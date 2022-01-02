@@ -1,10 +1,12 @@
 package com.astrainteractive.astratemplate.api
 
+import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.Callback
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.VaultHook
+import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -56,16 +58,19 @@ object AuctionAPI {
 
 
         if (player.inventory.firstEmpty() == -1) {
+            player.playSound(AstraAuctions.pluginConfig.sounds.fail)
             player.sendMessage(Translation.instanse.inventoryFull)
             return false
         }
         var vaultResponse = VaultHook.takeMoney(player, auction.price.toDouble())
         if (!vaultResponse) {
+            player.playSound(AstraAuctions.pluginConfig.sounds.fail)
             player.sendMessage(Translation.instanse.notEnoughMoney)
             return false
         }
         vaultResponse = VaultHook.addMoney(owner, auction.price.toDouble())
         if (!vaultResponse) {
+            player.playSound(AstraAuctions.pluginConfig.sounds.fail)
             player.sendMessage(Translation.instanse.failedToPay)
             VaultHook.addMoney(player, auction.price.toDouble())
             return false
@@ -74,6 +79,7 @@ object AuctionAPI {
         Repository.removeAuction(auction.id, object : Callback() {
             override fun <T> onSuccess(result: T?) {
                 player.inventory.addItem(item)
+                player.playSound(AstraAuctions.pluginConfig.sounds.sold)
                 player.sendMessage(Translation.instanse.itemBought + "-> ${owner.name} -> ${item.displayNameOrDefault()} -> ${auction.price}$")
                 callback?.onSuccess(true)
             }
@@ -82,6 +88,7 @@ object AuctionAPI {
                 VaultHook.addMoney(player, auction.price.toDouble())
                 VaultHook.takeMoney(owner, auction.price.toDouble())
                 player.sendMessage(Translation.instanse.unexpectedError + " ${e.message}")
+                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 callback?.onFailure(e)
             }
         })

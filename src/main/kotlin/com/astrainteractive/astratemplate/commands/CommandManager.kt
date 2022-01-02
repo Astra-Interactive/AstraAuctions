@@ -4,10 +4,7 @@ import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.utils.AsyncTask
-import com.astrainteractive.astratemplate.utils.Callback
-import com.astrainteractive.astratemplate.utils.Permissions
-import com.astrainteractive.astratemplate.utils.Translation
+import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
@@ -80,7 +77,6 @@ class CommandManager : AsyncTask {
         if (cmd == null) {
             launch(Dispatchers.IO) {
                 AuctionGui(AstraPlayerMenuUtility(sender)).open()
-
             }
 
             return@registerCommand
@@ -97,6 +93,7 @@ class CommandManager : AsyncTask {
             val auctionsAmount = Repository.countPlayerAuctions(player)
             if (auctionsAmount ?: 0 > AstraAuctions.pluginConfig.auction.maxAuctionPerPlayer) {
                 player.sendMessage(Translation.instanse.maxAuctions)
+                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
             val price = args.getOrNull(1)?.toFloatOrNull()
@@ -106,15 +103,18 @@ class CommandManager : AsyncTask {
 
             if (price == null) {
                 player.sendMessage(Translation.instanse.wrongArgs)
+                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
             if (price > AstraAuctions.pluginConfig.auction.maxPrice || price < AstraAuctions.pluginConfig.auction.minPrice) {
                 player.sendMessage(Translation.instanse.wrongPrice)
+                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
 
             if (item == null || item.type == Material.AIR) {
                 player.sendMessage(Translation.instanse.wrongItemInHand)
+                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
             val itemClone = item.clone().apply { this.amount = amount }
@@ -124,11 +124,13 @@ class CommandManager : AsyncTask {
                 override fun <T> onSuccess(result: T?) {
                     item.amount -= amount
                     player.sendMessage(Translation.instanse.auctionAdded)
+                    player.playSound(AstraAuctions.pluginConfig.sounds.success)
                     if (AstraAuctions.pluginConfig.auction.announce)
                         Bukkit.broadcastMessage(Translation.instanse.announce.replace("%player%",player.name))
                 }
 
                 override fun onFailure(e: Exception) {
+                    player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                     player.sendMessage(Translation.instanse.dbError + "${e.message}")
                 }
 

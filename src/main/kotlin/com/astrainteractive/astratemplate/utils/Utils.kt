@@ -3,6 +3,7 @@ package com.astrainteractive.astratemplate.utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.lang.Exception
@@ -50,3 +51,7 @@ fun ItemStack.setDisplayName(name: String) {
 
 val Player.uuid: String
     get() = this.uniqueId.toString()
+
+fun Player.playSound(sound:String){
+    playSound(location,sound,1f,1f)
+}

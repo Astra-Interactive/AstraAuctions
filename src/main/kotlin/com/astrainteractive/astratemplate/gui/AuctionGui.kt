@@ -7,10 +7,7 @@ import com.astrainteractive.astralibs.menu.PaginatedMenu
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.utils.AsyncTask
-import com.astrainteractive.astratemplate.utils.Callback
-import com.astrainteractive.astratemplate.utils.Translation
-import com.astrainteractive.astratemplate.utils.setDisplayName
+import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -49,12 +46,15 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
         super.handleMenu(e)
         when (e.slot) {
             nextButtonIndex -> {
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
                 setMenuItems()
             }
             prevButtonIndex -> {
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
                 setMenuItems()
             }
             (backButtonIndex + 1) -> {
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
                 sortType = if (e.isRightClick)
                     sortType.next()
                 else
@@ -62,6 +62,10 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
 
                 itemsInGui = AuctionAPI.sortBy(sortType)
                 setMenuItems()
+            }
+            backButtonIndex->{
+                inventory.close()
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.close)
             }
             else -> {
                 if (e.isLeftClick) {
@@ -72,9 +76,12 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
                                 updateItems()
                                 itemsInGui = runBlocking { AuctionAPI.sortBy(sortType) }
                                 setMenuItems()
+                                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.sold)
                             }
 
-                            override fun onFailure(e: Exception) {}
+                            override fun onFailure(e: Exception) {
+                                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.fail)
+                            }
                         })
                     }
                 }
@@ -129,6 +136,7 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
         })
     }
     init {
+        playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.open)
         updateItems()
     }
 

@@ -23,9 +23,11 @@ data class AuctionConfig(
     )
 
     data class Sounds(
+        val open: String = "ui.button.click",
+        val close: String = "ui.button.click",
         val click: String = "ui.button.click",
         val fail: String = "entity.villager.no",
-        val drop: String = "entity.player.burp",
+        val success: String = "block.note_block.chime",
         val sold: String = "block.note_block.chime"
     )
 

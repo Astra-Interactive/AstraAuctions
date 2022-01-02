@@ -4,9 +4,11 @@ auction:
   maxPrice: 1000000
   announce: true
 sounds:
+  open: ui.button.click
+  close: ui.button.click
   click: ui.button.click
   fail: entity.villager.no
-  drop: entity.player.burp
+  success: block.note_block.chime
   sold: block.note_block.chime
 buttons:
   back:
