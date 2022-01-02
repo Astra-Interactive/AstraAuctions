@@ -1,0 +1,13 @@
+main: com.astrainteractive.astratemplate.AstraAuctions
+name: AstraAuctions
+prefix: AstraAuctions
+version: '${project.version}'
+authors: [ MakeevRoman ]
+author: MakeevRoman
+website: AstraInteractive.ru
+api-version: 1.17
+softdepend: [Vault ]
+depend: [ ]
+commands:
+  aaucreload:
+  aauc:

@@ -1,0 +1,23 @@
+auction:
+  maxAuctionPerPlayer: 5
+  minPrice: 10
+  maxPrice: 1000000
+  announce: true
+sounds:
+  click: ui.button.click
+  fail: entity.villager.no
+  drop: entity.player.burp
+  sold: block.note_block.chime
+buttons:
+  back:
+    material: minecraft:iron_door
+    customModelData: 1
+  previous:
+    material: minecraft:iron_door
+    customModelData: 1
+  next:
+    material: minecraft:iron_door
+    customModelData: 1
+  sort:
+    material: minecraft:iron_door
+    customModelData: 1

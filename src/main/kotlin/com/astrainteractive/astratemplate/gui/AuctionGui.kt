@@ -1,0 +1,135 @@
+package com.astrainteractive.astratemplate.gui
+
+import com.astrainteractive.astralibs.HEX
+import com.astrainteractive.astralibs.menu.AstraMenuSize
+import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
+import com.astrainteractive.astralibs.menu.PaginatedMenu
+import com.astrainteractive.astratemplate.AstraAuctions
+import com.astrainteractive.astratemplate.api.*
+import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.utils.AsyncTask
+import com.astrainteractive.astratemplate.utils.Callback
+import com.astrainteractive.astratemplate.utils.Translation
+import com.astrainteractive.astratemplate.utils.setDisplayName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.bukkit.Bukkit
+import org.bukkit.ChatColor
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.inventory.ItemStack
+import java.lang.Exception
+import java.util.*
+
+class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : PaginatedMenu(), AsyncTask {
+
+
+    override var menuName: String = Translation.instanse.title
+    override val menuSize: AstraMenuSize = AstraMenuSize.XL
+    private var sortType: SortType = SortType.DATE_ASC
+
+
+    override val backPageButton: ItemStack =
+        AstraAuctions.pluginConfig.buttons.back.toItemStack().apply { setDisplayName(Translation.instanse.back) }
+    override val nextPageButton: ItemStack =
+        AstraAuctions.pluginConfig.buttons.next.toItemStack().apply { setDisplayName(Translation.instanse.next) }
+    override val prevPageButton: ItemStack =
+        AstraAuctions.pluginConfig.buttons.previous.toItemStack().apply { setDisplayName(Translation.instanse.prev) }
+    private val sortButton: ItemStack
+        get() = AstraAuctions.pluginConfig.buttons.sort.toItemStack().apply {
+            setDisplayName("${Translation.instanse.sort} ${sortType.desc}")
+        }
+    override var maxItemsPerPage: Int = 45
+    override var page: Int = 0
+    private var itemsInGui = AuctionAPI.sortBy(sortType)
+    override val maxItemsAmount: Int = itemsInGui.size
+
+
+    override fun handleMenu(e: InventoryClickEvent) {
+        super.handleMenu(e)
+        when (e.slot) {
+            nextButtonIndex -> {
+                setMenuItems()
+            }
+            prevButtonIndex -> {
+                setMenuItems()
+            }
+            (backButtonIndex + 1) -> {
+                sortType = if (e.isRightClick)
+                    sortType.next()
+                else
+                    sortType.prev()
+
+                itemsInGui = AuctionAPI.sortBy(sortType)
+                setMenuItems()
+            }
+            else -> {
+                if (e.isLeftClick) {
+                    val auction = itemsInGui[getIndex(e.slot)]
+                    launch(Dispatchers.IO) {
+                        AuctionAPI.buyAuction(auction, playerMenuUtility.player, object : Callback() {
+                            override fun <T> onSuccess(result: T?) {
+                                updateItems()
+                                itemsInGui = runBlocking { AuctionAPI.sortBy(sortType) }
+                                setMenuItems()
+                            }
+
+                            override fun onFailure(e: Exception) {}
+                        })
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun getTimeFormatted(sec: Long): String {
+        val time = System.currentTimeMillis().minus(sec)
+        val seconds = time / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        return "${hours}ч ${minutes}м назад"
+    }
+
+    override fun setMenuItems() {
+
+        if (!isInventoryInitialized())
+            return
+        inventory.clear()
+        addManageButtons()
+        inventory.setItem(backButtonIndex + 1, sortButton)
+        for (i in 0 until maxItemsPerPage) {
+            val index = maxItemsPerPage * page + i
+            val auctionItem = itemsInGui.getOrNull(index) ?: continue
+
+            val itemStack = ItemStack.deserializeBytes(auctionItem.item).apply {
+                val meta = itemMeta
+                val lore = meta.lore?.toMutableList() ?: mutableListOf()
+                lore.add(Translation.instanse.leftButton)
+                lore.add(Translation.instanse.rightButton)
+                lore.add("${ChatColor.GRAY}Выставил: #d6a213${Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid))?.name}".HEX())
+                lore.add("${ChatColor.GRAY}Время: #d6a213${getTimeFormatted(auctionItem.time)}".HEX())
+                lore.add("${ChatColor.GRAY}Стоимость: #d6a213${auctionItem.price}".HEX())
+                meta.lore = lore
+                setItemMeta(meta)
+            }
+            inventory.setItem(i, itemStack)
+        }
+    }
+
+    private fun updateItems() = launch {
+        AuctionAPI.loadAuctions(callback = object : Callback() {
+            override fun <T> onSuccess(result: T?) {
+                val result = result as List<Auction>
+                itemsInGui = result
+                setMenuItems()
+            }
+
+            override fun onFailure(e: Exception) {}
+        })
+    }
+    init {
+        updateItems()
+    }
+
+}
