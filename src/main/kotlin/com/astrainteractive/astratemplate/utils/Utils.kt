@@ -1,14 +1,12 @@
 package com.astrainteractive.astratemplate.utils
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import org.bukkit.Sound
+import com.astrainteractive.astratemplate.sqldatabase.Database
+import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.jetbrains.annotations.NotNull
 import java.lang.Exception
 import java.sql.ResultSet
-import kotlin.coroutines.CoroutineContext
 
 
 /**
@@ -34,7 +32,9 @@ public inline fun <R : Any, C : MutableCollection<in R>> ResultSet.mapNotNullTo(
 }
 
 
-public inline fun <T> callbackCatching(callback: Callback?, block: () -> T?): T? = try {
+public inline fun <T> callbackCatching(callback: Callback? = null, block: () -> T?): T? = try {
+    if (!Database.isInitialized)
+        throw Exception("Database not initialized")
     block.invoke()
 } catch (e: Exception) {
     e.printStackTrace()
@@ -52,6 +52,13 @@ fun ItemStack.setDisplayName(name: String) {
 val Player.uuid: String
     get() = this.uniqueId.toString()
 
-fun Player.playSound(sound:String){
-    playSound(location,sound,1f,1f)
+fun Player.playSound(sound: String) {
+    playSound(location, sound, 1f, 1f)
 }
+
+fun ItemStack.displayNameOrMaterialName(): String{
+        val name = itemMeta.displayName
+        if (name.isNullOrEmpty())
+            return type.name
+        return name
+    }

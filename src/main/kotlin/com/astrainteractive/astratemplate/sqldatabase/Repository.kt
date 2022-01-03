@@ -1,13 +1,9 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
-import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import com.astrainteractive.astratemplate.utils.*
-import kotlinx.coroutines.coroutineScope
 import org.bukkit.entity.Player
-import java.lang.Exception
-import java.sql.ResultSet
-import javax.xml.crypto.Data
 
 
 /**
@@ -19,8 +15,6 @@ object Repository {
      */
     suspend fun createAuctionTable(callback: Callback) =
         callbackCatching(callback) {
-            if (!Database.isInitialized)
-                throw Exception("Database not initialized")
             val res = Database.connection.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS ${Auction.table} " +
                         "(" +
@@ -48,20 +42,20 @@ object Repository {
             callback.onSuccess(result)
         }
 
-    suspend fun getAuctions(uuid: String? = null) = catching {
+    suspend fun getAuctions(uuid: String? = null) = callbackCatching {
         if (!Database.isInitialized)
             throw Exception("Database not initialized")
         val where = uuid?.let { "WHERE ${Auction.minecraftUuid.name}=${it}" } ?: ""
         val rs = Database.connection.createStatement().executeQuery("SELECT * FROM ${Auction.table} $where")
-        return@catching rs.mapNotNull { Auction.fromResultSet(it) }
+        return@callbackCatching rs.mapNotNull { Auction.fromResultSet(it) }
     }
 
-    suspend fun getAuction(id: Long) = catching {
+    suspend fun getAuction(id: Long) = callbackCatching {
         if (!Database.isInitialized)
             throw Exception("Database not initialized")
         val query = "SELECT * FROM ${Auction.table} WHERE ${Auction.id.name}=$id"
         val response = Database.connection.createStatement().executeQuery(query)
-        return@catching response.mapNotNull { Auction.fromResultSet(it) }
+        return@callbackCatching response.mapNotNull { Auction.fromResultSet(it) }
     }
 
     suspend fun removeAuction(key: Long, callback: Callback): Boolean? = callbackCatching(callback) {
@@ -73,14 +67,14 @@ object Repository {
         return@callbackCatching response
     }
 
-    suspend fun countPlayerAuctions(player: Player) = catching {
+    suspend fun countPlayerAuctions(player: Player) = callbackCatching {
         if (!Database.isInitialized)
             throw Exception("Database not initialized")
         val query =
             "SELECT COUNT(*) FROM ${Auction.table} WHERE ${Auction.minecraftUuid.name}=\'${player.uuid}\'"
         val response = Database.connection.createStatement().executeQuery(query)
-        response.forEach { return@catching it.getInt(1) }
-        return@catching null
+        response.forEach { return@callbackCatching it.getInt(1) }
+        return@callbackCatching null
     }
 
 }

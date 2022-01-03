@@ -49,5 +49,3 @@ data class Auction(
     }
 }
 
-data class EntityInfo(val name: String, val type: String)
-

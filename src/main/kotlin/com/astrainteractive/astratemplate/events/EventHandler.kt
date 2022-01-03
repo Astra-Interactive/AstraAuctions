@@ -11,7 +11,6 @@ import com.astrainteractive.astralibs.menu.MenuListener
 class EventHandler() : IAstraManager {
     override val handlers: MutableList<IAstraListener> = mutableListOf()
     init {
-        TemplateEvent().onEnable(this)
         MenuListener().onEnable(this)
     }
 }

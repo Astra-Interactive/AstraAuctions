@@ -7,6 +7,7 @@ import com.astrainteractive.astralibs.menu.PaginatedMenu
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

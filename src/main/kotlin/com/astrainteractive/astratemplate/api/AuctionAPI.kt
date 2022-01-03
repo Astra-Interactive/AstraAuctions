@@ -3,14 +3,13 @@ package com.astrainteractive.astratemplate.api
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.utils.Callback
+import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.VaultHook
+import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
-import org.jetbrains.annotations.NotNull
 import java.lang.Exception
 import java.util.*
 
@@ -80,7 +79,7 @@ object AuctionAPI {
             override fun <T> onSuccess(result: T?) {
                 player.inventory.addItem(item)
                 player.playSound(AstraAuctions.pluginConfig.sounds.sold)
-                player.sendMessage(Translation.instanse.itemBought + "-> ${owner.name} -> ${item.displayNameOrDefault()} -> ${auction.price}$")
+                player.sendMessage(Translation.instanse.itemBought + "-> ${owner.name} -> ${item.displayNameOrMaterialName()} -> ${auction.price}$")
                 callback?.onSuccess(true)
             }
 
@@ -95,10 +94,5 @@ object AuctionAPI {
         return true
     }
 
-    fun ItemStack.displayNameOrDefault(): @NotNull String {
-        val name = itemMeta.displayName
-        if (name.isNullOrEmpty())
-            return type.name
-        return name
-    }
+
 }

@@ -1,4 +1,4 @@
-package com.astrainteractive.astratemplate.utils
+package com.astrainteractive.astratemplate.sqldatabase.entities
 
 import java.lang.Exception
 

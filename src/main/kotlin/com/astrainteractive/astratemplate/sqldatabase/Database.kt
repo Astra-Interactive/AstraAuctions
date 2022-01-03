@@ -3,7 +3,7 @@ package com.astrainteractive.astratemplate.sqldatabase
 import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.utils.AsyncTask
-import com.astrainteractive.astratemplate.utils.Callback
+import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import org.bukkit.ChatColor
 import java.io.File
 import java.lang.Exception
