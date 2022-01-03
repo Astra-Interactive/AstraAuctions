@@ -49,6 +49,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Astra-Interactive/AstraLibs</url>
+        </repository>
     </repositories>
 
     <build>
@@ -120,7 +124,7 @@
         <dependency>
             <groupId>com.astrainteractive</groupId>
             <artifactId>astralibs</artifactId>
-            <version>1.0.22</version>
+            <version>1.0.23</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

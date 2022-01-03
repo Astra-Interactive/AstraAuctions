@@ -19,6 +19,8 @@ object Repository {
      */
     suspend fun createAuctionTable(callback: Callback) =
         callbackCatching(callback) {
+            if (!Database.isInitialized)
+                throw Exception("Database not initialized")
             val res = Database.connection.prepareStatement(
                 "CREATE TABLE IF NOT EXISTS ${Auction.table} " +
                         "(" +
@@ -35,6 +37,8 @@ object Repository {
 
     suspend fun insertAuction(auction: Auction, callback: Callback) =
         callbackCatching(callback) {
+            if (!Database.isInitialized)
+                throw Exception("Database not initialized")
             var query = "INSERT INTO ${Auction.table} " +
                     "(${Auction.discordId.name}, ${Auction.minecraftUuid.name}, ${Auction.time.name}, ${Auction.item.name}, ${Auction.price.name}) " +
                     "VALUES(NULL, \'${auction.minecraftUuid}\', ${auction.time},?, ${auction.price} )"
@@ -45,18 +49,24 @@ object Repository {
         }
 
     suspend fun getAuctions(uuid: String? = null) = catching {
+        if (!Database.isInitialized)
+            throw Exception("Database not initialized")
         val where = uuid?.let { "WHERE ${Auction.minecraftUuid.name}=${it}" } ?: ""
         val rs = Database.connection.createStatement().executeQuery("SELECT * FROM ${Auction.table} $where")
         return@catching rs.mapNotNull { Auction.fromResultSet(it) }
     }
 
     suspend fun getAuction(id: Long) = catching {
+        if (!Database.isInitialized)
+            throw Exception("Database not initialized")
         val query = "SELECT * FROM ${Auction.table} WHERE ${Auction.id.name}=$id"
         val response = Database.connection.createStatement().executeQuery(query)
         return@catching response.mapNotNull { Auction.fromResultSet(it) }
     }
 
     suspend fun removeAuction(key: Long, callback: Callback): Boolean? = callbackCatching(callback) {
+        if (!Database.isInitialized)
+            throw Exception("Database not initialized")
         val query = "DELETE FROM ${Auction.table} WHERE ${Auction.id.name}=${key}"
         val response = Database.connection.prepareStatement(query).execute()
         callback.onSuccess(response)
@@ -64,6 +74,8 @@ object Repository {
     }
 
     suspend fun countPlayerAuctions(player: Player) = catching {
+        if (!Database.isInitialized)
+            throw Exception("Database not initialized")
         val query =
             "SELECT COUNT(*) FROM ${Auction.table} WHERE ${Auction.minecraftUuid.name}=\'${player.uuid}\'"
         val response = Database.connection.createStatement().executeQuery(query)

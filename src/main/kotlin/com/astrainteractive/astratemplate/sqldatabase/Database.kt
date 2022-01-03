@@ -16,7 +16,7 @@ import kotlinx.coroutines.*
  *
  * Not fully functional!
  */
-class Database:AsyncTask {
+class Database : AsyncTask {
 
 
     /**
@@ -35,6 +35,8 @@ class Database:AsyncTask {
      */
     companion object {
         lateinit var connection: Connection
+        val isInitialized: Boolean
+            get() = this::connection.isInitialized && !connection.isClosed
     }
 
     /**
@@ -47,12 +49,11 @@ class Database:AsyncTask {
         }
 
 
-
-    fun onEnable(){
+    fun onEnable() {
 
         launch(Dispatchers.IO) {
             connectDatabase()
-            Repository.createAuctionTable(object : Callback(){
+            Repository.createAuctionTable(object : Callback() {
                 override fun <T> onSuccess(result: T?) {
                     println("${ChatColor.AQUA}База данных создана успешно")
                 }
