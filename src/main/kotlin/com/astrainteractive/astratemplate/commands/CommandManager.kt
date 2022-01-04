@@ -20,17 +20,7 @@ class CommandManager : AsyncTask {
     init {
         ReloadCommand()
         AuctionCommand()
-        AstraLibs.registerTabCompleter("aauc") { sender, args ->
-            if (args.isEmpty())
-                return@registerTabCompleter listOf("aauc", "aaucreload")
-            if (args.size == 1)
-                return@registerTabCompleter listOf("aauc", "aaucreload").withEntry(args.last())
-            if (args.size == 2)
-                when (args.first()) {
-                    "aauc" -> return@registerTabCompleter listOf("sell").withEntry(args.last())
-                }
-            return@registerTabCompleter listOf<String>()
-        }
+
 
 
     }

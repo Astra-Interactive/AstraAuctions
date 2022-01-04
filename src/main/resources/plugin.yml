@@ -1,13 +1,23 @@
 main: com.astrainteractive.astratemplate.AstraAuctions
+description: Auction plugin from AstraInteractive
 name: AstraAuctions
 prefix: AstraAuctions
 version: '${project.version}'
 authors: [ MakeevRoman ]
 author: MakeevRoman
 website: AstraInteractive.ru
-api-version: 1.17
-softdepend: [Vault ]
-depend: [ ]
+api-version: 1.18
+softdepend: []
+loadbefore: [Vault]
+depend: [Vault]
 commands:
   aaucreload:
+    description: Reload plugin
+    permission: astra_auctions.reload
+    permission-message: You do not have permission!
+    usage: /<command>
   aauc:
+    description: Open or create auction
+    permission-message: You do not have permission!
+    usage: |
+      /aauc [sell] <price> [amount]

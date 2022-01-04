@@ -1,5 +1,27 @@
-PLUGIN_PREFIX: "#18dbd1[EmpireItems]"
-RELOAD: "#dbbb18Перезагрузка плагина"
-RELOAD_COMPLETE: "#42f596Перезагрузка успешно завершена"
-SAVE_ERROR: "#db2c18Не удалось сохранить файл"
-NONSTANDART_FILE: "#db2c18Нестнадартный файл"
+general:
+  reload_started: '#dbbb18Перезагрузка плагина'
+  reload_complete: '#42f596Перезагрузка успешно завершена'
+  no_permission: '#f55442У вас нет прав'
+  player_command: '#f55442Эта команда только для игроков'
+  wrong_args: '#f55442Неверное использование команды'
+  db_error: '#f55442Произошла ошибка'
+  error: '#f55442Произошла непредвиденная ошибка'
+auction:
+  wrong_item: '#f55442Предмет в вашей руке не подходит для продажи'
+  wrong_price: '#f55442Неверный ценовой диапазон'
+  slot_added: '#18dbd1Предмет добавлен на аукцион'
+  inventory_full: '#f55442Инвентарь полон'
+  owner_not_buyer: '#f55442Вы не можете купить собственный лот'
+  failed_to_pay: '#f55442Не удалось выплатить деньги'
+  item_bought: '#18dbd1Вы купили предмет'
+  not_enough_money: '#f55442У вас недостаточно денег'
+  broadcast: '#18dbd1Игрок %player% выставил на /aauc новый предмет'
+  max_slots: '#f55442У вас уже макстимальное число лотов'
+menu:
+  left_button: '#d6a213ЛКМ #18dbd1- купить'
+  right_button: '#d6a213ПКМ #18dbd1- убрать'
+  title: '#1382d6Аукцион'
+  back: '#18dbd1Назад'
+  prev: '#18dbd1Раньше'
+  next: '#18dbd1Дальше'
+  sort: '#18dbd1Сортировка'

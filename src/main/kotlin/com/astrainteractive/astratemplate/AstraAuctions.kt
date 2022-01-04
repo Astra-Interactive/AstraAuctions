@@ -35,29 +35,12 @@ class AstraAuctions : JavaPlugin() {
             private set
     }
 
-    /**
-     * Class for handling all of your events
-     *
-     * Should be private
-     */
+
     private lateinit var eventHandler: EventHandler
 
-    /**
-     * Command manager for your commands.
-     *
-     * You can create multiple managers.
-     *
-     * Should be private
-     */
     private lateinit var commandManager: CommandManager
 
 
-
-    /**
-     * This method called when server starts.
-     *
-     * When server starts or PlugMan load plugin.
-     */
     override fun onEnable() {
         AstraLibs.create(this)
         Logger.init("AstraAuctions")
@@ -71,20 +54,12 @@ class AstraAuctions : JavaPlugin() {
         VaultHook()
     }
 
-    /**
-     * This method called when server is shutting down.
-     *
-     * Or when PlugMan disable plugin.
-     */
     override fun onDisable() {
         eventHandler.onDisable()
         database.onDisable()
         HandlerList.unregisterAll(this)
     }
 
-    /**
-     * As it says, function for plugin reload
-     */
     fun reloadPlugin() {
         onDisable()
         onEnable()

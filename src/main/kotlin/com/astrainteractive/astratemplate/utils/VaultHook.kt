@@ -1,5 +1,6 @@
 package com.astrainteractive.astratemplate.utils
 
+import com.astrainteractive.astralibs.Logger
 import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.economy.EconomyResponse
 import org.bukkit.Bukkit
@@ -46,7 +47,7 @@ class VaultHook {
     private fun onEnable() {
         instance = this
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            println("Vault is not installed!")
+            Logger.error("Vault is not installed!","VaultHook")
             return
         }
         val rsp = getServer().servicesManager.getRegistration(Economy::class.java) ?: return

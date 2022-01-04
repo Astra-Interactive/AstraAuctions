@@ -5,81 +5,79 @@ import com.astrainteractive.astralibs.HEX
 import com.astrainteractive.astralibs.getHEXString
 import java.nio.file.Path
 
-/**
- * All translation stored here by default
- * It's okay to create another translations classes and files, but remember to create Translation class before others
- */
-class Translation() {
+class Translation {
     companion object {
         lateinit var instanse: Translation
     }
-
     init {
         instanse = this
     }
 
-    /**
-     * This is a default translation file. Don't forget to create translation.yml in resources of the plugin
-     * translation contains non-null assert because translation.yml exist in every possible situation except whe you forget to add it to resources
-     */
-    val _translationFile: FileManager = FileManager("translations.yml")
+    private val _translationFile: FileManager = FileManager("translations.yml")
     private val translation = _translationFile.getConfig()!!
 
-    private fun getHEXString(path: String) = translation.getHEXString(path)
-    private fun getHEXString(path: String, default: String) = translation.getHEXString(path) ?: default.HEX()
+
+    private fun getHEXString(path: String, default: String):String {
+        if (!translation.contains(path)){
+            translation.set(path,default)
+            _translationFile.saveConfig()
+        }
+        return translation.getHEXString(path) ?: default.HEX()
+    }
 
 
-    val reloadStarted: String = getHEXString("RELOAD") ?: "#dbbb18Перезагрузка плагина".HEX()
+    //General
+    val reloadStarted: String = getHEXString("general.reload_started","#dbbb18Перезагрузка плагина")
     val reloadSuccess: String =
-        getHEXString("RELOAD_COMPLETE") ?: "#42f596Перезагрузка успешно завершена".HEX()
+        getHEXString("general.reload_complete","#42f596Перезагрузка успешно завершена")
     val noPermissions: String =
-        getHEXString("noPermissions", "#f55442У вас нет прав")
+        getHEXString("general.no_permission", "#f55442У вас нет прав")
     val onlyForPlayers: String =
-        getHEXString("onlyForPlayers", "#f55442Эта команда только для игроков")
-    val wrongItemInHand: String =
-        getHEXString("wrongItemInHand", "#f55442Предмет в вашей руке не подходит для продажи")
+        getHEXString("general.player_command", "#f55442Эта команда только для игроков")
     val wrongArgs: String =
-        getHEXString("wrongArgs", "#f55442Неверное использование команды")
-    val wrongPrice: String =
-        getHEXString("wrongPrice", "#f55442Неверный ценовой диапазон")
-    val auctionAdded: String =
-        getHEXString("auctionAdded", "#18dbd1Предмет добавлен на аукцион")
+        getHEXString("general.wrong_args", "#f55442Неверное использование команды")
     val dbError: String =
-        getHEXString("dbError", "#f55442Произошла ошибка")
-    val inventoryFull: String =
-        getHEXString("inventoryFull", "#f55442Инвентарь полон")
-    val ownerCantBeBuyer: String =
-        getHEXString("ownerCantBeBuyer", "#f55442Вы не можете купить собственный лот")
-    val notEnoughMoney: String =
-        getHEXString("notEnoughMoney", "#f55442У вас недостаточно денег")
+        getHEXString("general.db_error", "#f55442Произошла ошибка")
     val unexpectedError: String =
-        getHEXString("unexpectedError", "#f55442Произошла непредвиденная ошибка")
+        getHEXString("general.error", "#f55442Произошла непредвиденная ошибка")
+
+    //Auction
+    val wrongItemInHand: String =
+        getHEXString("auction.wrong_item", "#f55442Предмет в вашей руке не подходит для продажи")
+    val wrongPrice: String =
+        getHEXString("auction.wrong_price", "#f55442Неверный ценовой диапазон")
+    val auctionAdded: String =
+        getHEXString("auction.slot_added", "#18dbd1Предмет добавлен на аукцион")
+    val inventoryFull: String =
+        getHEXString("auction.inventory_full", "#f55442Инвентарь полон")
+    val ownerCantBeBuyer: String =
+        getHEXString("auction.owner_not_buyer", "#f55442Вы не можете купить собственный лот")
     val failedToPay: String =
-        getHEXString("failedToPay", "#f55442Не удалось выплатить деньги")
+        getHEXString("auction.failed_to_pay", "#f55442Не удалось выплатить деньги")
     val itemBought: String =
-        getHEXString("itemBought", "#18dbd1Вы купили предмет")
-    val title: String =
-        getHEXString("title", "#1382d6Аукцион")
-    val back: String =
-        getHEXString("back", "#18dbd1Назад")
-    val prev: String =
-        getHEXString("prev", "#18dbd1Раньше")
-    val next: String =
-        getHEXString("next", "#18dbd1Дальше")
-    val sort: String =
-        getHEXString("sort", "#18dbd1Сортировка")
-    val announce: String =
-        getHEXString("announce", "#18dbd1Игрок %player% выставил на /aauc новый предмет")
-
-
-    val maxAuctions: String =
-        getHEXString("maxAuctions", "#f55442У вас уже макстимальное число лотов")
-
-
+        getHEXString("auction.item_bought", "#18dbd1Вы купили предмет")
+    val notEnoughMoney: String =
+        getHEXString("auction.not_enough_money", "#f55442У вас недостаточно денег")
+    val broadcast: String =
+        getHEXString("auction.broadcast", "#18dbd1Игрок %player% выставил на /aauc новый предмет")
     val leftButton: String =
-        getHEXString("leftButton", "#d6a213ЛКМ #18dbd1- купить")
+        getHEXString("menu.left_button", "#d6a213ЛКМ #18dbd1- купить")
     val rightButton: String =
-        getHEXString("rightButton", "#d6a213ПКМ #18dbd1- убрать")
+        getHEXString("menu.right_button", "#d6a213ПКМ #18dbd1- убрать")
+
+    //Menu
+    val title: String =
+        getHEXString("menu.title", "#1382d6Аукцион")
+    val back: String =
+        getHEXString("menu.back", "#18dbd1Назад")
+    val prev: String =
+        getHEXString("menu.prev", "#18dbd1Раньше")
+    val next: String =
+        getHEXString("menu.next", "#18dbd1Дальше")
+    val sort: String =
+        getHEXString("menu.sort", "#18dbd1Сортировка")
+    val maxAuctions: String =
+        getHEXString("auction.max_slots", "#f55442У вас уже макстимальное число лотов")
 
 
 }

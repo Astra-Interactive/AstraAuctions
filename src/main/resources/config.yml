@@ -4,22 +4,22 @@ auction:
   maxPrice: 1000000
   announce: true
 sounds:
-  open: ui.button.click
-  close: ui.button.click
+  open: item.book.page_turn
+  close: item.book.page_turn
   click: ui.button.click
   fail: entity.villager.no
   success: block.note_block.chime
   sold: block.note_block.chime
 buttons:
   back:
-    material: minecraft:iron_door
+    material: IRON_DOOR
     customModelData: 1
   previous:
-    material: minecraft:iron_door
+    material: PAPER
     customModelData: 1
   next:
-    material: minecraft:iron_door
+    material: PAPER
     customModelData: 1
   sort:
-    material: minecraft:iron_door
+    material: SUNFLOWER
     customModelData: 1

@@ -29,10 +29,6 @@
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/Asrta-Interactive/astralibs</url>
-        </repository>
-        <repository>
             <id>dmulloy2-repo</id>
             <url>https://repo.dmulloy2.net/repository/public/</url>
         </repository>
@@ -105,7 +101,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>D:\Minecraft Servers\TEST_SERVER\plugins\EmpireTemplate.jar</outputFile>
+                            <outputFile>D:\Minecraft Servers\TEST_SERVER\plugins\${project.name}.jar</outputFile>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
@@ -124,7 +120,7 @@
         <dependency>
             <groupId>com.astrainteractive</groupId>
             <artifactId>astralibs</artifactId>
-            <version>1.0.23</version>
+            <version>1.0.27</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -149,12 +145,12 @@
             <version>2.10.9</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.junit.jupiter</groupId>-->
+<!--            <artifactId>junit-jupiter</artifactId>-->
+<!--            <version>RELEASE</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>com.github.MilkBowl</groupId>

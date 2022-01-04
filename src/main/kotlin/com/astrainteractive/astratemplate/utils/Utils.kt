@@ -1,11 +1,8 @@
 package com.astrainteractive.astratemplate.utils
 
 import com.astrainteractive.astratemplate.sqldatabase.Database
-import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.jetbrains.annotations.NotNull
-import java.lang.Exception
 import java.sql.ResultSet
 
 
@@ -32,13 +29,12 @@ public inline fun <R : Any, C : MutableCollection<in R>> ResultSet.mapNotNullTo(
 }
 
 
-public inline fun <T> callbackCatching(callback: Callback? = null, block: () -> T?): T? = try {
+public inline fun <T> callbackCatching(block: () -> T?): T? = try {
     if (!Database.isInitialized)
         throw Exception("Database not initialized")
     block.invoke()
 } catch (e: Exception) {
-    e.printStackTrace()
-    callback?.onFailure(e)
+    com.astrainteractive.astralibs.Logger.error(e.stackTraceToString(),"Database")
     null
 }
 

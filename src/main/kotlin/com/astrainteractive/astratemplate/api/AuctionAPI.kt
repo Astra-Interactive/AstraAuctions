@@ -3,7 +3,6 @@ package com.astrainteractive.astratemplate.api
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.VaultHook
 import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
@@ -17,17 +16,16 @@ object AuctionAPI {
 
     private var currentAuctions: List<Auction> = listOf()
 
-    fun setAuctions(value: List<Auction>) = synchronized(this) {
+    private fun setAuctions(value: List<Auction>) = synchronized(this) {
         currentAuctions = value
     }
 
-    fun getAuctions() = synchronized(this) { currentAuctions }
+    private fun getAuctions() = synchronized(this) { currentAuctions }
 
 
-    suspend fun loadAuctions(uuid: String? = null,callback: Callback?=null): List<Auction> {
+    suspend fun loadAuctions(uuid: String? = null): List<Auction> {
         val auctions = Repository.getAuctions(uuid) ?: listOf()
         setAuctions(auctions)
-        callback?.onSuccess(auctions)
         return currentAuctions
     }
 
@@ -46,7 +44,7 @@ object AuctionAPI {
         }
     }
 
-    suspend fun buyAuction(_auction: Auction, player: Player, callback: Callback?): Boolean {
+    suspend fun buyAuction(_auction: Auction, player: Player): Boolean {
         val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
 //        if (auction.minecraftUuid == player.uniqueId.toString()) {
 //            player.sendMessage(Translation.instanse.ownerCantBeBuyer)
@@ -75,23 +73,18 @@ object AuctionAPI {
             return false
         }
 
-        Repository.removeAuction(auction.id, object : Callback() {
-            override fun <T> onSuccess(result: T?) {
-                player.inventory.addItem(item)
-                player.playSound(AstraAuctions.pluginConfig.sounds.sold)
-                player.sendMessage(Translation.instanse.itemBought + "-> ${owner.name} -> ${item.displayNameOrMaterialName()} -> ${auction.price}$")
-                callback?.onSuccess(true)
-            }
-
-            override fun onFailure(e: Exception) {
-                VaultHook.addMoney(player, auction.price.toDouble())
-                VaultHook.takeMoney(owner, auction.price.toDouble())
-                player.sendMessage(Translation.instanse.unexpectedError + " ${e.message}")
-                player.playSound(AstraAuctions.pluginConfig.sounds.fail)
-                callback?.onFailure(e)
-            }
-        })
-        return true
+        val result = Repository.removeAuction(auction.id)
+        if (result != null) {
+            player.inventory.addItem(item)
+            player.playSound(AstraAuctions.pluginConfig.sounds.sold)
+            player.sendMessage(Translation.instanse.itemBought + "-> ${owner.name} -> ${item.displayNameOrMaterialName()} -> ${auction.price}$")
+        } else {
+            VaultHook.addMoney(player, auction.price.toDouble())
+            VaultHook.takeMoney(owner, auction.price.toDouble())
+            player.playSound(AstraAuctions.pluginConfig.sounds.fail)
+            player.sendMessage(Translation.instanse.dbError)
+        }
+        return result != null
     }
 
 

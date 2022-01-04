@@ -42,7 +42,7 @@ data class AuctionConfig(
         val material: String,
         val customModelData: Int = 0
     ) {
-        fun toItemStack() = ItemStack(Material.getMaterial(material) ?: Material.PAPER).apply {
+        fun toItemStack() = ItemStack(Material.getMaterial(material.uppercase()) ?: Material.PAPER).apply {
             val meta = itemMeta
             meta.setCustomModelData(customModelData)
             itemMeta = meta

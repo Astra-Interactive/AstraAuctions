@@ -7,7 +7,6 @@ import com.astrainteractive.astralibs.menu.PaginatedMenu
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,6 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import java.lang.Exception
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : PaginatedMenu(), AsyncTask {
 
@@ -47,15 +47,15 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
         super.handleMenu(e)
         when (e.slot) {
             nextButtonIndex -> {
-                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.open)
                 setMenuItems()
             }
             prevButtonIndex -> {
-                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.open)
                 setMenuItems()
             }
             (backButtonIndex + 1) -> {
-                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.click)
+                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.open)
                 sortType = if (e.isRightClick)
                     sortType.next()
                 else
@@ -64,7 +64,7 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
                 itemsInGui = AuctionAPI.sortBy(sortType)
                 setMenuItems()
             }
-            backButtonIndex->{
+            backButtonIndex -> {
                 inventory.close()
                 playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.close)
             }
@@ -72,18 +72,16 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
                 if (e.isLeftClick) {
                     val auction = itemsInGui[getIndex(e.slot)]
                     launch(Dispatchers.IO) {
-                        AuctionAPI.buyAuction(auction, playerMenuUtility.player, object : Callback() {
-                            override fun <T> onSuccess(result: T?) {
-                                updateItems()
-                                itemsInGui = runBlocking { AuctionAPI.sortBy(sortType) }
-                                setMenuItems()
-                                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.sold)
-                            }
+                        val result = AuctionAPI.buyAuction(auction, playerMenuUtility.player)
+                        if (result) {
+                            updateItems()
+                            itemsInGui = runBlocking { AuctionAPI.sortBy(sortType) }
+                            setMenuItems()
+                            playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.sold)
+                        } else {
+                            playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.fail)
+                        }
 
-                            override fun onFailure(e: Exception) {
-                                playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.fail)
-                            }
-                        })
                     }
                 }
 
@@ -93,10 +91,11 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
 
     private fun getTimeFormatted(sec: Long): String {
         val time = System.currentTimeMillis().minus(sec)
-        val seconds = time / 1000
-        val minutes = seconds / 60
-        val hours = minutes / 60
-        return "${hours}ч ${minutes}м назад"
+        val unit = TimeUnit.MILLISECONDS
+        val days = unit.toDays(time)
+        val hours = unit.toHours(time) - days * 24
+        val minutes = unit.toMinutes(time) - unit.toHours(time) * 60
+        return "${days}дн. ${hours}ч ${minutes}м назад"
     }
 
     override fun setMenuItems() {
@@ -126,16 +125,11 @@ class AuctionGui(override val playerMenuUtility: AstraPlayerMenuUtility) : Pagin
     }
 
     private fun updateItems() = launch {
-        AuctionAPI.loadAuctions(callback = object : Callback() {
-            override fun <T> onSuccess(result: T?) {
-                val result = result as List<Auction>
-                itemsInGui = result
-                setMenuItems()
-            }
-
-            override fun onFailure(e: Exception) {}
-        })
+        val result = AuctionAPI.loadAuctions() as List<Auction>
+        itemsInGui = result
+        setMenuItems()
     }
+
     init {
         playerMenuUtility.player.playSound(AstraAuctions.pluginConfig.sounds.open)
         updateItems()

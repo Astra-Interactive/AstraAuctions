@@ -1,15 +1,13 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
+import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.utils.AsyncTask
-import com.astrainteractive.astratemplate.sqldatabase.entities.Callback
-import org.bukkit.ChatColor
+import kotlinx.coroutines.*
 import java.io.File
-import java.lang.Exception
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlinx.coroutines.*
 
 /**
  * Database for plugin
@@ -53,16 +51,12 @@ class Database : AsyncTask {
 
         launch(Dispatchers.IO) {
             connectDatabase()
-            Repository.createAuctionTable(object : Callback() {
-                override fun <T> onSuccess(result: T?) {
-                    println("${ChatColor.AQUA}База данных создана успешно")
-                }
-
-                override fun onFailure(e: Exception) {
-                    println("${ChatColor.RED}Не удалось создать базу данныъ ${e.message}")
-                }
-
-            })
+            if (isInitialized) {
+                Logger.log("База данных создана успешно", "Database")
+                Repository.createAuctionTable()
+            }
+            else
+                Logger.error("Не удалось создать базу данных","Database")
         }
     }
 
