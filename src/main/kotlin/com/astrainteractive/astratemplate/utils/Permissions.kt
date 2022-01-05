@@ -10,4 +10,6 @@ object Permissions {
         get() = "astra_auctions.reload"
     val sell: String
         get() = "astra_auctions.sell"
+    val sellMax: String
+        get() = "astra_auctions.sell_max"
 }

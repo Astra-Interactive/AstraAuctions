@@ -6,7 +6,7 @@
 
     <artifactId>AstraAuctions</artifactId>
     <groupId>com.astrainteractive</groupId>
-    <version>1.0.0</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <description>AstraAuctions</description>
 

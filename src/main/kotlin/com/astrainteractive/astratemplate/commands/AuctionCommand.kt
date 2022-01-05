@@ -1,10 +1,7 @@
 package com.astrainteractive.astratemplate.commands
 
-import com.astrainteractive.astralibs.AstraLibs
+import com.astrainteractive.astralibs.*
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
-import com.astrainteractive.astralibs.registerCommand
-import com.astrainteractive.astralibs.registerTabCompleter
-import com.astrainteractive.astralibs.withEntry
 import com.astrainteractive.astratemplate.AstraAuctions
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
 import com.astrainteractive.astratemplate.gui.AuctionGui
@@ -91,9 +88,12 @@ class AuctionCommand : AsyncTask {
     private fun sell(player: Player, args: Array<out String>) {
         if (!player.checkPermission(Permissions.sell))
             return
+        val perm = player.effectivePermissions.firstOrNull { it.permission.startsWith(Permissions.sellMax) }
+        val amount = perm?.permission?.replace(Permissions.sellMax+".","")?.toIntOrNull()?:AstraAuctions.pluginConfig.auction.maxAuctionPerPlayer?:1
+
         launch {
             val auctionsAmount = Repository.countPlayerAuctions(player)
-            if ((auctionsAmount ?: 0) > AstraAuctions.pluginConfig.auction.maxAuctionPerPlayer) {
+            if ((auctionsAmount ?: 0) > amount) {
                 player.sendMessage(Translation.instance.maxAuctions)
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch

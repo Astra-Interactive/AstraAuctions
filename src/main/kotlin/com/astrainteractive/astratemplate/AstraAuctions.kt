@@ -52,12 +52,14 @@ class AstraAuctions : JavaPlugin() {
         pluginConfig = AuctionConfig.load()
         database = Database().apply { onEnable() }
         VaultHook()
+        Logger.log("Plugin enabled","AstraAuctions")
     }
 
     override fun onDisable() {
         eventHandler.onDisable()
         database.onDisable()
         HandlerList.unregisterAll(this)
+        Logger.log("Plugin disabled","AstraAuctions")
     }
 
     fun reloadPlugin() {

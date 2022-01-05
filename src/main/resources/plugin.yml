@@ -19,5 +19,6 @@ commands:
   aauc:
     description: Open or create auction
     permission-message: You do not have permission!
+    permission: astra_auctions.sell
     usage: |
       /aauc [sell] <price> [amount]
