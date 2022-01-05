@@ -52,11 +52,11 @@ class Database : AsyncTask {
         launch(Dispatchers.IO) {
             connectDatabase()
             if (isInitialized) {
-                Logger.log("База данных создана успешно", "Database")
+                Logger.log("Database created successfully", "Database")
                 Repository.createAuctionTable()
             }
             else
-                Logger.error("Не удалось создать базу данных","Database")
+                Logger.error("Could not create the database","Database")
         }
     }
 

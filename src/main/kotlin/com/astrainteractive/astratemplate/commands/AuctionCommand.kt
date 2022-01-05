@@ -20,7 +20,6 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import java.lang.Exception
 import kotlin.math.max
 import kotlin.math.min
 
@@ -41,14 +40,14 @@ class AuctionCommand : AsyncTask {
     }
 
     private fun CommandSender.checkPlayer(): Boolean = if (this !is Player) {
-        sendMessage(Translation.instanse.onlyForPlayers)
+        sendMessage(Translation.instance.onlyForPlayers)
         false
     } else {
         true
     }
 
     private fun CommandSender.checkPermission(permission: String): Boolean = if (!this.hasPermission(permission)) {
-        sendMessage(Translation.instanse.noPermissions)
+        sendMessage(Translation.instance.noPermissions)
         false
     } else {
         true
@@ -95,7 +94,7 @@ class AuctionCommand : AsyncTask {
         launch {
             val auctionsAmount = Repository.countPlayerAuctions(player)
             if ((auctionsAmount ?: 0) > AstraAuctions.pluginConfig.auction.maxAuctionPerPlayer) {
-                player.sendMessage(Translation.instanse.maxAuctions)
+                player.sendMessage(Translation.instance.maxAuctions)
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
@@ -103,21 +102,21 @@ class AuctionCommand : AsyncTask {
             var amount = args.getArgumentString(Arguments.amount)?.toIntOrNull() ?: 1
             val item = player.inventory.itemInMainHand
             amount = min(item.amount, amount)
-            amount = max(item.amount, 1)
+            amount = max(amount, 1)
 
             if (price == null) {
-                player.sendMessage(Translation.instanse.wrongArgs)
+                player.sendMessage(Translation.instance.wrongArgs)
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
             if (price > AstraAuctions.pluginConfig.auction.maxPrice || price < AstraAuctions.pluginConfig.auction.minPrice) {
-                player.sendMessage(Translation.instanse.wrongPrice)
+                player.sendMessage(Translation.instance.wrongPrice)
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
 
             if (item == null || item.type == Material.AIR) {
-                player.sendMessage(Translation.instanse.wrongItemInHand)
+                player.sendMessage(Translation.instance.wrongItemInHand)
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
                 return@launch
             }
@@ -127,13 +126,13 @@ class AuctionCommand : AsyncTask {
             val result = Repository.insertAuction(auction)
             if (result != null) {
                 item.amount -= amount
-                player.sendMessage(Translation.instanse.auctionAdded)
+                player.sendMessage(Translation.instance.auctionAdded)
                 player.playSound(AstraAuctions.pluginConfig.sounds.success)
                 if (AstraAuctions.pluginConfig.auction.announce)
-                    Bukkit.broadcastMessage(Translation.instanse.broadcast.replace("%player%", player.name))
+                    Bukkit.broadcastMessage(Translation.instance.broadcast.replace("%player%", player.name))
             } else {
                 player.playSound(AstraAuctions.pluginConfig.sounds.fail)
-                player.sendMessage(Translation.instanse.dbError)
+                player.sendMessage(Translation.instance.dbError)
             }
 
 

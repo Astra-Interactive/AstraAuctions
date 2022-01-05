@@ -1,5 +1,5 @@
 auction:
-  maxAuctionPerPlayer: 5
+  maxAuctionPerPlayer: 100000
   minPrice: 10
   maxPrice: 1000000
   announce: true
