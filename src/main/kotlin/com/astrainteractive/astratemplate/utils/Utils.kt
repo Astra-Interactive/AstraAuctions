@@ -39,7 +39,7 @@ public inline fun <T> callbackCatching(block: () -> T?): T? = try {
 }
 
 fun ItemStack.setDisplayName(name: String) {
-    val meta = itemMeta
+    val meta = itemMeta!!
     meta.setDisplayName(name)
     itemMeta = meta
 }
@@ -53,7 +53,7 @@ fun Player.playSound(sound: String) {
 }
 
 fun ItemStack.displayNameOrMaterialName(): String{
-        val name = itemMeta.displayName
+        val name = itemMeta!!.displayName
         if (name.isNullOrEmpty())
             return type.name
         return name

@@ -18,7 +18,6 @@ enum class SortType(val desc: String) {
 fun SortType.next() = getNextByInt(1)
 fun SortType.prev() = getNextByInt(-1)
 fun SortType.getNextByInt(add:Int): SortType {
-    println("Index ${SortType.values().indexOf(this)}")
     val i = SortType.values().indexOf(this)+add
     if (i >= SortType.values().size)
         return SortType.values().first()

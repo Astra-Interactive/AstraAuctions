@@ -1,11 +1,8 @@
 package com.astrainteractive.astratemplate.utils.config
 
 import com.astrainteractive.astralibs.AstraYamlParser
-import com.astrainteractive.astralibs.HEX
-import com.astrainteractive.astralibs.getHEXString
-import com.astrainteractive.astratemplate.AstraAuctions
+import com.astrainteractive.astratemplate.AstraMarket
 import org.bukkit.Material
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.inventory.ItemStack
 
 
@@ -20,6 +17,7 @@ data class AuctionConfig(
         val maxPrice: Int = 1000000,
         val taxPercent: Int = 0,
         val announce: Boolean = true,
+        val maxTime:Long = 20L//1*24*60*60*1000
     )
 
     data class Sounds(
@@ -35,7 +33,9 @@ data class AuctionConfig(
         val back: Button = Button(Material.IRON_DOOR.name),
         val previous: Button = Button(Material.PAPER.name),
         val next: Button = Button(Material.PAPER.name),
-        val sort: Button = Button(Material.SUNFLOWER.name)
+        val sort: Button = Button(Material.SUNFLOWER.name),
+        val aauc: Button = Button(Material.DIAMOND.name),
+        val expired: Button = Button(Material.EMERALD.name)
     )
 
     data class Button(
@@ -43,7 +43,7 @@ data class AuctionConfig(
         val customModelData: Int = 0
     ) {
         fun toItemStack() = ItemStack(Material.getMaterial(material.uppercase()) ?: Material.PAPER).apply {
-            val meta = itemMeta
+            val meta = itemMeta!!
             meta.setCustomModelData(customModelData)
             itemMeta = meta
         }
@@ -51,11 +51,11 @@ data class AuctionConfig(
 
     companion object {
         fun load(): AuctionConfig {
+            val c = AstraMarket.empireFiles.configFile.getConfig()
             val config =
-                AstraYamlParser.parser.fileConfigurationToClass<AuctionConfig>(AstraAuctions.empireFiles.configFile.getConfig())
+                AstraYamlParser.parser.fileConfigurationToClass<AuctionConfig>(c)
                     ?: AuctionConfig()
 
-            println(AstraAuctions.empireFiles.configFile.getConfig().getString("buttons.back.text"))
             println(config)
             return config
         }

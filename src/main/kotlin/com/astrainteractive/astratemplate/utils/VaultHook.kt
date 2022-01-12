@@ -13,6 +13,7 @@ class VaultHook {
     companion object {
         lateinit var instance: VaultHook
         private var econ: Economy? = null
+        final val TAG = "VaultHook"
         /**
          * @param  player player
          * @return double - current balance of [player]
@@ -43,13 +44,12 @@ class VaultHook {
             return (response?.type == EconomyResponse.ResponseType.SUCCESS)
         }
     }
-
     private fun onEnable() {
         instance = this
         if (Bukkit.getPluginManager().getPlugin("Vault") == null) {
-            Logger.error("Vault is not installed!","VaultHook")
+            Logger.error("Vault is not installed!",TAG)
             return
-        }
+        } else Logger.log("Vault is installed",TAG)
         val rsp = getServer().servicesManager.getRegistration(Economy::class.java) ?: return
         econ = rsp.provider
     }

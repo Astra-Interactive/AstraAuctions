@@ -1,8 +1,15 @@
 auction:
-  maxAuctionPerPlayer: 100000
+  # You can set custom amount using permission plugin
+  # Example: astra_auctions.sell_max.10
+  maxAuctionPerPlayer: 5
+  # Minimum price to sell slot
   minPrice: 10
+  # Maximum price to sell slot
   maxPrice: 1000000
+  # Announce created slots
   announce: true
+  # After this time auction will be expired
+  maxTime: 15
 sounds:
   open: item.book.page_turn
   close: item.book.page_turn
@@ -22,4 +29,10 @@ buttons:
     customModelData: 1
   sort:
     material: SUNFLOWER
+    customModelData: 1
+  aauc:
+    material: DIAMOND
+    customModelData: 1
+  expired:
+    material: EMERALD
     customModelData: 1

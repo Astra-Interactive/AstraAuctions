@@ -12,3 +12,6 @@ interface AsyncTask : CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.IO
 }
+object AsyncHelper:AsyncTask{
+
+}

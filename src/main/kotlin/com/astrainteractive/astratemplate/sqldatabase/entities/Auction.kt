@@ -2,9 +2,14 @@ package com.astrainteractive.astratemplate.sqldatabase.entities
 
 
 import com.astrainteractive.astralibs.catching
+import com.astrainteractive.astratemplate.utils.NMSHelper
+import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.sql.ResultSet
+import java.util.*
+import kotlin.math.exp
 
 data class Auction(
     val id: Long,
@@ -12,11 +17,28 @@ data class Auction(
     val minecraftUuid: String,
     val time: Long = System.currentTimeMillis(),
     val item: ByteArray,
-    val price: Float
+    val price: Float,
+    var expired: Boolean = false
 ) {
-    constructor(player: Player,itemStack: ItemStack,price: Float):this(-1L,null,player.uniqueId.toString(),System.currentTimeMillis(),itemStack.serializeAsBytes(),price)
+    constructor(player: Player, itemStack: ItemStack, price: Float) : this(
+        -1L,
+        null,
+        player.uniqueId.toString(),
+        System.currentTimeMillis(),
+        NMSHelper.serializeItem(itemStack),
+        price
+    )
+
     val itemStack: ItemStack
-        get() = ItemStack.deserializeBytes(item)
+        get() = NMSHelper.deserializeItem(item,time)
+
+    fun uuidToName(uuid: String) = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).name ?: "Player not found"
+
+    val owner: OfflinePlayer
+        get() = Bukkit.getOfflinePlayer(UUID.fromString(minecraftUuid))
+
+    override fun toString() =
+        "Auction(id=$id, discordId=$discordId, uuid=$minecraftUuid, userName=${uuidToName(minecraftUuid)} time=$time, price=$price, item=${itemStack})"
 
     companion object {
         fun fromResultSet(rs: ResultSet?) = catching {
@@ -27,7 +49,8 @@ data class Auction(
                     minecraftUuid = it.getString(minecraftUuid.name),
                     time = it.getLong(time.name),
                     item = it.getBytes(item.name),
-                    price = it.getFloat(price.name)
+                    price = it.getFloat(price.name),
+                    expired = it.getBoolean(expired.name)
                 )
             }
         }
@@ -44,6 +67,8 @@ data class Auction(
             get() = EntityInfo("item", "varbinary")
         val price: EntityInfo
             get() = EntityInfo("price", "FLOAT")
+        val expired: EntityInfo
+            get() = EntityInfo("expired", "BIT")
         val id: EntityInfo
             get() = EntityInfo("id", "INTEGER")
     }

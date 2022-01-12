@@ -2,7 +2,7 @@ package com.astrainteractive.astratemplate.sqldatabase
 
 import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.catching
-import com.astrainteractive.astratemplate.AstraAuctions
+import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.utils.AsyncTask
 import kotlinx.coroutines.*
 import java.io.File
@@ -22,7 +22,7 @@ class Database : AsyncTask {
      *
      * Should be private
      */
-    private val _dbPath = "${AstraAuctions.instance.dataFolder}${File.separator}data.db"
+    private val _dbPath = "${AstraMarket.instance.dataFolder}${File.separator}data.db"
 
 
     /**
@@ -54,6 +54,8 @@ class Database : AsyncTask {
             if (isInitialized) {
                 Logger.log("Database created successfully", "Database")
                 Repository.createAuctionTable()
+                Repository.createAuctionTable()
+                Repository.updateTable()
             }
             else
                 Logger.error("Could not create the database","Database")

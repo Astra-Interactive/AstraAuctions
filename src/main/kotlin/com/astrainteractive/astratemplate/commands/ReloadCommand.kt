@@ -2,7 +2,7 @@ package com.astrainteractive.astratemplate.commands
 
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.registerCommand
-import com.astrainteractive.astratemplate.AstraAuctions
+import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.utils.Permissions
 import org.bukkit.command.CommandSender
 
@@ -12,12 +12,12 @@ class ReloadCommand {
 
             if (sender?.hasPermission(Permissions.reload)!=true)
                 return
-            sender?.sendMessage(AstraAuctions.translations.reloadStarted)
-            AstraAuctions.instance.reloadPlugin()
-            sender?.sendMessage(AstraAuctions.translations.reloadSuccess)
+            sender?.sendMessage(AstraMarket.translations.reloadStarted)
+            AstraMarket.instance.reloadPlugin()
+            sender?.sendMessage(AstraMarket.translations.reloadSuccess)
         }
     }
-    val reload = AstraLibs.registerCommand("aaucreload") { sender, args ->
+    val reload = AstraLibs.registerCommand("amarketreload") { sender, args ->
         execute(sender)
     }
 }

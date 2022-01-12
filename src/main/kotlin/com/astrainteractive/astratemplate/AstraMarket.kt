@@ -4,11 +4,10 @@ package com.astrainteractive.astratemplate
 import CommandManager
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astratemplate.api.AuctionAPI
 import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
-import com.astrainteractive.astratemplate.utils.Translation
-import com.astrainteractive.astratemplate.utils.Files
-import com.astrainteractive.astratemplate.utils.VaultHook
+import com.astrainteractive.astratemplate.utils.*
 import com.astrainteractive.astratemplate.utils.config.AuctionConfig
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
@@ -16,14 +15,15 @@ import org.bukkit.plugin.java.JavaPlugin
 /**
  * Initial class for your plugin
  */
-class AstraAuctions : JavaPlugin() {
+class AstraMarket : JavaPlugin() {
+    final val TAG = "AstraMarket"
 
     /**
      * Static objects of this class
      * @see Translation
      */
     companion object {
-        lateinit var instance: AstraAuctions
+        lateinit var instance: AstraMarket
             private set
         lateinit var translations: Translation
             private set
@@ -52,14 +52,27 @@ class AstraAuctions : JavaPlugin() {
         pluginConfig = AuctionConfig.load()
         database = Database().apply { onEnable() }
         VaultHook()
-        Logger.log("Plugin enabled","AstraAuctions")
+        Logger.log("Plugin enabled", TAG)
+        if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
+            Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
+        else
+            Logger.log("Your server version is: ${ServerVersion.version}. This version is supported!", TAG)
+        if (ServerType.getServerType() == ServerType.UNMAINTAINED)
+            Logger.warn(
+                "Your server type is not PaperMC means it's not maintained and might be not fully functional!",
+                TAG
+            )
+        else
+            Logger.log("You are using PaperMC", TAG)
+        AuctionAPI.startAuctionChecker()
     }
 
     override fun onDisable() {
+        AuctionAPI.stopAuctionChecker()
         eventHandler.onDisable()
         database.onDisable()
         HandlerList.unregisterAll(this)
-        Logger.log("Plugin disabled","AstraAuctions")
+        Logger.log("Plugin disabled", TAG)
     }
 
     fun reloadPlugin() {

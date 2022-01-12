@@ -7,9 +7,11 @@ package com.astrainteractive.astratemplate.utils
  */
 object Permissions {
     val reload: String
-        get() = "astra_auctions.reload"
+        get() = "astra_market.reload"
     val sell: String
-        get() = "astra_auctions.sell"
+        get() = "astra_market.sell"
     val sellMax: String
-        get() = "astra_auctions.sell_max"
+        get() = "astra_market.sell_max"
+    val expire: String
+        get() = "astra_market.expire"
 }

@@ -1,24 +1,22 @@
-main: com.astrainteractive.astratemplate.AstraAuctions
-description: Auction plugin from AstraInteractive
-name: AstraAuctions
-prefix: AstraAuctions
+main: com.astrainteractive.astratemplate.AstraMarket
+description: Market plugin from AstraInteractive
+name: AstraMarket
+prefix: AstraMarket
 version: '${project.version}'
 authors: [ MakeevRoman ]
 author: MakeevRoman
 website: AstraInteractive.ru
-api-version: 1.18
+api-version: 1.13
 softdepend: []
 loadbefore: [Vault]
 depend: [Vault]
 commands:
-  aaucreload:
+  amarketreload:
     description: Reload plugin
-    permission: astra_auctions.reload
-    permission-message: You do not have permission!
+    permission: astra_market.reload
     usage: /<command>
-  aauc:
+  amarket:
     description: Open or create auction
     permission-message: You do not have permission!
-    permission: astra_auctions.sell
     usage: |
-      /aauc [sell] <price> [amount]
+      /amarket [sell] <price> [amount]

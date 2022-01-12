@@ -40,6 +40,8 @@ class Translation {
         getHEXString("general.db_error", "#f55442Произошла ошибка")
     val unexpectedError: String =
         getHEXString("general.error", "#f55442Произошла непредвиденная ошибка")
+    val timeAgoFormat: String =
+        getHEXString("general.time_format", "%days%дн. %hours%ч. %minutes%м. назад")
 
     //Auction
     val wrongItemInHand: String =
@@ -61,23 +63,39 @@ class Translation {
     val notEnoughMoney: String =
         getHEXString("auction.not_enough_money", "#f55442У вас недостаточно денег")
     val broadcast: String =
-        getHEXString("auction.broadcast", "#18dbd1Игрок #dbaa18%player% #18dbd1выставил на /aauc новый предмет")
+        getHEXString("auction.broadcast", "#18dbd1Игрок #d6a213%player% #18dbd1выставил на /aauc новый предмет")
+    val tabCompleterPrice: String =
+        getHEXString("auction.tab_completer.price", "ЦЕНА")
+    val tabCompleterAmount: String =
+        getHEXString("auction.tab_completer.amount", "КОЛИЧЕСТВО")
+    val auctionHasBeenExpired: String =
+        getHEXString("auction.auction_been_expired", "#d6a213Вы просрочили слот!")
     val leftButton: String =
         getHEXString("menu.left_button", "#d6a213ЛКМ #18dbd1- купить")
     val rightButton: String =
         getHEXString("menu.right_button", "#d6a213ПКМ #18dbd1- убрать")
+    val middleClick: String =
+        getHEXString("menu.middle_click", "#d6a213СКМ #18dbd1- убрать в истёкшие")
     val notAuctionOwner: String =
         getHEXString("menu.not_auction_owner", "#f55442Вы не владелец этого слота")
     val auctionDeleted: String =
         getHEXString("menu.auction_deleted", "#f55442Слот удалён")
+    val notifyAuctionExpired: String =
+        getHEXString("menu.auction_expired_notify", "#f55442Ваш слот %item% за %price% только что был просрочен")
 
     //Menu
     val title: String =
         getHEXString("menu.title", "#1382d6Аукцион")
+    val expiredTitle: String =
+        getHEXString("menu.title_expired", "#1382d6Истекшие")
     val back: String =
         getHEXString("menu.back", "#18dbd1Назад")
     val prev: String =
         getHEXString("menu.prev", "#18dbd1Раньше")
+    val aauc: String =
+        getHEXString("menu.aauc", "#18dbd1Аукцион")
+    val expired: String =
+        getHEXString("menu.expired", "#18dbd1Истекшие")
     val next: String =
         getHEXString("menu.next", "#18dbd1Дальше")
     val sort: String =
