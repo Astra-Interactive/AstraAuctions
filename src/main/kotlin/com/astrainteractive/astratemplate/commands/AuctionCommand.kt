@@ -3,6 +3,7 @@ package com.astrainteractive.astratemplate.commands
 import com.astrainteractive.astralibs.*
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astratemplate.api.AuctionAPI
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
 import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.gui.ExpiredAuctionGui
@@ -132,6 +133,7 @@ class AuctionCommand : AsyncTask {
                 item.amount -= amount
                 player.sendMessage(Translation.instance.auctionAdded)
                 player.playSound(AstraMarket.pluginConfig.sounds.success)
+                AuctionAPI.loadAuctions()
                 if (AstraMarket.pluginConfig.auction.announce)
                     Bukkit.broadcastMessage(Translation.instance.broadcast.replace("%player%", player.name))
             } else {

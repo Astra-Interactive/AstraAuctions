@@ -35,6 +35,8 @@ class Database : AsyncTask {
         lateinit var connection: Connection
         val isInitialized: Boolean
             get() = this::connection.isInitialized && !connection.isClosed
+        var isUpdated: Boolean = false
+
     }
 
     /**
@@ -53,7 +55,6 @@ class Database : AsyncTask {
             connectDatabase()
             if (isInitialized) {
                 Logger.log("Database created successfully", "Database")
-                Repository.createAuctionTable()
                 Repository.createAuctionTable()
                 Repository.updateTable()
             }

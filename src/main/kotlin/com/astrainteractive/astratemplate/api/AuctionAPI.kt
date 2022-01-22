@@ -1,6 +1,8 @@
 package com.astrainteractive.astratemplate.api
 
 import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astralibs.observer.LiveData
+import com.astrainteractive.astralibs.observer.MutableLiveData
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.sqldatabase.Repository
@@ -14,27 +16,30 @@ import java.util.*
 
 object AuctionAPI {
     final const val TAG = "AuctionAPI"
+
     /**
      * Current auction list
      */
-    private var currentAuctions: List<Auction> = listOf()
+    private var _currentAuctions = MutableLiveData<List<Auction>>(listOf<Auction>())
+    val currentAuctions: LiveData<List<Auction>>
+        get() = _currentAuctions
 
     /**
      * Set current auction list
      */
     private fun setAuctions(value: List<Auction>) = synchronized(this) {
-        currentAuctions = value
+        _currentAuctions.value = value
     }
 
     /**
      * @return current auctions list
      */
-    private fun getAuctions() = synchronized(this) { currentAuctions }
+    private fun getAuctions() = synchronized(this) { _currentAuctions }
 
     /**
      * @return list of player's expired auctions
      */
-    suspend fun getExpiredAuctions(uuid: String) = Repository.getAuctions(uuid, expired=true)
+    suspend fun getExpiredAuctions(uuid: String) = Repository.getAuctions(uuid, expired = true)
 
     /**
      * @param uuid uuid of user, which auctions to load or null for every auction
@@ -46,15 +51,17 @@ object AuctionAPI {
         return auctions
     }
 
-    var job:Timer? = null
+    var job: Timer? = null
 
     /**
      * Start job for auction expire checking
      */
     fun startAuctionChecker() {
-        Logger.log("Expired auction checker job has started", TAG,consolePrint = false)
-        job = kotlin.concurrent.timer("auction_checker",daemon = true,0L,AstraMarket.pluginConfig.auction.maxTime*20) {
+        Logger.log("Expired auction checker job has started", TAG, consolePrint = false)
+        job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 60000L) {
             if (!Database.isInitialized)
+                return@timer
+            if (!Database.isUpdated)
                 return@timer
             AsyncHelper.launch {
                 val auctions = Repository.getAuctions()
@@ -62,31 +69,35 @@ object AuctionAPI {
                     if (System.currentTimeMillis() - it.time < AstraMarket.pluginConfig.auction.maxTime * 1000)
                         return@forEach
                     val res = forceExpireAuction(null, it)
-                    Logger.log("Found expired auction ${it}. Expiring result: $res", TAG,consolePrint = false)
+                    Logger.log("Found expired auction ${it}. Expiring result: $res", TAG, consolePrint = false)
                 }
             }
         }
 
     }
-    fun stopAuctionChecker(){
-        Logger.log("Expired auction checker job has stopped", TAG,consolePrint = false)
+
+    fun stopAuctionChecker() {
+        Logger.log("Expired auction checker job has stopped", TAG, consolePrint = false)
         job?.cancel()
     }
+
     /**
      * @param player admin or moderator
      * @param _auction auction to expire
      * @return boolean - true if success false if not
      */
     suspend fun forceExpireAuction(player: Player?, _auction: Auction): Boolean {
-        if (player!=null && !player.hasPermission(Permissions.expire)) {
+        if (player != null && !player.hasPermission(Permissions.expire)) {
             player.sendMessage(Translation.instance.noPermissions)
             return false
         }
-        Logger.log("Player ${player?.name} forced auction to expire ${_auction}", TAG,consolePrint = false)
-        val auction= Repository.getAuction(_auction.id)?.firstOrNull()?:return false
-        auction.owner?.player?.sendMessage(Translation.instance.notifyAuctionExpired
-            .replace("%item%",auction.itemStack.displayNameOrMaterialName())
-            .replace("%price%",auction.price.toString()))
+        Logger.log("Player ${player?.name} forced auction to expire ${_auction}", TAG, consolePrint = false)
+        val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
+        auction.owner?.player?.sendMessage(
+            Translation.instance.notifyAuctionExpired
+                .replace("%item%", auction.itemStack.displayNameOrMaterialName())
+                .replace("%price%", auction.price.toString())
+        )
         val result = Repository.expireAuction(auction)
         if (result == null) {
             player?.sendMessage(Translation.instance.unexpectedError)
@@ -97,10 +108,10 @@ object AuctionAPI {
 
     /**
      * @param sortType type of sort [SortType]
-     * @return result - list of sorted auctions. If [result] is null, [currentAuctions] will be taken
+     * @return result - list of sorted auctions. If [result] is null, [_currentAuctions] will be taken
      */
     fun sortBy(sortType: SortType, list: List<Auction>? = null): List<Auction> {
-        val itemsInGui = list ?: getAuctions()
+        val itemsInGui = list ?: getAuctions()?.value ?: listOf()
         return when (sortType) {
             SortType.MATERIAL_DESC -> itemsInGui.sortedByDescending { it.itemStack.type }
             SortType.MATERIAL_ASC -> itemsInGui.sortedBy { it.itemStack.type }
@@ -126,7 +137,6 @@ object AuctionAPI {
     }
 
 
-
     /**
      * @param _auction auction to remove
      * @param player owner of auction
@@ -139,7 +149,7 @@ object AuctionAPI {
             player.sendMessage(Translation.instance.notAuctionOwner)
             return false
         }
-        Logger.log("Player ${player.name} removed his auction ${auction}", TAG,consolePrint = false)
+        Logger.log("Player ${player.name} removed his auction ${auction}", TAG, consolePrint = false)
         val item = auction.itemStack
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
@@ -156,8 +166,6 @@ object AuctionAPI {
             false
         }
     }
-
-
 
 
     /**

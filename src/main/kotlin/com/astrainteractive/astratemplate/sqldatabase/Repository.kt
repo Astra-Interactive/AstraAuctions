@@ -1,5 +1,7 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
+import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astralibs.catchingNoStackTrace
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.*
@@ -27,9 +29,11 @@ object Repository {
             ).execute()
         }
 
-    suspend fun updateTable() = callbackCatching {
+    suspend fun updateTable() = catching {
         catchingNoStackTrace { Database.connection.prepareStatement("ALTER TABLE ${Auction.table} ADD ${Auction.expired.name} ${Auction.expired.type}").execute() }
         Database.connection.prepareStatement("UPDATE ${Auction.table} SET ${Auction.expired.name}=0 WHERE ${Auction.expired.name} IS NULL").executeUpdate()
+        Database.isUpdated = true
+        Logger.log("Database is up to date","Database")
     }
 
     suspend fun insertAuction(auction: Auction) =
