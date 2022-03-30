@@ -4,9 +4,12 @@ import com.astrainteractive.astralibs.FileManager
 import com.astrainteractive.astralibs.HEX
 import com.astrainteractive.astralibs.getHEXString
 
-class Translation {
+val Translation: AstraTranslation
+    get() = AstraTranslation.instance
+
+class AstraTranslation {
     companion object {
-        lateinit var instance: Translation
+        lateinit var instance: AstraTranslation
     }
 
     init {
@@ -57,9 +60,15 @@ class Translation {
     val failedToPay: String =
         getHEXString("auction.failed_to_pay", "#f55442Не удалось выплатить деньги")
     val notifyUserBuy: String =
-        getHEXString("auction.notifyUserBuy", "#18dbd1Вы купили предмет #dbaa18%item%#18dbd1 у игрока #dbaa18%player_owner%#18dbd1 за #dbaa18%price%")
+        getHEXString(
+            "auction.notifyUserBuy",
+            "#18dbd1Вы купили предмет #dbaa18%item%#18dbd1 у игрока #dbaa18%player_owner%#18dbd1 за #dbaa18%price%"
+        )
     val notifyOwnerUserBuy: String =
-        getHEXString("auction.notifyOwnerUserBuy", "#18dbd1Игрок #dbaa18%player%#18dbd1 купил у вас #dbaa18%item%#18dbd1 за #dbaa18%price%")
+        getHEXString(
+            "auction.notifyOwnerUserBuy",
+            "#18dbd1Игрок #dbaa18%player%#18dbd1 купил у вас #dbaa18%item%#18dbd1 за #dbaa18%price%"
+        )
     val notEnoughMoney: String =
         getHEXString("auction.not_enough_money", "#f55442У вас недостаточно денег")
     val broadcast: String =

@@ -4,6 +4,7 @@ import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.registerCommand
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.utils.Permissions
+import com.astrainteractive.astratemplate.utils.Translation
 import org.bukkit.command.CommandSender
 
 class ReloadCommand {
@@ -12,9 +13,9 @@ class ReloadCommand {
 
             if (sender?.hasPermission(Permissions.reload) != true)
                 return
-            sender?.sendMessage(AstraMarket.translations.reloadStarted)
+            sender?.sendMessage(Translation.reloadStarted)
             AstraMarket.instance.reloadPlugin()
-            sender?.sendMessage(AstraMarket.translations.reloadSuccess)
+            sender?.sendMessage(Translation.reloadSuccess)
 
 
         }

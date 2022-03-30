@@ -3,16 +3,16 @@ package com.astrainteractive.astratemplate.api
 import com.astrainteractive.astratemplate.utils.Translation
 
 enum class SortType(val desc: String) {
-    MATERIAL_DESC(Translation.instance.sortMaterialDesc),
-    MATERIAL_ASC(Translation.instance.sortMaterialAsc),
-    DATE_DESC(Translation.instance.sortDateDesc),
-    DATE_ASC(Translation.instance.sortDateAsc),
-    NAME_DESC(Translation.instance.sortNameDesc),
-    NAME_ASC(Translation.instance.sortNameAsc),
-    PRICE_DESC(Translation.instance.sortPriceDesc),
-    PRICE_ASC(Translation.instance.sortPriceAsc),
-    PLAYER_ASC(Translation.instance.sortPlayerAsc),
-    PLAYER_DESC(Translation.instance.sortPlayerDesc)
+    MATERIAL_DESC(Translation.sortMaterialDesc),
+    MATERIAL_ASC(Translation.sortMaterialAsc),
+    DATE_DESC(Translation.sortDateDesc),
+    DATE_ASC(Translation.sortDateAsc),
+    NAME_DESC(Translation.sortNameDesc),
+    NAME_ASC(Translation.sortNameAsc),
+    PRICE_DESC(Translation.sortPriceDesc),
+    PRICE_ASC(Translation.sortPriceAsc),
+    PLAYER_ASC(Translation.sortPlayerAsc),
+    PLAYER_DESC(Translation.sortPlayerDesc)
 
 }
 fun SortType.next() = getNextByInt(1)

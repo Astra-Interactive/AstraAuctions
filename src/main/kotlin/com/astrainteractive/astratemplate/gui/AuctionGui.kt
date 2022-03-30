@@ -1,5 +1,6 @@
 package com.astrainteractive.astratemplate.gui
 
+import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraMenuSize
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astralibs.menu.Menu
@@ -16,7 +17,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryCloseEvent
 import java.util.*
 
-class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility), AsyncTask,Listener,LifecycleOwner {
+class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility),Listener,LifecycleOwner {
 
     override var itemsInGui = AuctionAPI.sortBy(sortType)
 
@@ -33,17 +34,17 @@ class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGu
             val itemStack = NMSHelper.deserializeItem(auctionItem.item,auctionItem.time).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
-                lore.add(Translation.instance.leftButton)
-                lore.add(Translation.instance.middleClick)
-                lore.add(Translation.instance.rightButton)
+                lore.add(Translation.leftButton)
+                lore.add(Translation.middleClick)
+                lore.add(Translation.rightButton)
                 lore.add(
-                    Translation.instance.auctionBy.replace(
+                    Translation.auctionBy.replace(
                         "%player_owner%",
                         Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid))?.name ?: "NULL"
                     )
                 )
-                lore.add(Translation.instance.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
-                lore.add(Translation.instance.auctionPrice.replace("%price%", auctionItem.price.toString()))
+                lore.add(Translation.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
+                lore.add(Translation.auctionPrice.replace("%price%", auctionItem.price.toString()))
 
                 meta.lore = lore
                 setItemMeta(meta)
@@ -52,7 +53,7 @@ class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGu
         }
     }
     override fun onAaucExpiredClicked() {
-        launch {
+        AsyncHelper.launch {
             ExpiredAuctionGui(playerMenuUtility).open()
         }
     }

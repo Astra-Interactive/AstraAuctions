@@ -1,5 +1,6 @@
 package com.astrainteractive.astratemplate.gui
 
+import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.*
@@ -11,13 +12,13 @@ import org.bukkit.Bukkit
 import org.bukkit.event.inventory.ClickType
 import java.util.*
 
-class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility), AsyncTask {
+class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
 
-    override var menuName: String = Translation.instance.expiredTitle
+    override var menuName: String = Translation.expiredTitle
 
 
     override fun onAuctionItemClicked(auction:Auction, clickType: ClickType){
-        launch(Dispatchers.IO) {
+        AsyncHelper.launch(Dispatchers.IO) {
             val result = when(clickType) {
                 ClickType.RIGHT -> AuctionAPI.removeAuction(auction,playerMenuUtility.player)
                 else -> return@launch
@@ -33,7 +34,7 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
     }
 
     override fun onAaucExpiredClicked() {
-        launch {
+        AsyncHelper.launch {
             AuctionGui(playerMenuUtility).open()
         }
     }
@@ -49,15 +50,15 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
             val itemStack = NMSHelper.deserializeItem(auctionItem.item,auctionItem.time).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
-                lore.add(Translation.instance.rightButton)
+                lore.add(Translation.rightButton)
                 lore.add(
-                    Translation.instance.auctionBy.replace(
+                    Translation.auctionBy.replace(
                         "%player_owner%",
                         Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid))?.name ?: "[ДАННЫЕ УДАЛЕНЫ]"
                     )
                 )
-                lore.add(Translation.instance.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
-                lore.add(Translation.instance.auctionPrice.replace("%price%", auctionItem.price.toString()))
+                lore.add(Translation.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
+                lore.add(Translation.auctionPrice.replace("%price%", auctionItem.price.toString()))
 
                 meta.lore = lore
                 itemMeta = meta

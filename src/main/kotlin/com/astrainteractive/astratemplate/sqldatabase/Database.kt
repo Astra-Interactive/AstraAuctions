@@ -1,9 +1,9 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
 import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.utils.AsyncTask
 import kotlinx.coroutines.*
 import java.io.File
 import java.sql.Connection
@@ -14,7 +14,7 @@ import java.sql.DriverManager
  *
  * Not fully functional!
  */
-class Database : AsyncTask {
+class Database {
 
 
     /**
@@ -51,7 +51,7 @@ class Database : AsyncTask {
 
     fun onEnable() {
 
-        launch(Dispatchers.IO) {
+        AsyncHelper.launch(Dispatchers.IO) {
             connectDatabase()
             if (isInitialized) {
                 Logger.log("Database created successfully", "Database")

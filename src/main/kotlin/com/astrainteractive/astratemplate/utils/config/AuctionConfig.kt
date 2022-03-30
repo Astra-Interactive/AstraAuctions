@@ -53,7 +53,7 @@ data class AuctionConfig(
         fun load(): AuctionConfig {
             val c = AstraMarket.empireFiles.configFile.getConfig()
             val config =
-                AstraYamlParser.parser.fileConfigurationToClass<AuctionConfig>(c)
+                AstraYamlParser.fileConfigurationToClass<AuctionConfig>(c)
                     ?: AuctionConfig()
 
             println(config)

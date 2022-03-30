@@ -13,8 +13,6 @@ class EventHandler() : EventManager {
 
     init {
         MenuListener().onEnable(this)
-
-
     }
 
     override fun onDisable() {

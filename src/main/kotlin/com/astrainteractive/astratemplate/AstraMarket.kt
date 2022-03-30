@@ -4,6 +4,7 @@ package com.astrainteractive.astratemplate
 import CommandManager
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astralibs.ServerVersion
 import com.astrainteractive.astratemplate.api.AuctionAPI
 import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
@@ -25,8 +26,6 @@ class AstraMarket : JavaPlugin() {
     companion object {
         lateinit var instance: AstraMarket
             private set
-        lateinit var translations: Translation
-            private set
         lateinit var empireFiles: Files
             private set
         lateinit var pluginConfig: AuctionConfig
@@ -43,9 +42,8 @@ class AstraMarket : JavaPlugin() {
 
     override fun onEnable() {
         AstraLibs.create(this)
-        Logger.init("AstraAuctions")
+        Logger.prefix = "AstraAuctions"
         instance = this
-        translations = Translation()
         empireFiles = Files()
         eventHandler = EventHandler()
         commandManager = CommandManager()
@@ -55,15 +53,7 @@ class AstraMarket : JavaPlugin() {
         Logger.log("Plugin enabled", TAG)
         if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
             Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
-        else
-            Logger.log("Your server version is: ${ServerVersion.version}. This version is supported!", TAG)
-        if (ServerType.getServerType() == ServerType.UNMAINTAINED)
-            Logger.warn(
-                "Your server type is not PaperMC means it's not maintained and might be not fully functional!",
-                TAG
-            )
-        else
-            Logger.log("You are using PaperMC", TAG)
+        Logger.warn("This plugin was created using PaperAPI. If you are using spigot you may have issues", TAG)
         AuctionAPI.startAuctionChecker()
     }
 

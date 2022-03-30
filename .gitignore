@@ -30,3 +30,4 @@ build/
 out/
 .git/
 target/
+astra.properties

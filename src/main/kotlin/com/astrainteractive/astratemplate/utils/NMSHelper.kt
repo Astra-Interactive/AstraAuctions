@@ -18,9 +18,6 @@ object NMSHelper {
     }
 
     fun deserializeItem(byteArray: ByteArray,createdTime:Long): ItemStack {
-        if (ServerType.type == ServerType.PAPER && createdTime < 1641877447314L) {
-            return ItemStack.deserializeBytes(byteArray)
-        }
         val _in = ByteArrayInputStream(byteArray)
         val _is = BukkitObjectInputStream(_in)
         return _is.readObject() as ItemStack

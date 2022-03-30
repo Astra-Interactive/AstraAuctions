@@ -1,8 +1,8 @@
 main: com.astrainteractive.astratemplate.AstraMarket
-description: Market plugin from AstraInteractive
-name: AstraMarket
+description: '${description}'
 prefix: AstraMarket
-version: '${project.version}'
+name: '${name}'
+version: '${version}'
 authors: [ MakeevRoman ]
 author: MakeevRoman
 website: AstraInteractive.ru

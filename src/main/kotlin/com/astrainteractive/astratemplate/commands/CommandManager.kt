@@ -9,7 +9,7 @@ import com.astrainteractive.astratemplate.utils.*
  * It's better to create different executors for different commands
  * @see ReloadCommand
  */
-class CommandManager : AsyncTask {
+class CommandManager {
     /**
      * Here you should declare commands for your plugin
      *

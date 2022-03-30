@@ -1,6 +1,7 @@
 package com.astrainteractive.astratemplate.api
 
 import com.astrainteractive.astralibs.Logger
+import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.observer.LiveData
 import com.astrainteractive.astralibs.observer.MutableLiveData
 import com.astrainteractive.astratemplate.AstraMarket
@@ -88,21 +89,21 @@ object AuctionAPI {
      */
     suspend fun forceExpireAuction(player: Player?, _auction: Auction): Boolean {
         if (player != null && !player.hasPermission(Permissions.expire)) {
-            player.sendMessage(Translation.instance.noPermissions)
+            player.sendMessage(Translation.noPermissions)
             return false
         }
         Logger.log("Player ${player?.name} forced auction to expire ${_auction}", TAG, consolePrint = false)
         val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
         auction.owner?.player?.sendMessage(
-            Translation.instance.notifyAuctionExpired
+            Translation.notifyAuctionExpired
                 .replace("%item%", auction.itemStack.displayNameOrMaterialName())
                 .replace("%price%", auction.price.toString())
         )
         val result = Repository.expireAuction(auction)
         if (result == null) {
-            player?.sendMessage(Translation.instance.unexpectedError)
+            player?.sendMessage(Translation.unexpectedError)
         } else
-            player?.sendMessage(Translation.instance.auctionHasBeenExpired)
+            player?.sendMessage(Translation.auctionHasBeenExpired)
         return (result != null)
     }
 
@@ -146,23 +147,23 @@ object AuctionAPI {
         val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
         if (owner.uniqueId != player.uniqueId) {
-            player.sendMessage(Translation.instance.notAuctionOwner)
+            player.sendMessage(Translation.notAuctionOwner)
             return false
         }
         Logger.log("Player ${player.name} removed his auction ${auction}", TAG, consolePrint = false)
         val item = auction.itemStack
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.instance.inventoryFull)
+            player.sendMessage(Translation.inventoryFull)
             return false
         }
         val result = Repository.removeAuction(auction.id)
         return if (result != null) {
-            player.sendMessage(Translation.instance.auctionDeleted)
+            player.sendMessage(Translation.auctionDeleted)
             player.inventory.addItem(item)
             true
         } else {
-            player.sendMessage(Translation.instance.unexpectedError)
+            player.sendMessage(Translation.unexpectedError)
             false
         }
     }
@@ -176,7 +177,7 @@ object AuctionAPI {
     suspend fun buyAuction(_auction: Auction, player: Player): Boolean {
         val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
         if (auction.minecraftUuid == player.uniqueId.toString()) {
-            player.sendMessage(Translation.instance.ownerCantBeBuyer)
+            player.sendMessage(Translation.ownerCantBeBuyer)
             return false
         }
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
@@ -185,19 +186,19 @@ object AuctionAPI {
 
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.instance.inventoryFull)
+            player.sendMessage(Translation.inventoryFull)
             return false
         }
         var vaultResponse = VaultHook.takeMoney(player, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.instance.notEnoughMoney)
+            player.sendMessage(Translation.notEnoughMoney)
             return false
         }
         vaultResponse = VaultHook.addMoney(owner, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.instance.failedToPay)
+            player.sendMessage(Translation.failedToPay)
             VaultHook.addMoney(player, auction.price.toDouble())
             return false
         }
@@ -207,20 +208,20 @@ object AuctionAPI {
             player.inventory.addItem(item)
             player.playSound(AstraMarket.pluginConfig.sounds.sold)
             player.sendMessage(
-                Translation.instance.notifyUserBuy.replace(
+                Translation.notifyUserBuy.replace(
                     "%player_owner%",
                     owner.name ?: "${ChatColor.MAGIC}NULL"
                 ).replace("%price%", auction.price.toString()).replace("%item%", item.displayNameOrMaterialName())
             )
             owner.player?.sendMessage(
-                Translation.instance.notifyOwnerUserBuy.replace("%player%", player.name)
+                Translation.notifyOwnerUserBuy.replace("%player%", player.name)
                     .replace("%item%", item.displayNameOrMaterialName()).replace("%price%", auction.price.toString())
             )
         } else {
             VaultHook.addMoney(player, auction.price.toDouble())
             VaultHook.takeMoney(owner, auction.price.toDouble())
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.instance.dbError)
+            player.sendMessage(Translation.dbError)
         }
         return result != null
     }

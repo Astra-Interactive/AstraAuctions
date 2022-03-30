@@ -1,6 +1,7 @@
 package com.astrainteractive.astratemplate.commands
 
 import com.astrainteractive.astralibs.*
+import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.AuctionAPI
@@ -9,7 +10,6 @@ import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.gui.ExpiredAuctionGui
 import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.utils.AsyncTask
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
@@ -22,7 +22,7 @@ import org.bukkit.entity.Player
 import kotlin.math.max
 import kotlin.math.min
 
-class AuctionCommand : AsyncTask {
+class AuctionCommand {
 
 
     val tabCompleter = AstraLibs.registerTabCompleter("amarket") { sender, args ->
@@ -31,22 +31,22 @@ class AuctionCommand : AsyncTask {
         if (args.size == 1)
             return@registerTabCompleter listOf("sell", "open","expired").withEntry(args.last())
         if (args.size == 2)
-            return@registerTabCompleter listOf(Translation.instance.tabCompleterPrice).withEntry(args.last())
+            return@registerTabCompleter listOf(Translation.tabCompleterPrice).withEntry(args.last())
         if (args.size == 3)
-            return@registerTabCompleter listOf(Translation.instance.tabCompleterAmount).withEntry(args.last())
+            return@registerTabCompleter listOf(Translation.tabCompleterAmount).withEntry(args.last())
 
         return@registerTabCompleter listOf<String>()
     }
 
     private fun CommandSender.checkPlayer(): Boolean = if (this !is Player) {
-        sendMessage(Translation.instance.onlyForPlayers)
+        sendMessage(Translation.onlyForPlayers)
         false
     } else {
         true
     }
 
     private fun CommandSender.checkPermission(permission: String): Boolean = if (!this.hasPermission(permission)) {
-        sendMessage(Translation.instance.noPermissions)
+        sendMessage(Translation.noPermissions)
         false
     } else {
         true
@@ -80,10 +80,10 @@ class AuctionCommand : AsyncTask {
         sender as Player
         when (cmd) {
             "sell" -> sell(sender, args)
-            "expired"->launch(Dispatchers.IO) {
+            "expired"->AsyncHelper.launch(Dispatchers.IO) {
                 ExpiredAuctionGui(AstraPlayerMenuUtility(sender)).open()
             }
-            "open", null -> launch(Dispatchers.IO) {
+            "open", null -> AsyncHelper.launch(Dispatchers.IO) {
                 AuctionGui(AstraPlayerMenuUtility(sender)).open()
             }
 
@@ -96,10 +96,10 @@ class AuctionCommand : AsyncTask {
         val perm = player.effectivePermissions.firstOrNull { it.permission.startsWith(Permissions.sellMax) }
         val amount = perm?.permission?.replace(Permissions.sellMax+".","")?.toIntOrNull()?:AstraMarket.pluginConfig.auction.maxAuctionPerPlayer?:1
 
-        launch {
+        AsyncHelper.launch {
             val auctionsAmount = Repository.countPlayerAuctions(player)
             if ((auctionsAmount ?: 0) > amount) {
-                player.sendMessage(Translation.instance.maxAuctions)
+                player.sendMessage(Translation.maxAuctions)
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
                 return@launch
             }
@@ -110,18 +110,18 @@ class AuctionCommand : AsyncTask {
             amount = max(amount, 1)
 
             if (price == null) {
-                player.sendMessage(Translation.instance.wrongArgs)
+                player.sendMessage(Translation.wrongArgs)
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
                 return@launch
             }
             if (price > AstraMarket.pluginConfig.auction.maxPrice || price < AstraMarket.pluginConfig.auction.minPrice) {
-                player.sendMessage(Translation.instance.wrongPrice)
+                player.sendMessage(Translation.wrongPrice)
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
                 return@launch
             }
 
             if (item == null || item.type == Material.AIR) {
-                player.sendMessage(Translation.instance.wrongItemInHand)
+                player.sendMessage(Translation.wrongItemInHand)
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
                 return@launch
             }
@@ -131,14 +131,14 @@ class AuctionCommand : AsyncTask {
             val result = Repository.insertAuction(auction)
             if (result != null) {
                 item.amount -= amount
-                player.sendMessage(Translation.instance.auctionAdded)
+                player.sendMessage(Translation.auctionAdded)
                 player.playSound(AstraMarket.pluginConfig.sounds.success)
                 AuctionAPI.loadAuctions()
                 if (AstraMarket.pluginConfig.auction.announce)
-                    Bukkit.broadcastMessage(Translation.instance.broadcast.replace("%player%", player.name))
+                    Bukkit.broadcastMessage(Translation.broadcast.replace("%player%", player.name))
             } else {
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                player.sendMessage(Translation.instance.dbError)
+                player.sendMessage(Translation.dbError)
             }
 
 

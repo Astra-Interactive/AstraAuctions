@@ -127,18 +127,18 @@
     </build>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>com.astrainteractive</groupId>-->
-<!--            <artifactId>astralibs</artifactId>-->
-<!--            <version>1.1.4</version>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.astrainteractive</groupId>
             <artifactId>astralibs</artifactId>
             <version>1.1.4</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>"D:/Minecraft Servers/AstraInteractive-Git/AstraLibs/target/AstraLibs.jar"</systemPath>-->
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.astrainteractive</groupId>-->
+<!--            <artifactId>astralibs</artifactId>-->
+<!--            <version>1.1.4</version>-->
+<!--&lt;!&ndash;            <scope>system</scope>&ndash;&gt;-->
+<!--&lt;!&ndash;            <systemPath>"D:/Minecraft Servers/AstraInteractive-Git/AstraLibs/target/AstraLibs.jar"</systemPath>&ndash;&gt;-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -160,7 +160,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
