@@ -55,8 +55,6 @@ data class AuctionConfig(
             val config =
                 AstraYamlParser.fileConfigurationToClass<AuctionConfig>(c)
                     ?: AuctionConfig()
-
-            println(config)
             return config
         }
 

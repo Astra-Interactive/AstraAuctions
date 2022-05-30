@@ -31,12 +31,12 @@ public inline fun <R : Any, C : MutableCollection<in R>> ResultSet.mapNotNullTo(
 
 public inline fun <T> callbackCatching(block: () -> T?): T? = try {
     if (!Database.isInitialized)
-        throw Exception("Database not initialized")
-    if (!Database.isUpdated)
-        throw Exception("Database not updated")
-    block.invoke()
+        null//throw Exception("Database not initialized")
+    else if (!Database.isUpdated)
+        null//throw Exception("Database not updated")
+    else block.invoke()
 } catch (e: Exception) {
-    com.astrainteractive.astralibs.Logger.error(e.stackTraceToString(),"Database")
+    com.astrainteractive.astralibs.Logger.error(e.stackTraceToString(), "Database")
     null
 }
 
@@ -54,9 +54,25 @@ fun Player.playSound(sound: String) {
     playSound(location, sound, 1f, 1f)
 }
 
-fun ItemStack.displayNameOrMaterialName(): String{
-        val name = itemMeta!!.displayName
-        if (name.isNullOrEmpty())
-            return type.name
-        return name
-    }
+fun ItemStack.displayNameOrMaterialName(): String {
+    val name = itemMeta!!.displayName
+    if (name.isNullOrEmpty())
+        return type.name
+    return name
+}
+
+inline fun <reified T : kotlin.Enum<T>> T.addIndex(offset: Int): T {
+    val values = T::class.java.enumConstants
+    var res = ordinal + offset
+    if (res <= -1) res = values.size-1
+    val index = res % values.size
+    return values[index]
+}
+
+inline fun <reified T : kotlin.Enum<T>> T.next(): T {
+    return addIndex(1)
+}
+
+inline fun <reified T : kotlin.Enum<T>> T.prev(): T {
+    return addIndex(-1)
+}

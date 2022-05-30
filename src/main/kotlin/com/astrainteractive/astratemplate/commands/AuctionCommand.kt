@@ -5,10 +5,10 @@ import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
+import com.astrainteractive.astratemplate.api.use_cases.CreateAuctionUseCase
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
 import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.gui.ExpiredAuctionGui
-import com.astrainteractive.astratemplate.api.AuctionAPI
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
@@ -29,7 +29,7 @@ class AuctionCommand {
         if (args.isEmpty())
             return@registerTabCompleter listOf("amarket")
         if (args.size == 1)
-            return@registerTabCompleter listOf("sell", "open","expired").withEntry(args.last())
+            return@registerTabCompleter listOf("sell", "open", "expired").withEntry(args.last())
         if (args.size == 2)
             return@registerTabCompleter listOf(Translation.tabCompleterPrice).withEntry(args.last())
         if (args.size == 3)
@@ -80,7 +80,7 @@ class AuctionCommand {
         sender as Player
         when (cmd) {
             "sell" -> sell(sender, args)
-            "expired"->AsyncHelper.launch(Dispatchers.IO) {
+            "expired" -> AsyncHelper.launch(Dispatchers.IO) {
                 ExpiredAuctionGui(AstraPlayerMenuUtility(sender)).open()
             }
             "open", null -> AsyncHelper.launch(Dispatchers.IO) {
@@ -94,54 +94,27 @@ class AuctionCommand {
         if (!player.checkPermission(Permissions.sell))
             return
         val perm = player.effectivePermissions.firstOrNull { it.permission.startsWith(Permissions.sellMax) }
-        val amount = perm?.permission?.replace(Permissions.sellMax+".","")?.toIntOrNull()?:AstraMarket.pluginConfig.auction.maxAuctionPerPlayer?:1
+        val maxAuctionsAllowed = perm?.permission?.replace(Permissions.sellMax + ".", "")?.toIntOrNull()
+            ?: AstraMarket.pluginConfig.auction.maxAuctionPerPlayer ?: 1
 
+        val price = args.getArgumentString(Arguments.price)?.toFloatOrNull() ?: run {
+            player.sendMessage(Translation.wrongArgs)
+            player.playSound(AstraMarket.pluginConfig.sounds.fail)
+            return
+        }
+        val amount = args.getArgumentString(Arguments.amount)?.toIntOrNull() ?: 1
+
+        val item = player.inventory.itemInMainHand
         AsyncHelper.launch {
-            val auctionsAmount = AuctionAPI.countPlayerAuctions(player)
-            if ((auctionsAmount ?: 0) > amount) {
-                player.sendMessage(Translation.maxAuctions)
-                player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                return@launch
-            }
-            val price = args.getArgumentString(Arguments.price)?.toFloatOrNull()
-            var amount = args.getArgumentString(Arguments.amount)?.toIntOrNull() ?: 1
-            val item = player.inventory.itemInMainHand
-            amount = min(item.amount, amount)
-            amount = max(amount, 1)
-
-            if (price == null) {
-                player.sendMessage(Translation.wrongArgs)
-                player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                return@launch
-            }
-            if (price > AstraMarket.pluginConfig.auction.maxPrice || price < AstraMarket.pluginConfig.auction.minPrice) {
-                player.sendMessage(Translation.wrongPrice)
-                player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                return@launch
-            }
-
-            if (item == null || item.type == Material.AIR) {
-                player.sendMessage(Translation.wrongItemInHand)
-                player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                return@launch
-            }
-            val itemClone = item.clone().apply { this.amount = amount }
-            val auction = Auction(player, itemClone, price)
-
-            val result = AuctionAPI.insertAuction(auction)
-            if (result != null) {
-                item.amount -= amount
-                player.sendMessage(Translation.auctionAdded)
-                player.playSound(AstraMarket.pluginConfig.sounds.success)
-                Repository.loadAuctions()
-                if (AstraMarket.pluginConfig.auction.announce)
-                    Bukkit.broadcastMessage(Translation.broadcast.replace("%player%", player.name))
-            } else {
-                player.playSound(AstraMarket.pluginConfig.sounds.fail)
-                player.sendMessage(Translation.dbError)
-            }
-
-
+            CreateAuctionUseCase()(
+                CreateAuctionUseCase.Params(
+                    maxAuctionsAllowed = maxAuctionsAllowed,
+                    player = player,
+                    price = price,
+                    amount = amount,
+                    item = item
+                )
+            )
         }
 
 

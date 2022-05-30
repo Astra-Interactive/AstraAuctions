@@ -6,6 +6,5 @@ internal class ExpTest {
     @Test
     fun expTest() {
         var total = 0
-        println("Hello")
     }
 }

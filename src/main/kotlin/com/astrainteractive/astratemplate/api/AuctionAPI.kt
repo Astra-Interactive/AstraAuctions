@@ -52,19 +52,25 @@ object AuctionAPI {
         Database.connection.prepareStatement(query).execute()
     }
 
-    suspend fun getAuctions(uuid: String? = null,expired:Boolean? = false) = callbackCatching {
+    suspend fun fetchAuctions(uuid: String? = null, expired:Boolean? = false) = callbackCatching {
         val where = uuid?.let { "WHERE ${Auction.minecraftUuid.name}=\'${it}\' AND ${Auction.expired.name} = ${expired}"  } ?: "WHERE ${Auction.expired.name} = ${expired}"
         val rs = Database.connection.createStatement().executeQuery("SELECT * FROM ${Auction.table} $where")
         return@callbackCatching rs.mapNotNull { Auction.fromResultSet(it) }
     }
+    suspend fun fetchOldAuctions(millis:Long) = callbackCatching {
+        val currentTime = System.currentTimeMillis()
+        val where = "WHERE ($currentTime - ${Auction.time.name}) > $millis AND ${Auction.expired.name} = 0"
+        val rs = Database.connection.createStatement().executeQuery("SELECT * FROM ${Auction.table} $where")
+        return@callbackCatching rs.mapNotNull { Auction.fromResultSet(it) }
+    }
 
-    suspend fun getAuction(id: Long) = callbackCatching {
+    suspend fun fetchAuction(id: Long) = callbackCatching {
         val query = "SELECT * FROM ${Auction.table} WHERE ${Auction.id.name}=$id"
         val response = Database.connection.createStatement().executeQuery(query)
         return@callbackCatching response.mapNotNull { Auction.fromResultSet(it) }
     }
 
-    suspend fun removeAuction(key: Long): Boolean? = callbackCatching {
+    suspend fun deleteAuction(key: Long): Boolean? = callbackCatching {
         val query = "DELETE FROM ${Auction.table} WHERE ${Auction.id.name}=${key}"
         return@callbackCatching Database.connection.prepareStatement(query).execute()
     }

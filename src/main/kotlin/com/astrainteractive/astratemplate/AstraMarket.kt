@@ -5,6 +5,7 @@ import CommandManager
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.ServerVersion
+import com.astrainteractive.astratemplate.api.AuctionExpireChecker
 import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
@@ -52,14 +53,14 @@ class AstraMarket : JavaPlugin() {
         database = Database().apply { onEnable() }
         VaultHook()
         Logger.log("Plugin enabled", TAG)
-        if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
-            Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
+//        if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
+//            Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
         Logger.warn("This plugin was created using PaperAPI. If you are using spigot you may have issues", TAG)
-        Repository.startAuctionChecker()
+        AuctionExpireChecker.startAuctionChecker()
     }
 
     override fun onDisable() {
-        Repository.stopAuctionChecker()
+        AuctionExpireChecker.stopAuctionChecker()
         eventHandler.onDisable()
         database.onDisable()
         HandlerList.unregisterAll(this)

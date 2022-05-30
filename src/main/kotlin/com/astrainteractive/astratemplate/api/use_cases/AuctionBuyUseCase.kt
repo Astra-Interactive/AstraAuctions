@@ -1,6 +1,7 @@
-package com.astrainteractive.astratemplate.api
+package com.astrainteractive.astratemplate.api.use_cases
 
 import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.VaultHook
@@ -11,16 +12,20 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import java.util.*
 
-class AuctionBuyUseCaseParams(
-    val auction: Auction,
-    val player: Player
-)
-
-class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCaseParams>() {
-    override suspend fun run(params: AuctionBuyUseCaseParams): Boolean {
+/**
+ * @param _auction auction to buy
+ * @param player the player which will buy auction
+ * @return boolean, which is true if succesfully bought
+ */
+class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params>() {
+    class Params(
+        val auction: Auction,
+        val player: Player
+    )
+    override suspend fun run(params: Params): Boolean {
         val _auction = params.auction
         val player = params.player
-        val auction = Repository.api.getAuction(_auction.id)?.firstOrNull() ?: return false
+        val auction = Repository.fetchAuction(_auction.id)?.firstOrNull() ?: return false
         if (auction.minecraftUuid == player.uniqueId.toString()) {
             player.sendMessage(Translation.ownerCantBeBuyer)
             return false
@@ -48,7 +53,7 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCaseParams>() {
             return false
         }
 
-        val result = Repository.api.removeAuction(auction.id)
+        val result = Repository.deleteAuction(auction.id)
         if (result != null) {
             player.inventory.addItem(item)
             player.playSound(AstraMarket.pluginConfig.sounds.sold)
