@@ -4,11 +4,11 @@ import com.astrainteractive.astralibs.*
 import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.api.AuctionAPI
+import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
 import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.gui.ExpiredAuctionGui
-import com.astrainteractive.astratemplate.sqldatabase.Repository
+import com.astrainteractive.astratemplate.api.AuctionAPI
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
@@ -97,7 +97,7 @@ class AuctionCommand {
         val amount = perm?.permission?.replace(Permissions.sellMax+".","")?.toIntOrNull()?:AstraMarket.pluginConfig.auction.maxAuctionPerPlayer?:1
 
         AsyncHelper.launch {
-            val auctionsAmount = Repository.countPlayerAuctions(player)
+            val auctionsAmount = AuctionAPI.countPlayerAuctions(player)
             if ((auctionsAmount ?: 0) > amount) {
                 player.sendMessage(Translation.maxAuctions)
                 player.playSound(AstraMarket.pluginConfig.sounds.fail)
@@ -128,12 +128,12 @@ class AuctionCommand {
             val itemClone = item.clone().apply { this.amount = amount }
             val auction = Auction(player, itemClone, price)
 
-            val result = Repository.insertAuction(auction)
+            val result = AuctionAPI.insertAuction(auction)
             if (result != null) {
                 item.amount -= amount
                 player.sendMessage(Translation.auctionAdded)
                 player.playSound(AstraMarket.pluginConfig.sounds.success)
-                AuctionAPI.loadAuctions()
+                Repository.loadAuctions()
                 if (AstraMarket.pluginConfig.auction.announce)
                     Bukkit.broadcastMessage(Translation.broadcast.replace("%player%", player.name))
             } else {

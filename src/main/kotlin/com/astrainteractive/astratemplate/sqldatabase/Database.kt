@@ -4,6 +4,7 @@ import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astratemplate.api.AuctionAPI
 import kotlinx.coroutines.*
 import java.io.File
 import java.sql.Connection
@@ -55,8 +56,8 @@ class Database {
             connectDatabase()
             if (isInitialized) {
                 Logger.log("Database created successfully", "Database")
-                Repository.createAuctionTable()
-                Repository.updateTable()
+                AuctionAPI.createAuctionTable()
+                AuctionAPI.updateTable()
             }
             else
                 Logger.error("Could not create the database","Database")

@@ -5,12 +5,11 @@ import com.astrainteractive.astralibs.menu.AstraMenuSize
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astralibs.menu.PaginatedMenu
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.api.*
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
@@ -20,14 +19,13 @@ open class AbstractAuctionGui(
     final override val playerMenuUtility: AstraPlayerMenuUtility
 ) : PaginatedMenu() {
 
-    override val backButtonIndex: Int = 45
-    override val nextButtonIndex: Int = 48
-    override val prevButtonIndex: Int = 53
+    override val prevButtonIndex: Int = 45
+    override val backButtonIndex: Int = 49
+    override val nextButtonIndex: Int = 53
 
     override var menuName: String = Translation.title
     override val menuSize: AstraMenuSize = AstraMenuSize.XL
-    var sortType: SortType = SortType.DATE_ASC
-
+    open val viewModel: ViewModel = ViewModel(playerMenuUtility.player)
 
     override val backPageButton: ItemStack =
         AstraMarket.pluginConfig.buttons.back.toItemStack().apply { setDisplayName(Translation.back) }
@@ -35,22 +33,24 @@ open class AbstractAuctionGui(
         AstraMarket.pluginConfig.buttons.next.toItemStack().apply { setDisplayName(Translation.next) }
     override val prevPageButton: ItemStack =
         AstraMarket.pluginConfig.buttons.previous.toItemStack().apply { setDisplayName(Translation.prev) }
-    val aaucButton: ItemStack =
-        AstraMarket.pluginConfig.buttons.aauc.toItemStack().apply { setDisplayName(Translation.aauc) }
+
     val expiredButton: ItemStack =
         AstraMarket.pluginConfig.buttons.expired.toItemStack().apply { setDisplayName(Translation.expired) }
+
+    val aaucButton: ItemStack =
+        AstraMarket.pluginConfig.buttons.aauc.toItemStack().apply { setDisplayName(Translation.aauc) }
+
     private val sortButton: ItemStack
         get() = AstraMarket.pluginConfig.buttons.sort.toItemStack().apply {
-            setDisplayName("${Translation.sort} ${sortType.desc}")
+            setDisplayName("${Translation.sort} ${viewModel.sortType.desc}")
         }
+
     override var maxItemsPerPage: Int = 45
     override var page: Int = 0
-    open var itemsInGui = listOf<Auction>()
     override val maxItemsAmount: Int
-        get() = itemsInGui.size
+        get() = viewModel.maxItemsAmount
 
     open fun onNextPageClicked() {
-
         playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
         setMenuItems()
     }
@@ -62,16 +62,8 @@ open class AbstractAuctionGui(
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
         playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
-        sortType = if (isRightClick)
-            sortType.next()
-        else
-            sortType.prev()
-        sortAuction()
-    }
-
-    open fun sortAuction() {
-        itemsInGui = AuctionAPI.sortBy(sortType)
-        setMenuItems()
+        viewModel.onSortButtonClicked(isRightClick)
+        inventory.setItem(backButtonIndex + 1, sortButton)
     }
 
     open fun onCloseClicked() {
@@ -79,25 +71,17 @@ open class AbstractAuctionGui(
         playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.close)
     }
 
-    open fun onAuctionItemClicked(auction: Auction, clickType: ClickType) {
+    open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
         AsyncHelper.launch(Dispatchers.IO) {
-            val result = when (clickType) {
-                ClickType.LEFT -> AuctionAPI.buyAuction(auction, playerMenuUtility.player)
-                ClickType.RIGHT -> AuctionAPI.removeAuction(auction, playerMenuUtility.player)
-                ClickType.MIDDLE -> AuctionAPI.forceExpireAuction(playerMenuUtility.player, auction)
-                else -> return@launch
-            }
-            if (result) {
-                updateItems()
-                itemsInGui = runBlocking { AuctionAPI.sortBy(sortType) }
-                setMenuItems()
+            val result = viewModel.onAuctionItemClicked(i, clickType)
+            if (result)
                 playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.sold)
-            } else
+            else
                 playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.fail)
         }
     }
 
-    open fun onAaucExpiredClicked() {}
+    open fun onExpiredOpenClicked() {}
 
     override fun handleMenu(e: InventoryClickEvent) {
         super.handleMenu(e)
@@ -106,11 +90,8 @@ open class AbstractAuctionGui(
             prevButtonIndex -> onPrevPageClicked()
             (backButtonIndex + 1) -> onSortButtonClicked(e.isRightClick)
             backButtonIndex -> onCloseClicked()
-            (backButtonIndex - 1) -> onAaucExpiredClicked()
-            else -> {
-                val auction = itemsInGui[getIndex(e.slot)]
-                onAuctionItemClicked(auction, e.click)
-            }
+            (backButtonIndex - 1) -> onExpiredOpenClicked()
+            else -> onAuctionItemClicked(getIndex(e.slot), e.click)
         }
     }
 
@@ -128,25 +109,19 @@ open class AbstractAuctionGui(
 
 
     override fun setMenuItems() {
-        if (!isInventoryInitialized())
-            return
         inventory.clear()
         addManageButtons()
         inventory.setItem(backButtonIndex + 1, sortButton)
-
-    }
-
-
-    open suspend fun updateItems() {
-        AuctionAPI.loadAuctions() as List<Auction>
-        itemsInGui = AuctionAPI.sortBy(sortType)
-        setMenuItems()
     }
 
     init {
         playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
         AsyncHelper.launch {
-            updateItems()
+            viewModel.auctionList.collectLatest {
+                while (!isInventoryInitialized())
+                    delay(100)
+                setMenuItems()
+            }
         }
     }
 

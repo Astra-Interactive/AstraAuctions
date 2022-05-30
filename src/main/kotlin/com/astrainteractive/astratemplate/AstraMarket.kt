@@ -5,7 +5,7 @@ import CommandManager
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.ServerVersion
-import com.astrainteractive.astratemplate.api.AuctionAPI
+import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.utils.*
@@ -30,7 +30,7 @@ class AstraMarket : JavaPlugin() {
             private set
         lateinit var pluginConfig: AuctionConfig
             private set
-        public lateinit var database: Database
+        lateinit var database: Database
             private set
     }
 
@@ -41,10 +41,11 @@ class AstraMarket : JavaPlugin() {
 
 
     override fun onEnable() {
-        AstraLibs.create(this)
+        AstraLibs.rememberPlugin(this)
         Logger.prefix = "AstraAuctions"
         instance = this
         empireFiles = Files()
+        AstraTranslation()
         eventHandler = EventHandler()
         commandManager = CommandManager()
         pluginConfig = AuctionConfig.load()
@@ -54,11 +55,11 @@ class AstraMarket : JavaPlugin() {
         if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
             Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
         Logger.warn("This plugin was created using PaperAPI. If you are using spigot you may have issues", TAG)
-        AuctionAPI.startAuctionChecker()
+        Repository.startAuctionChecker()
     }
 
     override fun onDisable() {
-        AuctionAPI.stopAuctionChecker()
+        Repository.stopAuctionChecker()
         eventHandler.onDisable()
         database.onDisable()
         HandlerList.unregisterAll(this)

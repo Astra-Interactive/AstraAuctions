@@ -1,230 +1,81 @@
 package com.astrainteractive.astratemplate.api
 
 import com.astrainteractive.astralibs.Logger
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.observer.LiveData
-import com.astrainteractive.astralibs.observer.MutableLiveData
-import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astralibs.catching
 import com.astrainteractive.astratemplate.sqldatabase.Database
-import com.astrainteractive.astratemplate.sqldatabase.Repository
 import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.*
-import kotlinx.coroutines.launch
-import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import java.util.*
 
+
+
+/**
+ * Repository with all SQL commands
+ */
 object AuctionAPI {
-    final const val TAG = "AuctionAPI"
-
     /**
-     * Current auction list
+     * Return boolean of null if exception happened
      */
-    private var _currentAuctions = MutableLiveData<List<Auction>>(listOf<Auction>())
-    val currentAuctions: LiveData<List<Auction>>
-        get() = _currentAuctions
+    suspend fun createAuctionTable() =
+        callbackCatching {
+            return@callbackCatching Database.connection.prepareStatement(
+                "CREATE TABLE IF NOT EXISTS ${Auction.table} " +
+                        "(" +
+                        "${Auction.id.name} ${Auction.id.type} PRIMARY KEY AUTOINCREMENT, " +
+                        "${Auction.discordId.name} ${Auction.discordId.type} NULL, " +
+                        "${Auction.minecraftUuid.name} ${Auction.minecraftUuid.type} NOT NULL, " +
+                        "${Auction.time.name} ${Auction.time.type} NOT NULL, " +
+                        "${Auction.item.name} ${Auction.item.type} NOT NULL, " +
+                        "${Auction.price.name} ${Auction.price.type} NOT NULL);"
+            ).execute()
+        }
 
-    /**
-     * Set current auction list
-     */
-    private fun setAuctions(value: List<Auction>) = synchronized(this) {
-        _currentAuctions.value = value
+    suspend fun updateTable() = catching {
+        catching { Database.connection.prepareStatement("ALTER TABLE ${Auction.table} ADD ${Auction.expired.name} ${Auction.expired.type}").execute() }
+        Database.connection.prepareStatement("UPDATE ${Auction.table} SET ${Auction.expired.name}=0 WHERE ${Auction.expired.name} IS NULL").executeUpdate()
+        Database.isUpdated = true
+        Logger.log("Database is up to date","Database")
     }
 
-    /**
-     * @return current auctions list
-     */
-    private fun getAuctions() = synchronized(this) { _currentAuctions }
+    suspend fun insertAuction(auction: Auction) =
+        callbackCatching {
+            val query = "INSERT INTO ${Auction.table} " +
+                    "(${Auction.discordId.name}, ${Auction.minecraftUuid.name}, ${Auction.time.name}, ${Auction.item.name}, ${Auction.price.name}, ${Auction.expired.name}) " +
+                    "VALUES(NULL, \'${auction.minecraftUuid}\', ${auction.time},?, ${auction.price}, 0)"
+            val statement = Database.connection.prepareStatement(query)
+            statement.setBytes(1, auction.item)
+            return@callbackCatching statement.executeUpdate()
+        }
 
-    /**
-     * @return list of player's expired auctions
-     */
-    suspend fun getExpiredAuctions(uuid: String) = Repository.getAuctions(uuid, expired = true)
-
-    /**
-     * @param uuid uuid of user, which auctions to load or null for every auction
-     * @return current auction list
-     */
-    suspend fun loadAuctions(uuid: String? = null): List<Auction> {
-        val auctions = Repository.getAuctions(uuid) ?: listOf()
-        setAuctions(auctions)
-        return auctions
+    suspend fun expireAuction(auction: Auction)= callbackCatching {
+        val query = "UPDATE ${Auction.table} SET ${Auction.expired.name}=TRUE WHERE ${Auction.id.name}=${auction.id}"
+        Database.connection.prepareStatement(query).execute()
     }
 
-    var job: Timer? = null
-
-    /**
-     * Start job for auction expire checking
-     */
-    fun startAuctionChecker() {
-        Logger.log("Expired auction checker job has started", TAG, consolePrint = false)
-        job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 60000L) {
-            if (!Database.isInitialized)
-                return@timer
-            if (!Database.isUpdated)
-                return@timer
-            AsyncHelper.launch {
-                val auctions = Repository.getAuctions()
-                auctions?.forEach {
-                    if (System.currentTimeMillis() - it.time < AstraMarket.pluginConfig.auction.maxTime * 1000)
-                        return@forEach
-                    val res = forceExpireAuction(null, it)
-                    Logger.log("Found expired auction ${it}. Expiring result: $res", TAG, consolePrint = false)
-                }
-            }
-        }
-
+    suspend fun getAuctions(uuid: String? = null,expired:Boolean? = false) = callbackCatching {
+        val where = uuid?.let { "WHERE ${Auction.minecraftUuid.name}=\'${it}\' AND ${Auction.expired.name} = ${expired}"  } ?: "WHERE ${Auction.expired.name} = ${expired}"
+        val rs = Database.connection.createStatement().executeQuery("SELECT * FROM ${Auction.table} $where")
+        return@callbackCatching rs.mapNotNull { Auction.fromResultSet(it) }
     }
 
-    fun stopAuctionChecker() {
-        Logger.log("Expired auction checker job has stopped", TAG, consolePrint = false)
-        job?.cancel()
+    suspend fun getAuction(id: Long) = callbackCatching {
+        val query = "SELECT * FROM ${Auction.table} WHERE ${Auction.id.name}=$id"
+        val response = Database.connection.createStatement().executeQuery(query)
+        return@callbackCatching response.mapNotNull { Auction.fromResultSet(it) }
     }
 
-    /**
-     * @param player admin or moderator
-     * @param _auction auction to expire
-     * @return boolean - true if success false if not
-     */
-    suspend fun forceExpireAuction(player: Player?, _auction: Auction): Boolean {
-        if (player != null && !player.hasPermission(Permissions.expire)) {
-            player.sendMessage(Translation.noPermissions)
-            return false
-        }
-        Logger.log("Player ${player?.name} forced auction to expire ${_auction}", TAG, consolePrint = false)
-        val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
-        auction.owner?.player?.sendMessage(
-            Translation.notifyAuctionExpired
-                .replace("%item%", auction.itemStack.displayNameOrMaterialName())
-                .replace("%price%", auction.price.toString())
-        )
-        val result = Repository.expireAuction(auction)
-        if (result == null) {
-            player?.sendMessage(Translation.unexpectedError)
-        } else
-            player?.sendMessage(Translation.auctionHasBeenExpired)
-        return (result != null)
+    suspend fun removeAuction(key: Long): Boolean? = callbackCatching {
+        val query = "DELETE FROM ${Auction.table} WHERE ${Auction.id.name}=${key}"
+        return@callbackCatching Database.connection.prepareStatement(query).execute()
     }
 
-    /**
-     * @param sortType type of sort [SortType]
-     * @return result - list of sorted auctions. If [result] is null, [_currentAuctions] will be taken
-     */
-    fun sortBy(sortType: SortType, list: List<Auction>? = null): List<Auction> {
-        val itemsInGui = list ?: getAuctions()?.value ?: listOf()
-        return when (sortType) {
-            SortType.MATERIAL_DESC -> itemsInGui.sortedByDescending { it.itemStack.type }
-            SortType.MATERIAL_ASC -> itemsInGui.sortedBy { it.itemStack.type }
-
-            SortType.DATE_ASC -> itemsInGui.sortedBy { it.time }
-            SortType.DATE_DESC -> itemsInGui.sortedByDescending { it.time }
-
-            SortType.NAME_ASC -> itemsInGui.sortedBy { it.itemStack.itemMeta?.displayName }
-            SortType.NAME_DESC -> itemsInGui.sortedByDescending { it.itemStack.itemMeta?.displayName }
-
-            SortType.PRICE_ASC -> itemsInGui.sortedBy { it.price }
-            SortType.PRICE_DESC -> itemsInGui.sortedByDescending { it.price }
-
-
-            SortType.PLAYER_ASC -> itemsInGui.sortedBy {
-                Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
-            }
-            SortType.PLAYER_DESC -> itemsInGui.sortedByDescending {
-                Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
-            }
-            else -> itemsInGui
-        }
+    suspend fun countPlayerAuctions(player: Player) = callbackCatching {
+        val query =
+            "SELECT COUNT(*) FROM ${Auction.table} WHERE ${Auction.minecraftUuid.name}=\'${player.uuid}\' AND ${Auction.expired.name}=0"
+        val response = Database.connection.createStatement().executeQuery(query)
+        response.forEach { return@callbackCatching it.getInt(1)+1 }
+        return@callbackCatching null
     }
-
-
-    /**
-     * @param _auction auction to remove
-     * @param player owner of auction
-     * @return boolean - true if succesfully removed
-     */
-    suspend fun removeAuction(_auction: Auction, player: Player): Boolean {
-        val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
-        val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
-        if (owner.uniqueId != player.uniqueId) {
-            player.sendMessage(Translation.notAuctionOwner)
-            return false
-        }
-        Logger.log("Player ${player.name} removed his auction ${auction}", TAG, consolePrint = false)
-        val item = auction.itemStack
-        if (player.inventory.firstEmpty() == -1) {
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.inventoryFull)
-            return false
-        }
-        val result = Repository.removeAuction(auction.id)
-        return if (result != null) {
-            player.sendMessage(Translation.auctionDeleted)
-            player.inventory.addItem(item)
-            true
-        } else {
-            player.sendMessage(Translation.unexpectedError)
-            false
-        }
-    }
-
-
-    /**
-     * @param _auction auction to buy
-     * @param player the player which will buy auction
-     * @return boolean, which is true if succesfully bought
-     */
-    suspend fun buyAuction(_auction: Auction, player: Player): Boolean {
-        val auction = Repository.getAuction(_auction.id)?.firstOrNull() ?: return false
-        if (auction.minecraftUuid == player.uniqueId.toString()) {
-            player.sendMessage(Translation.ownerCantBeBuyer)
-            return false
-        }
-        val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
-        val item = auction.itemStack
-
-
-        if (player.inventory.firstEmpty() == -1) {
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.inventoryFull)
-            return false
-        }
-        var vaultResponse = VaultHook.takeMoney(player, auction.price.toDouble())
-        if (!vaultResponse) {
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.notEnoughMoney)
-            return false
-        }
-        vaultResponse = VaultHook.addMoney(owner, auction.price.toDouble())
-        if (!vaultResponse) {
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.failedToPay)
-            VaultHook.addMoney(player, auction.price.toDouble())
-            return false
-        }
-
-        val result = Repository.removeAuction(auction.id)
-        if (result != null) {
-            player.inventory.addItem(item)
-            player.playSound(AstraMarket.pluginConfig.sounds.sold)
-            player.sendMessage(
-                Translation.notifyUserBuy.replace(
-                    "%player_owner%",
-                    owner.name ?: "${ChatColor.MAGIC}NULL"
-                ).replace("%price%", auction.price.toString()).replace("%item%", item.displayNameOrMaterialName())
-            )
-            owner.player?.sendMessage(
-                Translation.notifyOwnerUserBuy.replace("%player%", player.name)
-                    .replace("%item%", item.displayNameOrMaterialName()).replace("%price%", auction.price.toString())
-            )
-        } else {
-            VaultHook.addMoney(player, auction.price.toDouble())
-            VaultHook.takeMoney(owner, auction.price.toDouble())
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.dbError)
-        }
-        return result != null
-    }
-
 
 }
+

@@ -47,14 +47,18 @@ repositories {
     maven("https://maven.enginehub.org/repo/")
     maven("https://jitpack.io")
     maven("https://oss.sonatype.org/content/groups/public/")
+    flatDir {
+        dirs("libs")
+    }
 }
 
 dependencies {
-    compileOnly("com.astrainteractive:astralibs:1.1.9-8")
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0")
+//    compileOnly("com.astrainteractive:astralibs:1.1.9-8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0")
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     compileOnly("me.clip:placeholderapi:2.10.9")
@@ -81,8 +85,9 @@ publishing {
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
 }
-
-
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
+}
 tasks {
     processResources {
         from(sourceSets.main.get().resources.srcDirs) {
@@ -100,10 +105,39 @@ tasks {
     compileJava {
         options.encoding = "UTF-8"
     }
+
+    shadowJar {
+        dependencies {
+//            include(dependency("com.astrainteractive:astralibs:1.1.9-8"))
+            include(dependency(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar",".aar")))))
+            include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"))
+            include(dependency("org.jetbrains.kotlin:kotlin-runtime:1.5.21"))
+            include(dependency("org.jetbrains.kotlin:kotlin-stdlib:1.5.21"))
+            include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"))
+            include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1"))
+        }
+        isReproducibleFileOrder = true
+
+        from(sourceSets.main.get().output)
+        from(project.configurations.runtimeClasspath)
+        manifest.attributes("Main-Class" to "com.astrainteractive.astratemplate.AstraTemplate")
+        minimize()
+    }
+
     test {
         useJUnit()
         testLogging {
             events("passed", "skipped", "failed")
+            this.showStandardStreams = true
         }
     }
+
+//    register<Copy>("copyToServer") {
+//        val path = project.property("targetDir") ?: ""
+//        if (path.toString().isEmpty()) {
+//            println("targetDir is not set in gradle properties")
+//            return@register
+//        }
+//        destinationDir = File(path.toString())
+//    }
 }

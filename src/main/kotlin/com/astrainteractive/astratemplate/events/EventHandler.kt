@@ -1,7 +1,7 @@
 package com.astrainteractive.astratemplate.events
 
-import com.astrainteractive.astralibs.EventListener
-import com.astrainteractive.astralibs.EventManager
+import com.astrainteractive.astralibs.events.EventListener
+import com.astrainteractive.astralibs.events.EventManager
 import com.astrainteractive.astralibs.menu.MenuListener
 
 

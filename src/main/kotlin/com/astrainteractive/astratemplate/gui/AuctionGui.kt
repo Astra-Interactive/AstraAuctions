@@ -1,7 +1,6 @@
 package com.astrainteractive.astratemplate.gui
 
 import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.menu.AstraMenuSize
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
 import com.astrainteractive.astralibs.menu.Menu
 import com.astrainteractive.astralibs.menu.PaginatedMenu
@@ -17,13 +16,12 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryCloseEvent
 import java.util.*
 
-class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility),Listener,LifecycleOwner {
+class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
 
-    override var itemsInGui = AuctionAPI.sortBy(sortType)
+    private val itemsInGui: List<Auction>
+        get() = viewModel.auctionList.value
 
     override fun setMenuItems() {
-        if (!isInventoryInitialized())
-            return
         super.setMenuItems()
         inventory.setItem(backButtonIndex - 1, expiredButton)
 
@@ -31,7 +29,7 @@ class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGu
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = NMSHelper.deserializeItem(auctionItem.item,auctionItem.time).apply {
+            val itemStack = NMSHelper.deserializeItem(auctionItem.item, auctionItem.time).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(Translation.leftButton)
@@ -52,35 +50,10 @@ class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGu
             inventory.setItem(i, itemStack)
         }
     }
-    override fun onAaucExpiredClicked() {
+
+    override fun onExpiredOpenClicked() {
         AsyncHelper.launch {
             ExpiredAuctionGui(playerMenuUtility).open()
         }
-    }
-
-    override suspend fun updateItems() {
-        AuctionAPI.loadAuctions() as List<Auction>
-        itemsInGui = AuctionAPI.sortBy(sortType)
-        setMenuItems()
-    }
-
-    @EventHandler
-    fun onMenuClosed(e:InventoryCloseEvent){
-        if (e.player!=playerMenuUtility.player)
-            return
-        if (e.inventory.holder !is Menu)
-            return
-        if (e.inventory.holder !is PaginatedMenu)
-            return
-        AuctionAPI.currentAuctions.removeObserver(this)
-        InventoryCloseEvent.getHandlerList().unregister(this)
-
-    }
-    init {
-        AuctionAPI.currentAuctions.observe(this){
-            itemsInGui = AuctionAPI.sortBy(sortType,it)
-            setMenuItems()
-        }
-        Bukkit.getServer().pluginManager.registerEvents(this,AstraMarket.instance)
     }
 }

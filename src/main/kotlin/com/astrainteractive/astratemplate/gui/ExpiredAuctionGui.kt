@@ -15,32 +15,18 @@ import java.util.*
 class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
 
     override var menuName: String = Translation.expiredTitle
+    override val viewModel: ViewModel = ViewModel(playerMenuUtility.player,expired = true)
+
+    private val itemsInGui: List<Auction>
+        get() = viewModel.auctionList.value
 
 
-    override fun onAuctionItemClicked(auction:Auction, clickType: ClickType){
-        AsyncHelper.launch(Dispatchers.IO) {
-            val result = when(clickType) {
-                ClickType.RIGHT -> AuctionAPI.removeAuction(auction,playerMenuUtility.player)
-                else -> return@launch
-            }
-            if (result) {
-                updateItems()
-                itemsInGui = AuctionAPI.sortBy(sortType,itemsInGui)
-                setMenuItems()
-                playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.sold)
-            } else
-                playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.fail)
-        }
-    }
-
-    override fun onAaucExpiredClicked() {
+    override fun onExpiredOpenClicked() {
         AsyncHelper.launch {
             AuctionGui(playerMenuUtility).open()
         }
     }
     override fun setMenuItems() {
-        if (!isInventoryInitialized())
-            return
         super.setMenuItems()
         inventory.setItem(backButtonIndex - 1, aaucButton)
         for (i in 0 until maxItemsPerPage) {
@@ -65,17 +51,6 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
             }
             inventory.setItem(i, itemStack)
         }
-    }
-
-
-
-    override fun sortAuction(){
-        itemsInGui = AuctionAPI.sortBy(sortType,itemsInGui)
-        setMenuItems()
-    }
-    override suspend fun updateItems(){
-        itemsInGui = AuctionAPI.getExpiredAuctions(playerMenuUtility.player.uuid)?: listOf()
-        setMenuItems()
     }
 
 }
