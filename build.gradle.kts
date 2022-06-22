@@ -28,41 +28,42 @@ task("Get GPR keys") {
 }
 repositories {
     mavenLocal()
-    maven("https://repo.maven.apache.org/maven2/")
-    maven {
-        name = "GitHubPackages"
-        url = uri("https://maven.pkg.github.com/Astra-Interactive/AstraLibs")
-        credentials {
-            username = gprUser
-            password = gprPassword
-        }
-        metadataSources {
-            artifact()
-        }
-    }
-    maven("https://repo1.maven.org/maven2/")
-    maven("https://papermc.io/repo/repository/maven-public/")
-    maven("https://repo.dmulloy2.net/repository/public/")
+    mavenCentral()
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://maven.enginehub.org/repo/")
-    maven("https://jitpack.io")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://oss.sonatype.org/content/repositories/central")
+    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
+    maven("https://nexus.scarsz.me/content/groups/public/")
+    maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.essentialsx.net/snapshots/")
+    maven("https://repo.maven.apache.org/maven2/")
+    maven("https://maven.enginehub.org/repo/")
+    maven("https://repo1.maven.org/maven2/")
+    maven("https://maven.playpro.com")
+    maven("https://jitpack.io")
     flatDir {
         dirs("libs")
     }
 }
 
 dependencies {
-//    compileOnly("com.astrainteractive:astralibs:1.1.9-8")
+    val spigot = "1.19-R0.1-SNAPSHOT"
+    val vault = "1.7"
+    val placeholderapi = "2.11.1"
+    val protocolLib = "4.8.0"
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0")
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
-    compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
-    compileOnly("me.clip:placeholderapi:2.10.9")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+//    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:$spigot")
+//    compileOnly("com.comphenix.protocol:ProtocolLib:$protocolLib")
+//    compileOnly("me.clip:placeholderapi:$placeholderapi")
+    compileOnly("com.github.MilkBowl:VaultAPI:$vault")
     testImplementation("junit:junit:4.13.1")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.18:1.24.1")
     testImplementation("io.kotest:kotest-runner-junit5:latest.release")
@@ -71,17 +72,18 @@ dependencies {
 }
 
 group = "com.astrainteractive"
-version = "1.0.1"
+version = "1.0.2"
 val name = "AstraMarket"
 description = "Global Market plugin from AstraInteractive for EmpireSMP"
-java.sourceCompatibility = JavaVersion.VERSION_17
 
 publishing {
     publications.create<MavenPublication>("maven") {
         from(components["java"])
     }
 }
-
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
 }
