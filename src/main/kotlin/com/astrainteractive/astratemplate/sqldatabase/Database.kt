@@ -36,8 +36,6 @@ class Database {
         lateinit var connection: Connection
         val isInitialized: Boolean
             get() = this::connection.isInitialized && !connection.isClosed
-        var isUpdated: Boolean = false
-
     }
 
     /**
@@ -57,7 +55,6 @@ class Database {
             if (isInitialized) {
                 Logger.log("Database created successfully", "Database")
                 AuctionAPI.createAuctionTable()
-                AuctionAPI.updateTable()
             }
             else
                 Logger.error("Could not create the database","Database")

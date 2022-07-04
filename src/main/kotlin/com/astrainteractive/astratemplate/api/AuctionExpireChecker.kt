@@ -17,7 +17,6 @@ object AuctionExpireChecker {
         Logger.log("Expired auction checker job has started", Repository.TAG, consolePrint = false)
         job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 2000L) {
             if (!Database.isInitialized) return@timer
-            if (!Database.isUpdated) return@timer
             AsyncHelper.launch {
                 val auctions = Repository.fetchOldAuctions(AstraMarket.pluginConfig.auction.maxTime * 1000)
                 auctions?.forEach {

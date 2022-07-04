@@ -26,16 +26,10 @@ object AuctionAPI {
                         "${Auction.minecraftUuid.name} ${Auction.minecraftUuid.type} NOT NULL, " +
                         "${Auction.time.name} ${Auction.time.type} NOT NULL, " +
                         "${Auction.item.name} ${Auction.item.type} NOT NULL, " +
+                        "${Auction.expired.name} ${Auction.expired.type} NOT NULL, " +
                         "${Auction.price.name} ${Auction.price.type} NOT NULL);"
             ).execute()
         }
-
-    suspend fun updateTable() = catching {
-        catching { Database.connection.prepareStatement("ALTER TABLE ${Auction.table} ADD ${Auction.expired.name} ${Auction.expired.type}").execute() }
-        Database.connection.prepareStatement("UPDATE ${Auction.table} SET ${Auction.expired.name}=0 WHERE ${Auction.expired.name} IS NULL").executeUpdate()
-        Database.isUpdated = true
-        Logger.log("Database is up to date","Database")
-    }
 
     suspend fun insertAuction(auction: Auction) =
         callbackCatching {

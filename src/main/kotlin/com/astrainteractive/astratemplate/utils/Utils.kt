@@ -31,9 +31,7 @@ public inline fun <R : Any, C : MutableCollection<in R>> ResultSet.mapNotNullTo(
 
 public inline fun <T> callbackCatching(block: () -> T?): T? = try {
     if (!Database.isInitialized)
-        null//throw Exception("Database not initialized")
-    else if (!Database.isUpdated)
-        null//throw Exception("Database not updated")
+        throw Exception("Database not initialized")
     else block.invoke()
 } catch (e: Exception) {
     com.astrainteractive.astralibs.Logger.error(e.stackTraceToString(), "Database")
