@@ -1,10 +1,24 @@
-val kotlin_version: String by project
-val kotlin_coroutines_version: String by project
-val kotlin_json_version: String by project
-val kaml: String by project
+object Kotlin {
+    const val version = "1.7.0"
+    const val coroutines = "1.6.3"
+    const val json = "1.3.3"
+    const val kaml = "0.46.0"
+}
+object Spigot {
+    const val version = "1.19-R0.1-SNAPSHOT"
+    const val placeholderAPI = "2.11.2"
+    const val protocolLib = "4.8.0"
+    const val worldGuard = "7.0.7"
+    const val vault = "1.7"
+    const val coreProtect = "21.2"
+    const val modelEngine = "R2.5.0"
+    const val essentials = "2.19.5-SNAPSHOT"
+    const val discordSRV = "1.25.0"
+    const val luckPerms = "5.4"
+}
 
 group = "com.astrainteractive"
-version = "1.1.0"
+version = "1.1.1"
 val name = "AstraMarket"
 description = "Global Market plugin from AstraInteractive for EmpireSMP"
 
@@ -12,7 +26,7 @@ plugins {
     java
     `maven-publish`
     `java-library`
-    kotlin("jvm") version "1.6.21"
+    kotlin("jvm") version "1.7.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 java {
@@ -40,21 +54,17 @@ repositories {
 }
 
 dependencies {
-    val spigot = "1.19-R0.1-SNAPSHOT"
-    val vault = "1.7"
-    val placeholderapi = "2.11.1"
-    val protocolLib = "4.8.0"
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}")
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlin_coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Kotlin.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}")
     // AstraLibs
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    compileOnly("org.spigotmc:spigot-api:$spigot")
-    compileOnly("org.spigotmc:spigot:$spigot")
-    compileOnly("org.spigotmc:spigot-api:$spigot")
-    compileOnly("com.github.MilkBowl:VaultAPI:$vault")
+    compileOnly("io.papermc.paper:paper-api:${Spigot.version}")
+    compileOnly("org.spigotmc:spigot-api:${Spigot.version}")
+    compileOnly("org.spigotmc:spigot:${Spigot.version}")
+    compileOnly("com.github.MilkBowl:VaultAPI:${Spigot.vault}")
     testImplementation("junit:junit:4.13.1")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.18:1.24.1")
     testImplementation("io.kotest:kotest-runner-junit5:latest.release")
@@ -102,9 +112,9 @@ tasks{
 tasks.shadowJar {
     dependencies {
         include(dependency(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", ".aar")))))
-        include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"))
-        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"))
-        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlin_coroutines_version"))
+        include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Kotlin.coroutines}"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}"))
     }
     isReproducibleFileOrder = true
     mergeServiceFiles()
