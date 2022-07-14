@@ -15,6 +15,7 @@ object Spigot {
     const val essentials = "2.19.5-SNAPSHOT"
     const val discordSRV = "1.25.0"
     const val luckPerms = "5.4"
+    const val bstats = "3.0.0"
 }
 
 group = "com.astrainteractive"
@@ -43,6 +44,7 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://nexus.scarsz.me/content/groups/public/")
     maven("https://repo.dmulloy2.net/repository/public/")
+    maven("https://repo.codemc.org/repository/maven-public")
     maven("https://repo.essentialsx.net/snapshots/")
     maven("https://repo.maven.apache.org/maven2/")
     maven("https://repo.maven.apache.org/maven2/")
@@ -61,6 +63,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}")
     // AstraLibs
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation("org.bstats:bstats-bukkit:${Spigot.bstats}")
     compileOnly("io.papermc.paper:paper-api:${Spigot.version}")
     compileOnly("org.spigotmc:spigot-api:${Spigot.version}")
     compileOnly("org.spigotmc:spigot:${Spigot.version}")
@@ -115,7 +118,9 @@ tasks.shadowJar {
         include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}"))
         include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Kotlin.coroutines}"))
         include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}"))
+        include(dependency("org.bstats:bstats-bukkit:${Spigot.bstats}"))
     }
+    relocate("org.bstats", "com.astrainteractive.astratemplate")
     isReproducibleFileOrder = true
     mergeServiceFiles()
     dependsOn(configurations)

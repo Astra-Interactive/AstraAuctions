@@ -10,6 +10,8 @@ api-version: 1.13
 softdepend: []
 loadbefore: [Vault]
 depend: [Vault]
+libraries:
+  - org.bstats:bstats-bukkit:3.0.0
 commands:
   amarketreload:
     description: Reload plugin

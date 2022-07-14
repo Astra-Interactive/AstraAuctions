@@ -11,8 +11,21 @@ import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.utils.*
 import com.astrainteractive.astratemplate.utils.config.AuctionConfig
+import org.bstats.bukkit.Metrics
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
+
+class BStats private constructor(private val id:Int) {
+    private val metrics = Metrics(AstraMarket.instance,id)
+    companion object {
+        private var instance: BStats? = null
+        fun create() {
+            if (instance != null) return
+            instance = BStats(15771)
+        }
+
+    }
+}
 
 /**
  * Initial class for your plugin
@@ -45,6 +58,7 @@ class AstraMarket : JavaPlugin() {
         AstraLibs.rememberPlugin(this)
         Logger.prefix = "AstraAuctions"
         instance = this
+        BStats.create()
         empireFiles = Files()
         AstraTranslation()
         eventHandler = EventHandler()
