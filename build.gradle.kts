@@ -19,7 +19,7 @@ object Spigot {
 }
 
 group = "com.astrainteractive"
-version = "1.1.1"
+version = "1.1.2"
 val name = "AstraMarket"
 description = "Global Market plugin from AstraInteractive for EmpireSMP"
 
