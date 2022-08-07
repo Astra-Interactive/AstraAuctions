@@ -3,24 +3,21 @@ package com.astrainteractive.astratemplate.commands
 import com.astrainteractive.astralibs.*
 import com.astrainteractive.astralibs.async.AsyncHelper
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
+import com.astrainteractive.astralibs.utils.registerCommand
+import com.astrainteractive.astralibs.utils.registerTabCompleter
+import com.astrainteractive.astralibs.utils.withEntry
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.api.use_cases.CreateAuctionUseCase
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
 import com.astrainteractive.astratemplate.gui.AuctionGui
 import com.astrainteractive.astratemplate.gui.ExpiredAuctionGui
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import kotlin.math.max
-import kotlin.math.min
 
 class AuctionCommand {
 

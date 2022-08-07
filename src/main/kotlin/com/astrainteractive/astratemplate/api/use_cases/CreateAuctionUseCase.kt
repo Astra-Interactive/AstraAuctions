@@ -1,8 +1,10 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
+import com.astrainteractive.astralibs.utils.ReflectionUtil
+import com.astrainteractive.astralibs.utils.uuid
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
@@ -50,7 +52,7 @@ class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params>() {
         }
 
         val itemClone = item.clone().apply { this.amount = amount }
-        val auction = Auction(player, itemClone, price)
+        val auction = Auction(-1,"",player.uuid,System.currentTimeMillis(), ReflectionUtil.serializeItem(itemClone), price)
 
         val result = Repository.insertAuction(auction)
         if (result != null) {

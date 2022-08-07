@@ -1,15 +1,16 @@
 package com.astrainteractive.astratemplate.gui
 
 import com.astrainteractive.astralibs.async.AsyncHelper
+import com.astrainteractive.astralibs.events.EventManager
 import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
-import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astralibs.utils.ReflectionUtil
 import com.astrainteractive.astratemplate.api.*
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
-import org.bukkit.event.inventory.ClickType
+import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
@@ -33,7 +34,7 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = NMSHelper.deserializeItem(auctionItem.item,auctionItem.time).apply {
+            val itemStack = ReflectionUtil.deserializeItem<ItemStack>(auctionItem.item,auctionItem.time).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(Translation.rightButton)
@@ -52,5 +53,7 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
             inventory.setItem(i, itemStack)
         }
     }
+
+    override fun onInventoryClose(it: InventoryCloseEvent, manager: EventManager)  = Unit
 
 }

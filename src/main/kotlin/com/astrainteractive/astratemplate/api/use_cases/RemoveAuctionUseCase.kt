@@ -3,7 +3,7 @@ package com.astrainteractive.astratemplate.api.use_cases
 import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
@@ -40,7 +40,7 @@ class RemoveAuctionUseCase : UseCase<Boolean, RemoveAuctionUseCase.Params>() {
             player.sendMessage(Translation.inventoryFull)
             return false
         }
-        val result = Repository.deleteAuction(auction.id)
+        val result = Repository.deleteAuction(auction)
         return if (result != null) {
             player.sendMessage(Translation.auctionDeleted)
             player.inventory.addItem(item)

@@ -1,6 +1,6 @@
 package com.astrainteractive.astratemplate.api
 
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.*
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -19,7 +19,7 @@ object Repository {
 
     suspend fun fetchAuction(id: Long): List<Auction>? = api.fetchAuction(id)
 
-    suspend fun deleteAuction(id: Long): Boolean? = api.deleteAuction(id)
+    suspend fun deleteAuction(auction: Auction): Boolean? = api.deleteAuction(auction)
 
     suspend fun expireAuction(auction: Auction) = api.expireAuction(auction)
 

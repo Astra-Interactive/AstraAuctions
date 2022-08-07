@@ -128,5 +128,5 @@ tasks.shadowJar {
     from(sourceSets.main.get().output)
     from(project.configurations.runtimeClasspath)
     minimize()
-    destinationDirectory.set(File("D:\\Minecraft Servers\\1_19\\paper\\plugins"))
+    destinationDirectory.set(File("D:\\Minecraft Servers\\TEST_SERVER\\plugins"))
 }

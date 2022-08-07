@@ -5,12 +5,14 @@ import CommandManager
 import com.astrainteractive.astralibs.AstraLibs
 import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astralibs.ServerVersion
+import com.astrainteractive.astralibs.utils.VaultHook
 import com.astrainteractive.astratemplate.api.AuctionExpireChecker
 import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.utils.*
 import com.astrainteractive.astratemplate.utils.config.AuctionConfig
+import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
@@ -64,8 +66,8 @@ class AstraMarket : JavaPlugin() {
         eventHandler = EventHandler()
         commandManager = CommandManager()
         pluginConfig = AuctionConfig.load()
-        database = Database().apply { onEnable() }
-        VaultHook()
+        database = Database().apply { runBlocking { onEnable() } }
+        com.astrainteractive.astralibs.utils.VaultHook.onEnable()
         Logger.log("Plugin enabled", TAG)
 //        if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
 //            Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
@@ -76,9 +78,10 @@ class AstraMarket : JavaPlugin() {
     override fun onDisable() {
         AuctionExpireChecker.stopAuctionChecker()
         eventHandler.onDisable()
-        database.onDisable()
+        runBlocking { database.close() }
         HandlerList.unregisterAll(this)
         Logger.log("Plugin disabled", TAG)
+        VaultHook.onDisable()
     }
 
     fun reloadPlugin() {

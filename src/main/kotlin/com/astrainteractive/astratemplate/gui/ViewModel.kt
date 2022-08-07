@@ -1,14 +1,14 @@
 package com.astrainteractive.astratemplate.gui
 
 import com.astrainteractive.astralibs.async.AsyncHelper
+import com.astrainteractive.astralibs.utils.next
+import com.astrainteractive.astralibs.utils.prev
+import com.astrainteractive.astralibs.utils.uuid
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.api.use_cases.AuctionBuyUseCase
 import com.astrainteractive.astratemplate.api.use_cases.ExpireAuctionUseCase
 import com.astrainteractive.astratemplate.api.use_cases.RemoveAuctionUseCase
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
-import com.astrainteractive.astratemplate.utils.next
-import com.astrainteractive.astratemplate.utils.prev
-import com.astrainteractive.astratemplate.utils.uuid
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

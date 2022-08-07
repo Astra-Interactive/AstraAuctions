@@ -1,10 +1,10 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
+import com.astrainteractive.astralibs.utils.VaultHook
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.sqldatabase.entities.Auction
+import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.Translation
-import com.astrainteractive.astratemplate.utils.VaultHook
 import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
@@ -53,7 +53,7 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params>() {
             return false
         }
 
-        val result = Repository.deleteAuction(auction.id)
+        val result = Repository.deleteAuction(auction)
         if (result != null) {
             player.inventory.addItem(item)
             player.playSound(AstraMarket.pluginConfig.sounds.sold)

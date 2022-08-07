@@ -6,6 +6,6 @@ import org.junit.jupiter.api.Test
 internal class DatabaseTest {
     @Test
     fun expTest() {
-        Database().onEnable()
+//        Database().onEnable()
     }
 }

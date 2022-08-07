@@ -1,8 +1,8 @@
 package com.astrainteractive.astratemplate.utils
 
 import com.astrainteractive.astralibs.FileManager
-import com.astrainteractive.astralibs.HEX
-import com.astrainteractive.astralibs.getHEXString
+import com.astrainteractive.astralibs.utils.HEX
+import com.astrainteractive.astralibs.utils.getHEXString
 
 val Translation: AstraTranslation
     get() = AstraTranslation.instance

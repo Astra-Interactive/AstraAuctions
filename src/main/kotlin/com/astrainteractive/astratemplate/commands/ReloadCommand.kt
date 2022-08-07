@@ -1,7 +1,7 @@
 package com.astrainteractive.astratemplate.commands
 
 import com.astrainteractive.astralibs.AstraLibs
-import com.astrainteractive.astralibs.registerCommand
+import com.astrainteractive.astralibs.utils.registerCommand
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
