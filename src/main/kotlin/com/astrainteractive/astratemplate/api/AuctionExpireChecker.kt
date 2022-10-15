@@ -1,11 +1,11 @@
 package com.astrainteractive.astratemplate.api
 
-import com.astrainteractive.astralibs.Logger
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.database.isConnected
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import kotlinx.coroutines.launch
+import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.database.isConnected
 import java.util.*
 
 object AuctionExpireChecker {
@@ -18,7 +18,7 @@ object AuctionExpireChecker {
         Logger.log("Expired auction checker job has started", Repository.TAG, consolePrint = false)
         job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 2000L) {
             if (!Database.instance?.connection.isConnected) return@timer
-            AsyncHelper.launch {
+            PluginScope.launch {
                 val auctions = Repository.fetchOldAuctions(AstraMarket.pluginConfig.auction.maxTime * 1000)
                 auctions?.forEach {
                     val res = Repository.expireAuction(it)

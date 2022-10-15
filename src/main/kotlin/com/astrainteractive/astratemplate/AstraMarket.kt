@@ -1,14 +1,8 @@
 package com.astrainteractive.astratemplate
 
-//import com.makeevrserg.empiretemplate.database.EmpireDatabase
 import CommandManager
-import com.astrainteractive.astralibs.AstraLibs
-import com.astrainteractive.astralibs.Logger
-import com.astrainteractive.astralibs.ServerVersion
-import com.astrainteractive.astralibs.utils.VaultHook
 import com.astrainteractive.astratemplate.api.AuctionExpireChecker
 import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.events.EventHandler
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.utils.*
 import com.astrainteractive.astratemplate.utils.config.AuctionConfig
@@ -16,6 +10,9 @@ import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
+import ru.astrainteractive.astralibs.AstraLibs
+import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
 
 class BStats private constructor(private val id:Int) {
     private val metrics = Metrics(AstraMarket.instance,id)
@@ -51,7 +48,6 @@ class AstraMarket : JavaPlugin() {
     }
 
 
-    private lateinit var eventHandler: EventHandler
 
     private lateinit var commandManager: CommandManager
 
@@ -63,11 +59,10 @@ class AstraMarket : JavaPlugin() {
         BStats.create()
         empireFiles = Files()
         AstraTranslation()
-        eventHandler = EventHandler()
         commandManager = CommandManager()
         pluginConfig = AuctionConfig.load()
         database = Database().apply { runBlocking { onEnable() } }
-        com.astrainteractive.astralibs.utils.VaultHook.onEnable()
+        VaultEconomyProvider.onEnable()
         Logger.log("Plugin enabled", TAG)
 //        if (ServerVersion.getServerVersion() == ServerVersion.UNMAINTAINED)
 //            Logger.warn("Your server version is not maintained and might be not fully functional!", TAG)
@@ -77,11 +72,10 @@ class AstraMarket : JavaPlugin() {
 
     override fun onDisable() {
         AuctionExpireChecker.stopAuctionChecker()
-        eventHandler.onDisable()
         runBlocking { database.close() }
         HandlerList.unregisterAll(this)
         Logger.log("Plugin disabled", TAG)
-        VaultHook.onDisable()
+        VaultEconomyProvider.onDisable()
     }
 
     fun reloadPlugin() {

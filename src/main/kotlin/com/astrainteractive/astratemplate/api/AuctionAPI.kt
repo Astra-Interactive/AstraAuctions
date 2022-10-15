@@ -1,13 +1,13 @@
 package com.astrainteractive.astratemplate.api
 
-import com.astrainteractive.astralibs.database.columnName
-import com.astrainteractive.astralibs.utils.catching
-import com.astrainteractive.astralibs.utils.forEach
-import com.astrainteractive.astralibs.utils.uuid
 import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.sqldatabase.Database
 import com.astrainteractive.astratemplate.utils.*
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.database.columnName
+import ru.astrainteractive.astralibs.utils.catching
+import ru.astrainteractive.astralibs.utils.forEach
+import ru.astrainteractive.astralibs.utils.uuid
 
 
 /**

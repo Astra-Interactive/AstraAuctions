@@ -1,32 +1,31 @@
 package com.astrainteractive.astratemplate.gui
 
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.events.EventManager
-import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
-import com.astrainteractive.astralibs.utils.ReflectionUtil
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 
-class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
+class AuctionGui(player: Player) : AbstractAuctionGui(player) {
 
     private val itemsInGui: List<Auction>
         get() = viewModel.auctionList.value
 
     override fun setMenuItems() {
         super.setMenuItems()
-        inventory.setItem(backButtonIndex - 1, expiredButton)
+        inventory.setItem(backPageButton.index - 1, expiredButton)
 
         for (i in 0 until maxItemsPerPage) {
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = ReflectionUtil.deserializeItem<ItemStack>(auctionItem.item, auctionItem.time).apply {
+            val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(Translation.leftButton)
@@ -49,10 +48,9 @@ class AuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGu
     }
 
     override fun onExpiredOpenClicked() {
-        AsyncHelper.launch {
-            ExpiredAuctionGui(playerMenuUtility).open()
+        PluginScope.launch {
+            ExpiredAuctionGui(playerMenuUtility.player).open()
         }
     }
 
-    override fun onInventoryClose(it: InventoryCloseEvent, manager: EventManager) = Unit
 }

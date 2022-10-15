@@ -1,21 +1,20 @@
 package com.astrainteractive.astratemplate.gui
 
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.events.EventManager
-import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
-import com.astrainteractive.astralibs.utils.ReflectionUtil
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 
-class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAuctionGui(_playerMenuUtility) {
+class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
 
-    override var menuName: String = Translation.expiredTitle
+    override var menuTitle: String = Translation.expiredTitle
     override val viewModel: ViewModel = ViewModel(playerMenuUtility.player,expired = true)
 
     private val itemsInGui: List<Auction>
@@ -23,18 +22,18 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
 
 
     override fun onExpiredOpenClicked() {
-        AsyncHelper.launch {
-            AuctionGui(playerMenuUtility).open()
+        PluginScope.launch {
+            AuctionGui(playerMenuUtility.player).open()
         }
     }
     override fun setMenuItems() {
         super.setMenuItems()
-        inventory.setItem(backButtonIndex - 1, aaucButton)
+        inventory.setItem(backPageButton.index - 1, aaucButton)
         for (i in 0 until maxItemsPerPage) {
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = ReflectionUtil.deserializeItem<ItemStack>(auctionItem.item,auctionItem.time).apply {
+            val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(Translation.rightButton)
@@ -53,7 +52,5 @@ class ExpiredAuctionGui(_playerMenuUtility: AstraPlayerMenuUtility) : AbstractAu
             inventory.setItem(i, itemStack)
         }
     }
-
-    override fun onInventoryClose(it: InventoryCloseEvent, manager: EventManager)  = Unit
 
 }

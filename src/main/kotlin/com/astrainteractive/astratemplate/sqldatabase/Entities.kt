@@ -1,12 +1,13 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
-import com.astrainteractive.astralibs.database.ColumnInfo
-import com.astrainteractive.astralibs.database.Entity
-import com.astrainteractive.astralibs.database.PrimaryKey
-import com.astrainteractive.astralibs.utils.ReflectionUtil
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.database.ColumnInfo
+import ru.astrainteractive.astralibs.database.Entity
+import ru.astrainteractive.astralibs.database.PrimaryKey
+import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 
 @Entity(Auction.TABLE)
@@ -28,7 +29,7 @@ data class Auction(
     var expired: Boolean = false,
 ) {
     val itemStack: ItemStack
-        get() = ReflectionUtil.deserializeItem(item,time)
+        get() = Serializer.fromByteArray<ItemStack>(item,BukkitInputStreamProvider)
     val owner: OfflinePlayer
         get() = Bukkit.getOfflinePlayer(UUID.fromString(minecraftUuid))
 

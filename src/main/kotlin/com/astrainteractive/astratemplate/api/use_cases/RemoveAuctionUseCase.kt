@@ -1,6 +1,5 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
-import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.sqldatabase.Auction
@@ -8,6 +7,8 @@ import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.domain.IUseCase
 import java.util.*
 
 /**
@@ -15,7 +16,7 @@ import java.util.*
  * @param player owner of auction
  * @return boolean - true if succesfully removed
  */
-class RemoveAuctionUseCase : UseCase<Boolean, RemoveAuctionUseCase.Params>() {
+class RemoveAuctionUseCase : IUseCase<Boolean, RemoveAuctionUseCase.Params> {
     class Params(
         val auction: Auction,
         val player: Player

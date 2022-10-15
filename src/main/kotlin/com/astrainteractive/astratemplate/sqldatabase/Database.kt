@@ -1,14 +1,14 @@
 package com.astrainteractive.astratemplate.sqldatabase
 
-import com.astrainteractive.astralibs.AstraLibs
-import com.astrainteractive.astralibs.Logger
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.database.DatabaseCore
-import com.astrainteractive.astralibs.database.isConnected
-import com.astrainteractive.astralibs.utils.catching
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import ru.astrainteractive.astralibs.AstraLibs
+import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.database.DatabaseCore
+import ru.astrainteractive.astralibs.database.isConnected
+import ru.astrainteractive.astralibs.utils.catching
 import java.io.File
 import java.sql.Connection
 import java.sql.DriverManager
@@ -33,7 +33,7 @@ class Database(filePath: String = "${AstraLibs.instance.dataFolder}${File.separa
             Logger.error("Could not create the database", "Database")
             return
         }
-        AsyncHelper.launch(Dispatchers.IO) {
+        PluginScope.launch(Dispatchers.IO) {
             createTable<Auction>()
         }
     }

@@ -1,11 +1,11 @@
 package com.astrainteractive.astratemplate.commands
 
-import com.astrainteractive.astralibs.AstraLibs
-import com.astrainteractive.astralibs.utils.registerCommand
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
 import org.bukkit.command.CommandSender
+import ru.astrainteractive.astralibs.AstraLibs
+import ru.astrainteractive.astralibs.utils.registerCommand
 
 class ReloadCommand {
     companion object {

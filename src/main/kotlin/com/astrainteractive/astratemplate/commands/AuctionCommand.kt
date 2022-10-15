@@ -1,11 +1,5 @@
 package com.astrainteractive.astratemplate.commands
 
-import com.astrainteractive.astralibs.*
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.menu.AstraPlayerMenuUtility
-import com.astrainteractive.astralibs.utils.registerCommand
-import com.astrainteractive.astralibs.utils.registerTabCompleter
-import com.astrainteractive.astralibs.utils.withEntry
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.use_cases.CreateAuctionUseCase
 import com.astrainteractive.astratemplate.commands.AuctionCommand.Arguments.Companion.getArgumentString
@@ -18,6 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.AstraLibs
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.utils.registerCommand
+import ru.astrainteractive.astralibs.utils.registerTabCompleter
+import ru.astrainteractive.astralibs.utils.withEntry
 
 class AuctionCommand {
 
@@ -77,11 +76,11 @@ class AuctionCommand {
         sender as Player
         when (cmd) {
             "sell" -> sell(sender, args)
-            "expired" -> AsyncHelper.launch(Dispatchers.IO) {
-                ExpiredAuctionGui(AstraPlayerMenuUtility(sender)).open()
+            "expired" -> PluginScope.launch(Dispatchers.IO) {
+                ExpiredAuctionGui(sender).open()
             }
-            "open", null -> AsyncHelper.launch(Dispatchers.IO) {
-                AuctionGui(AstraPlayerMenuUtility(sender)).open()
+            "open", null -> PluginScope.launch(Dispatchers.IO) {
+                AuctionGui(sender).open()
             }
 
         }
@@ -102,7 +101,7 @@ class AuctionCommand {
         val amount = args.getArgumentString(Arguments.amount)?.toIntOrNull() ?: 1
 
         val item = player.inventory.itemInMainHand
-        AsyncHelper.launch {
+        PluginScope.launch {
             CreateAuctionUseCase()(
                 CreateAuctionUseCase.Params(
                     maxAuctionsAllowed = maxAuctionsAllowed,

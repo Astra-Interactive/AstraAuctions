@@ -1,9 +1,5 @@
 package com.astrainteractive.astratemplate.gui
 
-import com.astrainteractive.astralibs.async.AsyncHelper
-import com.astrainteractive.astralibs.utils.next
-import com.astrainteractive.astralibs.utils.prev
-import com.astrainteractive.astralibs.utils.uuid
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.api.use_cases.AuctionBuyUseCase
 import com.astrainteractive.astratemplate.api.use_cases.ExpireAuctionUseCase
@@ -14,6 +10,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
+import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.utils.next
+import ru.astrainteractive.astralibs.utils.prev
+import ru.astrainteractive.astralibs.utils.uuid
 
 class ViewModel(private val player: Player, private val expired: Boolean = false) {
     private val _auctionList = MutableStateFlow(listOf<Auction>())
@@ -36,7 +36,7 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
 
     fun sort() {
         val sorted = Repository.sortBy(sortType, auctionList.value)
-        AsyncHelper.launch {
+        PluginScope.launch {
             _auctionList.emit(sorted)
         }
     }
@@ -64,7 +64,7 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
     }
 
     fun loadItems() =
-        AsyncHelper.launch {
+        PluginScope.launch {
             val list = Repository.fetchAuctions(if (expired) player.uuid else null,expired)
             val sorted = Repository.sortBy(sortType, list)
             _auctionList.emit(sorted)

@@ -1,22 +1,3 @@
-object Kotlin {
-    const val version = "1.7.0"
-    const val coroutines = "1.6.3"
-    const val json = "1.3.3"
-    const val kaml = "0.46.0"
-}
-object Spigot {
-    const val version = "1.19-R0.1-SNAPSHOT"
-    const val placeholderAPI = "2.11.2"
-    const val protocolLib = "4.8.0"
-    const val worldGuard = "7.0.7"
-    const val vault = "1.7"
-    const val coreProtect = "21.2"
-    const val modelEngine = "R2.5.0"
-    const val essentials = "2.19.5-SNAPSHOT"
-    const val discordSRV = "1.25.0"
-    const val luckPerms = "5.4"
-    const val bstats = "3.0.0"
-}
 
 group = "com.astrainteractive"
 version = "1.1.2"
@@ -44,35 +25,45 @@ repositories {
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://nexus.scarsz.me/content/groups/public/")
     maven("https://repo.dmulloy2.net/repository/public/")
-    maven("https://repo.codemc.org/repository/maven-public")
     maven("https://repo.essentialsx.net/snapshots/")
     maven("https://repo.maven.apache.org/maven2/")
     maven("https://repo.maven.apache.org/maven2/")
     maven("https://maven.enginehub.org/repo/")
     maven("https://repo1.maven.org/maven2/")
+    maven("https://m2.dv8tion.net/releases")
     maven("https://maven.playpro.com")
     maven("https://jitpack.io")
-    flatDir { dirs("libs") }
+    maven {
+        url = uri("https://maven.pkg.github.com/Astra-Interactive/AstraLibs")
+        val config = project.getConfig()
+        credentials {
+            username = config.username
+            password = config.token
+        }
+    }
 }
 
 dependencies {
     // Kotlin
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.Kotlin.version}")
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Kotlin.coroutines}")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.Kotlin.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Dependencies.Kotlin.coroutines}")
+    // Serialization
+    implementation("org.jetbrains.kotlin:kotlin-serialization:${Dependencies.Kotlin.version}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${Dependencies.Kotlin.json}")
+    implementation("com.charleskorn.kaml:kaml:${Dependencies.Kotlin.kaml}")
     // AstraLibs
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-    implementation("org.bstats:bstats-bukkit:${Spigot.bstats}")
-    compileOnly("io.papermc.paper:paper-api:${Spigot.version}")
-    compileOnly("org.spigotmc:spigot-api:${Spigot.version}")
-    compileOnly("org.spigotmc:spigot:${Spigot.version}")
-    compileOnly("com.github.MilkBowl:VaultAPI:${Spigot.vault}")
-    testImplementation("junit:junit:4.13.1")
-    testImplementation("com.github.seeseemelk:MockBukkit-v1.18:1.24.1")
-    testImplementation("io.kotest:kotest-runner-junit5:latest.release")
-    testImplementation("io.kotest:kotest-assertions-core:latest.release")
+    implementation("ru.astrainteractive.astralibs:ktx-core:${Dependencies.Kotlin.astraLibs}")
+    implementation("ru.astrainteractive.astralibs:spigot-core:${Dependencies.Kotlin.astraLibs}")
+    implementation("org.bstats:bstats-bukkit:${Dependencies.Spigot.bstats}")
+    compileOnly("io.papermc.paper:paper-api:${Dependencies.Spigot.version}")
+    compileOnly("org.spigotmc:spigot-api:${Dependencies.Spigot.version}")
+    compileOnly("org.spigotmc:spigot:${Dependencies.Spigot.version}")
+    compileOnly("com.github.MilkBowl:VaultAPI:${Dependencies.Spigot.vault}")
+    // Test
     testImplementation(kotlin("test"))
+    testImplementation("org.testng:testng:7.1.0")
 }
 
 
@@ -115,10 +106,10 @@ tasks{
 tasks.shadowJar {
     dependencies {
         include(dependency(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", ".aar")))))
-        include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}"))
-        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Kotlin.coroutines}"))
-        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Kotlin.coroutines}"))
-        include(dependency("org.bstats:bstats-bukkit:${Spigot.bstats}"))
+        include(dependency("org.jetbrains.kotlin:kotlin-gradle-plugin:${Dependencies.Kotlin.version}"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.Kotlin.coroutines}"))
+        include(dependency("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Dependencies.Kotlin.coroutines}"))
+        include(dependency("org.bstats:bstats-bukkit:${Dependencies.Spigot.bstats}"))
     }
     relocate("org.bstats", "com.astrainteractive.astratemplate")
     isReproducibleFileOrder = true

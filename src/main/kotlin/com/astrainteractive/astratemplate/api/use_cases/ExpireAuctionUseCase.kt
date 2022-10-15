@@ -1,18 +1,20 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
-import com.astrainteractive.astralibs.Logger
 import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.sqldatabase.Auction
 import com.astrainteractive.astratemplate.utils.Permissions
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.domain.IUseCase
+
 /**
  * @param player admin or moderator
  * @param _auction auction to expire
  * @return boolean - true if success false if not
  */
-class ExpireAuctionUseCase : UseCase<Boolean, ExpireAuctionUseCase.Params>() {
+class ExpireAuctionUseCase : IUseCase<Boolean, ExpireAuctionUseCase.Params> {
     class Params(
         val auction: Auction,
         val player: Player? = null

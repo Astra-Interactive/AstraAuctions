@@ -1,6 +1,5 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
-import com.astrainteractive.astralibs.utils.VaultHook
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
 import com.astrainteractive.astratemplate.sqldatabase.Auction
@@ -10,6 +9,8 @@ import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.domain.IUseCase
+import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
 import java.util.*
 
 /**
@@ -17,7 +18,7 @@ import java.util.*
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params>() {
+class AuctionBuyUseCase : IUseCase<Boolean, AuctionBuyUseCase.Params> {
     class Params(
         val auction: Auction,
         val player: Player
@@ -39,17 +40,17 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params>() {
             player.sendMessage(Translation.inventoryFull)
             return false
         }
-        var vaultResponse = VaultHook.takeMoney(player, auction.price.toDouble())
+        var vaultResponse = VaultEconomyProvider.takeMoney(player, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
             player.sendMessage(Translation.notEnoughMoney)
             return false
         }
-        vaultResponse = VaultHook.addMoney(owner, auction.price.toDouble())
+        vaultResponse = VaultEconomyProvider.addMoney(owner, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
             player.sendMessage(Translation.failedToPay)
-            VaultHook.addMoney(player, auction.price.toDouble())
+            VaultEconomyProvider.addMoney(player, auction.price.toDouble())
             return false
         }
 
@@ -68,8 +69,8 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params>() {
                     .replace("%item%", item.displayNameOrMaterialName()).replace("%price%", auction.price.toString())
             )
         } else {
-            VaultHook.addMoney(player, auction.price.toDouble())
-            VaultHook.takeMoney(owner, auction.price.toDouble())
+            VaultEconomyProvider.addMoney(player, auction.price.toDouble())
+            VaultEconomyProvider.takeMoney(owner, auction.price.toDouble())
             player.playSound(AstraMarket.pluginConfig.sounds.fail)
             player.sendMessage(Translation.dbError)
         }
