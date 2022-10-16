@@ -1,9 +1,15 @@
-
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
 import java.io.InputStream
+import java.net.URI
 import java.util.*
 
 object Dependencies {
+    const val version = "1.1.2"
+    const val group = "com.astrainteractive"
+    const val destinationDirectoryPath = "D:\\Minecraft Servers\\FarmWorld\\farm\\plugins"
+
     object Kotlin {
         const val version = "1.7.0"
         const val coroutines = "1.6.3"
@@ -12,8 +18,13 @@ object Dependencies {
         const val exposed = "0.38.1"
         const val jdbc = "3.36.0.3"
         const val astraLibs = "2.0.0"
+        const val shadow = "7.1.2"
+        const val mysqlDriver = "8.0.20"
+        const val orgTesting = "7.1.0"
     }
+
     object Spigot {
+        const val velocity = "3.1.1"
         const val version = "1.19-R0.1-SNAPSHOT"
         const val placeholderAPI = "2.11.2"
         const val protocolLib = "4.8.0"
@@ -28,7 +39,7 @@ object Dependencies {
     }
 
     object Repositories {
-        val lumine = "https://mvn.lumine.io/repository/maven-public/"
+        const val lumine = "https://mvn.lumine.io/repository/maven-public/"
         const val jitpack = "https://jitpack.io"
         const val clojars = "https://repo.clojars.org/"
         const val playpro = "https://maven.playpro.com"
@@ -41,18 +52,33 @@ object Dependencies {
         const val scarsz = "https://nexus.scarsz.me/content/groups/public/"
         const val papermc = "https://papermc.io/repo/repository/maven-public/"
         const val spigotmc = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+
+        /**
+         * PlaceholderAPI
+         */
         const val extendedclip = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+
     }
 
-    object Implementation {
+    object Libraries {
+        // Kotlin
         const val kotlinGradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Kotlin.version}"
-        const val kotlinxCoroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.Kotlin.coroutines}"
+
+        // Coroutines
         const val kotlinxCoroutinesCore =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.Kotlin.coroutines}"
+        const val kotlinxCoroutinesCoreJVM =
             "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:${Dependencies.Kotlin.coroutines}"
+
+        // Serialization
         const val kotlinxSerialization = "org.jetbrains.kotlin:kotlin-serialization:${Dependencies.Kotlin.version}"
         const val kotlinxSerializationJson =
             "org.jetbrains.kotlinx:kotlinx-serialization-json:${Dependencies.Kotlin.json}"
         const val kotlinxSerializationYaml = "com.charleskorn.kaml:kaml:${Dependencies.Kotlin.kaml}"
+
+        // AstraLibs
+        const val astraLibsKtxCore = "ru.astrainteractive.astralibs:ktx-core:${Dependencies.Kotlin.astraLibs}"
+        const val astraLibsSpigotCore = "ru.astrainteractive.astralibs:spigot-core:${Dependencies.Kotlin.astraLibs}"
 
         // Exposed
         const val jdbc = "org.xerial:sqlite-jdbc:${Kotlin.jdbc}"
@@ -60,13 +86,17 @@ object Dependencies {
         const val exposedJDBC = "org.jetbrains.exposed:exposed-jdbc:${Kotlin.exposed}"
         const val exposedDAO = "org.jetbrains.exposed:exposed-dao:${Kotlin.exposed}"
         const val exposedCORD = "org.jetbrains.exposed:exposed-core:${Kotlin.exposed}"
-    }
+        const val mysqlConnectorJava = "mysql:mysql-connector-java:${Dependencies.Kotlin.mysqlDriver}"
 
-    object CompileOnly {
+        // Testing
+        const val orgTeting = "org.testng:testng:${Dependencies.Kotlin.orgTesting}"
+
+        // Spigot
         const val essentialsX = "net.essentialsx:EssentialsX:${Dependencies.Spigot.essentials}"
         const val paperMC = "io.papermc.paper:paper-api:${Dependencies.Spigot.version}"
         const val spigotApi = "org.spigotmc:spigot-api:${Dependencies.Spigot.version}"
         const val spigot = "org.spigotmc:spigot:${Dependencies.Spigot.version}"
+        const val velocityApi = "com.velocitypowered:velocity-api:${Dependencies.Spigot.velocity}"
         const val protocolLib = "com.comphenix.protocol:ProtocolLib:${Dependencies.Spigot.protocolLib}"
         const val placeholderapi = "me.clip:placeholderapi:${Dependencies.Spigot.placeholderAPI}"
         const val worldguard = "com.sk89q.worldguard:worldguard-bukkit:${Dependencies.Spigot.worldGuard}"
@@ -74,27 +104,6 @@ object Dependencies {
         const val vaultAPI = "com.github.MilkBowl:VaultAPI:${Dependencies.Spigot.vault}"
         const val coreprotect = "net.coreprotect:coreprotect:${Dependencies.Spigot.coreProtect}"
         const val modelengine = "com.ticxo.modelengine:api:${Dependencies.Spigot.modelEngine}"
+        const val bstats = "org.bstats:bstats-bukkit:${Dependencies.Spigot.bstats}"
     }
-}
-
-fun Project.getPluginProperties(path: String): Properties {
-    val properties: Properties = Properties()
-    val inputStream: InputStream = rootProject.file(path).inputStream()
-    properties.load(inputStream)
-    return properties
-}
-
-data class Config(
-    val username: String,
-    val password: String,
-    val token:String
-)
-
-fun Project.getConfig(): Config {
-    val properties = this.getPluginProperties("astra.properties")
-    return Config(
-        properties.getProperty("username") ?: "",
-        properties.getProperty("password") ?: "",
-        properties.getProperty("token") ?: "",
-    )
 }
