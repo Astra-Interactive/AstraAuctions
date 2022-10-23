@@ -92,6 +92,7 @@ open class AbstractAuctionGui(
     open fun onExpiredOpenClicked() {}
     override fun onInventoryClicked(e: InventoryClickEvent) {
         super.onInventoryClicked(e)
+        e.isCancelled = true
         when (e.slot) {
             nextPageButton.index -> onNextPageClicked()
             prevPageButton.index -> onPrevPageClicked()
@@ -131,6 +132,9 @@ open class AbstractAuctionGui(
 
     override fun onCreated() {
         playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
+        viewModel.auctionList.collectOn {
+            setMenuItems()
+        }
         setMenuItems()
     }
 

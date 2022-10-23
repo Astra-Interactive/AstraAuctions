@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
 import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 
@@ -31,7 +32,7 @@ class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
+            val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item, BukkitInputStreamProvider).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(Translation.rightButton)

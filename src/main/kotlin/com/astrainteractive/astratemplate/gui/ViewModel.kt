@@ -5,8 +5,10 @@ import com.astrainteractive.astratemplate.api.use_cases.AuctionBuyUseCase
 import com.astrainteractive.astratemplate.api.use_cases.ExpireAuctionUseCase
 import com.astrainteractive.astratemplate.api.use_cases.RemoveAuctionUseCase
 import com.astrainteractive.astratemplate.api.entities.Auction
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -36,8 +38,10 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
 
     fun sort() {
         val sorted = Repository.sortBy(sortType, auctionList.value)
-        PluginScope.launch {
-            _auctionList.emit(sorted)
+        PluginScope.launch(Dispatchers.IO) {
+            _auctionList.update {
+                sorted
+            }
         }
     }
 
@@ -64,10 +68,12 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
     }
 
     fun loadItems() =
-        PluginScope.launch {
+        PluginScope.launch(Dispatchers.IO) {
             val list = Repository.fetchAuctions(if (expired) player.uuid else null,expired)
             val sorted = Repository.sortBy(sortType, list)
-            _auctionList.emit(sorted)
+            _auctionList.update {
+                sorted
+            }
         }
 
     init {
