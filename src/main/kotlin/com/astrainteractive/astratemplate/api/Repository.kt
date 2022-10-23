@@ -1,6 +1,6 @@
 package com.astrainteractive.astratemplate.api
 
-import com.astrainteractive.astratemplate.sqldatabase.Auction
+import com.astrainteractive.astratemplate.api.entities.Auction
 import com.astrainteractive.astratemplate.utils.*
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

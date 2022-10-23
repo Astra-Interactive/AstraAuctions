@@ -4,7 +4,7 @@ import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.api.use_cases.AuctionBuyUseCase
 import com.astrainteractive.astratemplate.api.use_cases.ExpireAuctionUseCase
 import com.astrainteractive.astratemplate.api.use_cases.RemoveAuctionUseCase
-import com.astrainteractive.astratemplate.sqldatabase.Auction
+import com.astrainteractive.astratemplate.api.entities.Auction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

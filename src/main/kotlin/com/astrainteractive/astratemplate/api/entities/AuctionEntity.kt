@@ -1,4 +1,4 @@
-package com.astrainteractive.astratemplate.sqldatabase
+package com.astrainteractive.astratemplate.api.entities
 
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer

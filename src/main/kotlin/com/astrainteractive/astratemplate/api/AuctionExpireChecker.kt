@@ -1,7 +1,6 @@
 package com.astrainteractive.astratemplate.api
 
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.sqldatabase.Database
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.Logger
 import ru.astrainteractive.astralibs.async.PluginScope

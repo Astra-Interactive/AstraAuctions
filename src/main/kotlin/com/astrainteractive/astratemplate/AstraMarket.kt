@@ -2,8 +2,7 @@ package com.astrainteractive.astratemplate
 
 import CommandManager
 import com.astrainteractive.astratemplate.api.AuctionExpireChecker
-import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.sqldatabase.Database
+import com.astrainteractive.astratemplate.api.Database
 import com.astrainteractive.astratemplate.utils.*
 import com.astrainteractive.astratemplate.utils.config.AuctionConfig
 import kotlinx.coroutines.runBlocking

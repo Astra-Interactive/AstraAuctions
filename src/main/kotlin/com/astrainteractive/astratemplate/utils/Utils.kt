@@ -1,9 +1,7 @@
 package com.astrainteractive.astratemplate.utils
 
-import com.astrainteractive.astratemplate.sqldatabase.Database
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.sql.ResultSet
 
 
 fun ItemStack.setDisplayName(name: String) {

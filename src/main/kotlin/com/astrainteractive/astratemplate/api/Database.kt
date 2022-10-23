@@ -1,8 +1,8 @@
-package com.astrainteractive.astratemplate.sqldatabase
+package com.astrainteractive.astratemplate.api
 
+import com.astrainteractive.astratemplate.api.entities.Auction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import ru.astrainteractive.astralibs.AstraLibs
 import ru.astrainteractive.astralibs.Logger
 import ru.astrainteractive.astralibs.async.PluginScope

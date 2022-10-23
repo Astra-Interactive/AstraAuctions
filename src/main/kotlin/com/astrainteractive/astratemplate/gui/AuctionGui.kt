@@ -1,12 +1,10 @@
 package com.astrainteractive.astratemplate.gui
 
-import com.astrainteractive.astratemplate.api.*
-import com.astrainteractive.astratemplate.sqldatabase.Auction
+import com.astrainteractive.astratemplate.api.entities.Auction
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.utils.encoding.Serializer

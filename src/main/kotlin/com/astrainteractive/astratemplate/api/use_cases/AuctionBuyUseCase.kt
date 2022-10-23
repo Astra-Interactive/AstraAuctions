@@ -2,7 +2,7 @@ package com.astrainteractive.astratemplate.api.use_cases
 
 import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.sqldatabase.Auction
+import com.astrainteractive.astratemplate.api.entities.Auction
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
 import com.astrainteractive.astratemplate.utils.playSound
