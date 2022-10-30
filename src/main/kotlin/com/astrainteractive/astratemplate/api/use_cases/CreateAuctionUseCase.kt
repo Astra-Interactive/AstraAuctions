@@ -1,14 +1,17 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
+import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astratemplate.AstraMarket
-import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.api.entities.Auction
+import com.astrainteractive.astratemplate.modules.ConfigModule
+import com.astrainteractive.astratemplate.modules.DataSourceModule
+import com.astrainteractive.astratemplate.modules.TranslationModule
 import com.astrainteractive.astratemplate.utils.Translation
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.IUseCase
 import ru.astrainteractive.astralibs.utils.encoding.BukkitOutputStreamProvider
 import ru.astrainteractive.astralibs.utils.encoding.Serializer
@@ -17,6 +20,10 @@ import kotlin.math.max
 import kotlin.math.min
 
 class CreateAuctionUseCase : IUseCase<Boolean, CreateAuctionUseCase.Params> {
+    private val dataSource by DataSourceModule
+    private val translation by TranslationModule
+    private val config by ConfigModule
+
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,
@@ -33,41 +40,48 @@ class CreateAuctionUseCase : IUseCase<Boolean, CreateAuctionUseCase.Params> {
         var amount = params.amount
 
         if (item == null || item.type == Material.AIR) {
-            player.sendMessage(Translation.wrongItemInHand)
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
+            player.sendMessage(translation.wrongItemInHand)
+            player.playSound(config.sounds.fail)
             return false
         }
 
         amount = min(item.amount, amount)
         amount = max(amount, 1)
 
-        val auctionsAmount = Repository.countPlayerAuctions(player) ?: 0
+        val auctionsAmount = dataSource.countPlayerAuctions(player.uuid) ?: 0
         if (auctionsAmount > maxAuctionsAllowed) {
-            player.sendMessage(Translation.maxAuctions)
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
+            player.sendMessage(translation.maxAuctions)
+            player.playSound(config.sounds.fail)
             return false
         }
-        if (price > AstraMarket.pluginConfig.auction.maxPrice || price < AstraMarket.pluginConfig.auction.minPrice) {
-            player.sendMessage(Translation.wrongPrice)
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
+        if (price > config.auction.maxPrice || price < config.auction.minPrice) {
+            player.sendMessage(translation.wrongPrice)
+            player.playSound(config.sounds.fail)
             return false
         }
 
         val itemClone = item.clone().apply { this.amount = amount }
-        val auction = Auction(-1,"",player.uuid,System.currentTimeMillis(), Serializer.toByteArray(itemClone,BukkitOutputStreamProvider), price)
+        val auction = AuctionDTO(
+            -1,
+            "",
+            player.uuid,
+            System.currentTimeMillis(),
+            Serializer.toByteArray(itemClone, BukkitOutputStreamProvider),
+            price,
+            expired = false
+        )
 
-        val result = Repository.insertAuction(auction)
+        val result = dataSource.insertAuction(auction)
         if (result != null) {
             item.amount -= amount
-            player.sendMessage(Translation.auctionAdded)
-            player.playSound(AstraMarket.pluginConfig.sounds.success)
-            Repository.fetchAuctions()
-            if (AstraMarket.pluginConfig.auction.announce)
-                Bukkit.broadcastMessage(Translation.broadcast.replace("%player%", player.name))
+            player.sendMessage(translation.auctionAdded)
+            player.playSound(config.sounds.success)
+            if (config.auction.announce)
+                Bukkit.broadcastMessage(translation.broadcast.replace("%player%", player.name))
             return true
         } else {
-            player.playSound(AstraMarket.pluginConfig.sounds.fail)
-            player.sendMessage(Translation.dbError)
+            player.playSound(config.sounds.fail)
+            player.sendMessage(translation.dbError)
             return false
         }
 

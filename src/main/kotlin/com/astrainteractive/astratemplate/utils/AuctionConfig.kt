@@ -1,9 +1,7 @@
-package com.astrainteractive.astratemplate.utils.config
+package com.astrainteractive.astratemplate.utils
 
-import com.astrainteractive.astratemplate.AstraMarket
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.AstraYamlParser
 
 
 data class AuctionConfig(
@@ -47,16 +45,5 @@ data class AuctionConfig(
             meta.setCustomModelData(customModelData)
             itemMeta = meta
         }
-    }
-
-    companion object {
-        fun load(): AuctionConfig {
-            val c = AstraMarket.empireFiles.configFile.fileConfiguration
-            val config =
-                AstraYamlParser.fileConfigurationToClass<AuctionConfig>(c)
-                    ?: AuctionConfig()
-            return config
-        }
-
     }
 }

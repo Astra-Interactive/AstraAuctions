@@ -8,7 +8,7 @@ import ru.astrainteractive.astralibs.file_manager.FileManager
  * Except for translation.yml - it should be stored at EmpireTranslation
  * @see Translation
  */
-class Files {
+object Files {
     val configFile: FileManager =
         FileManager("config.yml")
 }

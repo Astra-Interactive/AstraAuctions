@@ -1,10 +1,12 @@
 package com.astrainteractive.astratemplate.gui
 
+import com.astrainteractive.astramarket.domain.IDataSource
+import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astratemplate.api.*
 import com.astrainteractive.astratemplate.api.use_cases.AuctionBuyUseCase
 import com.astrainteractive.astratemplate.api.use_cases.ExpireAuctionUseCase
 import com.astrainteractive.astratemplate.api.use_cases.RemoveAuctionUseCase
-import com.astrainteractive.astratemplate.api.entities.Auction
+import com.astrainteractive.astratemplate.utils.sortBy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,14 +14,19 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
+import ru.astrainteractive.astralibs.architecture.ViewModel
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.utils.next
 import ru.astrainteractive.astralibs.utils.prev
 import ru.astrainteractive.astralibs.utils.uuid
 
-class ViewModel(private val player: Player, private val expired: Boolean = false) {
-    private val _auctionList = MutableStateFlow(listOf<Auction>())
-    val auctionList: StateFlow<List<Auction>>
+class AuctionViewModel(
+    private val player: Player,
+    private val expired: Boolean = false,
+    private val dataSource: IDataSource
+) : ViewModel() {
+    private val _auctionList = MutableStateFlow(listOf<AuctionDTO>())
+    val auctionList: StateFlow<List<AuctionDTO>>
         get() = _auctionList
     val maxItemsAmount: Int
         get() = _auctionList.value.size
@@ -37,7 +44,8 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
     }
 
     fun sort() {
-        val sorted = Repository.sortBy(sortType, auctionList.value)
+
+        val sorted = auctionList.value.sortBy(sortType)
         PluginScope.launch(Dispatchers.IO) {
             _auctionList.update {
                 sorted
@@ -45,11 +53,11 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
         }
     }
 
-    private suspend fun onExpiredAuctionClicked(auction: Auction): Boolean {
+    private suspend fun onExpiredAuctionClicked(auction: AuctionDTO): Boolean {
         return removeAuctionUseCase(RemoveAuctionUseCase.Params(auction, player))
     }
 
-    private suspend fun onAuctionClicked(auction: Auction, clickType: ClickType): Boolean {
+    private suspend fun onAuctionClicked(auction: AuctionDTO, clickType: ClickType): Boolean {
         return when (clickType) {
             ClickType.LEFT -> auctionBuyUseCase(AuctionBuyUseCase.Params(auction, player))
             ClickType.RIGHT -> removeAuctionUseCase(RemoveAuctionUseCase.Params(auction, player))
@@ -69,8 +77,10 @@ class ViewModel(private val player: Player, private val expired: Boolean = false
 
     fun loadItems() =
         PluginScope.launch(Dispatchers.IO) {
-            val list = Repository.fetchAuctions(if (expired) player.uuid else null,expired)
-            val sorted = Repository.sortBy(sortType, list)
+
+            val list =
+                if (!expired) dataSource.getAuctions(expired) else dataSource.getUserAuctions(player.uuid, expired)
+            val sorted = list?.sortBy(sortType) ?: emptyList()
             _auctionList.update {
                 sorted
             }

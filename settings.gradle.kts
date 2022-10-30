@@ -3,3 +3,4 @@
  */
 
 rootProject.name = "AstraMarket"
+include("domain")

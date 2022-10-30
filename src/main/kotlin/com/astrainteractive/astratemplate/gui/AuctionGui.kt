@@ -1,6 +1,7 @@
 package com.astrainteractive.astratemplate.gui
 
-import com.astrainteractive.astratemplate.api.entities.Auction
+import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astratemplate.modules.AuctionViewModelFactory
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
@@ -12,8 +13,9 @@ import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 
 class AuctionGui(player: Player) : AbstractAuctionGui(player) {
+    override val viewModel: AuctionViewModel = AuctionViewModelFactory(player,false).provide()
 
-    private val itemsInGui: List<Auction>
+    private val itemsInGui: List<AuctionDTO>
         get() = viewModel.auctionList.value
 
     override fun setMenuItems() {
@@ -27,17 +29,17 @@ class AuctionGui(player: Player) : AbstractAuctionGui(player) {
             val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item, BukkitInputStreamProvider).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
-                lore.add(Translation.leftButton)
-                lore.add(Translation.middleClick)
-                lore.add(Translation.rightButton)
+                lore.add(translation.leftButton)
+                lore.add(translation.middleClick)
+                lore.add(translation.rightButton)
                 lore.add(
-                    Translation.auctionBy.replace(
+                    translation.auctionBy.replace(
                         "%player_owner%",
                         Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid))?.name ?: "NULL"
                     )
                 )
-                lore.add(Translation.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
-                lore.add(Translation.auctionPrice.replace("%price%", auctionItem.price.toString()))
+                lore.add(translation.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
+                lore.add(translation.auctionPrice.replace("%price%", auctionItem.price.toString()))
 
                 meta.lore = lore
                 setItemMeta(meta)

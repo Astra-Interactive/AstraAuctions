@@ -1,10 +1,10 @@
 package com.astrainteractive.astratemplate.gui
 
 import com.astrainteractive.astratemplate.AstraMarket
+import com.astrainteractive.astratemplate.modules.ConfigModule
+import com.astrainteractive.astratemplate.modules.TranslationModule
 import com.astrainteractive.astratemplate.utils.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -12,45 +12,51 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.menu.*
 import java.util.concurrent.TimeUnit
 
-open class AbstractAuctionGui(
+abstract class AbstractAuctionGui(
     player: Player
 ) : PaginatedMenu() {
     override val playerMenuUtility: IPlayerHolder = DefaultPlayerHolder(player)
 
+    val translation by TranslationModule
+    private val config by ConfigModule
 
-    override var menuTitle: String = Translation.title
+    override var menuTitle: String = translation.title
     override val menuSize: AstraMenuSize = AstraMenuSize.XL
-    open val viewModel: ViewModel = ViewModel(playerMenuUtility.player)
+    abstract val viewModel: AuctionViewModel
 
     override val backPageButton = object : IInventoryButton {
         override val item: ItemStack =
-            AstraMarket.pluginConfig.buttons.back.toItemStack().apply { setDisplayName(Translation.back) }
+            config.buttons.back.toItemStack().apply { setDisplayName(translation.back) }
         override val index: Int = 49
+        override val onClick: (e: InventoryClickEvent) -> Unit = {}
     }
     override val nextPageButton = object : IInventoryButton {
         override val item: ItemStack =
-            AstraMarket.pluginConfig.buttons.next.toItemStack().apply { setDisplayName(Translation.next) }
+            config.buttons.next.toItemStack().apply { setDisplayName(translation.next) }
         override val index: Int = 53
+        override val onClick: (e: InventoryClickEvent) -> Unit = {}
     }
     override val prevPageButton = object : IInventoryButton {
         override val item: ItemStack =
-            AstraMarket.pluginConfig.buttons.previous.toItemStack().apply { setDisplayName(Translation.prev) }
+            config.buttons.previous.toItemStack().apply { setDisplayName(translation.prev) }
         override val index: Int = 45
+        override val onClick: (e: InventoryClickEvent) -> Unit = {}
     }
 
 
     val expiredButton: ItemStack =
-        AstraMarket.pluginConfig.buttons.expired.toItemStack().apply { setDisplayName(Translation.expired) }
+        config.buttons.expired.toItemStack().apply { setDisplayName(translation.expired) }
 
     val aaucButton: ItemStack =
-        AstraMarket.pluginConfig.buttons.aauc.toItemStack().apply { setDisplayName(Translation.aauc) }
+        config.buttons.aauc.toItemStack().apply { setDisplayName(translation.aauc) }
 
     private val sortButton: ItemStack
-        get() = AstraMarket.pluginConfig.buttons.sort.toItemStack().apply {
-            setDisplayName("${Translation.sort} ${viewModel.sortType.desc}")
+        get() = config.buttons.sort.toItemStack().apply {
+            setDisplayName("${translation.sort} ${viewModel.sortType.desc}")
         }
 
     override var maxItemsPerPage: Int = 45
@@ -59,33 +65,33 @@ open class AbstractAuctionGui(
         get() = viewModel.maxItemsAmount
 
     open fun onNextPageClicked() {
-        playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
+        playerMenuUtility.player.playSound(config.sounds.open)
         setMenuItems()
     }
 
     open fun onPrevPageClicked() {
-        playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
+        playerMenuUtility.player.playSound(config.sounds.open)
         setMenuItems()
     }
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
-        playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
+        playerMenuUtility.player.playSound(config.sounds.open)
         viewModel.onSortButtonClicked(isRightClick)
         inventory.setItem(backPageButton.index + 1, sortButton)
     }
 
     open fun onCloseClicked() {
         playerMenuUtility.player.closeInventory()
-        playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.close)
+        playerMenuUtility.player.playSound(config.sounds.close)
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
         PluginScope.launch(Dispatchers.IO) {
             val result = viewModel.onAuctionItemClicked(i, clickType)
             if (result)
-                playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.sold)
+                playerMenuUtility.player.playSound(config.sounds.sold)
             else
-                playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.fail)
+                playerMenuUtility.player.playSound(config.sounds.fail)
         }
     }
 
@@ -117,7 +123,7 @@ open class AbstractAuctionGui(
         val days = unit.toDays(time)
         val hours = unit.toHours(time) - days * 24
         val minutes = unit.toMinutes(time) - unit.toHours(time) * 60
-        return Translation.timeAgoFormat
+        return translation.timeAgoFormat
             .replace("%days%", days.toString())
             .replace("%hours%", hours.toString())
             .replace("%minutes%", minutes.toString())
@@ -131,7 +137,7 @@ open class AbstractAuctionGui(
     }
 
     override fun onCreated() {
-        playerMenuUtility.player.playSound(AstraMarket.pluginConfig.sounds.open)
+        playerMenuUtility.player.playSound(config.sounds.open)
         viewModel.auctionList.collectOn {
             setMenuItems()
         }

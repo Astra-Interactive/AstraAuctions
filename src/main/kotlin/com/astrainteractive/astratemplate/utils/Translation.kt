@@ -1,148 +1,127 @@
 package com.astrainteractive.astratemplate.utils
 
 import ru.astrainteractive.astralibs.file_manager.FileManager
-import ru.astrainteractive.astralibs.utils.HEX
-import ru.astrainteractive.astralibs.utils.getHEXString
+import ru.astrainteractive.astralibs.utils.BaseTranslation
 
-val Translation: AstraTranslation
-    get() = AstraTranslation.instance
+class Translation() : BaseTranslation() {
 
-class AstraTranslation {
-    companion object {
-        lateinit var instance: AstraTranslation
-    }
-
-    init {
-        instance = this
-    }
-
-    private val _translationFile: FileManager = FileManager("translations.yml")
-    private val translation = _translationFile.fileConfiguration
-
-
-    private fun getHEXString(path: String, default: String): String {
-        if (!translation.contains(path)) {
-            translation.set(path, default)
-            _translationFile.save()
-        }
-        return translation.getHEXString(path) ?: default.HEX()
-    }
+    override val translationFile: FileManager = FileManager("translations.yml")
 
 
     //General
-    val reloadStarted: String = getHEXString("general.reload_started", "#dbbb18Перезагрузка плагина")
+    val reloadStarted: String = translationValue("general.reload_started", "#dbbb18Перезагрузка плагина")
     val reloadSuccess: String =
-        getHEXString("general.reload_complete", "#42f596Перезагрузка успешно завершена")
+        translationValue("general.reload_complete", "#42f596Перезагрузка успешно завершена")
     val noPermissions: String =
-        getHEXString("general.no_permission", "#f55442У вас нет прав")
+        translationValue("general.no_permission", "#f55442У вас нет прав")
     val onlyForPlayers: String =
-        getHEXString("general.player_command", "#f55442Эта команда только для игроков")
+        translationValue("general.player_command", "#f55442Эта команда только для игроков")
     val wrongArgs: String =
-        getHEXString("general.wrong_args", "#f55442Неверное использование команды")
+        translationValue("general.wrong_args", "#f55442Неверное использование команды")
     val dbError: String =
-        getHEXString("general.db_error", "#f55442Произошла ошибка")
+        translationValue("general.db_error", "#f55442Произошла ошибка")
     val unexpectedError: String =
-        getHEXString("general.error", "#f55442Произошла непредвиденная ошибка")
+        translationValue("general.error", "#f55442Произошла непредвиденная ошибка")
     val timeAgoFormat: String =
-        getHEXString("general.time_format", "%days%дн. %hours%ч. %minutes%м. назад")
+        translationValue("general.time_format", "%days%дн. %hours%ч. %minutes%м. назад")
 
     //Auction
     val wrongItemInHand: String =
-        getHEXString("auction.wrong_item", "#f55442Предмет в вашей руке не подходит для продажи")
+        translationValue("auction.wrong_item", "#f55442Предмет в вашей руке не подходит для продажи")
     val wrongPrice: String =
-        getHEXString("auction.wrong_price", "#f55442Неверный ценовой диапазон")
+        translationValue("auction.wrong_price", "#f55442Неверный ценовой диапазон")
     val auctionAdded: String =
-        getHEXString("auction.slot_added", "#18dbd1Предмет добавлен на аукцион")
+        translationValue("auction.slot_added", "#18dbd1Предмет добавлен на аукцион")
     val inventoryFull: String =
-        getHEXString("auction.inventory_full", "#f55442Инвентарь полон")
+        translationValue("auction.inventory_full", "#f55442Инвентарь полон")
     val ownerCantBeBuyer: String =
-        getHEXString("auction.owner_not_buyer", "#f55442Вы не можете купить собственный лот")
+        translationValue("auction.owner_not_buyer", "#f55442Вы не можете купить собственный лот")
     val failedToPay: String =
-        getHEXString("auction.failed_to_pay", "#f55442Не удалось выплатить деньги")
+        translationValue("auction.failed_to_pay", "#f55442Не удалось выплатить деньги")
     val notifyUserBuy: String =
-        getHEXString(
+        translationValue(
             "auction.notifyUserBuy",
             "#18dbd1Вы купили предмет #dbaa18%item%#18dbd1 у игрока #dbaa18%player_owner%#18dbd1 за #dbaa18%price%"
         )
     val notifyOwnerUserBuy: String =
-        getHEXString(
+        translationValue(
             "auction.notifyOwnerUserBuy",
             "#18dbd1Игрок #dbaa18%player%#18dbd1 купил у вас #dbaa18%item%#18dbd1 за #dbaa18%price%"
         )
     val notEnoughMoney: String =
-        getHEXString("auction.not_enough_money", "#f55442У вас недостаточно денег")
+        translationValue("auction.not_enough_money", "#f55442У вас недостаточно денег")
     val broadcast: String =
-        getHEXString("auction.broadcast", "#18dbd1Игрок #d6a213%player% #18dbd1выставил на /aauc новый предмет")
+        translationValue("auction.broadcast", "#18dbd1Игрок #d6a213%player% #18dbd1выставил на /aauc новый предмет")
     val tabCompleterPrice: String =
-        getHEXString("auction.tab_completer.price", "ЦЕНА")
+        translationValue("auction.tab_completer.price", "ЦЕНА")
     val tabCompleterAmount: String =
-        getHEXString("auction.tab_completer.amount", "КОЛИЧЕСТВО")
+        translationValue("auction.tab_completer.amount", "КОЛИЧЕСТВО")
     val auctionHasBeenExpired: String =
-        getHEXString("auction.auction_been_expired", "#d6a213Вы просрочили слот!")
+        translationValue("auction.auction_been_expired", "#d6a213Вы просрочили слот!")
     val leftButton: String =
-        getHEXString("menu.left_button", "#d6a213ЛКМ #18dbd1- купить")
+        translationValue("menu.left_button", "#d6a213ЛКМ #18dbd1- купить")
     val rightButton: String =
-        getHEXString("menu.right_button", "#d6a213ПКМ #18dbd1- убрать")
+        translationValue("menu.right_button", "#d6a213ПКМ #18dbd1- убрать")
     val middleClick: String =
-        getHEXString("menu.middle_click", "#d6a213СКМ #18dbd1- убрать в истёкшие")
+        translationValue("menu.middle_click", "#d6a213СКМ #18dbd1- убрать в истёкшие")
     val notAuctionOwner: String =
-        getHEXString("menu.not_auction_owner", "#f55442Вы не владелец этого слота")
+        translationValue("menu.not_auction_owner", "#f55442Вы не владелец этого слота")
     val auctionDeleted: String =
-        getHEXString("menu.auction_deleted", "#f55442Слот удалён")
+        translationValue("menu.auction_deleted", "#f55442Слот удалён")
     val notifyAuctionExpired: String =
-        getHEXString("menu.auction_expired_notify", "#f55442Ваш слот %item% за %price% только что был просрочен")
+        translationValue("menu.auction_expired_notify", "#f55442Ваш слот %item% за %price% только что был просрочен")
 
     //Menu
     val title: String =
-        getHEXString("menu.title", "#1382d6Аукцион")
+        translationValue("menu.title", "#1382d6Аукцион")
     val expiredTitle: String =
-        getHEXString("menu.title_expired", "#1382d6Истекшие")
+        translationValue("menu.title_expired", "#1382d6Истекшие")
     val back: String =
-        getHEXString("menu.back", "#18dbd1Назад")
+        translationValue("menu.back", "#18dbd1Назад")
     val prev: String =
-        getHEXString("menu.prev", "#18dbd1Раньше")
+        translationValue("menu.prev", "#18dbd1Раньше")
     val aauc: String =
-        getHEXString("menu.aauc", "#18dbd1Аукцион")
+        translationValue("menu.aauc", "#18dbd1Аукцион")
     val expired: String =
-        getHEXString("menu.expired", "#18dbd1Истекшие")
+        translationValue("menu.expired", "#18dbd1Истекшие")
     val next: String =
-        getHEXString("menu.next", "#18dbd1Дальше")
+        translationValue("menu.next", "#18dbd1Дальше")
     val sort: String =
-        getHEXString("menu.sort", "#18dbd1Сортировка")
+        translationValue("menu.sort", "#18dbd1Сортировка")
     val maxAuctions: String =
-        getHEXString("auction.max_slots", "#f55442У вас уже макстимальное число лотов")
+        translationValue("auction.max_slots", "#f55442У вас уже макстимальное число лотов")
 
     val auctionBy: String =
-        getHEXString("auction.auction_by", "&7Выставил: #d6a213%player_owner%")
+        translationValue("auction.auction_by", "&7Выставил: #d6a213%player_owner%")
     val auctionCreatedAgo: String =
-        getHEXString("auction.auction_created_ago", "&7Время: #d6a213%time%")
+        translationValue("auction.auction_created_ago", "&7Время: #d6a213%time%")
     val auctionPrice: String =
-        getHEXString("auction.auction_price", "&7Стоимость: #d6a213%price%")
+        translationValue("auction.auction_price", "&7Стоимость: #d6a213%price%")
 
     val sortMaterialDesc: String =
-        getHEXString("auction.sort.material_desc", "#FFFFFFпо материалу #d6a213&l↑")
+        translationValue("auction.sort.material_desc", "#FFFFFFпо материалу #d6a213&l↑")
     val sortMaterialAsc: String =
-        getHEXString("auction.sort.material_asc", "#FFFFFFпо материалу #d6a213&l↓")
+        translationValue("auction.sort.material_asc", "#FFFFFFпо материалу #d6a213&l↓")
 
     val sortDateDesc: String =
-        getHEXString("auction.sort.date_desc", "#FFFFFFпо дате #d6a213&l↑")
+        translationValue("auction.sort.date_desc", "#FFFFFFпо дате #d6a213&l↑")
     val sortDateAsc: String =
-        getHEXString("auction.sort.date_asc", "#FFFFFFпо дате #d6a213&l↓")
+        translationValue("auction.sort.date_asc", "#FFFFFFпо дате #d6a213&l↓")
 
     val sortNameDesc: String =
-        getHEXString("auction.sort.name_desc", "#FFFFFFпо имени #d6a213&l↑")
+        translationValue("auction.sort.name_desc", "#FFFFFFпо имени #d6a213&l↑")
     val sortNameAsc: String =
-        getHEXString("auction.sort.name_asc", "#FFFFFFпо имени #d6a213&l↓")
+        translationValue("auction.sort.name_asc", "#FFFFFFпо имени #d6a213&l↓")
 
     val sortPriceDesc: String =
-        getHEXString("auction.sort.price_desc", "#FFFFFFпо цене #d6a213&l↑")
+        translationValue("auction.sort.price_desc", "#FFFFFFпо цене #d6a213&l↑")
     val sortPriceAsc: String =
-        getHEXString("auction.sort.price_asc", "#FFFFFFпо цене #d6a213&l↓")
+        translationValue("auction.sort.price_asc", "#FFFFFFпо цене #d6a213&l↓")
 
     val sortPlayerDesc: String =
-        getHEXString("auction.sort.player_desc", "#FFFFFFпо игроку #d6a213&l↑")
+        translationValue("auction.sort.player_desc", "#FFFFFFпо игроку #d6a213&l↑")
     val sortPlayerAsc: String =
-        getHEXString("auction.sort.player_asc", "#FFFFFFпо игроку #d6a213&l↓")
+        translationValue("auction.sort.player_asc", "#FFFFFFпо игроку #d6a213&l↓")
 
 
 }

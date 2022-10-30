@@ -1,12 +1,11 @@
 package com.astrainteractive.astratemplate.api.use_cases
 
-import com.astrainteractive.astratemplate.api.Repository
-import com.astrainteractive.astratemplate.api.entities.Auction
-import com.astrainteractive.astratemplate.utils.Permissions
-import com.astrainteractive.astratemplate.utils.Translation
-import com.astrainteractive.astratemplate.utils.displayNameOrMaterialName
+import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astratemplate.modules.DataSourceModule
+import com.astrainteractive.astratemplate.modules.TranslationModule
+import com.astrainteractive.astratemplate.utils.*
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.IUseCase
 
 /**
@@ -15,29 +14,30 @@ import ru.astrainteractive.astralibs.domain.IUseCase
  * @return boolean - true if success false if not
  */
 class ExpireAuctionUseCase : IUseCase<Boolean, ExpireAuctionUseCase.Params> {
+    private val dataSource by DataSourceModule
+    private val translation by TranslationModule
     class Params(
-        val auction: Auction,
+        val auction: AuctionDTO,
         val player: Player? = null
     )
     override suspend fun run(params: Params): Boolean {
         val player = params.player
         val _auction = params.auction
         if (player != null && !player.hasPermission(Permissions.expire)) {
-            player.sendMessage(Translation.noPermissions)
+            player.sendMessage(translation.noPermissions)
             return false
         }
-        Logger.log("Player ${player?.name} forced auction to expire ${_auction}", Repository.TAG, consolePrint = false)
-        val auction = Repository.fetchAuction(_auction.id)?.firstOrNull() ?: return false
+        val auction = dataSource.fetchAuction(_auction.id) ?: return false
         auction.owner?.player?.sendMessage(
-            Translation.notifyAuctionExpired
+            translation.notifyAuctionExpired
                 .replace("%item%", auction.itemStack.displayNameOrMaterialName())
                 .replace("%price%", auction.price.toString())
         )
-        val result = Repository.expireAuction(auction)
+        val result = dataSource.expireAuction(auction)
         if (result == null) {
-            player?.sendMessage(Translation.unexpectedError)
+            player?.sendMessage(translation.unexpectedError)
         } else
-            player?.sendMessage(Translation.auctionHasBeenExpired)
+            player?.sendMessage(translation.auctionHasBeenExpired)
         return (result != null)
     }
 }
