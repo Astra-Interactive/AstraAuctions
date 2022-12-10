@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.di.getValue
+import ru.astrainteractive.astralibs.events.DSLEvent
 import ru.astrainteractive.astralibs.menu.*
 import java.util.concurrent.TimeUnit
 
@@ -107,6 +108,10 @@ abstract class AbstractAuctionGui(
             (backPageButton.index - 1) -> onExpiredOpenClicked()
             else -> onAuctionItemClicked(getIndex(e.slot), e.click)
         }
+    }
+    val shiftClickDetector = DSLEvent.event(InventoryClickEvent::class.java, inventoryEventHandler) { e ->
+        if (e.whoClicked!=playerMenuUtility.player) return@event
+        e.isCancelled = true
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {
