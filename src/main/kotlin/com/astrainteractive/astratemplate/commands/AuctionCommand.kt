@@ -105,7 +105,7 @@ class AuctionCommand {
         val amount = args.getArgumentString(Arguments.amount)?.toIntOrNull() ?: 1
 
         val item = player.inventory.itemInMainHand
-        PluginScope.launch {
+        PluginScope.launch(Dispatchers.IO) {
             CreateAuctionUseCase()(
                 CreateAuctionUseCase.Params(
                     maxAuctionsAllowed = maxAuctionsAllowed,

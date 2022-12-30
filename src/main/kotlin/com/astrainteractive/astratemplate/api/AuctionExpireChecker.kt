@@ -4,6 +4,7 @@ import com.astrainteractive.astratemplate.AstraMarket
 import com.astrainteractive.astratemplate.modules.ConfigModule
 import com.astrainteractive.astratemplate.modules.DataSourceModule
 import com.astrainteractive.astratemplate.modules.DatabaseModule
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.Logger
 import ru.astrainteractive.astralibs.async.PluginScope
@@ -25,7 +26,7 @@ object AuctionExpireChecker {
         Logger.log("Expired auction checker job has started", TAG, consolePrint = false)
         job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 2000L) {
             if (!database.isConnected) return@timer
-            PluginScope.launch {
+            PluginScope.launch(Dispatchers.IO) {
                 val auctions = dataSource.getAuctionsOlderThan(config.auction.maxTime * 1000)
                 auctions?.forEach {
                     val res = dataSource.expireAuction(it)

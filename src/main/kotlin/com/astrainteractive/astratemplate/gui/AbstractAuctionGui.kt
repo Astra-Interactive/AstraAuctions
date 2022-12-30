@@ -99,6 +99,8 @@ abstract class AbstractAuctionGui(
     open fun onExpiredOpenClicked() {}
     override fun onInventoryClicked(e: InventoryClickEvent) {
         super.onInventoryClicked(e)
+        if (e.whoClicked != playerMenuUtility.player) return
+        if (e.clickedInventory != inventory) return
         e.isCancelled = true
         when (e.slot) {
             nextPageButton.index -> onNextPageClicked()
@@ -108,10 +110,6 @@ abstract class AbstractAuctionGui(
             (backPageButton.index - 1) -> onExpiredOpenClicked()
             else -> onAuctionItemClicked(getIndex(e.slot), e.click)
         }
-    }
-    val shiftClickDetector = DSLEvent.event(InventoryClickEvent::class.java, inventoryEventHandler) { e ->
-        if (e.whoClicked!=playerMenuUtility.player) return@event
-        e.isCancelled = true
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {

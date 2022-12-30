@@ -6,7 +6,7 @@ import java.net.URI
 import java.util.*
 
 object Dependencies {
-    const val version = "1.2.2"
+    const val version = "1.2.3"
     const val group = "com.astrainteractive"
     const val destinationDirectoryPath = "D:\\Minecraft Servers\\EmpireProjekt_remake\\smp\\plugins"
 
@@ -17,7 +17,7 @@ object Dependencies {
         const val kaml = "0.46.0"
         const val exposed = "0.38.1"
         const val jdbc = "3.36.0.3"
-        const val astraLibs = "2.0.12"
+        const val astraLibs = "2.0.14"
         const val shadow = "7.1.2"
         const val mysqlDriver = "8.0.20"
         const val orgTesting = "7.1.0"

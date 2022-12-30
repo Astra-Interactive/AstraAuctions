@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.AstraLibs
 import ru.astrainteractive.astralibs.Logger
 import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.utils.setupWithSpigot
 import javax.xml.crypto.Data
 
 /**
@@ -37,7 +38,7 @@ class AstraMarket : JavaPlugin() {
 
     override fun onEnable() {
         AstraLibs.rememberPlugin(this)
-        Logger.prefix = "AstraAuctions"
+        Logger.setupWithSpigot("AstraAuctions")
         instance = this
         BStatsModule.value
         CommandManager()

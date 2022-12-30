@@ -3,6 +3,9 @@ import com.astrainteractive.astramarket.domain.IDataSource
 import kotlinx.coroutines.runBlocking
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
+import org.testng.annotations.AfterTest
+import org.testng.annotations.BeforeTest
+import org.testng.annotations.Test
 import ru.astrainteractive.astralibs.database_v2.Database
 import java.io.File
 import java.util.*

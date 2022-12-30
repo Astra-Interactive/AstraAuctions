@@ -8,8 +8,11 @@ import ru.astrainteractive.astralibs.di.getValue
 class AuctionViewModelFactory(
     private val player: Player,
     private val expired: Boolean = false,
-) : IFactory<AuctionViewModel> {
+) : IFactory<AuctionViewModel>() {
     private val dataSource by DataSourceModule
+    override val value: AuctionViewModel
+        get() = provide()
+
     override fun provide(): AuctionViewModel {
         return AuctionViewModel(player, expired, dataSource)
     }

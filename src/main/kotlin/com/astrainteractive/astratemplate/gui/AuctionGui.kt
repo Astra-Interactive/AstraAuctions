@@ -3,6 +3,7 @@ package com.astrainteractive.astratemplate.gui
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astratemplate.modules.AuctionViewModelFactory
 import com.astrainteractive.astratemplate.utils.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -49,7 +50,7 @@ class AuctionGui(player: Player) : AbstractAuctionGui(player) {
     }
 
     override fun onExpiredOpenClicked() {
-        PluginScope.launch {
+        PluginScope.launch(Dispatchers.IO) {
             ExpiredAuctionGui(playerMenuUtility.player).open()
         }
     }
