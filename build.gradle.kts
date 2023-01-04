@@ -9,6 +9,7 @@ plugins {
     `java-library`
     kotlin("jvm") version Dependencies.Kotlin.version
     id("com.github.johnrengelman.shadow") version Dependencies.Kotlin.shadow
+    kotlin("plugin.serialization") version Dependencies.Kotlin.version
 }
 java {
     withSourcesJar()

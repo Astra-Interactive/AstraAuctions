@@ -98,10 +98,8 @@ abstract class AbstractAuctionGui(
 
     open fun onExpiredOpenClicked() {}
     override fun onInventoryClicked(e: InventoryClickEvent) {
-        super.onInventoryClicked(e)
-        if (e.whoClicked != playerMenuUtility.player) return
-        if (e.clickedInventory != inventory) return
         e.isCancelled = true
+        handleChangePageClick(e.slot)
         when (e.slot) {
             nextPageButton.index -> onNextPageClicked()
             prevPageButton.index -> onPrevPageClicked()
