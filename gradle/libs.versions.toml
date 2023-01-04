@@ -1,0 +1,90 @@
+[versions]
+plugin = "1.3.0"
+name = "AstraAuctions"
+group =  "com.astrainteractive"
+description = "Rating plugin for EmpireSMP"
+wear-gms = "18.0.0"
+destinationDirectoryPath = "D:\\Minecraft Servers\\EmpireProjekt_remake\\smp\\plugins"
+# Kotlin
+kotlin = "1.7.0"
+jetbrainsCompose = "1.2.0"
+coroutines = "1.6.3"
+json = "1.3.3"
+kaml = "0.46.0"
+exposed = "0.38.1"
+jdbc = "3.36.0.3"
+astraLibs = "2.0.17"
+shadow = "7.1.2"
+mysqlDriver = "8.0.20"
+orgTesting = "7.1.0"
+# Spigot
+velocity = "3.1.1"
+spigot = "1.19.3-R0.1-SNAPSHOT"
+placeholderAPI = "2.11.2"
+protocolLib = "4.8.0"
+worldGuard = "7.0.7"
+vault = "1.7"
+coreProtect = "21.2"
+modelEngine = "R3.0.0"
+essentials = "2.19.5-SNAPSHOT"
+discordSRV = "1.25.0"
+luckPerms = "5.4"
+bstats = "3.0.0"
+# Testing
+junit = "4.12"
+mockito = "4.0.0"
+roboelectric = "4.9"
+mockk = "1.13.2"
+arkivanov-decompose = "1.0.0-alpha-06"
+orbitMvi = "4.5.0"
+junit-jupiterApi = "5.9.1"
+junit-bom = "5.7.0"
+[libraries]
+# Gradle - Core
+shadow = { module = "gradle.plugin.com.github.johnrengelman:shadow", version.ref = "shadow" }
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-coreJvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "coroutines" }
+kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+kotlin-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
+kotlin-serializationKaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kaml" }
+kotlin-dokka-kotlinJavaPlugin = { module = "org.jetbrains.dokka:kotlin-as-java-plugin", version.ref = "kotlin" }
+kotlin-dokka-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "kotlin" }
+astralibs-ktxCore = { module = "ru.astrainteractive.astralibs:ktx-core", version.ref = "astraLibs" }
+astralibs-spigotCore = { module = "ru.astrainteractive.astralibs:spigot-core", version.ref = "astraLibs" }
+xerial-sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "jdbc" }
+junit-jupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiterApi" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit-bom" }
+io-kotlintest-junitRunner = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit-jupiterApi" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlDriver" }
+orgTesting = { module = "org.testng:testng", version.ref = "orgTesting" }
+essentialsx = { module = "net.essentialsx:EssentialsX", version.ref = "essentials" }
+paperApi = { module = "io.papermc.paper:paper-api", version.ref = "spigot" }
+spigotApi = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
+spigot = { module = "org.spigotmc:spigot", version.ref = "spigot" }
+velocity-api = { module = "com.velocitypowered:velocity-api", version.ref = "velocity" }
+protocollib = { module = "com.comphenix.protocol:ProtocolLib", version.ref = "protocolLib" }
+placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderAPI" }
+worldguard-bukkit = { module = "com.sk89q.worldguard:worldguard-bukkit", version.ref = "worldGuard" }
+discordsrv = { module = "com.discordsrv:discordsrv", version.ref = "discordSRV" }
+vaultapi = { module = "com.github.MilkBowl:VaultAPI", version.ref = "vault" }
+coreprotect = { module = "net.coreprotect:coreprotect", version.ref = "coreProtect" }
+modelengine = { module = "com.ticxo.modelengine:api", version.ref = "modelEngine" }
+bstats-bukkit = { module = "org.bstats:bstats-bukkit", version.ref = "bstats" }
+kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+arkivanov-decompose-core = { module = "com.arkivanov.decompose:decompose", version.ref = "arkivanov-decompose" }
+arkivanov-decompose-compose-jetbrains = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "arkivanov-decompose" }
+orbitmvi-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbitMvi" }
+orbitmvi-viewModel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbitMvi" }
+orbitmvi-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbitMvi" }
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.compose", version.ref = "jetbrainsCompose" }
+kotlin-gradle = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-dokka = { id = "org.jetbrains.dokka", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
