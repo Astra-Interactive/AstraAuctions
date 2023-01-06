@@ -138,10 +138,9 @@ abstract class AbstractAuctionGui(
 
     override fun onCreated() {
         playerMenuUtility.player.playSound(config.sounds.open)
-        viewModel.auctionList.collectOn {
+        viewModel.auctionList.collectOn(Dispatchers.IO) {
             setMenuItems()
         }
-        setMenuItems()
     }
 
 }

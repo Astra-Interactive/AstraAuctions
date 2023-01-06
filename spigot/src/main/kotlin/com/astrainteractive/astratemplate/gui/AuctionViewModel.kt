@@ -43,12 +43,10 @@ class AuctionViewModel(
         sort()
     }
 
-    fun sort() {
-
-        val sorted = auctionList.value.sortBy(sortType)
+    private fun sort() {
         PluginScope.launch(Dispatchers.IO) {
             _auctionList.update {
-                sorted
+                auctionList.value.sortBy(sortType)
             }
         }
     }
@@ -77,7 +75,6 @@ class AuctionViewModel(
 
     fun loadItems() =
         PluginScope.launch(Dispatchers.IO) {
-
             val list =
                 if (!expired) dataSource.getAuctions(expired) else dataSource.getUserAuctions(player.uuid, expired)
             val sorted = list?.sortBy(sortType) ?: emptyList()
