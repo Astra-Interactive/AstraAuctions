@@ -3,7 +3,9 @@ import com.astrainteractive.astramarket.domain.IDataSource
 import kotlinx.coroutines.runBlocking
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
-import ru.astrainteractive.astralibs.database_v2.Database
+import ru.astrainteractive.astralibs.orm.DBConnection
+import ru.astrainteractive.astralibs.orm.Database
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.io.File
 import java.util.*
 import kotlin.random.Random
@@ -18,7 +20,7 @@ class AuctionsTests {
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
-            item = ByteArray(0),
+            item = Serializer.Wrapper.ByteArray( ByteArray(0)),
             price = Random.nextInt().toFloat(),
             expired = false
         )
@@ -27,7 +29,7 @@ class AuctionsTests {
     fun setup(): Unit = runBlocking {
         File("dbv2_auction.db").delete()
         databaseV2 = Database()
-        databaseV2.openConnection("jdbc:sqlite:dbv2_auction.db", "org.sqlite.JDBC")
+        databaseV2.openConnection("dbv2_auction.db", DBConnection.SQLite)
         AuctionTable.create()
         dataSource = DataSource(databaseV2)
     }
