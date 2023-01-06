@@ -13,18 +13,23 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.menu.*
+import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
+import ru.astrainteractive.astralibs.utils.encoding.BukkitOutputStreamProvider
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.concurrent.TimeUnit
 
 abstract class AbstractAuctionGui(
     player: Player
 ) : PaginatedMenu() {
-    override val playerMenuUtility: IPlayerHolder = DefaultPlayerHolder(player)
+
+    protected val serializer = Serializer(BukkitOutputStreamProvider, BukkitInputStreamProvider)
+    override val playerMenuUtility: IPlayerHolder = PlayerHolder(player)
 
     val translation by TranslationModule
     private val config by ConfigModule
 
     override var menuTitle: String = translation.title
-    override val menuSize: AstraMenuSize = AstraMenuSize.XL
+    override val menuSize: MenuSize = MenuSize.XL
     abstract val viewModel: AuctionViewModel
 
     override val backPageButton = object : IInventoryButton {
@@ -106,10 +111,6 @@ abstract class AbstractAuctionGui(
             (backPageButton.index - 1) -> onExpiredOpenClicked()
             else -> onAuctionItemClicked(getIndex(e.slot), e.click)
         }
-    }
-
-    override fun onInventoryClose(it: InventoryCloseEvent) {
-
     }
 
     override fun onPageChanged() {

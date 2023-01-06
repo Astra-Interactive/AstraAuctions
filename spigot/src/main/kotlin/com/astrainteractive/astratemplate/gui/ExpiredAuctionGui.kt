@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
@@ -15,7 +16,7 @@ import java.util.*
 class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
 
     override var menuTitle: String = translation.expiredTitle
-    override val viewModel: AuctionViewModel = AuctionViewModelFactory(playerMenuUtility.player,expired = true).provide()
+    override val viewModel: AuctionViewModel = AuctionViewModelFactory(playerMenuUtility.player,expired = true).value
 
     private val itemsInGui: List<AuctionDTO>
         get() = viewModel.auctionList.value
@@ -33,7 +34,7 @@ class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            val itemStack = Serializer.fromByteArray<ItemStack>(auctionItem.item, BukkitInputStreamProvider).apply {
+            val itemStack = serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                 val meta = itemMeta!!
                 val lore = meta.lore?.toMutableList() ?: mutableListOf()
                 lore.add(translation.rightButton)
@@ -51,6 +52,10 @@ class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
             }
             inventory.setItem(i, itemStack)
         }
+    }
+
+    override fun onInventoryClose(it: InventoryCloseEvent) {
+        viewModel.close()
     }
 
 }

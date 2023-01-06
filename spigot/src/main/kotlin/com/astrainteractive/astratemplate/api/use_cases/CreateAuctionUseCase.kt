@@ -3,6 +3,7 @@ package com.astrainteractive.astratemplate.api.use_cases
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astratemplate.modules.ConfigModule
 import com.astrainteractive.astratemplate.modules.DataSourceModule
+import com.astrainteractive.astratemplate.modules.Modules
 import com.astrainteractive.astratemplate.modules.TranslationModule
 import com.astrainteractive.astratemplate.utils.playSound
 import org.bukkit.Bukkit
@@ -21,7 +22,7 @@ class CreateAuctionUseCase : IUseCase<Boolean, CreateAuctionUseCase.Params> {
     private val dataSource by DataSourceModule
     private val translation by TranslationModule
     private val config by ConfigModule
-
+    private val serializer by Modules.bukkitSerializer
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,
@@ -64,7 +65,7 @@ class CreateAuctionUseCase : IUseCase<Boolean, CreateAuctionUseCase.Params> {
             "",
             player.uuid,
             System.currentTimeMillis(),
-            Serializer.toByteArray(itemClone, BukkitOutputStreamProvider),
+            serializer.toByteArray(itemClone),
             price,
             expired = false
         )

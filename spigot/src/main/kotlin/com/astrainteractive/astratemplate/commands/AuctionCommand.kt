@@ -14,16 +14,16 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.AstraLibs
 import ru.astrainteractive.astralibs.async.PluginScope
+import ru.astrainteractive.astralibs.commands.registerCommand
+import ru.astrainteractive.astralibs.commands.registerTabCompleter
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.utils.registerCommand
-import ru.astrainteractive.astralibs.utils.registerTabCompleter
 import ru.astrainteractive.astralibs.utils.withEntry
 
 class AuctionCommand {
     private val translation by TranslationModule
     private val config by ConfigModule
 
-    val tabCompleter = AstraLibs.registerTabCompleter("amarket") { sender, args ->
+    val tabCompleter = AstraLibs.instance.registerTabCompleter("amarket") {
         if (args.isEmpty())
             return@registerTabCompleter listOf("amarket")
         if (args.size == 1)
@@ -67,7 +67,8 @@ class AuctionCommand {
         }
     }
 
-    val aauc = AstraLibs.registerCommand("amarket") { sender, args ->
+    val aauc = AstraLibs.instance.registerCommand("amarket") {
+        val sender = this.sender
         val cmd = args.getArgumentString(Arguments.cmd)
         if (cmd.equals("reload", ignoreCase = true)) {
             ReloadCommand.execute(sender)

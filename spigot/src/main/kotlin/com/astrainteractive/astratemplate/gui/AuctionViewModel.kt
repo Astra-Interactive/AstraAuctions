@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
-import ru.astrainteractive.astralibs.architecture.ViewModel
+import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.utils.next
 import ru.astrainteractive.astralibs.utils.prev
@@ -24,7 +24,7 @@ class AuctionViewModel(
     private val player: Player,
     private val expired: Boolean = false,
     private val dataSource: IDataSource
-) : ViewModel() {
+) : AsyncComponent() {
     private val _auctionList = MutableStateFlow(listOf<AuctionDTO>())
     val auctionList: StateFlow<List<AuctionDTO>>
         get() = _auctionList

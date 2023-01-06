@@ -3,6 +3,7 @@ package com.astrainteractive.astramarket.domain.dto
 import com.astrainteractive.astramarket.domain.entities.Auction
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
 import ru.astrainteractive.astralibs.domain.mapping.IMapper
+import ru.astrainteractive.astralibs.utils.encoding.Serializer
 
 object AuctionMapper : IMapper<Auction, AuctionDTO> {
 
@@ -11,13 +12,13 @@ object AuctionMapper : IMapper<Auction, AuctionDTO> {
         discordId = it.discordId,
         minecraftUuid = it.minecraftUuid,
         time = it.time,
-        item = it.item,
+        item = Serializer.Wrapper.ByteArray(it.item),
         price = it.price,
         expired = it.expired==1
     )
 
     override fun fromDTO(it: AuctionDTO): Auction {
-        return AuctionTable.find(constructor = ::Auction) {
+        return AuctionTable.find(constructor = Auction) {
             AuctionTable.id.eq(it.id)
         }.first()
     }

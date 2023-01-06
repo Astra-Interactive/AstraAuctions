@@ -1,8 +1,9 @@
 package com.astrainteractive.astramarket.domain.entities
 
-import ru.astrainteractive.astralibs.database_v2.Column
-import ru.astrainteractive.astralibs.database_v2.Entity
-import ru.astrainteractive.astralibs.database_v2.Table
+import ru.astrainteractive.astralibs.orm.database.Column
+import ru.astrainteractive.astralibs.orm.database.Constructable
+import ru.astrainteractive.astralibs.orm.database.Entity
+import ru.astrainteractive.astralibs.orm.database.Table
 
 
 object AuctionTable : Table<Long>("auctions") {
@@ -24,4 +25,5 @@ class Auction : Entity<Long>(AuctionTable) {
     val item by AuctionTable.item
     val price by AuctionTable.price
     var expired by AuctionTable.expired
+    companion object: Constructable<Auction>(::Auction)
 }

@@ -5,8 +5,8 @@ import com.astrainteractive.astratemplate.modules.TranslationModule
 import com.astrainteractive.astratemplate.utils.Permissions
 import org.bukkit.command.CommandSender
 import ru.astrainteractive.astralibs.AstraLibs
+import ru.astrainteractive.astralibs.commands.registerCommand
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.utils.registerCommand
 
 class ReloadCommand {
     companion object {
@@ -23,7 +23,7 @@ class ReloadCommand {
         }
     }
 
-    val reload = AstraLibs.registerCommand("amarketreload") { sender, args ->
+    val reload = AstraLibs.instance.registerCommand("amarketreload") {
         execute(sender)
     }
 }
