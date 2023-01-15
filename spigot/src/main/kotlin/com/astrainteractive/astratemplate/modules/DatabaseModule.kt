@@ -10,7 +10,7 @@ object DatabaseModule : IModule<Database>() {
     override fun initializer(): Database = runBlocking {
         val database = Database()
         database.openConnection("dbv2_auction.db", DBConnection.SQLite)
-        AuctionTable.create()
+        AuctionTable.create(database)
         database
     }
 }

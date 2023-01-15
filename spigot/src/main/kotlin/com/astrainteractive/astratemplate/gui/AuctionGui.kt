@@ -51,7 +51,6 @@ class AuctionGui(player: Player) : AbstractAuctionGui(player) {
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {
-        super.onInventoryClose(it)
         viewModel.close()
     }
 

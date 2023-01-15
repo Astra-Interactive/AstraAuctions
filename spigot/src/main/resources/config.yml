@@ -9,7 +9,7 @@ auction:
   # Announce created slots
   announce: true
   # After this time auction will be expired
-  maxTime: 32800
+  maxTime: 999999999
 sounds:
   open: item.book.page_turn
   close: item.book.page_turn

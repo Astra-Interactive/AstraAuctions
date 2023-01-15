@@ -21,6 +21,7 @@ object AuctionExpireChecker {
      * Start job for auction expire checking
      */
     fun startAuctionChecker() {
+        return
         Logger.log("Expired auction checker job has started", TAG, consolePrint = false)
         job = kotlin.concurrent.timer("auction_checker", daemon = true, 0L, 2000L) {
             if (!database.isConnected) return@timer
