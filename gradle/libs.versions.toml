@@ -2,7 +2,7 @@
 plugin = "1.4.0"
 name = "AstraAuctions"
 group =  "com.astrainteractive"
-description = "Rating plugin for EmpireSMP"
+description = "Market plugin for EmpireSMP"
 wear-gms = "18.0.0"
 destinationDirectoryPath = "D:\\Minecraft Servers\\EmpireProjekt_remake\\smp\\plugins"
 # Kotlin
