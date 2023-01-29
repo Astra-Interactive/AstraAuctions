@@ -6,18 +6,18 @@ import ru.astrainteractive.astralibs.orm.database.Entity
 import ru.astrainteractive.astralibs.orm.database.Table
 
 
-object AuctionTable : Table<Long>("auctions") {
-    override val id: Column<Long> = long("id").primaryKey().autoIncrement()
+object AuctionTable : Table<Int>("auctions") {
+    override val id: Column<Int> = integer("id").primaryKey().autoIncrement()
     val discordId = text("discord_id").nullable()
     val minecraftUuid = text("minecraft_uuid")
-    val time = long("time")
-    val item = byteArray("item")
+    val time = bigint("time")
+    val item = byteArray("item",6132)
     val price = float("price")
     val expired = bool("expired")
 }
 
 
-class Auction : Entity<Long>(AuctionTable) {
+class Auction : Entity<Int>(AuctionTable) {
     val id by AuctionTable.id
     val discordId by AuctionTable.discordId
     val minecraftUuid by AuctionTable.minecraftUuid

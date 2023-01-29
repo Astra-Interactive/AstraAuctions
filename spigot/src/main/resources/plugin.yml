@@ -1,4 +1,4 @@
-main: com.astrainteractive.astratemplate.AstraMarket
+main: com.astrainteractive.astramarket.AstraMarket
 description: '${description}'
 prefix: '${name}'
 name: '${name}'

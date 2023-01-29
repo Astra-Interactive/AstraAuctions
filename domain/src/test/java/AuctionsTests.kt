@@ -1,42 +1,35 @@
-import com.astrainteractive.astramarket.domain.DataSource
-import com.astrainteractive.astramarket.domain.IDataSource
+import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
+import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import kotlinx.coroutines.runBlocking
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
 import ru.astrainteractive.astralibs.orm.DBConnection
-import ru.astrainteractive.astralibs.orm.Database
+import ru.astrainteractive.astralibs.orm.DBSyntax
+import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astralibs.utils.encoding.Serializer
-import java.io.File
 import java.util.*
 import kotlin.random.Random
 import kotlin.test.*
 
-class AuctionsTests {
-    private lateinit var databaseV2: Database
-    private lateinit var dataSource: IDataSource
+class AuctionsTests : ORMTest(builder = { DefaultDatabase(DBConnection.SQLite("db.db"), DBSyntax.SQLite) }) {
+    private val dataSource: AuctionsAPI
+        get() = AuctionsAPIImpl(assertConnected())
     val randomAuction: AuctionDTO
         get() = AuctionDTO(
-            id = -1L,
+            id = -1,
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
-            item = Serializer.Wrapper.ByteArray( ByteArray(0)),
+            item = Serializer.Wrapper.ByteArray(ByteArray(0)),
             price = Random.nextInt().toFloat(),
             expired = false
         )
 
     @BeforeTest
-    fun setup(): Unit = runBlocking {
-        File("dbv2_auction.db").delete()
-        databaseV2 = Database()
-        databaseV2.openConnection("dbv2_auction.db", DBConnection.SQLite)
-        AuctionTable.create()
-        dataSource = DataSource(databaseV2)
-    }
-
-    @AfterTest
-    fun destruct(): Unit = runBlocking {
-        databaseV2.closeConnection()
+    override fun setup(): Unit = runBlocking {
+        super.setup()
+        val database = assertConnected()
+        AuctionTable.create(database)
     }
 
     @Test
@@ -69,8 +62,8 @@ class AuctionsTests {
         assertEquals(amount, 0)
         val oldAuctionDTO = randomAuction.copy(time = 0)
         dataSource.insertAuction(oldAuctionDTO)
-        amount = dataSource.getAuctionsOlderThan(System.currentTimeMillis()-1)!!.size
-        assertEquals(amount,1)
+        amount = dataSource.getAuctionsOlderThan(System.currentTimeMillis() - 1)!!.size
+        assertEquals(amount, 1)
     }
 
 }
