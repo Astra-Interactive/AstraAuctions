@@ -12,3 +12,4 @@ Advantages:
 - [x] Fully translatable
 
 More plugins from AstraInteractive [AstraInteractive](https://github.com/Astra-Interactive)
+<img src="https://bstats.org/signatures/bukkit/AstraMarket.svg"/>
