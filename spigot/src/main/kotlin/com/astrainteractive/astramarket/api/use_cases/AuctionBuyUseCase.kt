@@ -9,7 +9,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.domain.IUseCase
+import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
 import java.util.*
 
@@ -18,7 +18,7 @@ import java.util.*
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-class AuctionBuyUseCase : IUseCase<Boolean, AuctionBuyUseCase.Params> {
+class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
     private val dataSource by Modules.auctionsApi
     private val translation by Modules.translation
     private val config by Modules.configuration

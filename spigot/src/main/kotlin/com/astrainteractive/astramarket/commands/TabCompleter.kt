@@ -2,9 +2,7 @@ package com.astrainteractive.astramarket.commands
 
 import CommandManager
 import com.astrainteractive.astramarket.modules.Modules
-import ru.astrainteractive.astralibs.AstraLibs
 import ru.astrainteractive.astralibs.commands.registerTabCompleter
-import ru.astrainteractive.astralibs.di.IDependency
 import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.utils.withEntry
 

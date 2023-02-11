@@ -8,12 +8,12 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.domain.IUseCase
+import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.utils.uuid
 import kotlin.math.max
 import kotlin.math.min
 
-class CreateAuctionUseCase : IUseCase<Boolean, CreateAuctionUseCase.Params> {
+class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params> {
     private val dataSource by Modules.auctionsApi
     private val translation by Modules.translation
     private val config by Modules.configuration

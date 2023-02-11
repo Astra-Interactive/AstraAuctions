@@ -16,14 +16,13 @@ import ru.astrainteractive.astralibs.di.reloadable
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
-import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
-import ru.astrainteractive.astralibs.utils.encoding.BukkitOutputStreamProvider
+import ru.astrainteractive.astralibs.utils.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import ru.astrainteractive.astralibs.utils.toClass
 
 object Modules {
     val bukkitSerializer = module {
-        Serializer(BukkitOutputStreamProvider, BukkitInputStreamProvider)
+        Serializer(BukkitIOStreamProvider)
     }
     val translation = reloadable {
         Translation()

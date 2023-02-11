@@ -11,17 +11,24 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.menu.*
-import ru.astrainteractive.astralibs.utils.encoding.BukkitInputStreamProvider
-import ru.astrainteractive.astralibs.utils.encoding.BukkitOutputStreamProvider
+import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
+import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
+import ru.astrainteractive.astralibs.menu.utils.InventoryButton
+import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
+import ru.astrainteractive.astralibs.menu.utils.MenuSize
+import ru.astrainteractive.astralibs.menu.utils.click.MenuClickListener
+import ru.astrainteractive.astralibs.utils.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.concurrent.TimeUnit
 
 abstract class AbstractAuctionGui(
     player: Player
 ) : PaginatedMenu() {
+    protected val clickListener = MenuClickListener()
 
-    protected val serializer = Serializer(BukkitOutputStreamProvider, BukkitInputStreamProvider)
-    override val playerMenuUtility: IPlayerHolder = PlayerHolder(player)
+    protected val serializer = Serializer(BukkitIOStreamProvider)
+
+    override val playerHolder = DefaultPlayerHolder(player)
 
     val translation by Modules.translation
     private val config by Modules.configuration
@@ -29,36 +36,53 @@ abstract class AbstractAuctionGui(
     override var menuTitle: String = translation.title
     override val menuSize: MenuSize = MenuSize.XL
     abstract val viewModel: AuctionViewModel
-
-    override val backPageButton = object : IInventoryButton {
-        override val item: ItemStack =
-            config.buttons.back.toItemStack().apply { setDisplayName(translation.back) }
-        override val index: Int = 49
-        override val onClick: (e: InventoryClickEvent) -> Unit = {}
-    }
-    override val nextPageButton = object : IInventoryButton {
-        override val item: ItemStack =
-            config.buttons.next.toItemStack().apply { setDisplayName(translation.next) }
-        override val index: Int = 53
-        override val onClick: (e: InventoryClickEvent) -> Unit = {}
-    }
-    override val prevPageButton = object : IInventoryButton {
-        override val item: ItemStack =
-            config.buttons.previous.toItemStack().apply { setDisplayName(translation.prev) }
-        override val index: Int = 45
-        override val onClick: (e: InventoryClickEvent) -> Unit = {}
+    override val backPageButton = ItemStackButtonBuilder {
+        index = 49
+        itemStack = config.buttons.back.toItemStack().apply { setDisplayName(translation.back) }
+        onClick = {
+            onCloseClicked()
+        }
     }
 
+    override val nextPageButton = ItemStackButtonBuilder {
+        index = 53
+        itemStack = config.buttons.next.toItemStack().apply { setDisplayName(translation.next) }
+        onClick = {
+            onNextPageClicked()
+        }
+    }
+    override val prevPageButton = ItemStackButtonBuilder {
+        index = 45
+        itemStack = config.buttons.previous.toItemStack().apply { setDisplayName(translation.prev) }
+        onClick = {
+            onPrevPageClicked()
+        }
+    }
+    val expiredButton = ItemStackButtonBuilder {
+        index = backPageButton.index - 1
+        itemStack = config.buttons.expired.toItemStack().apply { setDisplayName(translation.expired) }
+        onClick = {
+            onExpiredOpenClicked()
+        }
+    }
+    val aaucButton = ItemStackButtonBuilder {
+        index = backPageButton.index - 1
+        itemStack = config.buttons.aauc.toItemStack().apply { setDisplayName(translation.aauc) }
+        onClick = {
+            onExpiredOpenClicked()
+        }
+    }
 
-    val expiredButton: ItemStack =
-        config.buttons.expired.toItemStack().apply { setDisplayName(translation.expired) }
 
-    val aaucButton: ItemStack =
-        config.buttons.aauc.toItemStack().apply { setDisplayName(translation.aauc) }
-
-    private val sortButton: ItemStack
-        get() = config.buttons.sort.toItemStack().apply {
-            setDisplayName("${translation.sort} ${viewModel.sortType.desc}")
+    val sortButton: InventoryButton
+        get() = ItemStackButtonBuilder {
+            index = backPageButton.index + 1
+            itemStack = config.buttons.sort.toItemStack().apply {
+                setDisplayName("${translation.sort} ${viewModel.sortType.desc}")
+            }
+            onClick = {
+                onSortButtonClicked(it.isRightClick)
+            }
         }
 
     override var maxItemsPerPage: Int = 45
@@ -67,48 +91,40 @@ abstract class AbstractAuctionGui(
         get() = viewModel.maxItemsAmount
 
     open fun onNextPageClicked() {
-        playerMenuUtility.player.playSound(config.sounds.open)
+        playerHolder.player.playSound(config.sounds.open)
         setMenuItems()
     }
 
     open fun onPrevPageClicked() {
-        playerMenuUtility.player.playSound(config.sounds.open)
+        playerHolder.player.playSound(config.sounds.open)
         setMenuItems()
     }
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
-        playerMenuUtility.player.playSound(config.sounds.open)
+        playerHolder.player.playSound(config.sounds.open)
         viewModel.onSortButtonClicked(isRightClick)
-        inventory.setItem(backPageButton.index + 1, sortButton)
+        sortButton.setInventoryButton()
     }
 
     open fun onCloseClicked() {
-        playerMenuUtility.player.closeInventory()
-        playerMenuUtility.player.playSound(config.sounds.close)
+        playerHolder.player.closeInventory()
+        playerHolder.player.playSound(config.sounds.close)
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
         PluginScope.launch(Dispatchers.IO) {
             val result = viewModel.onAuctionItemClicked(i, clickType)
             if (result)
-                playerMenuUtility.player.playSound(config.sounds.sold)
+                playerHolder.player.playSound(config.sounds.sold)
             else
-                playerMenuUtility.player.playSound(config.sounds.fail)
+                playerHolder.player.playSound(config.sounds.fail)
         }
     }
 
-    open fun onExpiredOpenClicked() {}
+    abstract fun onExpiredOpenClicked()
     override fun onInventoryClicked(e: InventoryClickEvent) {
         e.isCancelled = true
-        handleChangePageClick(e.slot)
-        when (e.slot) {
-            nextPageButton.index -> onNextPageClicked()
-            prevPageButton.index -> onPrevPageClicked()
-            (backPageButton.index + 1) -> onSortButtonClicked(e.isRightClick)
-            backPageButton.index -> onCloseClicked()
-            (backPageButton.index - 1) -> onExpiredOpenClicked()
-            else -> onAuctionItemClicked(getIndex(e.slot), e.click)
-        }
+        clickListener.onClick(e)
     }
 
     override fun onPageChanged() {
@@ -130,12 +146,13 @@ abstract class AbstractAuctionGui(
 
     open fun setMenuItems() {
         inventory.clear()
-        setManageButtons()
-        inventory.setItem(backPageButton.index + 1, sortButton)
+        clickListener.clearClickListener()
+        setManageButtons(clickListener)
+        sortButton.also(clickListener::remember).setInventoryButton()
     }
 
     override fun onCreated() {
-        playerMenuUtility.player.playSound(config.sounds.open)
+        playerHolder.player.playSound(config.sounds.open)
         viewModel.auctionList.collectOn(Dispatchers.IO) {
             setMenuItems()
         }

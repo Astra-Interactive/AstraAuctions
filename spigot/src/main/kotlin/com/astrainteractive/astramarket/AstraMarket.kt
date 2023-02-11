@@ -10,8 +10,8 @@ import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.AstraLibs
 import ru.astrainteractive.astralibs.Logger
-import ru.astrainteractive.astralibs.events.GlobalEventManager
-import ru.astrainteractive.astralibs.menu.SharedInventoryClickEvent
+import ru.astrainteractive.astralibs.events.GlobalEventListener
+import ru.astrainteractive.astralibs.menu.event.SharedInventoryClickEvent
 import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
 import ru.astrainteractive.astralibs.utils.setupWithSpigot
 
@@ -35,14 +35,15 @@ class AstraMarket : JavaPlugin() {
 
     override fun onEnable() {
         AstraLibs.rememberPlugin(this)
-        Logger.setupWithSpigot("AstraAuctions")
+        Logger.setupWithSpigot("AstraAuctions",this)
         instance = this
         Modules.bStats.value
         CommandManager()
         VaultEconomyProvider.onEnable()
         Logger.log("Plugin enabled", TAG)
         AuctionExpireChecker.startAuctionChecker()
-        SharedInventoryClickEvent.onEnable(GlobalEventManager)
+        GlobalEventListener.onEnable(this)
+        SharedInventoryClickEvent.onEnable(this)
     }
 
     override fun onDisable() {
@@ -51,6 +52,8 @@ class AstraMarket : JavaPlugin() {
         HandlerList.unregisterAll(this)
         Logger.log("Plugin disabled", TAG)
         VaultEconomyProvider.onDisable()
+        GlobalEventListener.onDisable()
+        SharedInventoryClickEvent.onDisable()
     }
 
     fun reloadPlugin() {

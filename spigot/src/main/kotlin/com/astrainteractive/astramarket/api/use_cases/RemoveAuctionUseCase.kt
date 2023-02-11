@@ -7,7 +7,7 @@ import com.astrainteractive.astramarket.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.domain.IUseCase
+import ru.astrainteractive.astralibs.domain.UseCase
 import java.util.*
 
 /**
@@ -15,7 +15,7 @@ import java.util.*
  * @param player owner of auction
  * @return boolean - true if succesfully removed
  */
-class RemoveAuctionUseCase : IUseCase<Boolean, RemoveAuctionUseCase.Params> {
+class RemoveAuctionUseCase : UseCase<Boolean, RemoveAuctionUseCase.Params> {
     private val dataSource by Modules.auctionsApi
     private val translation by Modules.translation
     private val config by Modules.configuration

@@ -4,7 +4,7 @@ import com.astrainteractive.astramarket.api.use_cases.CreateAuctionUseCase
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import com.astrainteractive.astramarket.modules.Modules
-import com.astrainteractive.astramarket.plugin.Permission
+import com.astrainteractive.astramarket.plugin.PluginPermission
 import com.astrainteractive.astramarket.utils.playSound
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,9 +40,9 @@ class AuctionCommand {
     }
 
     private val sellCommand: Command.() -> Unit = command@{
-        if (!Permission.Sell.hasPermission(sender)) return@command
+        if (!PluginPermission.Sell.hasPermission(sender)) return@command
         val player = sender as? Player ?: return@command
-        val maxAuctionsAllowed = Permission.SellMax.permissionSize(player) ?: config.auction.maxAuctionPerPlayer ?: 1
+        val maxAuctionsAllowed = PluginPermission.SellMax.permissionSize(player) ?: config.auction.maxAuctionPerPlayer ?: 1
 
         val price = argument(1) {
             it?.toFloatOrNull()
