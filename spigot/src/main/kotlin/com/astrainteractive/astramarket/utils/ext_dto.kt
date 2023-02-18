@@ -3,9 +3,12 @@ package com.astrainteractive.astramarket.utils
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.api.AuctionSort
 import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.plugin.AuctionConfig
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.orm.DBConnection
+import ru.astrainteractive.astralibs.orm.DBSyntax
 import java.util.*
 
 val AuctionDTO.itemStack: ItemStack
@@ -40,4 +43,22 @@ fun List<AuctionDTO>.sortBy(sortType: AuctionSort): List<AuctionDTO> {
         }
         else -> this
     }
+}
+
+
+fun AuctionConfig.Connection.toDBConnection(): Pair<DBConnection, DBSyntax> {
+    val sqliteConnection = DBConnection.SQLite("dbv2_auction.db") to DBSyntax.SQLite
+    if (this.sqlite) return sqliteConnection
+    val mySqlConnection = this.mysql?.let {
+        DBConnection.MySQL(
+            database = it.database,
+            ip = it.ip,
+            port = it.port,
+            username = it.username,
+            password = it.password,
+            sessionVariables = it.sessionVariables.toTypedArray()
+        ) to DBSyntax.MySQL
+    }
+
+    return mySqlConnection ?: sqliteConnection
 }

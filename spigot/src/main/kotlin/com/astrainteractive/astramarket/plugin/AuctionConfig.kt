@@ -9,8 +9,24 @@ import org.bukkit.inventory.ItemStack
 data class AuctionConfig(
     val auction: Auction = Auction(),
     val sounds: Sounds = Sounds(),
-    val buttons: Buttons = Buttons()
+    val buttons: Buttons = Buttons(),
+    val connection: Connection = Connection()
 ) {
+    @Serializable
+    class Connection(
+        val sqlite: Boolean = false,
+        val mysql: MySqlConnection? = null
+    ) {
+        @Serializable
+        class MySqlConnection(
+            val database: String,
+            val ip: String,
+            val port: Int,
+            val username: String,
+            val password: String,
+            val sessionVariables: List<String>
+        )
+    }
     @Serializable
     data class Auction(
         val maxAuctionPerPlayer: Int = 5,

@@ -7,6 +7,7 @@ import com.astrainteractive.astramarket.domain.entities.AuctionTable
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Files
 import com.astrainteractive.astramarket.plugin.Translation
+import com.astrainteractive.astramarket.utils.toDBConnection
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import ru.astrainteractive.astralibs.EmpireSerializer
@@ -27,9 +28,14 @@ object Modules {
     val translation = reloadable {
         Translation()
     }
+    val configuration = reloadable {
+        EmpireSerializer.toClass<AuctionConfig>(Files.configFile) ?: AuctionConfig()
+    }
     val database = module {
+        val config by configuration
         runBlocking {
-            val database = DefaultDatabase(DBConnection.SQLite("dbv2_auction.db"), DBSyntax.SQLite)
+            val (dbconnection, dbsyntax) = config.connection.toDBConnection()
+            val database = DefaultDatabase(dbconnection, dbsyntax)
             database.openConnection()
             AuctionTable.create(database)
             database
@@ -39,9 +45,7 @@ object Modules {
         val database by database
         AuctionsAPIImpl(database) as AuctionsAPI
     }
-    val configuration = reloadable {
-        EmpireSerializer.toClass<AuctionConfig>(Files.configFile) ?: AuctionConfig()
-    }
+
     val bStats = module {
         Metrics(AstraMarket.instance, 15771)
     }

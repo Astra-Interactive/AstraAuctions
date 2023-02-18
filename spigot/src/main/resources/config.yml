@@ -36,3 +36,12 @@ buttons:
   expired:
     material: EMERALD
     customModelData: 1
+connection:
+  sqlite: false
+  #mysql:
+  #  database: "database_name"
+  #  ip: "127.0.0.1"
+  #  port: 32202
+  #  username: "your_username"
+  #  password: "your_password"
+  #  sessionVariables: "sql_mode=\'&enabledTLSProtocols=TLSv1.2\'"
