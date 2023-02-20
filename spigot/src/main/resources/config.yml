@@ -44,4 +44,5 @@ connection:
   #  port: 32202
   #  username: "your_username"
   #  password: "your_password"
-  #  sessionVariables: "sql_mode=\'&enabledTLSProtocols=TLSv1.2\'"
+  #  sessionVariables:
+  #  - "sql_mode=\'&enabledTLSProtocols=TLSv1.2\'"
