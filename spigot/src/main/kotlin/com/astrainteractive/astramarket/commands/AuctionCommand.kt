@@ -25,7 +25,10 @@ class AuctionCommand {
             sender.sendMessage(translation.onlyForPlayers)
             return@registerCommand
         }
-
+        if (!PluginPermission.Amarket.hasPermission(sender)) {
+            sender.sendMessage(translation.noPermissions)
+            return@registerCommand
+        }
         when (args.getOrNull(0)) {
             "sell" -> sellCommand.invoke(this)
             "expired" -> PluginScope.launch(Dispatchers.IO) {
