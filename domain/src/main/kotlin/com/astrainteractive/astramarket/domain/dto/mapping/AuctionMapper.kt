@@ -3,7 +3,7 @@ package com.astrainteractive.astramarket.domain.dto.mapping
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.Auction
 import ru.astrainteractive.astralibs.domain.mapping.Mapper
-import ru.astrainteractive.astralibs.utils.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Serializer
 
 object AuctionMapper : Mapper<Auction, AuctionDTO> {
 

@@ -3,10 +3,10 @@ import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import kotlinx.coroutines.runBlocking
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
+import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
-import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.*
 import kotlin.random.Random
 import kotlin.test.*

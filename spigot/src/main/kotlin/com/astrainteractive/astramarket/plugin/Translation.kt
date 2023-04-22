@@ -4,8 +4,8 @@ import com.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astralibs.filemanager.SpigotFileManager
 import ru.astrainteractive.astralibs.utils.BaseTranslation
 
-class Translation() : BaseTranslation() {
-    override val translationFile = SpigotFileManager(name = "translations.yml", isOptional = true)
+class Translation : BaseTranslation() {
+    override val translationFile = SpigotFileManager(name = "translations.yml")
 
 
     //General

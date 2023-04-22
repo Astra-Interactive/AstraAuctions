@@ -1,16 +1,15 @@
 package com.astrainteractive.astramarket.gui
 
 import com.astrainteractive.astramarket.modules.Modules
-import com.astrainteractive.astramarket.utils.*
+import com.astrainteractive.astramarket.utils.playSound
+import com.astrainteractive.astramarket.utils.setDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.di.getValue
-import ru.astrainteractive.astralibs.menu.*
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
@@ -18,8 +17,6 @@ import ru.astrainteractive.astralibs.menu.utils.InventoryButton
 import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
 import ru.astrainteractive.astralibs.menu.utils.MenuSize
 import ru.astrainteractive.astralibs.menu.utils.click.MenuClickListener
-import ru.astrainteractive.astralibs.utils.encoding.BukkitIOStreamProvider
-import ru.astrainteractive.astralibs.utils.encoding.Serializer
 import java.util.concurrent.TimeUnit
 
 abstract class AbstractAuctionGui(
@@ -27,7 +24,7 @@ abstract class AbstractAuctionGui(
 ) : PaginatedMenu() {
     protected val clickListener = MenuClickListener()
 
-    protected val serializer = Serializer(BukkitIOStreamProvider)
+    protected val serializer by Modules.bukkitSerializer
 
     override val playerHolder = DefaultPlayerHolder(player)
 

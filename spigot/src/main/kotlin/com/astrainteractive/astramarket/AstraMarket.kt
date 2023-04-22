@@ -3,44 +3,37 @@ package com.astrainteractive.astramarket
 import CommandManager
 import com.astrainteractive.astramarket.utils.AuctionExpireChecker
 import com.astrainteractive.astramarket.modules.Modules
-import com.astrainteractive.astramarket.plugin.Files
-import com.astrainteractive.astramarket.utils.*
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.AstraLibs
-import ru.astrainteractive.astralibs.Logger
+import ru.astrainteractive.astralibs.di.Singleton
+import ru.astrainteractive.astralibs.di.getValue
+import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
 import ru.astrainteractive.astralibs.events.GlobalEventListener
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.menu.event.SharedInventoryClickEvent
-import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
 import ru.astrainteractive.astralibs.utils.setupWithSpigot
 
 /**
  * Initial class for your plugin
  */
 class AstraMarket : JavaPlugin() {
-    final val TAG = "AstraMarket"
 
-    /**
-     * Static objects of this class
-     * @see Translation
-     */
-    companion object {
-        lateinit var instance: AstraMarket
-            private set
+    companion object : Singleton<AstraMarket>() {
+        const val TAG = "AstraMarket"
     }
 
-
-
+    private val _logger: Logger by Logger
 
     override fun onEnable() {
         AstraLibs.rememberPlugin(this)
-        Logger.setupWithSpigot("AstraAuctions",this)
+        Logger.setupWithSpigot(TAG, this)
         instance = this
         Modules.bStats.value
         CommandManager()
         VaultEconomyProvider.onEnable()
-        Logger.log("Plugin enabled", TAG)
+        _logger.info(TAG, "Plugin enabled")
         AuctionExpireChecker.startAuctionChecker()
         GlobalEventListener.onEnable(this)
         SharedInventoryClickEvent.onEnable(this)
@@ -50,14 +43,14 @@ class AstraMarket : JavaPlugin() {
         AuctionExpireChecker.stopAuctionChecker()
         runBlocking { Modules.database.value.closeConnection() }
         HandlerList.unregisterAll(this)
-        Logger.log("Plugin disabled", TAG)
+        _logger.info("Plugin disabled", TAG)
         VaultEconomyProvider.onDisable()
         GlobalEventListener.onDisable()
         SharedInventoryClickEvent.onDisable()
     }
 
     fun reloadPlugin() {
-        Files.configFile.reload()
+        Modules.configFileManager.value.reload()
         Modules.configuration.reload()
         Modules.translation.reload()
     }

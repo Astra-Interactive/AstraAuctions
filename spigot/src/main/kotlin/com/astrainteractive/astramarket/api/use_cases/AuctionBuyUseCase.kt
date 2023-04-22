@@ -10,7 +10,7 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.UseCase
-import ru.astrainteractive.astralibs.utils.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
 import java.util.*
 
 /**
