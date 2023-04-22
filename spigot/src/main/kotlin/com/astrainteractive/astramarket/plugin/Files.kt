@@ -1,6 +1,6 @@
 package com.astrainteractive.astramarket.plugin
 
-import ru.astrainteractive.astralibs.file_manager.FileManager
+import ru.astrainteractive.astralibs.filemanager.SpigotFileManager
 
 
 /**
@@ -9,6 +9,5 @@ import ru.astrainteractive.astralibs.file_manager.FileManager
  * @see Translation
  */
 object Files {
-    val configFile: FileManager =
-        FileManager("config.yml")
+    val configFile = SpigotFileManager("config.yml")
 }

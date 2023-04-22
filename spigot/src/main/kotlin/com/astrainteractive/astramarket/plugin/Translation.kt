@@ -1,11 +1,11 @@
 package com.astrainteractive.astramarket.plugin
 
-import ru.astrainteractive.astralibs.file_manager.FileManager
+import ru.astrainteractive.astralibs.filemanager.SpigotFileManager
 import ru.astrainteractive.astralibs.utils.BaseTranslation
 
 class Translation() : BaseTranslation() {
 
-    override val translationFile: FileManager = FileManager("translations.yml")
+    override val translationFile = SpigotFileManager("translations.yml")
 
 
     //General

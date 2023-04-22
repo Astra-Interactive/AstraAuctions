@@ -14,7 +14,7 @@ tasks.shadowJar {
     archiveClassifier.set(null as String?)
     from(sourceSets.main.get().output)
     from(project.configurations.runtimeClasspath)
-    relocate("org.bstats", "${libs.versions.group.get()}.astramarket")
+    relocate("org.bstats", libs.versions.group.get())
     minimize()
     archiveBaseName.set(libs.versions.name.get())
     destinationDirectory.set(File(libs.versions.destinationDirectoryPath.get()))
