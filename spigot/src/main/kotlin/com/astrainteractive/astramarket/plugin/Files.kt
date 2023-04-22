@@ -9,5 +9,5 @@ import ru.astrainteractive.astralibs.filemanager.SpigotFileManager
  * @see Translation
  */
 object Files {
-    val configFile = SpigotFileManager("config.yml")
+    val configFile = SpigotFileManager(name = "config.yml", isOptional = true)
 }
