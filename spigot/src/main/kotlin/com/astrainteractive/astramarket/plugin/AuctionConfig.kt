@@ -14,17 +14,17 @@ data class AuctionConfig(
 ) {
     @Serializable
     class Connection(
-        val sqlite: Boolean = false,
-        val mysql: MySqlConnection? = null
+        val sqlite: Boolean = true,
+        val mysql: MySqlConnection? = MySqlConnection()
     ) {
         @Serializable
         class MySqlConnection(
-            val database: String,
-            val ip: String,
-            val port: Int,
-            val username: String,
-            val password: String,
-            val sessionVariables: List<String>
+            val database: String = "SAMPLE_DATABASE",
+            val ip: String = "127.0.0.1",
+            val port: Int = 8080,
+            val username: String = "USERNAME",
+            val password: String="PASSWORD",
+            val sessionVariables: List<String> = listOf("autoReconnect=true","useSSL=false")
         )
     }
     @Serializable
