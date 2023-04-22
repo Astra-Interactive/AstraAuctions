@@ -12,6 +12,7 @@ import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.menu.*
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
+import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
 import ru.astrainteractive.astralibs.menu.utils.InventoryButton
 import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
@@ -92,12 +93,12 @@ abstract class AbstractAuctionGui(
 
     open fun onNextPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        setMenuItems()
+        showPage(page+1)
     }
 
     open fun onPrevPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        setMenuItems()
+        showPage(page-1)
     }
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
@@ -124,6 +125,7 @@ abstract class AbstractAuctionGui(
     abstract fun onExpiredOpenClicked()
     override fun onInventoryClicked(e: InventoryClickEvent) {
         e.isCancelled = true
+        if (e.clickedInventory?.holder !is Menu) return
         clickListener.onClick(e)
     }
 
