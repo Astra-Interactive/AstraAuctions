@@ -5,6 +5,7 @@ import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.PluginPermission
+import com.astrainteractive.astramarket.utils.openSync
 import com.astrainteractive.astramarket.utils.playSound
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,11 +33,11 @@ class AuctionCommand {
         when (args.getOrNull(0)) {
             "sell" -> sellCommand.invoke(this)
             "expired" -> PluginScope.launch(Dispatchers.IO) {
-                ExpiredAuctionGui(sender).open()
+                ExpiredAuctionGui(sender).openSync()
             }
 
             "open", null -> PluginScope.launch(Dispatchers.IO) {
-                AuctionGui(sender).open()
+                AuctionGui(sender).openSync()
             }
 
         }

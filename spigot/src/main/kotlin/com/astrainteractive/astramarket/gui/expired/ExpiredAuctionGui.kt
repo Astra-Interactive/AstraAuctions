@@ -5,6 +5,7 @@ import com.astrainteractive.astramarket.gui.AbstractAuctionGui
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.AuctionViewModel
 import com.astrainteractive.astramarket.modules.AuctionViewModelFactory
+import com.astrainteractive.astramarket.utils.openSync
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
@@ -26,7 +27,7 @@ class ExpiredAuctionGui(player: Player) : AbstractAuctionGui(player) {
 
     override fun onExpiredOpenClicked() {
         PluginScope.launch(Dispatchers.IO) {
-            AuctionGui(playerHolder.player).open()
+            AuctionGui(playerHolder.player).openSync()
         }
     }
     override fun setMenuItems() {
