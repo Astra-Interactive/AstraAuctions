@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.api.usecases
 
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.utils.itemStack
 import com.astrainteractive.astramarket.utils.playSound
 import org.bukkit.Bukkit
@@ -16,9 +16,10 @@ import java.util.*
  * @return boolean - true if succesfully removed
  */
 class RemoveAuctionUseCase : UseCase<Boolean, RemoveAuctionUseCase.Params> {
-    private val dataSource by Modules.auctionsApi
-    private val translation by Modules.translation
-    private val config by Modules.configuration
+    private val dataSource by RootModuleImpl.auctionsApi
+    private val translation by RootModuleImpl.translation
+    private val config by RootModuleImpl.configuration
+
     class Params(
         val auction: AuctionDTO,
         val player: Player

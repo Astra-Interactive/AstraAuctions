@@ -1,6 +1,6 @@
 package com.astrainteractive.astramarket.utils
 
-import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.logging.Logger
@@ -9,12 +9,12 @@ import java.util.*
 object AuctionExpireChecker {
     const val TAG = "AuctionExpireChecker"
     var job: Timer? = null
-    private val database by Modules.database
-    private val dataSource by Modules.auctionsApi
-    private val config by Modules.configuration
-    private val logger: Logger by Modules.logger
-    private val scope by Modules.scope
-    private val dispatchers by Modules.dispatchers
+    private val database by RootModuleImpl.database
+    private val dataSource by RootModuleImpl.auctionsApi
+    private val config by RootModuleImpl.configuration
+    private val logger: Logger by RootModuleImpl.logger
+    private val scope by RootModuleImpl.scope
+    private val dispatchers by RootModuleImpl.dispatchers
 
     /**
      * Start job for auction expire checking

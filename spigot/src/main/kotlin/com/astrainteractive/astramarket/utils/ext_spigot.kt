@@ -1,6 +1,6 @@
 package com.astrainteractive.astramarket.utils
 
-import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -24,6 +24,6 @@ fun ItemStack.displayNameOrMaterialName(): String {
     return name
 }
 
-suspend fun Menu.openSync() = withContext(Modules.dispatchers.value.BukkitMain) {
+suspend fun Menu.openSync() = withContext(RootModuleImpl.dispatchers.value.BukkitMain) {
     open()
 }

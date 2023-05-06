@@ -1,8 +1,8 @@
 package com.astrainteractive.astramarket.utils
 
 import com.astrainteractive.astramarket.api.AuctionSort
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
@@ -12,7 +12,7 @@ import ru.astrainteractive.astralibs.orm.DBSyntax
 import java.util.*
 
 val AuctionDTO.itemStack: ItemStack
-    get() = Modules.bukkitSerializer.value.fromByteArray<ItemStack>(item)
+    get() = RootModuleImpl.bukkitSerializer.value.fromByteArray<ItemStack>(item)
 val AuctionDTO.owner: OfflinePlayer
     get() = Bukkit.getOfflinePlayer(UUID.fromString(minecraftUuid))
 
