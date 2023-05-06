@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.api.usecases
 
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.PluginPermission
 import com.astrainteractive.astramarket.utils.displayNameOrMaterialName
 import com.astrainteractive.astramarket.utils.itemStack
@@ -16,8 +16,8 @@ import ru.astrainteractive.astralibs.getValue
  * @return boolean - true if success false if not
  */
 class ExpireAuctionUseCase : UseCase<Boolean, ExpireAuctionUseCase.Params> {
-    private val dataSource by Modules.auctionsApi
-    private val translation by Modules.translation
+    private val dataSource by RootModuleImpl.auctionsApi
+    private val translation by RootModuleImpl.translation
     class Params(
         val auction: AuctionDTO,
         val player: Player? = null

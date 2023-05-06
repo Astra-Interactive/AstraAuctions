@@ -4,9 +4,9 @@ import com.astrainteractive.astramarket.api.AuctionSort
 import com.astrainteractive.astramarket.api.usecases.AuctionBuyUseCase
 import com.astrainteractive.astramarket.api.usecases.ExpireAuctionUseCase
 import com.astrainteractive.astramarket.api.usecases.RemoveAuctionUseCase
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.utils.sortBy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,8 +25,8 @@ class AuctionViewModel(
     private val expired: Boolean = false,
     private val dataSource: AuctionsAPI
 ) : AsyncComponent() {
-    private val scope by Modules.scope
-    private val dispatchers by Modules.dispatchers
+    private val scope by RootModuleImpl.scope
+    private val dispatchers by RootModuleImpl.dispatchers
 
     private val _auctionList = MutableStateFlow(listOf<AuctionDTO>())
     val auctionList: StateFlow<List<AuctionDTO>>

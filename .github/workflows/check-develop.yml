@@ -1,0 +1,35 @@
+name: Check Develop
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  gradle_validation:
+    name: Validate gradle wrapper
+    uses: ./.github/workflows/gradle-wrapper-validation.yml
+  detekt_validation:
+    name: Check by detekt
+    needs: gradle_validation
+    uses: ./.github/workflows/detekt-validation.yml
+#  tests_validation:
+#    needs: gradle_validation
+#    uses: ./.github/workflows/tests-validation.yml
+
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+    needs: [ gradle_validation, detekt_validation ]
+    steps:
+      - name: Checkout Git repo
+        uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 17
+      - name: Give gradle permission
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build --stacktrace

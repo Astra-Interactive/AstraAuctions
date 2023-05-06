@@ -1,6 +1,7 @@
-package com.astrainteractive.astramarket.modules
+package com.astrainteractive.astramarket.di.impl
 
 import com.astrainteractive.astramarket.AstraMarket
+import com.astrainteractive.astramarket.di.RootModule
 import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
@@ -27,23 +28,23 @@ import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astralibs.utils.buildWithSpigot
 
-object Modules {
-    val plugin = Lateinit<AstraMarket>()
-    val configFileManager = Single {
+object RootModuleImpl : RootModule {
+    override val plugin: Lateinit<AstraMarket> = Lateinit<AstraMarket>()
+    override val configFileManager: Single<DefaultSpigotFileManager> = Single {
         val plugin by plugin
         DefaultSpigotFileManager(plugin, name = "config.yml")
     }
-    val bukkitSerializer = Single {
+    override val bukkitSerializer: Single<Serializer> = Single {
         Serializer(BukkitIOStreamProvider)
     }
-    val translation = Reloadable {
+    override val translation: Reloadable<Translation> = Reloadable {
         Translation()
     }
-    val configuration = Reloadable {
+    override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val configFileManager by configFileManager
         ConfigLoader.toClassOrDefault(configFileManager.configFile, ::AuctionConfig)
     }
-    val database = Single {
+    override val database: Single<DefaultDatabase> = Single {
         val config by configuration
         runBlocking {
             val (dbconnection, dbsyntax) = config.connection.toDBConnection()
@@ -53,30 +54,30 @@ object Modules {
             database
         }
     }
-    val auctionsApi = Single {
+    override val auctionsApi: Single<AuctionsAPI> = Single {
         val database by database
         AuctionsAPIImpl(database) as AuctionsAPI
     }
 
-    val bStats = Single {
+    override val bStats: Single<Metrics> = Single {
         val plugin by plugin
         Metrics(plugin, 15771)
     }
-    val vaultEconomyProvider = Single {
+    override val vaultEconomyProvider: Single<VaultEconomyProvider> = Single {
         VaultEconomyProvider()
     }
 
     @OptIn(UnsafeApi::class)
-    val scope = Single<AsyncComponent> {
+    override val scope: Single<AsyncComponent> = Single<AsyncComponent> {
         PluginScope
     }
 
     @OptIn(UnsafeApi::class)
-    val dispatchers = Single<BukkitDispatchers> {
+    override val dispatchers: Single<BukkitDispatchers> = Single<BukkitDispatchers> {
         val plugin by plugin
         DefaultBukkitDispatchers(plugin)
     }
-    val logger = Single {
+    override val logger: Single<Logger> = Single {
         val plugin by plugin
         Logger.buildWithSpigot("AstraMarket", plugin)
     }

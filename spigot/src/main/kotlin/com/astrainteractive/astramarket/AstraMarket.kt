@@ -3,7 +3,8 @@
 package com.astrainteractive.astramarket
 
 import CommandManager
-import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.di.impl.CommandsModuleImpl
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.utils.AuctionExpireChecker
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
@@ -18,15 +19,15 @@ import ru.astrainteractive.astralibs.menu.event.GlobalInventoryClickEvent
  */
 class AstraMarket : JavaPlugin() {
 
-    private val vaultEconomyProvider by Modules.vaultEconomyProvider
+    private val vaultEconomyProvider by RootModuleImpl.vaultEconomyProvider
 
     init {
-        Modules.plugin.initialize(this)
+        RootModuleImpl.plugin.initialize(this)
     }
 
     override fun onEnable() {
-        Modules.bStats.value
-        CommandManager()
+        RootModuleImpl.bStats.value
+        CommandManager(this, CommandsModuleImpl)
         vaultEconomyProvider
         AuctionExpireChecker.startAuctionChecker()
         GlobalEventListener.onEnable(this)
@@ -35,14 +36,14 @@ class AstraMarket : JavaPlugin() {
 
     override fun onDisable() {
         AuctionExpireChecker.stopAuctionChecker()
-        runBlocking { Modules.database.value.closeConnection() }
+        runBlocking { RootModuleImpl.database.value.closeConnection() }
         HandlerList.unregisterAll(this)
         GlobalInventoryClickEvent.onDisable()
     }
 
     fun reloadPlugin() {
-        Modules.configFileManager.value.reload()
-        Modules.configuration.reload()
-        Modules.translation.reload()
+        RootModuleImpl.configFileManager.value.reload()
+        RootModuleImpl.configuration.reload()
+        RootModuleImpl.translation.reload()
     }
 }

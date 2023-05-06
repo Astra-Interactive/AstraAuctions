@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.api.usecases
 
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -14,10 +14,11 @@ import kotlin.math.max
 import kotlin.math.min
 
 class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params> {
-    private val dataSource by Modules.auctionsApi
-    private val translation by Modules.translation
-    private val config by Modules.configuration
-    private val serializer by Modules.bukkitSerializer
+    private val dataSource by RootModuleImpl.auctionsApi
+    private val translation by RootModuleImpl.translation
+    private val config by RootModuleImpl.configuration
+    private val serializer by RootModuleImpl.bukkitSerializer
+
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,

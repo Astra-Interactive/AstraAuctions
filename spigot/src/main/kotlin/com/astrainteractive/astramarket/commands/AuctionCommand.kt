@@ -1,24 +1,27 @@
 package com.astrainteractive.astramarket.commands
 
 import com.astrainteractive.astramarket.api.usecases.CreateAuctionUseCase
+import com.astrainteractive.astramarket.commands.di.CommandsModule
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.PluginPermission
 import com.astrainteractive.astramarket.utils.openSync
 import com.astrainteractive.astramarket.utils.playSound
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
+import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.commands.Command
 import ru.astrainteractive.astralibs.commands.registerCommand
 import ru.astrainteractive.astralibs.getValue
 
-class AuctionCommand {
-    private val translation by Modules.translation
-    private val config by Modules.configuration
-    private val plugin by Modules.plugin
-    private val scope by Modules.scope
-    private val dispatchers by Modules.dispatchers
+class AuctionCommand(
+    plugin: JavaPlugin,
+    module: CommandsModule
+) {
+    private val translation by module.translation
+    private val config by module.configuration
+    private val scope by module.scope
+    private val dispatchers by module.dispatchers
 
     val amarket = plugin.registerCommand("amarket") {
         val sender = this.sender

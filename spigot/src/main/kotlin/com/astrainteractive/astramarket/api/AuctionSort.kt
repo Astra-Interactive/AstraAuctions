@@ -1,9 +1,9 @@
 package com.astrainteractive.astramarket.api
 
-import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import ru.astrainteractive.astralibs.getValue
 
-private val translation by Modules.translation
+private val translation by RootModuleImpl.translation
 
 enum class AuctionSort(val desc: String) {
     MATERIAL_DESC(translation.sortMaterialDesc),

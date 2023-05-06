@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.api.usecases
 
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.utils.displayNameOrMaterialName
 import com.astrainteractive.astramarket.utils.itemStack
 import com.astrainteractive.astramarket.utils.playSound
@@ -18,10 +18,10 @@ import java.util.*
  * @return boolean, which is true if succesfully bought
  */
 class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
-    private val dataSource by Modules.auctionsApi
-    private val translation by Modules.translation
-    private val config by Modules.configuration
-    private val economyProvider by Modules.vaultEconomyProvider
+    private val dataSource by RootModuleImpl.auctionsApi
+    private val translation by RootModuleImpl.translation
+    private val config by RootModuleImpl.configuration
+    private val economyProvider by RootModuleImpl.vaultEconomyProvider
 
     class Params(
         val auction: AuctionDTO,

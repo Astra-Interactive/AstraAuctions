@@ -1,10 +1,10 @@
 package com.astrainteractive.astramarket.gui.auctions
 
+import com.astrainteractive.astramarket.di.AuctionViewModelFactory
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.AbstractAuctionGui
 import com.astrainteractive.astramarket.gui.AuctionViewModel
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
-import com.astrainteractive.astramarket.modules.AuctionViewModelFactory
 import com.astrainteractive.astramarket.utils.openSync
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit

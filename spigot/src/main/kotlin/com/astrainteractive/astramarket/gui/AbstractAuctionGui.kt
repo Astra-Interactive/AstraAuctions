@@ -1,6 +1,6 @@
 package com.astrainteractive.astramarket.gui
 
-import com.astrainteractive.astramarket.modules.Modules
+import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.utils.playSound
 import com.astrainteractive.astramarket.utils.setDisplayName
 import kotlinx.coroutines.launch
@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit
 abstract class AbstractAuctionGui(
     player: Player
 ) : PaginatedMenu() {
-    private val config by Modules.configuration
-    protected val translation by Modules.translation
-    protected val serializer by Modules.bukkitSerializer
-    protected val scope by Modules.scope
-    protected val dispatchers by Modules.dispatchers
+    private val config by RootModuleImpl.configuration
+    protected val translation by RootModuleImpl.translation
+    protected val serializer by RootModuleImpl.bukkitSerializer
+    protected val scope by RootModuleImpl.scope
+    protected val dispatchers by RootModuleImpl.dispatchers
 
     override val playerHolder = DefaultPlayerHolder(player)
     protected val clickListener = MenuClickListener()
