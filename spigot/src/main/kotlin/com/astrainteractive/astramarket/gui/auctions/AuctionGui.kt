@@ -23,7 +23,6 @@ class AuctionGui(player: Player) : AbstractAuctionGui(player) {
     override fun setMenuItems() {
         super.setMenuItems()
         expiredButton.also(clickListener::remember).setInventoryButton()
-        println("Page: $page")
         for (i in 0 until maxItemsPerPage) {
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue

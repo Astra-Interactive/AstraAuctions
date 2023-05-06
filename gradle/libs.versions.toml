@@ -1,7 +1,7 @@
 [versions]
 # Plugin core
-project-version = "1.5.1"
-project-name = "AstraAuctions"
+project-version = "1.5.2"
+project-name = "AstraMarket"
 project-group = "com.astrainteractive.astramarket"
 project-url = "EmpireProjekt.ru"
 project-description = "Market plugin for EmpireSMP"
