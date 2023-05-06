@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.utils
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.api.AuctionSort
+import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import org.bukkit.Bukkit
@@ -34,7 +34,6 @@ fun List<AuctionDTO>.sortBy(sortType: AuctionSort): List<AuctionDTO> {
         AuctionSort.PRICE_ASC -> sortedBy { it.price }
         AuctionSort.PRICE_DESC -> sortedByDescending { it.price }
 
-
         AuctionSort.PLAYER_ASC -> sortedBy {
             Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
         }
@@ -44,7 +43,6 @@ fun List<AuctionDTO>.sortBy(sortType: AuctionSort): List<AuctionDTO> {
         else -> this
     }
 }
-
 
 fun AuctionConfig.Connection.toDBConnection(): Pair<DBConnection, DBSyntax> {
     val sqliteConnection = DBConnection.SQLite("dbv2_auction.db") to DBSyntax.SQLite

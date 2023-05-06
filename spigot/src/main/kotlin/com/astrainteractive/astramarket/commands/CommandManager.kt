@@ -1,7 +1,6 @@
 import com.astrainteractive.astramarket.commands.AuctionCommand
 import com.astrainteractive.astramarket.commands.reloadCommand
 
-
 /**
  * Command handler for your plugin
  * It's better to create different executors for different commands
@@ -18,9 +17,5 @@ class CommandManager {
     init {
         reloadCommand()
         AuctionCommand()
-
-
-
     }
-
 }

@@ -3,7 +3,7 @@ package com.astrainteractive.astramarket.domain.dto.mapping
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.Auction
 import ru.astrainteractive.astralibs.domain.mapping.Mapper
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.IO
 
 object AuctionMapper : Mapper<Auction, AuctionDTO> {
 
@@ -12,12 +12,12 @@ object AuctionMapper : Mapper<Auction, AuctionDTO> {
         discordId = it.discordId,
         minecraftUuid = it.minecraftUuid,
         time = it.time,
-        item = Serializer.Wrapper.ByteArray(it.item),
+        item = IO.ByteArray(it.item),
         price = it.price,
-        expired = it.expired==1
+        expired = it.expired == 1
     )
 
     override fun fromDTO(it: AuctionDTO): Auction {
-        throw IllegalStateException("Not implemented")
+        error("Not implemented")
     }
 }

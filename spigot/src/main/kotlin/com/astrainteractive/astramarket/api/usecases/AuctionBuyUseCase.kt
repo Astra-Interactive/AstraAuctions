@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.api.use_cases
+package com.astrainteractive.astramarket.api.usecases
 
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.modules.Modules
@@ -8,9 +8,8 @@ import com.astrainteractive.astramarket.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.UseCase
-import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.getValue
 import java.util.*
 
 /**
@@ -22,14 +21,16 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
     private val dataSource by Modules.auctionsApi
     private val translation by Modules.translation
     private val config by Modules.configuration
+    private val economyProvider by Modules.vaultEconomyProvider
+
     class Params(
         val auction: AuctionDTO,
         val player: Player
     )
     override suspend fun run(params: Params): Boolean {
-        val _auction = params.auction
+        val receivedAuction = params.auction
         val player = params.player
-        val auction = dataSource.fetchAuction(_auction.id) ?: return false
+        val auction = dataSource.fetchAuction(receivedAuction.id) ?: return false
         if (auction.minecraftUuid == player.uniqueId.toString()) {
             player.sendMessage(translation.ownerCantBeBuyer)
             return false
@@ -37,23 +38,22 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
         val item = auction.itemStack
 
-
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(config.sounds.fail)
             player.sendMessage(translation.inventoryFull)
             return false
         }
-        var vaultResponse = VaultEconomyProvider.takeMoney(player, auction.price.toDouble())
+        var vaultResponse = economyProvider.takeMoney(player.uniqueId, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(config.sounds.fail)
             player.sendMessage(translation.notEnoughMoney)
             return false
         }
-        vaultResponse = VaultEconomyProvider.addMoney(owner, auction.price.toDouble())
+        vaultResponse = economyProvider.addMoney(owner.uniqueId, auction.price.toDouble())
         if (!vaultResponse) {
             player.playSound(config.sounds.fail)
             player.sendMessage(translation.failedToPay)
-            VaultEconomyProvider.addMoney(player, auction.price.toDouble())
+            economyProvider.addMoney(player.uniqueId, auction.price.toDouble())
             return false
         }
 
@@ -72,8 +72,8 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
                     .replace("%item%", item.displayNameOrMaterialName()).replace("%price%", auction.price.toString())
             )
         } else {
-            VaultEconomyProvider.addMoney(player, auction.price.toDouble())
-            VaultEconomyProvider.takeMoney(owner, auction.price.toDouble())
+            economyProvider.addMoney(player.uniqueId, auction.price.toDouble())
+            economyProvider.takeMoney(owner.uniqueId, auction.price.toDouble())
             player.playSound(config.sounds.fail)
             player.sendMessage(translation.dbError)
         }

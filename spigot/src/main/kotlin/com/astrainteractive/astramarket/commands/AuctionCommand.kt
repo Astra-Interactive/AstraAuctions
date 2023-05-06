@@ -1,26 +1,26 @@
 package com.astrainteractive.astramarket.commands
 
-import com.astrainteractive.astramarket.api.use_cases.CreateAuctionUseCase
+import com.astrainteractive.astramarket.api.usecases.CreateAuctionUseCase
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.PluginPermission
 import com.astrainteractive.astramarket.utils.openSync
 import com.astrainteractive.astramarket.utils.playSound
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.AstraLibs
-import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.commands.Command
 import ru.astrainteractive.astralibs.commands.registerCommand
-import ru.astrainteractive.astralibs.di.getValue
+import ru.astrainteractive.astralibs.getValue
 
 class AuctionCommand {
     private val translation by Modules.translation
     private val config by Modules.configuration
+    private val plugin by Modules.plugin
+    private val scope by Modules.scope
+    private val dispatchers by Modules.dispatchers
 
-    val amarket = AstraLibs.instance.registerCommand("amarket") {
+    val amarket = plugin.registerCommand("amarket") {
         val sender = this.sender
         if (sender !is Player) {
             sender.sendMessage(translation.onlyForPlayers)
@@ -32,21 +32,20 @@ class AuctionCommand {
         }
         when (args.getOrNull(0)) {
             "sell" -> sellCommand.invoke(this)
-            "expired" -> PluginScope.launch(Dispatchers.IO) {
+            "expired" -> scope.launch(dispatchers.IO) {
                 ExpiredAuctionGui(sender).openSync()
             }
 
-            "open", null -> PluginScope.launch(Dispatchers.IO) {
+            "open", null -> scope.launch(dispatchers.IO) {
                 AuctionGui(sender).openSync()
             }
-
         }
     }
 
     private val sellCommand: Command.() -> Unit = command@{
         if (!PluginPermission.Sell.hasPermission(sender)) return@command
         val player = sender as? Player ?: return@command
-        val maxAuctionsAllowed = PluginPermission.SellMax.permissionSize(player) ?: config.auction.maxAuctionPerPlayer ?: 1
+        val maxAuctionsAllowed = PluginPermission.SellMax.permissionSize(player) ?: config.auction.maxAuctionPerPlayer
 
         val price = argument(1) {
             it?.toFloatOrNull()
@@ -58,11 +57,10 @@ class AuctionCommand {
         val amount = argument(2) {
             it?.toIntOrNull() ?: 1
         }.onFailure {
-
         }.successOrNull()?.value ?: return@command
         val item = player.inventory.itemInMainHand
 
-        PluginScope.launch(Dispatchers.IO) {
+        scope.launch(dispatchers.IO) {
             CreateAuctionUseCase()(
                 CreateAuctionUseCase.Params(
                     maxAuctionsAllowed = maxAuctionsAllowed,
@@ -73,9 +71,5 @@ class AuctionCommand {
                 )
             )
         }
-
     }
 }
-
-
-

@@ -1,12 +1,14 @@
-package com.astrainteractive.astramarket.api.use_cases
+package com.astrainteractive.astramarket.api.usecases
 
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.plugin.PluginPermission
-import com.astrainteractive.astramarket.utils.*
+import com.astrainteractive.astramarket.utils.displayNameOrMaterialName
+import com.astrainteractive.astramarket.utils.itemStack
+import com.astrainteractive.astramarket.utils.owner
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.UseCase
+import ru.astrainteractive.astralibs.getValue
 
 /**
  * @param player admin or moderator
@@ -22,12 +24,12 @@ class ExpireAuctionUseCase : UseCase<Boolean, ExpireAuctionUseCase.Params> {
     )
     override suspend fun run(params: Params): Boolean {
         val player = params.player
-        val _auction = params.auction
+        val receivedAuction = params.auction
         if (player != null && !PluginPermission.Expire.hasPermission(player)) {
             player.sendMessage(translation.noPermissions)
             return false
         }
-        val auction = dataSource.fetchAuction(_auction.id) ?: return false
+        val auction = dataSource.fetchAuction(receivedAuction.id) ?: return false
         auction.owner?.player?.sendMessage(
             translation.notifyAuctionExpired
                 .replace("%item%", auction.itemStack.displayNameOrMaterialName())
@@ -36,8 +38,9 @@ class ExpireAuctionUseCase : UseCase<Boolean, ExpireAuctionUseCase.Params> {
         val result = dataSource.expireAuction(auction)
         if (result == null) {
             player?.sendMessage(translation.unexpectedError)
-        } else
+        } else {
             player?.sendMessage(translation.auctionHasBeenExpired)
+        }
         return (result != null)
     }
 }

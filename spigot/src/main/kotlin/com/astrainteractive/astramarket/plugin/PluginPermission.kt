@@ -8,5 +8,4 @@ sealed class PluginPermission(override val value: String) : Permission {
     object SellMax : PluginPermission("astra_market.sell_max")
     object Expire : PluginPermission("astra_market.expire")
     object Amarket : PluginPermission("astra_market.command")
-
 }

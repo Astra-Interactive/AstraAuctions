@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.api.use_cases
+package com.astrainteractive.astramarket.api.usecases
 
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.modules.Modules
@@ -6,8 +6,8 @@ import com.astrainteractive.astramarket.utils.itemStack
 import com.astrainteractive.astramarket.utils.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.UseCase
+import ru.astrainteractive.astralibs.getValue
 import java.util.*
 
 /**

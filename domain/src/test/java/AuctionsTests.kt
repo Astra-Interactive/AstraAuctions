@@ -1,15 +1,17 @@
-import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
 import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import kotlinx.coroutines.runBlocking
+import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
-import ru.astrainteractive.astralibs.encoding.Serializer
+import kotlinx.coroutines.runBlocking
+import ru.astrainteractive.astralibs.encoding.IO
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
-import java.util.*
+import java.util.UUID
 import kotlin.random.Random
-import kotlin.test.*
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class AuctionsTests : ORMTest(builder = { DefaultDatabase(DBConnection.SQLite("db.db"), DBSyntax.SQLite) }) {
     private val dataSource: AuctionsAPI
@@ -20,7 +22,7 @@ class AuctionsTests : ORMTest(builder = { DefaultDatabase(DBConnection.SQLite("d
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
-            item = Serializer.Wrapper.ByteArray(ByteArray(0)),
+            item = IO.ByteArray(ByteArray(0)),
             price = Random.nextInt().toFloat(),
             expired = false
         )
@@ -65,5 +67,4 @@ class AuctionsTests : ORMTest(builder = { DefaultDatabase(DBConnection.SQLite("d
         amount = dataSource.getAuctionsOlderThan(System.currentTimeMillis() - 1)!!.size
         assertEquals(amount, 1)
     }
-
 }

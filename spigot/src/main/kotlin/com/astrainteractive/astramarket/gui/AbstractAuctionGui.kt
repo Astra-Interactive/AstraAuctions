@@ -3,33 +3,32 @@ package com.astrainteractive.astramarket.gui
 import com.astrainteractive.astramarket.modules.Modules
 import com.astrainteractive.astramarket.utils.playSound
 import com.astrainteractive.astramarket.utils.setDisplayName
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import ru.astrainteractive.astralibs.async.PluginScope
-import ru.astrainteractive.astralibs.di.getValue
+import ru.astrainteractive.astralibs.getValue
+import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
+import ru.astrainteractive.astralibs.menu.menu.InventoryButton
 import ru.astrainteractive.astralibs.menu.menu.Menu
+import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
-import ru.astrainteractive.astralibs.menu.utils.InventoryButton
 import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
-import ru.astrainteractive.astralibs.menu.utils.MenuSize
-import ru.astrainteractive.astralibs.menu.utils.click.MenuClickListener
 import java.util.concurrent.TimeUnit
 
+@Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
     player: Player
 ) : PaginatedMenu() {
-    protected val clickListener = MenuClickListener()
-
+    private val config by Modules.configuration
+    protected val translation by Modules.translation
     protected val serializer by Modules.bukkitSerializer
+    protected val scope by Modules.scope
+    protected val dispatchers by Modules.dispatchers
 
     override val playerHolder = DefaultPlayerHolder(player)
-
-    val translation by Modules.translation
-    private val config by Modules.configuration
+    protected val clickListener = MenuClickListener()
 
     override var menuTitle: String = translation.title
     override val menuSize: MenuSize = MenuSize.XL
@@ -71,7 +70,6 @@ abstract class AbstractAuctionGui(
         }
     }
 
-
     val sortButton: InventoryButton
         get() = ItemStackButtonBuilder {
             index = backPageButton.index + 1
@@ -90,12 +88,12 @@ abstract class AbstractAuctionGui(
 
     open fun onNextPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        showPage(page+1)
+        showPage(page + 1)
     }
 
     open fun onPrevPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        showPage(page-1)
+        showPage(page - 1)
     }
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
@@ -110,12 +108,13 @@ abstract class AbstractAuctionGui(
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
-        PluginScope.launch(Dispatchers.IO) {
+        scope.launch(dispatchers.IO) {
             val result = viewModel.onAuctionItemClicked(i, clickType)
-            if (result)
+            if (result) {
                 playerHolder.player.playSound(config.sounds.sold)
-            else
+            } else {
                 playerHolder.player.playSound(config.sounds.fail)
+            }
         }
     }
 
@@ -142,7 +141,6 @@ abstract class AbstractAuctionGui(
             .replace("%minutes%", minutes.toString())
     }
 
-
     open fun setMenuItems() {
         inventory.clear()
         clickListener.clearClickListener()
@@ -152,9 +150,8 @@ abstract class AbstractAuctionGui(
 
     override fun onCreated() {
         playerHolder.player.playSound(config.sounds.open)
-        viewModel.auctionList.collectOn(Dispatchers.IO) {
+        viewModel.auctionList.collectOn(dispatchers.IO) {
             setMenuItems()
         }
     }
-
 }

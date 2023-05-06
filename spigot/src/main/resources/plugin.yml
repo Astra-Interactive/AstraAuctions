@@ -1,13 +1,14 @@
-main: com.astrainteractive.astramarket.AstraMarket
+main: '${main}'
+prefix: '${prefix}'
 description: '${description}'
-prefix: '${name}'
 name: '${name}'
 version: '${version}'
-authors: [ MakeevRoman ]
-author: MakeevRoman
-website: AstraInteractive.ru
-api-version: 1.13
-softdepend: []
+authors: [ "${authors}" ]
+author: "${author}"
+website: "${url}"
+api-version: 1.18
+softdepend: [ ]
+#libraries: [ "${libraries}" ]
 loadbefore: [Vault]
 depend: [Vault]
 libraries:

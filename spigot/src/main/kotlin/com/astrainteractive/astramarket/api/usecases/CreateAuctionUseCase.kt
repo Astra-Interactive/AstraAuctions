@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.api.use_cases
+package com.astrainteractive.astramarket.api.usecases
 
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.modules.Modules
@@ -7,8 +7,8 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.di.getValue
 import ru.astrainteractive.astralibs.domain.UseCase
+import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.utils.uuid
 import kotlin.math.max
 import kotlin.math.min
@@ -70,15 +70,14 @@ class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params> {
             item.amount -= amount
             player.sendMessage(translation.auctionAdded)
             player.playSound(config.sounds.success)
-            if (config.auction.announce)
+            if (config.auction.announce) {
                 Bukkit.broadcastMessage(translation.broadcast.replace("%player%", player.name))
+            }
             return true
         } else {
             player.playSound(config.sounds.fail)
             player.sendMessage(translation.dbError)
             return false
         }
-
-
     }
 }

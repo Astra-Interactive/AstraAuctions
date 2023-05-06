@@ -1,14 +1,15 @@
 package com.astrainteractive.astramarket.plugin
 
-import com.astrainteractive.astramarket.AstraMarket
-import ru.astrainteractive.astralibs.filemanager.SpigotFileManager
+import com.astrainteractive.astramarket.modules.Modules
+import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
+import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.utils.BaseTranslation
 
 class Translation : BaseTranslation() {
-    override val translationFile = SpigotFileManager(name = "translations.yml")
+    private val plugin by Modules.plugin
+    override val translationFile = DefaultSpigotFileManager(plugin, name = "translations.yml")
 
-
-    //General
+    // General
     val reloadStarted: String = translationValue("general.reload_started", "#dbbb18Перезагрузка плагина")
     val reloadSuccess: String =
         translationValue("general.reload_complete", "#42f596Перезагрузка успешно завершена")
@@ -25,7 +26,7 @@ class Translation : BaseTranslation() {
     val timeAgoFormat: String =
         translationValue("general.time_format", "%days%дн. %hours%ч. %minutes%м. назад")
 
-    //Auction
+    // Auction
     val wrongItemInHand: String =
         translationValue("auction.wrong_item", "#f55442Предмет в вашей руке не подходит для продажи")
     val wrongPrice: String =
@@ -71,7 +72,7 @@ class Translation : BaseTranslation() {
     val notifyAuctionExpired: String =
         translationValue("menu.auction_expired_notify", "#f55442Ваш слот %item% за %price% только что был просрочен")
 
-    //Menu
+    // Menu
     val title: String =
         translationValue("menu.title", "#1382d6Аукцион")
     val expiredTitle: String =
@@ -122,6 +123,4 @@ class Translation : BaseTranslation() {
         translationValue("auction.sort.player_desc", "#FFFFFFпо игроку #d6a213&l↑")
     val sortPlayerAsc: String =
         translationValue("auction.sort.player_asc", "#FFFFFFпо игроку #d6a213&l↓")
-
-
 }

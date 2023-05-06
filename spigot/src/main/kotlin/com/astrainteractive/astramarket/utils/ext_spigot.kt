@@ -1,13 +1,10 @@
 package com.astrainteractive.astramarket.utils
 
-import kotlinx.coroutines.Dispatchers
+import com.astrainteractive.astramarket.modules.Modules
 import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.async.BukkitAsync
-import ru.astrainteractive.astralibs.async.BukkitMain
 import ru.astrainteractive.astralibs.menu.menu.Menu
-
 
 fun ItemStack.setDisplayName(name: String) {
     val meta = itemMeta!!
@@ -21,11 +18,12 @@ fun Player.playSound(sound: String) {
 
 fun ItemStack.displayNameOrMaterialName(): String {
     val name = itemMeta!!.displayName
-    if (name.isNullOrEmpty())
+    if (name.isNullOrEmpty()) {
         return type.name
+    }
     return name
 }
 
-suspend fun Menu.openSync() = withContext(Dispatchers.BukkitMain){
+suspend fun Menu.openSync() = withContext(Modules.dispatchers.value.BukkitMain) {
     open()
 }

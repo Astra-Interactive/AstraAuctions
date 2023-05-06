@@ -3,7 +3,8 @@ import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astralibs.orm.exception.DatabaseException
 import java.io.File
-import kotlin.test.*
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 
 abstract class ORMTest(
     val builder: () -> Database
@@ -28,5 +29,4 @@ abstract class ORMTest(
         }
         database = null
     }
-
 }

@@ -4,7 +4,6 @@ import kotlinx.serialization.Serializable
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
-
 @Serializable
 data class AuctionConfig(
     val auction: Auction = Auction(),
@@ -23,10 +22,11 @@ data class AuctionConfig(
             val ip: String = "127.0.0.1",
             val port: Int = 8080,
             val username: String = "USERNAME",
-            val password: String="PASSWORD",
-            val sessionVariables: List<String> = listOf("autoReconnect=true","useSSL=false")
+            val password: String = "PASSWORD",
+            val sessionVariables: List<String> = listOf("autoReconnect=true", "useSSL=false")
         )
     }
+
     @Serializable
     data class Auction(
         val maxAuctionPerPlayer: Int = 5,
@@ -34,8 +34,9 @@ data class AuctionConfig(
         val maxPrice: Int = 1000000,
         val taxPercent: Int = 0,
         val announce: Boolean = true,
-        val maxTime:Long = 20L//1*24*60*60*1000
+        val maxTime: Long = 20L // 1*24*60*60*1000
     )
+
     @Serializable
     data class Sounds(
         val open: String = "ui.button.click",
@@ -45,6 +46,7 @@ data class AuctionConfig(
         val success: String = "block.note_block.chime",
         val sold: String = "block.note_block.chime"
     )
+
     @Serializable
     data class Buttons(
         val back: Button = Button(Material.IRON_DOOR.name),
@@ -54,6 +56,7 @@ data class AuctionConfig(
         val aauc: Button = Button(Material.DIAMOND.name),
         val expired: Button = Button(Material.EMERALD.name)
     )
+
     @Serializable
     data class Button(
         val material: String,

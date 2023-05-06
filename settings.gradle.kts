@@ -39,6 +39,7 @@ dependencyResolutionManagement {
         maven("https://jitpack.io")
     }
 }
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AstraMarket"
 include("domain")
 include("spigot")
