@@ -107,6 +107,7 @@ tests-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", vers
 tests-org-testing = { module = "org.testng:testng", version.ref = "tests-org-testing" }
 tests-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
 tests-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+tests-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 # Exposed
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
