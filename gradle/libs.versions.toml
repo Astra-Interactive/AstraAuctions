@@ -70,14 +70,6 @@ gradle-buildconfig = "3.1.0"
 # Exposed
 exposed = "0.38.1"
 
-[bundles]
-exposed = ["exposed-java-time", "exposed-jdbc", "exposed-dao", "exposed-core"]
-minecraft-bukkit = ["minecraft-paper-api", "minecraft-spigot-api", "minecraft-spigot-core", "minecraft-vaultapi", "minecraft-papi"]
-testing-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "driver-jdbc", "driver-mysql", "kotlin-serialization", "kotlin-serializationJson"]
-testing-libs = ["tests-junit-jupiter-api", "tests-org-testing", "tests-junit5", "tests-junit-jupiter"]
-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-dokka-kotlinJavaPlugin", "kotlin-gradle"]
-
-
 [libraries]
 # Linter
 lint-detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "lint-detekt" }
@@ -102,11 +94,7 @@ driver-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "driver-jdbc" }
 driver-mysql = { module = "mysql:mysql-connector-java", version.ref = "driver-mysql" }
 
 # Testing
-tests-junit-bom = { module = "org.junit:junit-bom", version.ref = "tests-junit-bom" }
-tests-junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "tests-junit-jupiter-api" }
-tests-org-testing = { module = "org.testng:testng", version.ref = "tests-org-testing" }
-tests-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5" }
-tests-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+tests-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 
 # Exposed
 exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
@@ -138,6 +126,13 @@ minecraft-fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", vers
 minecraft-fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "minecraft-fabric-loader" }
 minecraft-fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "minecraft-fabric-api" }
 minecraft-mojang = { module = "com.mojang:minecraft", version.ref = "minecraft-version" }
+
+[bundles]
+exposed = ["exposed-java-time", "exposed-jdbc", "exposed-dao", "exposed-core"]
+minecraft-bukkit = ["minecraft-paper-api", "minecraft-spigot-api", "minecraft-spigot-core", "minecraft-vaultapi", "minecraft-papi"]
+testing-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "driver-jdbc", "driver-mysql", "kotlin-serialization", "kotlin-serializationJson"]
+kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-dokka-kotlinJavaPlugin", "kotlin-gradle"]
+
 
 [plugins]
 # Kotlin

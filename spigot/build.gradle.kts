@@ -16,10 +16,8 @@ dependencies {
     implementation(libs.minecraft.astralibs.spigot.gui)
     implementation(libs.minecraft.astralibs.spigot.core)
     // Test
-    testImplementation(platform(libs.tests.junit.bom))
-    testImplementation(libs.bundles.testing.libs)
     testImplementation(libs.bundles.testing.kotlin)
-    testImplementation(libs.driver.mysql)
+    testImplementation(libs.tests.kotlin.test)
     // Spigot dependencies
     compileOnly(libs.minecraft.paper.api)
     implementation(libs.minecraft.bstats)
