@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.commands
+package com.astrainteractive.astramarket.command
 
 import CommandManager
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl

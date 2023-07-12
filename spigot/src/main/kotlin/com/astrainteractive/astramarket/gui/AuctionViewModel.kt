@@ -7,7 +7,7 @@ import com.astrainteractive.astramarket.api.usecases.RemoveAuctionUseCase
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.utils.sortBy
+import com.astrainteractive.astramarket.util.sortBy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

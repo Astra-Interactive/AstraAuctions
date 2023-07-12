@@ -1,7 +1,7 @@
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.commands.AuctionCommand
-import com.astrainteractive.astramarket.commands.di.CommandsModule
-import com.astrainteractive.astramarket.commands.reloadCommand
+import com.astrainteractive.astramarket.command.AuctionCommand
+import com.astrainteractive.astramarket.command.di.CommandsModule
+import com.astrainteractive.astramarket.command.reloadCommand
 
 class CommandManager(
     plugin: AstraMarket,

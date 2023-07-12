@@ -5,7 +5,7 @@ package com.astrainteractive.astramarket
 import CommandManager
 import com.astrainteractive.astramarket.di.impl.CommandsModuleImpl
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
-import com.astrainteractive.astramarket.utils.AuctionExpireChecker
+import com.astrainteractive.astramarket.util.AuctionExpireChecker
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin

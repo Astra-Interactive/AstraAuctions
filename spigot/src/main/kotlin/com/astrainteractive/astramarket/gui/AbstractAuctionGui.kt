@@ -1,8 +1,8 @@
 package com.astrainteractive.astramarket.gui
 
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
-import com.astrainteractive.astramarket.utils.playSound
-import com.astrainteractive.astramarket.utils.setDisplayName
+import com.astrainteractive.astramarket.util.playSound
+import com.astrainteractive.astramarket.util.setDisplayName
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType

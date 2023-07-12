@@ -7,7 +7,7 @@ import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
-import com.astrainteractive.astramarket.utils.toDBConnection
+import com.astrainteractive.astramarket.util.toDBConnection
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.jetbrains.kotlin.tooling.core.UnsafeApi

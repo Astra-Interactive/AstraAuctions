@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.utils
+package com.astrainteractive.astramarket.util
 
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import kotlinx.coroutines.launch

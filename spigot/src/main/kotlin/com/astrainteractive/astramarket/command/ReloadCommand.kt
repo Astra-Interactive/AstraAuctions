@@ -1,8 +1,8 @@
-package com.astrainteractive.astramarket.commands
+package com.astrainteractive.astramarket.command
 
 import CommandManager
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.commands.di.CommandsModule
+import com.astrainteractive.astramarket.command.di.CommandsModule
 import com.astrainteractive.astramarket.plugin.PluginPermission
 import ru.astrainteractive.astralibs.commands.registerCommand
 import ru.astrainteractive.astralibs.getValue

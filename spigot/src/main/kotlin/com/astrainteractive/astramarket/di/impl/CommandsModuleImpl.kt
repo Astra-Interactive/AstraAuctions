@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.di.impl
 
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.commands.di.CommandsModule
+import com.astrainteractive.astramarket.command.di.CommandsModule
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astralibs.Dependency
