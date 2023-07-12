@@ -1,21 +1,6 @@
 [versions]
-# Plugin core
-project-version = "1.5.3"
-project-name = "AstraMarket"
-project-group = "com.astrainteractive.astramarket"
-project-url = "EmpireProjekt.ru"
-project-description = "Market plugin for EmpireSMP"
-project-authors = "Roman Makeev"
-project-author = "Roman Makeev"
-
-# Plugin destinations
-destination-paper = "D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins"
-destination-fabric = "C:\\Users\\Roman\\Desktop\\server\\mods"
-destination-forge = "C:\\Users\\Roman\\Desktop\\Forge\\mods"
-destination-velocity = "D:\\Minecraft Servers\\Servers\\esmp-configuration\\velocity\\plugins"
-
 # Kotlin
-kotlin-version = "1.8.10"
+kotlin-version = "1.9.0"
 kotlin-coroutines = "1.6.3"
 kotlin-json = "1.5.0-RC"
 kotlin-kaml = "0.50.0"
@@ -29,13 +14,13 @@ driver-mysql = "8.0.20"
 # Minecraft
 minecraft-version = "1.19.2"
 minecraft-velocity = "3.1.1"
-minecraft-spigot = "1.19.3-R0.1-SNAPSHOT"
+minecraft-spigot = "1.20.1-R0.1-SNAPSHOT"
 minecraft-papi = "2.11.2"
 minecraft-protocollib = "4.8.0"
 minecraft-wg = "7.0.7"
 minecraft-vault = "1.7"
 minecraft-coreprotect = "21.2"
-minecraft-astralibs = "2.7.0-RC8"
+minecraft-astralibs = "2.7.5"
 minecraft-bstats = "3.0.0"
 minecraft-mockbukkit = "v1.19-SNAPSHOT"
 
@@ -56,11 +41,6 @@ minecraft-fabric-api = "0.60.0+1.19.2"
 minecraft-forge-net = "5.1.61"
 minecrft-forge-version = "1.19.2-43.1.52"
 
-# Linter
-lint-detekt = "1.22.0"
-lint-detekt-ruleset-compiler = "0.0.2"
-lint-detekt-ruleset-ktlint = "0.48.0"
-
 # Shadow
 gradle-shadow = "7.1.2"
 
@@ -71,19 +51,12 @@ gradle-buildconfig = "3.1.0"
 exposed = "0.38.1"
 
 [libraries]
-# Linter
-lint-detekt-gradle = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "lint-detekt" }
-lint-detekt-ruleset-compiler = { module = "com.braisgabin.detekt:kotlin-compiler-wrapper", version.ref = "lint-detekt-ruleset-compiler" }
-lint-detekt-ruleset-ktlint = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "lint-detekt" }
-
 # Kotlin
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlin-coroutines-coreJvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlin-coroutines" }
 kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin-version" }
 kotlin-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-json" }
 kotlin-serializationKaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kotlin-kaml" }
-kotlin-dokka-kotlinJavaPlugin = { module = "org.jetbrains.dokka:kotlin-as-java-plugin", version.ref = "kotlin-version" }
-kotlin-dokka-plugin = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "kotlin-version" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-version" }
 
 # Shadow
@@ -131,7 +104,7 @@ minecraft-mojang = { module = "com.mojang:minecraft", version.ref = "minecraft-v
 exposed = ["exposed-java-time", "exposed-jdbc", "exposed-dao", "exposed-core"]
 minecraft-bukkit = ["minecraft-paper-api", "minecraft-spigot-api", "minecraft-spigot-core", "minecraft-vaultapi", "minecraft-papi"]
 testing-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "driver-jdbc", "driver-mysql", "kotlin-serialization", "kotlin-serializationJson"]
-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-dokka-kotlinJavaPlugin", "kotlin-gradle"]
+kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-gradle"]
 
 
 [plugins]
@@ -143,9 +116,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 # Minecraft
 minecraft-fabric-loom = { id = "fabric-loom", version.ref = "minecraft-fabric-loom" }
 minecraft-forge-net = { id = "net.minecraftforge.gradle", version.ref = "minecraft-forge-net" }
-
-# Lint
-lint-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "lint-detekt" }
 
 # Gradle
 gradle-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "gradle-shadow" }

@@ -3,9 +3,9 @@ package com.astrainteractive.astramarket.api.usecases
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.plugin.PluginPermission
-import com.astrainteractive.astramarket.utils.displayNameOrMaterialName
-import com.astrainteractive.astramarket.utils.itemStack
-import com.astrainteractive.astramarket.utils.owner
+import com.astrainteractive.astramarket.util.displayNameOrMaterialName
+import com.astrainteractive.astramarket.util.itemStack
+import com.astrainteractive.astramarket.util.owner
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.getValue

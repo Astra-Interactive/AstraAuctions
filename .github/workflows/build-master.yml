@@ -9,47 +9,11 @@ jobs:
   detekt_validation:
     needs: gradle_validation
     uses: ./.github/workflows/detekt-validation.yml
-#  tests_validation:
-#    needs: gradle_validation
-#    uses: ./.github/workflows/tests-validation.yml
-
-  publish:
-    name: Build and upload
-    runs-on: ubuntu-latest
-    needs: [ gradle_validation, detekt_validation ]
-    steps:
-      - name: Checkout Git repo
-        uses: actions/checkout@v2
-      - uses: SebRollen/toml-action@v1.0.2
-        id: version
-        with:
-          file: 'gradle/libs.versions.toml'
-          field: 'versions.project-version'
-      - uses: SebRollen/toml-action@v1.0.2
-        id: name
-        with:
-          file: 'gradle/libs.versions.toml'
-          field: 'versions.project-name'
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: 17
-      - name: Give gradle permission
-        run: chmod +x gradlew
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: shadowJar --stacktrace
-      - name: Create release
-        id: create_internal_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.actions_token }}
-        with:
-          files: |
-            ./jars/${{ steps.name.outputs.value }}-${{ steps.version.outputs.value }}.jar
-          tag_name: ${{ steps.version.outputs.value }}
-          name: ${{ steps.name.outputs.value }} - ${{ steps.version.outputs.value }}
-          draft: false
-          prerelease: false
+  tests_validation:
+    needs: gradle_validation
+    uses: ./.github/workflows/tests-validation.yml
+  create_artifact:
+    needs: [ gradle_validation, detekt_validation, tests_validation ]
+    uses: ./.github/workflows/create-artifacts.yml
+    secrets:
+      ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}

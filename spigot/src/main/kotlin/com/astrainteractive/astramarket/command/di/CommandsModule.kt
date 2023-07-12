@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.commands.di
+package com.astrainteractive.astramarket.command.di
 
 import com.astrainteractive.astramarket.AstraMarket
 import com.astrainteractive.astramarket.plugin.AuctionConfig

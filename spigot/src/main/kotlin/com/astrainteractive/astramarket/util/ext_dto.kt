@@ -1,4 +1,6 @@
-package com.astrainteractive.astramarket.utils
+@file:Suppress("Filename")
+
+package com.astrainteractive.astramarket.util
 
 import com.astrainteractive.astramarket.api.AuctionSort
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl

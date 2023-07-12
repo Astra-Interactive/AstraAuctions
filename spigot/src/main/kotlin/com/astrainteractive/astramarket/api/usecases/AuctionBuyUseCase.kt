@@ -2,9 +2,9 @@ package com.astrainteractive.astramarket.api.usecases
 
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.utils.displayNameOrMaterialName
-import com.astrainteractive.astramarket.utils.itemStack
-import com.astrainteractive.astramarket.utils.playSound
+import com.astrainteractive.astramarket.util.displayNameOrMaterialName
+import com.astrainteractive.astramarket.util.itemStack
+import com.astrainteractive.astramarket.util.playSound
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player

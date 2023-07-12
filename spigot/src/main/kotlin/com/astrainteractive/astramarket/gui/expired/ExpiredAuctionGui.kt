@@ -5,7 +5,7 @@ import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.AbstractAuctionGui
 import com.astrainteractive.astramarket.gui.AuctionViewModel
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
-import com.astrainteractive.astramarket.utils.openSync
+import com.astrainteractive.astramarket.util.openSync
 import kotlinx.coroutines.launch
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

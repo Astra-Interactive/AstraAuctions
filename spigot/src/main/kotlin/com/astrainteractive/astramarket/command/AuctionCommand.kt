@@ -1,12 +1,12 @@
-package com.astrainteractive.astramarket.commands
+package com.astrainteractive.astramarket.command
 
 import com.astrainteractive.astramarket.api.usecases.CreateAuctionUseCase
-import com.astrainteractive.astramarket.commands.di.CommandsModule
+import com.astrainteractive.astramarket.command.di.CommandsModule
 import com.astrainteractive.astramarket.gui.auctions.AuctionGui
 import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import com.astrainteractive.astramarket.plugin.PluginPermission
-import com.astrainteractive.astramarket.utils.openSync
-import com.astrainteractive.astramarket.utils.playSound
+import com.astrainteractive.astramarket.util.openSync
+import com.astrainteractive.astramarket.util.playSound
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
