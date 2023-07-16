@@ -1,12 +1,11 @@
 package com.astrainteractive.astramarket.gui.auctions
 
-import com.astrainteractive.astramarket.di.AuctionViewModelFactory
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.AbstractAuctionGui
 import com.astrainteractive.astramarket.gui.AuctionViewModel
-import com.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
-import com.astrainteractive.astramarket.util.openSync
+import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -14,8 +13,11 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
 import java.util.*
 
-class AuctionGui(player: Player) : AbstractAuctionGui(player) {
-    override val viewModel: AuctionViewModel = AuctionViewModelFactory(player, false).build()
+class AuctionGui(
+    player: Player,
+    override val viewModel: AuctionViewModel,
+    module: AuctionGuiModule
+) : AbstractAuctionGui(player, module) {
 
     private val itemsInGui: List<AuctionDTO>
         get() = viewModel.auctionList.value
@@ -59,7 +61,8 @@ class AuctionGui(player: Player) : AbstractAuctionGui(player) {
 
     override fun onExpiredOpenClicked() {
         scope.launch(dispatchers.IO) {
-            ExpiredAuctionGui(playerHolder.player).openSync()
+            val menu = guiModule.auctionGuiFactory(playerHolder.player, true).create()
+            withContext(dispatchers.BukkitMain) { menu.open() }
         }
     }
 }

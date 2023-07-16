@@ -1,16 +1,10 @@
 package com.astrainteractive.astramarket.command
 
-import CommandManager
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
-import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.commands.registerTabCompleter
-import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.utils.withEntry
+import ru.astrainteractive.klibs.kdi.getValue
 
-fun CommandManager.tabCompleter(
-    plugin: JavaPlugin
-) = plugin.registerTabCompleter("amarket") {
-    val translation by RootModuleImpl.translation
+fun CommandManager.tabCompleter() = plugin.registerTabCompleter("amarket") {
     when (val size = args.size) {
         0 -> listOf("amarket")
         1 -> listOf("sell", "open", "expired").withEntry(args.last())

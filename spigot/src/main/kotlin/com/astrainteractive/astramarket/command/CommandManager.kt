@@ -1,15 +1,12 @@
-import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.command.AuctionCommand
-import com.astrainteractive.astramarket.command.di.CommandsModule
-import com.astrainteractive.astramarket.command.reloadCommand
+package com.astrainteractive.astramarket.command
 
-class CommandManager(
-    plugin: AstraMarket,
-    module: CommandsModule
-) {
+import com.astrainteractive.astramarket.command.di.CommandsModule
+
+class CommandManager(module: CommandsModule) : CommandsModule by module {
 
     init {
-        reloadCommand(plugin, module)
-        AuctionCommand(plugin, module)
+        reloadCommand()
+        amarketCommand()
+        tabCompleter()
     }
 }

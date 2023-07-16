@@ -1,7 +1,10 @@
 package com.astrainteractive.astramarket.di.impl
 
 import com.astrainteractive.astramarket.AstraMarket
+import com.astrainteractive.astramarket.di.GuiModule
 import com.astrainteractive.astramarket.di.RootModule
+import com.astrainteractive.astramarket.di.UseCasesModule
+import com.astrainteractive.astramarket.di.ViewModels
 import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
 import com.astrainteractive.astramarket.domain.entities.AuctionTable
@@ -11,9 +14,6 @@ import com.astrainteractive.astramarket.util.toDBConnection
 import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.jetbrains.kotlin.tooling.core.UnsafeApi
-import ru.astrainteractive.astralibs.Lateinit
-import ru.astrainteractive.astralibs.Reloadable
-import ru.astrainteractive.astralibs.Single
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
@@ -23,12 +23,15 @@ import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
 import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
-import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astralibs.utils.buildWithSpigot
+import ru.astrainteractive.klibs.kdi.Lateinit
+import ru.astrainteractive.klibs.kdi.Reloadable
+import ru.astrainteractive.klibs.kdi.Single
+import ru.astrainteractive.klibs.kdi.getValue
 
-object RootModuleImpl : RootModule {
+class RootModuleImpl : RootModule {
     override val plugin: Lateinit<AstraMarket> = Lateinit<AstraMarket>()
     override val configFileManager: Single<DefaultSpigotFileManager> = Single {
         val plugin by plugin
@@ -38,7 +41,7 @@ object RootModuleImpl : RootModule {
         Serializer(BukkitIOStreamProvider)
     }
     override val translation: Reloadable<Translation> = Reloadable {
-        Translation()
+        Translation(plugin.value)
     }
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val configFileManager by configFileManager
@@ -80,5 +83,15 @@ object RootModuleImpl : RootModule {
     override val logger: Single<Logger> = Single {
         val plugin by plugin
         Logger.buildWithSpigot("AstraMarket", plugin)
+    }
+
+    override val viewModelsModule: ViewModels by Single {
+        ViewModelsImpl(this)
+    }
+    override val guiModule: GuiModule by Single {
+        GuiModuleImpl(this)
+    }
+    override val useCasesModule: UseCasesModule by Single {
+        UseCasesModuleImpl(this)
     }
 }

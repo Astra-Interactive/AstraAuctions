@@ -1,13 +1,13 @@
 package com.astrainteractive.astramarket.gui
 
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
+import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
+import com.astrainteractive.astramarket.gui.util.desc
 import com.astrainteractive.astramarket.util.playSound
 import com.astrainteractive.astramarket.util.setDisplayName
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import ru.astrainteractive.astralibs.getValue
 import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.menu.InventoryButton
@@ -15,17 +15,14 @@ import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
 import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
+import ru.astrainteractive.klibs.kdi.getValue
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
-    player: Player
-) : PaginatedMenu() {
-    private val config by RootModuleImpl.configuration
-    protected val translation by RootModuleImpl.translation
-    protected val serializer by RootModuleImpl.bukkitSerializer
-    protected val scope by RootModuleImpl.scope
-    protected val dispatchers by RootModuleImpl.dispatchers
+    player: Player,
+    module: AuctionGuiModule
+) : PaginatedMenu(), AuctionGuiModule by module {
 
     override val playerHolder = DefaultPlayerHolder(player)
     protected val clickListener = MenuClickListener()
@@ -74,7 +71,7 @@ abstract class AbstractAuctionGui(
         get() = ItemStackButtonBuilder {
             index = backPageButton.index + 1
             itemStack = config.buttons.sort.toItemStack().apply {
-                setDisplayName("${translation.sort} ${viewModel.sortType.desc}")
+                setDisplayName("${translation.sort} ${viewModel.sortType.desc(translation)}")
             }
             onClick = {
                 onSortButtonClicked(it.isRightClick)

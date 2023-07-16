@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.minecraft.astralibs.ktxcore)
     implementation(libs.minecraft.astralibs.orm)
     implementation(libs.minecraft.astralibs.di)
+    implementation(libs.klibs.kdi)
     implementation(libs.minecraft.astralibs.spigot.gui)
     implementation(libs.minecraft.astralibs.spigot.core)
     // Test

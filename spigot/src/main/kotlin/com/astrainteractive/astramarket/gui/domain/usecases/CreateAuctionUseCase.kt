@@ -1,24 +1,27 @@
-package com.astrainteractive.astramarket.api.usecases
+package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
+import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.plugin.AuctionConfig
+import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.playSound
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.domain.UseCase
-import ru.astrainteractive.astralibs.getValue
+import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.utils.uuid
+import ru.astrainteractive.klibs.kdi.getValue
 import kotlin.math.max
 import kotlin.math.min
 
-class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params> {
-    private val dataSource by RootModuleImpl.auctionsApi
-    private val translation by RootModuleImpl.translation
-    private val config by RootModuleImpl.configuration
-    private val serializer by RootModuleImpl.bukkitSerializer
-
+class CreateAuctionUseCase(
+    private val dataSource: AuctionsAPI,
+    private val translation: Translation,
+    private val config: AuctionConfig,
+    private val serializer: Serializer
+) : UseCase<Boolean, CreateAuctionUseCase.Params> {
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,
@@ -27,7 +30,7 @@ class CreateAuctionUseCase : UseCase<Boolean, CreateAuctionUseCase.Params> {
         val item: ItemStack?
     )
 
-    override suspend fun run(params: CreateAuctionUseCase.Params): Boolean {
+    override suspend fun run(params: Params): Boolean {
         val player = params.player
         val maxAuctionsAllowed = params.maxAuctionsAllowed
         val price = params.price

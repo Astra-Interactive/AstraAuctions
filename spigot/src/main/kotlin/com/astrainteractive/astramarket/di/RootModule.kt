@@ -5,11 +5,6 @@ import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import org.bstats.bukkit.Metrics
-import org.jetbrains.kotlin.tooling.core.UnsafeApi
-import ru.astrainteractive.astralibs.Lateinit
-import ru.astrainteractive.astralibs.Module
-import ru.astrainteractive.astralibs.Reloadable
-import ru.astrainteractive.astralibs.Single
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
@@ -17,6 +12,10 @@ import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
+import ru.astrainteractive.klibs.kdi.Lateinit
+import ru.astrainteractive.klibs.kdi.Module
+import ru.astrainteractive.klibs.kdi.Reloadable
+import ru.astrainteractive.klibs.kdi.Single
 
 interface RootModule : Module {
     val plugin: Lateinit<AstraMarket>
@@ -29,10 +28,11 @@ interface RootModule : Module {
     val bStats: Single<Metrics>
     val vaultEconomyProvider: Single<VaultEconomyProvider>
 
-    @OptIn(UnsafeApi::class)
     val scope: Single<AsyncComponent>
-
-    @OptIn(UnsafeApi::class)
     val dispatchers: Single<BukkitDispatchers>
     val logger: Single<Logger>
+
+    val viewModelsModule: ViewModels
+    val guiModule: GuiModule
+    val useCasesModule: UseCasesModule
 }

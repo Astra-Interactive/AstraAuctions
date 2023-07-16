@@ -1,7 +1,9 @@
-package com.astrainteractive.astramarket.api.usecases
+package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
+import com.astrainteractive.astramarket.domain.api.AuctionsAPI
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.plugin.AuctionConfig
+import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.displayNameOrMaterialName
 import com.astrainteractive.astramarket.util.itemStack
 import com.astrainteractive.astramarket.util.playSound
@@ -9,24 +11,28 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.domain.UseCase
-import ru.astrainteractive.astralibs.getValue
-import java.util.*
+import ru.astrainteractive.astralibs.economy.EconomyProvider
+import ru.astrainteractive.astralibs.encoding.Serializer
+import java.util.UUID
 
 /**
  * @param _auction auction to buy
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
-    private val dataSource by RootModuleImpl.auctionsApi
-    private val translation by RootModuleImpl.translation
-    private val config by RootModuleImpl.configuration
-    private val economyProvider by RootModuleImpl.vaultEconomyProvider
+class AuctionBuyUseCase(
+    private val dataSource: AuctionsAPI,
+    private val translation: Translation,
+    private val config: AuctionConfig,
+    private val economyProvider: EconomyProvider,
+    private val serializer: Serializer
+) : UseCase<Boolean, AuctionBuyUseCase.Params> {
 
     class Params(
         val auction: AuctionDTO,
         val player: Player
     )
+
     override suspend fun run(params: Params): Boolean {
         val receivedAuction = params.auction
         val player = params.player
@@ -36,7 +42,7 @@ class AuctionBuyUseCase : UseCase<Boolean, AuctionBuyUseCase.Params> {
             return false
         }
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
-        val item = auction.itemStack
+        val item = auction.itemStack(serializer)
 
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(config.sounds.fail)

@@ -94,6 +94,9 @@ minecraft-astralibs-orm = { module = "ru.astrainteractive.astralibs:orm", versio
 minecraft-astralibs-spigot-core = { module = "ru.astrainteractive.astralibs:spigot-core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-spigot-gui = { module = "ru.astrainteractive.astralibs:spigot-gui", version.ref = "minecraft-astralibs" }
 
+# klibs
+klibs-kdi = { module = "ru.astrainteractive.klibs:kdi", version.strictly = "1.0.1" }
+
 # Fabric
 minecraft-fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "minecraft-fabric-kotlin" }
 minecraft-fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "minecraft-fabric-loader" }
