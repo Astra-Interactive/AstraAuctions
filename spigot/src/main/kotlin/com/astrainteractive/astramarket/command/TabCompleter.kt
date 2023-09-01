@@ -1,8 +1,7 @@
 package com.astrainteractive.astramarket.command
 
-import ru.astrainteractive.astralibs.commands.registerTabCompleter
-import ru.astrainteractive.astralibs.utils.withEntry
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.astralibs.command.registerTabCompleter
+import ru.astrainteractive.astralibs.util.withEntry
 
 fun CommandManager.tabCompleter() = plugin.registerTabCompleter("amarket") {
     when (val size = args.size) {

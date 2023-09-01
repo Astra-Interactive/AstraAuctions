@@ -20,7 +20,7 @@ minecraft-protocollib = "4.8.0"
 minecraft-wg = "7.0.7"
 minecraft-vault = "1.7"
 minecraft-coreprotect = "21.2"
-minecraft-astralibs = "2.7.5"
+minecraft-astralibs = "2.10.1"
 minecraft-bstats = "3.0.0"
 minecraft-mockbukkit = "v1.19-SNAPSHOT"
 
@@ -89,7 +89,6 @@ minecraft-mockbukkit = { module = "com.github.MockBukkit:MockBukkit", version.re
 
 # AstraLibs
 minecraft-astralibs-ktxcore = { module = "ru.astrainteractive.astralibs:ktx-core", version.ref = "minecraft-astralibs" }
-minecraft-astralibs-di = { module = "ru.astrainteractive.astralibs:di", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-orm = { module = "ru.astrainteractive.astralibs:orm", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-spigot-core = { module = "ru.astrainteractive.astralibs:spigot-core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-spigot-gui = { module = "ru.astrainteractive.astralibs:spigot-gui", version.ref = "minecraft-astralibs" }

@@ -10,9 +10,9 @@ import com.astrainteractive.astramarket.util.playSound
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 /**
@@ -26,16 +26,16 @@ class AuctionBuyUseCase(
     private val config: AuctionConfig,
     private val economyProvider: EconomyProvider,
     private val serializer: Serializer
-) : UseCase<Boolean, AuctionBuyUseCase.Params> {
+) : UseCase.Parametrized<AuctionBuyUseCase.Params, Boolean> {
 
     class Params(
         val auction: AuctionDTO,
         val player: Player
     )
 
-    override suspend fun run(params: Params): Boolean {
-        val receivedAuction = params.auction
-        val player = params.player
+    override suspend operator fun invoke(input: Params): Boolean {
+        val receivedAuction = input.auction
+        val player = input.player
         val auction = dataSource.fetchAuction(receivedAuction.id) ?: return false
         if (auction.minecraftUuid == player.uniqueId.toString()) {
             player.sendMessage(translation.ownerCantBeBuyer)

@@ -9,10 +9,9 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.encoding.Serializer
-import ru.astrainteractive.astralibs.utils.uuid
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.astralibs.util.uuid
+import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import kotlin.math.max
 import kotlin.math.min
 
@@ -21,7 +20,7 @@ class CreateAuctionUseCase(
     private val translation: Translation,
     private val config: AuctionConfig,
     private val serializer: Serializer
-) : UseCase<Boolean, CreateAuctionUseCase.Params> {
+) : UseCase.Parametrized<CreateAuctionUseCase.Params, Boolean> {
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,
@@ -30,12 +29,12 @@ class CreateAuctionUseCase(
         val item: ItemStack?
     )
 
-    override suspend fun run(params: Params): Boolean {
-        val player = params.player
-        val maxAuctionsAllowed = params.maxAuctionsAllowed
-        val price = params.price
-        val item = params.item
-        var amount = params.amount
+    override suspend operator fun invoke(input: Params): Boolean {
+        val player = input.player
+        val maxAuctionsAllowed = input.maxAuctionsAllowed
+        val price = input.price
+        val item = input.item
+        var amount = input.amount
 
         if (item == null || item.type == Material.AIR) {
             player.sendMessage(translation.wrongItemInHand)
@@ -47,7 +46,7 @@ class CreateAuctionUseCase(
         amount = max(amount, 1)
 
         val auctionsAmount = dataSource.countPlayerAuctions(player.uuid) ?: 0
-        if (auctionsAmount > maxAuctionsAllowed) {
+        if (auctionsAmount >= maxAuctionsAllowed) {
             player.sendMessage(translation.maxAuctions)
             player.playSound(config.sounds.fail)
             return false

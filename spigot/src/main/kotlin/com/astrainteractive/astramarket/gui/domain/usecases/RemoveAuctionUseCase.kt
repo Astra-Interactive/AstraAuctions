@@ -8,9 +8,8 @@ import com.astrainteractive.astramarket.util.itemStack
 import com.astrainteractive.astramarket.util.playSound
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.encoding.Serializer
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.*
 
 /**
@@ -23,7 +22,7 @@ class RemoveAuctionUseCase(
     private val translation: Translation,
     private val config: AuctionConfig,
     private val serializer: Serializer
-) : UseCase<Boolean, RemoveAuctionUseCase.Params> {
+) : UseCase.Parametrized<RemoveAuctionUseCase.Params, Boolean> {
     class Params(
         val auction: AuctionDTO,
         val player: Player
@@ -32,8 +31,8 @@ class RemoveAuctionUseCase(
         operator fun component2() = player
     }
 
-    override suspend fun run(params: Params): Boolean {
-        val (_auction, player) = params
+    override suspend operator fun invoke(input: Params): Boolean {
+        val (_auction, player) = input
 
         val auction = dataSource.fetchAuction(_auction.id) ?: return false
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))

@@ -2,8 +2,7 @@ package com.astrainteractive.astramarket.plugin
 
 import com.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
-import ru.astrainteractive.astralibs.utils.BaseTranslation
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.astralibs.util.BaseTranslation
 
 class Translation(plugin: AstraMarket) : BaseTranslation() {
     override val translationFile = DefaultSpigotFileManager(plugin, name = "translations.yml")

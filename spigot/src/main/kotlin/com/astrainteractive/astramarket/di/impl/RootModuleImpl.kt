@@ -25,7 +25,7 @@ import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
-import ru.astrainteractive.astralibs.utils.buildWithSpigot
+import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Reloadable
 import ru.astrainteractive.klibs.kdi.Single
@@ -45,7 +45,7 @@ class RootModuleImpl : RootModule {
     }
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val configFileManager by configFileManager
-        ConfigLoader.toClassOrDefault(configFileManager.configFile, ::AuctionConfig)
+        ConfigLoader().toClassOrDefault(configFileManager.configFile, ::AuctionConfig)
     }
     override val database: Single<DefaultDatabase> = Single {
         val config by configuration

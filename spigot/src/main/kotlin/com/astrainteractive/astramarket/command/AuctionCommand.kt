@@ -6,8 +6,8 @@ import com.astrainteractive.astramarket.util.playSound
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.commands.Command
-import ru.astrainteractive.astralibs.commands.registerCommand
+import ru.astrainteractive.astralibs.command.Command
+import ru.astrainteractive.astralibs.command.registerCommand
 
 fun CommandManager.amarketCommand() = plugin.registerCommand("amarket") {
     val sender = this.sender
@@ -38,8 +38,7 @@ private val CommandManager.sellCommand: Command.() -> Unit
         if (!PluginPermission.Sell.hasPermission(sender)) return@command
         val player = sender as? Player ?: return@command
         val maxAuctionsAllowed =
-            PluginPermission.SellMax.permissionSize(player) ?: configuration.auction.maxAuctionPerPlayer
-
+            PluginPermission.SellMax.maxPermissionSize(player) ?: configuration.auction.maxAuctionPerPlayer
         val price = argument(1) {
             it?.toFloatOrNull()
         }.onFailure {

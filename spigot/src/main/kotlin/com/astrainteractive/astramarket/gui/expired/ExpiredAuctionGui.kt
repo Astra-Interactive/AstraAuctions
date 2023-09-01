@@ -10,7 +10,8 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
+import ru.astrainteractive.astralibs.menu.clicker.Click
+import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import java.util.UUID
 
 class ExpiredAuctionGui(
@@ -38,9 +39,9 @@ class ExpiredAuctionGui(
             val index = maxItemsPerPage * page + i
             val auctionItem = itemsInGui.getOrNull(index) ?: continue
 
-            ItemStackButtonBuilder {
+            InventorySlot.Builder {
                 this.index = i
-                onClick = {
+                click = Click {
                     onAuctionItemClicked(getIndex(it.slot), it.click)
                 }
                 itemStack = serializer.fromByteArray<ItemStack>(auctionItem.item).apply {

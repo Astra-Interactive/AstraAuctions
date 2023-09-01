@@ -8,9 +8,8 @@ import com.astrainteractive.astramarket.util.displayNameOrMaterialName
 import com.astrainteractive.astramarket.util.itemStack
 import com.astrainteractive.astramarket.util.owner
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.domain.UseCase
 import ru.astrainteractive.astralibs.encoding.Serializer
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 
 /**
  * @param player admin or moderator
@@ -21,15 +20,15 @@ class ExpireAuctionUseCase(
     private val dataSource: AuctionsAPI,
     private val translation: Translation,
     private val serializer: Serializer
-) : UseCase<Boolean, ExpireAuctionUseCase.Params> {
+) : UseCase.Parametrized<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
         val auction: AuctionDTO,
         val player: Player? = null
     )
 
-    override suspend fun run(params: Params): Boolean {
-        val player = params.player
-        val receivedAuction = params.auction
+    override suspend operator fun invoke(input: Params): Boolean {
+        val player = input.player
+        val receivedAuction = input.auction
         if (player != null && !PluginPermission.Expire.hasPermission(player)) {
             player.sendMessage(translation.noPermissions)
             return false

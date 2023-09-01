@@ -14,10 +14,9 @@ import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astralibs.utils.next
-import ru.astrainteractive.astralibs.utils.prev
-import ru.astrainteractive.astralibs.utils.uuid
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.astralibs.util.uuid
+import ru.astrainteractive.klibs.mikro.core.util.next
+import ru.astrainteractive.klibs.mikro.core.util.prev
 
 class AuctionViewModel(
     private val player: Player,
@@ -34,9 +33,9 @@ class AuctionViewModel(
     var sortType = AuctionSort.DATE_ASC
     fun onSortButtonClicked(isRightClick: Boolean) {
         sortType = if (isRightClick) {
-            sortType.next()
+            sortType.next(AuctionSort.values())
         } else {
-            sortType.prev()
+            sortType.prev(AuctionSort.values())
         }
         sort()
     }
