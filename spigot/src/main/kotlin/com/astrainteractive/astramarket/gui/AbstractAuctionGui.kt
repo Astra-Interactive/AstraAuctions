@@ -1,31 +1,27 @@
 package com.astrainteractive.astramarket.gui
 
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
+import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
+import com.astrainteractive.astramarket.gui.util.desc
 import com.astrainteractive.astramarket.util.playSound
 import com.astrainteractive.astramarket.util.setDisplayName
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import ru.astrainteractive.astralibs.getValue
+import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
-import ru.astrainteractive.astralibs.menu.menu.InventoryButton
+import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
-import ru.astrainteractive.astralibs.menu.utils.ItemStackButtonBuilder
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
-    player: Player
-) : PaginatedMenu() {
-    private val config by RootModuleImpl.configuration
-    protected val translation by RootModuleImpl.translation
-    protected val serializer by RootModuleImpl.bukkitSerializer
-    protected val scope by RootModuleImpl.scope
-    protected val dispatchers by RootModuleImpl.dispatchers
+    player: Player,
+    module: AuctionGuiModule
+) : PaginatedMenu(), AuctionGuiModule by module {
 
     override val playerHolder = DefaultPlayerHolder(player)
     protected val clickListener = MenuClickListener()
@@ -33,50 +29,50 @@ abstract class AbstractAuctionGui(
     override var menuTitle: String = translation.title
     override val menuSize: MenuSize = MenuSize.XL
     abstract val viewModel: AuctionViewModel
-    override val backPageButton = ItemStackButtonBuilder {
+    override val backPageButton = InventorySlot.Builder {
         index = 49
         itemStack = config.buttons.back.toItemStack().apply { setDisplayName(translation.back) }
-        onClick = {
+        click = Click {
             onCloseClicked()
         }
     }
 
-    override val nextPageButton = ItemStackButtonBuilder {
+    override val nextPageButton = InventorySlot.Builder {
         index = 53
         itemStack = config.buttons.next.toItemStack().apply { setDisplayName(translation.next) }
-        onClick = {
+        click = Click {
             onNextPageClicked()
         }
     }
-    override val prevPageButton = ItemStackButtonBuilder {
+    override val prevPageButton = InventorySlot.Builder {
         index = 45
         itemStack = config.buttons.previous.toItemStack().apply { setDisplayName(translation.prev) }
-        onClick = {
+        click = Click {
             onPrevPageClicked()
         }
     }
-    val expiredButton = ItemStackButtonBuilder {
+    val expiredButton = InventorySlot.Builder {
         index = backPageButton.index - 1
         itemStack = config.buttons.expired.toItemStack().apply { setDisplayName(translation.expired) }
-        onClick = {
+        click = Click {
             onExpiredOpenClicked()
         }
     }
-    val aaucButton = ItemStackButtonBuilder {
+    val aaucButton = InventorySlot.Builder {
         index = backPageButton.index - 1
         itemStack = config.buttons.aauc.toItemStack().apply { setDisplayName(translation.aauc) }
-        onClick = {
+        click = Click {
             onExpiredOpenClicked()
         }
     }
 
-    val sortButton: InventoryButton
-        get() = ItemStackButtonBuilder {
+    val sortButton: InventorySlot
+        get() = InventorySlot.Builder {
             index = backPageButton.index + 1
             itemStack = config.buttons.sort.toItemStack().apply {
-                setDisplayName("${translation.sort} ${viewModel.sortType.desc}")
+                setDisplayName("${translation.sort} ${viewModel.sortType.desc(translation)}")
             }
-            onClick = {
+            click = Click {
                 onSortButtonClicked(it.isRightClick)
             }
         }

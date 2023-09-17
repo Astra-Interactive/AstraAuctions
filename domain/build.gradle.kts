@@ -10,7 +10,7 @@ dependencies {
     implementation(libs.minecraft.astralibs.spigot.core)
     implementation(libs.minecraft.astralibs.spigot.gui)
     implementation(libs.minecraft.astralibs.orm)
-    implementation(libs.minecraft.astralibs.di)
+    implementation(libs.klibs.kdi)
     implementation(libs.minecraft.bstats)
     // Test
     testImplementation(libs.bundles.testing.kotlin)

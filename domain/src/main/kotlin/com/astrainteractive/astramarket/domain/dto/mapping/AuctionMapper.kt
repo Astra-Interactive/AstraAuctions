@@ -2,8 +2,8 @@ package com.astrainteractive.astramarket.domain.dto.mapping
 
 import com.astrainteractive.astramarket.domain.dto.AuctionDTO
 import com.astrainteractive.astramarket.domain.entities.Auction
-import ru.astrainteractive.astralibs.domain.mapping.Mapper
 import ru.astrainteractive.astralibs.encoding.IO
+import ru.astrainteractive.klibs.mikro.core.domain.Mapper
 
 object AuctionMapper : Mapper<Auction, AuctionDTO> {
 

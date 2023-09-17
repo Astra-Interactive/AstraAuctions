@@ -1,17 +1,9 @@
 package com.astrainteractive.astramarket.command
 
-import CommandManager
-import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.command.di.CommandsModule
 import com.astrainteractive.astramarket.plugin.PluginPermission
-import ru.astrainteractive.astralibs.commands.registerCommand
-import ru.astrainteractive.astralibs.getValue
+import ru.astrainteractive.astralibs.command.registerCommand
 
-fun CommandManager.reloadCommand(
-    plugin: AstraMarket,
-    module: CommandsModule
-) = plugin.registerCommand("amarketreload") {
-    val translation by module.translation
+fun CommandManager.reloadCommand() = plugin.registerCommand("amarketreload") {
     if (!PluginPermission.Reload.hasPermission(sender)) return@registerCommand
     sender.sendMessage(translation.reloadStarted)
     plugin.reloadPlugin()

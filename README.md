@@ -15,9 +15,9 @@ Advantages:
 
 | Command                           | Description                                     | Permission              |
 |:----------------------------------|:------------------------------------------------|:------------------------|
-| ️`/amarket`                       | Open market                                     | -                       |
-| ️`/amarket open`                  | Open market                                     | -                       |
-| ️`/amarket expired`               | Open expired menu                               | -                       |
+| ️`/amarket`                       | Open market                                     | astra_market.command    |
+| ️`/amarket open`                  | Open market                                     | astra_market.command    |
+| ️`/amarket expired`               | Open expired menu                               | astra_market.command    |
 | ️`/amarket sell <price> <amount>` | Sell items on market                            | astra_market.sell       |
 | ️-                                | Allows player to sell up to N items at one time | astra_market.sell_max.N |
 | ️`/amarketreload`                 | reload plugin                                   | astra_market.reload     |

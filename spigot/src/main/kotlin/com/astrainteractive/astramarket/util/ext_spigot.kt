@@ -2,11 +2,8 @@
 
 package com.astrainteractive.astramarket.util
 
-import com.astrainteractive.astramarket.di.impl.RootModuleImpl
-import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.menu.menu.Menu
 
 fun ItemStack.setDisplayName(name: String) {
     val meta = itemMeta!!
@@ -24,8 +21,4 @@ fun ItemStack.displayNameOrMaterialName(): String {
         return type.name
     }
     return name
-}
-
-suspend fun Menu.openSync() = withContext(RootModuleImpl.dispatchers.value.BukkitMain) {
-    open()
 }
