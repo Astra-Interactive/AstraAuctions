@@ -19,7 +19,7 @@ import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
 import ru.astrainteractive.astralibs.async.PluginScope
 import ru.astrainteractive.astralibs.configloader.ConfigLoader
-import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
 import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
@@ -66,8 +66,8 @@ class RootModuleImpl : RootModule {
         val plugin by plugin
         Metrics(plugin, 15771)
     }
-    override val vaultEconomyProvider: Single<VaultEconomyProvider> = Single {
-        VaultEconomyProvider()
+    override val vaultEconomyProvider = Single {
+        AnyEconomyProvider(plugin.value)
     }
 
     @OptIn(UnsafeApi::class)

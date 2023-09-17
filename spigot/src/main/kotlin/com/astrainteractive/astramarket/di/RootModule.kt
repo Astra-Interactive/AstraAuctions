@@ -7,7 +7,7 @@ import com.astrainteractive.astramarket.plugin.Translation
 import org.bstats.bukkit.Metrics
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
@@ -26,7 +26,7 @@ interface RootModule : Module {
     val database: Single<DefaultDatabase>
     val auctionsApi: Single<AuctionsAPI>
     val bStats: Single<Metrics>
-    val vaultEconomyProvider: Single<VaultEconomyProvider>
+    val vaultEconomyProvider: Single<EconomyProvider>
 
     val scope: Single<AsyncComponent>
     val dispatchers: Single<BukkitDispatchers>
