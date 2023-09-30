@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.plugin.PluginPermission
 import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.displayNameOrMaterialName
@@ -16,17 +16,20 @@ import ru.astrainteractive.klibs.mikro.core.domain.UseCase
  * @param _auction auction to expire
  * @return boolean - true if success false if not
  */
-class ExpireAuctionUseCase(
-    private val dataSource: AuctionsAPI,
-    private val translation: Translation,
-    private val serializer: Serializer
-) : UseCase.Parametrized<ExpireAuctionUseCase.Params, Boolean> {
+interface ExpireAuctionUseCase : UseCase.Parametrized<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
         val auction: AuctionDTO,
         val player: Player? = null
     )
+}
 
-    override suspend operator fun invoke(input: Params): Boolean {
+internal class ExpireAuctionUseCaseImpl(
+    private val dataSource: AuctionsAPI,
+    private val translation: Translation,
+    private val serializer: Serializer
+) : ExpireAuctionUseCase {
+
+    override suspend operator fun invoke(input: ExpireAuctionUseCase.Params): Boolean {
         val player = input.player
         val receivedAuction = input.auction
         if (player != null && !PluginPermission.Expire.hasPermission(player)) {

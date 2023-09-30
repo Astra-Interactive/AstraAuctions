@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.itemStack
@@ -10,28 +10,28 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
-import java.util.*
+import java.util.UUID
 
 /**
  * @param _auction auction to remove
  * @param player owner of auction
  * @return boolean - true if succesfully removed
  */
-class RemoveAuctionUseCase(
+interface RemoveAuctionUseCase : UseCase.Parametrized<RemoveAuctionUseCase.Params, Boolean> {
+    data class Params(
+        val auction: AuctionDTO,
+        val player: Player
+    )
+}
+
+internal class RemoveAuctionUseCaseImpl(
     private val dataSource: AuctionsAPI,
     private val translation: Translation,
     private val config: AuctionConfig,
     private val serializer: Serializer
-) : UseCase.Parametrized<RemoveAuctionUseCase.Params, Boolean> {
-    class Params(
-        val auction: AuctionDTO,
-        val player: Player
-    ) {
-        operator fun component1() = auction
-        operator fun component2() = player
-    }
+) : RemoveAuctionUseCase {
 
-    override suspend operator fun invoke(input: Params): Boolean {
+    override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
         val (_auction, player) = input
 
         val auction = dataSource.fetchAuction(_auction.id) ?: return false

@@ -1,13 +1,15 @@
 package com.astrainteractive.astramarket.gui
 
-import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
-import com.astrainteractive.astramarket.gui.util.desc
+import com.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
+import com.astrainteractive.astramarket.plugin.AuctionConfig
+import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.playSound
 import com.astrainteractive.astramarket.util.setDisplayName
 import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
@@ -19,9 +21,12 @@ import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
-    player: Player,
-    module: AuctionGuiModule
-) : PaginatedMenu(), AuctionGuiModule by module {
+    player: Player
+) : PaginatedMenu() {
+    protected abstract val config: AuctionConfig
+    protected abstract val translation: Translation
+    protected abstract val dispatchers: BukkitDispatchers
+    protected abstract val auctionSortTranslationMapping: AuctionSortTranslationMapping
 
     override val playerHolder = DefaultPlayerHolder(player)
     protected val clickListener = MenuClickListener()
@@ -70,7 +75,8 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder {
             index = backPageButton.index + 1
             itemStack = config.buttons.sort.toItemStack().apply {
-                setDisplayName("${translation.sort} ${viewModel.sortType.desc(translation)}")
+                val sortDesc = auctionSortTranslationMapping.translate(viewModel.sortType)
+                setDisplayName("${translation.sort} $sortDesc")
             }
             click = Click {
                 onSortButtonClicked(it.isRightClick)
@@ -104,7 +110,7 @@ abstract class AbstractAuctionGui(
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
-        scope.launch(dispatchers.IO) {
+        componentScope.launch(dispatchers.IO) {
             val result = viewModel.onAuctionItemClicked(i, clickType)
             if (result) {
                 playerHolder.player.playSound(config.sounds.sold)

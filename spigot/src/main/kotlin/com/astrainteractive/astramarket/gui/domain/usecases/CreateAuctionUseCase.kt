@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.playSound
@@ -15,12 +15,7 @@ import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import kotlin.math.max
 import kotlin.math.min
 
-class CreateAuctionUseCase(
-    private val dataSource: AuctionsAPI,
-    private val translation: Translation,
-    private val config: AuctionConfig,
-    private val serializer: Serializer
-) : UseCase.Parametrized<CreateAuctionUseCase.Params, Boolean> {
+interface CreateAuctionUseCase : UseCase.Parametrized<CreateAuctionUseCase.Params, Boolean> {
     class Params(
         val maxAuctionsAllowed: Int,
         val player: Player,
@@ -28,8 +23,16 @@ class CreateAuctionUseCase(
         val amount: Int,
         val item: ItemStack?
     )
+}
 
-    override suspend operator fun invoke(input: Params): Boolean {
+internal class CreateAuctionUseCaseImpl(
+    private val dataSource: AuctionsAPI,
+    private val translation: Translation,
+    private val config: AuctionConfig,
+    private val serializer: Serializer
+) : CreateAuctionUseCase {
+
+    override suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean {
         val player = input.player
         val maxAuctionsAllowed = input.maxAuctionsAllowed
         val price = input.price

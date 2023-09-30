@@ -1,6 +1,6 @@
-package com.astrainteractive.astramarket.domain.api
+package com.astrainteractive.astramarket.api.market
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 
 interface AuctionsAPI {
     suspend fun insertAuction(auctionDTO: AuctionDTO): Int?

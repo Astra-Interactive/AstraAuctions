@@ -1,11 +1,13 @@
-package com.astrainteractive.astramarket.domain.dto.mapping
+package com.astrainteractive.astramarket.api.market.mapping
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.domain.entities.Auction
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import com.astrainteractive.astramarket.db.market.entity.Auction
 import ru.astrainteractive.astralibs.encoding.IO
 import ru.astrainteractive.klibs.mikro.core.domain.Mapper
 
-object AuctionMapper : Mapper<Auction, AuctionDTO> {
+interface AuctionMapper : Mapper<Auction, AuctionDTO>
+
+internal class AuctionMapperImpl : AuctionMapper {
 
     override fun toDTO(it: Auction): AuctionDTO = AuctionDTO(
         id = it.id,

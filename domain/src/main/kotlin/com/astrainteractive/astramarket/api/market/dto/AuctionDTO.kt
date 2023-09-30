@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.domain.dto
+package com.astrainteractive.astramarket.api.market.dto
 
 import ru.astrainteractive.astralibs.encoding.IO
 

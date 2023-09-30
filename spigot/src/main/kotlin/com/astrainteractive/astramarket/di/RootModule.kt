@@ -1,7 +1,8 @@
 package com.astrainteractive.astramarket.di
 
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.di.ApiMarketModule
+import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import org.bstats.bukkit.Metrics
@@ -24,7 +25,6 @@ interface RootModule : Module {
     val translation: Reloadable<Translation>
     val configuration: Reloadable<AuctionConfig>
     val database: Single<DefaultDatabase>
-    val auctionsApi: Single<AuctionsAPI>
     val bStats: Single<Metrics>
     val vaultEconomyProvider: Single<EconomyProvider>
 
@@ -32,7 +32,6 @@ interface RootModule : Module {
     val dispatchers: Single<BukkitDispatchers>
     val logger: Single<Logger>
 
-    val viewModelsModule: ViewModels
-    val guiModule: GuiModule
-    val useCasesModule: UseCasesModule
+    val apiMarketModule: ApiMarketModule
+    val auctionGuiModule: AuctionGuiModule
 }

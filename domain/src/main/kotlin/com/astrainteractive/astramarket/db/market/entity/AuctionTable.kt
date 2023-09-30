@@ -1,4 +1,4 @@
-package com.astrainteractive.astramarket.domain.entities
+package com.astrainteractive.astramarket.db.market.entity
 
 import ru.astrainteractive.astralibs.orm.database.Column
 import ru.astrainteractive.astralibs.orm.database.Constructable

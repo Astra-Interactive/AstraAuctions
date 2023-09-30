@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.gui
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.domain.models.AuctionSort
 import com.astrainteractive.astramarket.gui.domain.usecases.AuctionBuyUseCase
 import com.astrainteractive.astramarket.gui.domain.usecases.ExpireAuctionUseCase
@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import ru.astrainteractive.astralibs.async.AsyncComponent
+import ru.astrainteractive.astralibs.async.BukkitDispatchers
+import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.util.uuid
 import ru.astrainteractive.klibs.mikro.core.util.next
 import ru.astrainteractive.klibs.mikro.core.util.prev
@@ -21,8 +23,13 @@ import ru.astrainteractive.klibs.mikro.core.util.prev
 class AuctionViewModel(
     private val player: Player,
     private val expired: Boolean = false,
-    module: AuctionGuiModule
-) : AsyncComponent(), AuctionGuiModule by module {
+    private val dispatchers: BukkitDispatchers,
+    private val auctionsAPI: AuctionsAPI,
+    private val serializer: Serializer,
+    private val auctionBuyUseCase: AuctionBuyUseCase,
+    private val expireAuctionUseCase: ExpireAuctionUseCase,
+    private val removeAuctionUseCase: RemoveAuctionUseCase
+) : AsyncComponent() {
 
     private val _auctionList = MutableStateFlow(listOf<AuctionDTO>())
     val auctionList: StateFlow<List<AuctionDTO>>
@@ -41,7 +48,7 @@ class AuctionViewModel(
     }
 
     private fun sort() {
-        scope.launch(dispatchers.IO) {
+        componentScope.launch(dispatchers.IO) {
             _auctionList.update {
                 auctionList.value.sortBy(sortType, serializer)
             }
@@ -49,14 +56,14 @@ class AuctionViewModel(
     }
 
     private suspend fun onExpiredAuctionClicked(auction: AuctionDTO): Boolean {
-        return useCasesModule.removeAuctionUseCase(RemoveAuctionUseCase.Params(auction, player))
+        return removeAuctionUseCase.invoke(RemoveAuctionUseCase.Params(auction, player))
     }
 
     private suspend fun onAuctionClicked(auction: AuctionDTO, clickType: ClickType): Boolean {
         return when (clickType) {
-            ClickType.LEFT -> useCasesModule.auctionBuyUseCase(AuctionBuyUseCase.Params(auction, player))
-            ClickType.RIGHT -> useCasesModule.removeAuctionUseCase(RemoveAuctionUseCase.Params(auction, player))
-            ClickType.MIDDLE -> useCasesModule.expireAuctionUseCase(ExpireAuctionUseCase.Params(auction, player))
+            ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, player))
+            ClickType.RIGHT -> removeAuctionUseCase.invoke(RemoveAuctionUseCase.Params(auction, player))
+            ClickType.MIDDLE -> expireAuctionUseCase.invoke(ExpireAuctionUseCase.Params(auction, player))
             else -> return false
         }
     }
@@ -75,9 +82,9 @@ class AuctionViewModel(
     }
 
     fun loadItems() =
-        scope.launch(dispatchers.IO) {
+        componentScope.launch(dispatchers.IO) {
             val list =
-                if (!expired) dataSource.getAuctions(expired) else dataSource.getUserAuctions(player.uuid, expired)
+                if (!expired) auctionsAPI.getAuctions(expired) else auctionsAPI.getUserAuctions(player.uuid, expired)
             val sorted = list?.sortBy(sortType, serializer) ?: emptyList()
             _auctionList.update {
                 sorted

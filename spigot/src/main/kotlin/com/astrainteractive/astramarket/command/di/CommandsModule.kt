@@ -1,13 +1,16 @@
 package com.astrainteractive.astramarket.command.di
 
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.di.GuiModule
-import com.astrainteractive.astramarket.di.UseCasesModule
+import com.astrainteractive.astramarket.di.RootModule
+import com.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
+import com.astrainteractive.astramarket.gui.domain.usecases.CreateAuctionUseCase
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.klibs.kdi.Module
+import ru.astrainteractive.klibs.kdi.Provider
+import ru.astrainteractive.klibs.kdi.getValue
 
 interface CommandsModule : Module {
     val translation: Translation
@@ -15,6 +18,23 @@ interface CommandsModule : Module {
     val plugin: AstraMarket
     val scope: AsyncComponent
     val dispatchers: BukkitDispatchers
-    val guiModule: GuiModule
-    val useCasesModule: UseCasesModule
+    val auctionGuiFactory: AuctionGuiFactory
+    val createAuctionUseCase: CreateAuctionUseCase
+
+    class Default(
+        rootModule: RootModule
+    ) : CommandsModule {
+        override val translation: Translation by rootModule.translation
+        override val configuration: AuctionConfig by rootModule.configuration
+        override val plugin: AstraMarket by rootModule.plugin
+        override val scope: AsyncComponent by rootModule.scope
+        override val dispatchers: BukkitDispatchers by rootModule.dispatchers
+
+        override val auctionGuiFactory: AuctionGuiFactory by Provider {
+            rootModule.auctionGuiModule.auctionGuiFactory
+        }
+        override val createAuctionUseCase: CreateAuctionUseCase by Provider {
+            rootModule.auctionGuiModule.guiDomainModule.createAuctionUseCase
+        }
+    }
 }

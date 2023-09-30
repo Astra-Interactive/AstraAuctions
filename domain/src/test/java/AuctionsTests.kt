@@ -1,12 +1,14 @@
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
-import com.astrainteractive.astramarket.domain.entities.AuctionTable
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.impl.AuctionsAPIImpl
+import com.astrainteractive.astramarket.api.market.mapping.AuctionMapperImpl
+import com.astrainteractive.astramarket.db.market.entity.AuctionTable
 import kotlinx.coroutines.runBlocking
 import ru.astrainteractive.astralibs.encoding.IO
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
+import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.test.BeforeTest
@@ -15,7 +17,11 @@ import kotlin.test.assertEquals
 
 class AuctionsTests : ORMTest(builder = { DefaultDatabase(DBConnection.SQLite("db.db"), DBSyntax.SQLite) }) {
     private val dataSource: AuctionsAPI
-        get() = AuctionsAPIImpl(assertConnected())
+        get() = AuctionsAPIImpl(
+            database = assertConnected(),
+            auctionMapper = AuctionMapperImpl(),
+            dispatchers = DefaultKotlinDispatchers
+        )
     val randomAuction: AuctionDTO
         get() = AuctionDTO(
             id = -1,

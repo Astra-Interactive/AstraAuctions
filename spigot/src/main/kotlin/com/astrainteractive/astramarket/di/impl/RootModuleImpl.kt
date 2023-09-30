@@ -1,13 +1,10 @@
 package com.astrainteractive.astramarket.di.impl
 
 import com.astrainteractive.astramarket.AstraMarket
-import com.astrainteractive.astramarket.di.GuiModule
+import com.astrainteractive.astramarket.api.market.di.ApiMarketModule
+import com.astrainteractive.astramarket.db.market.entity.AuctionTable
 import com.astrainteractive.astramarket.di.RootModule
-import com.astrainteractive.astramarket.di.UseCasesModule
-import com.astrainteractive.astramarket.di.ViewModels
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.api.AuctionsAPIImpl
-import com.astrainteractive.astramarket.domain.entities.AuctionTable
+import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.toDBConnection
@@ -27,6 +24,7 @@ import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.klibs.kdi.Lateinit
+import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.Reloadable
 import ru.astrainteractive.klibs.kdi.Single
 import ru.astrainteractive.klibs.kdi.getValue
@@ -57,9 +55,23 @@ class RootModuleImpl : RootModule {
             database
         }
     }
-    override val auctionsApi: Single<AuctionsAPI> = Single {
-        val database by database
-        AuctionsAPIImpl(database) as AuctionsAPI
+
+    override val apiMarketModule: ApiMarketModule by Provider {
+        ApiMarketModule.Default(
+            database = database.value,
+            dispatchers = dispatchers.value
+        )
+    }
+    override val auctionGuiModule: AuctionGuiModule by Provider {
+        AuctionGuiModule.Default(
+            economyProvider = vaultEconomyProvider.value,
+            config = configuration.value,
+            translation = translation.value,
+            serializer = bukkitSerializer.value,
+            auctionApi = apiMarketModule.auctionApi,
+            dispatchers = dispatchers.value,
+            auctionSortTranslationMapping = auctionGuiModule.guiDomainModule.auctionSortTranslationMapping
+        )
     }
 
     override val bStats: Single<Metrics> = Single {
@@ -83,15 +95,5 @@ class RootModuleImpl : RootModule {
     override val logger: Single<Logger> = Single {
         val plugin by plugin
         Logger.buildWithSpigot("AstraMarket", plugin)
-    }
-
-    override val viewModelsModule: ViewModels by Single {
-        ViewModelsImpl(this)
-    }
-    override val guiModule: GuiModule by Single {
-        GuiModuleImpl(this)
-    }
-    override val useCasesModule: UseCasesModule by Single {
-        UseCasesModuleImpl(this)
     }
 }

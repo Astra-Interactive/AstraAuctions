@@ -1,7 +1,7 @@
 package com.astrainteractive.astramarket.gui.domain.usecases
 
-import com.astrainteractive.astramarket.domain.api.AuctionsAPI
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.AuctionsAPI
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import com.astrainteractive.astramarket.plugin.Translation
 import com.astrainteractive.astramarket.util.displayNameOrMaterialName
@@ -20,20 +20,22 @@ import java.util.UUID
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-class AuctionBuyUseCase(
+interface AuctionBuyUseCase : UseCase.Parametrized<AuctionBuyUseCase.Params, Boolean> {
+    class Params(
+        val auction: AuctionDTO,
+        val player: Player
+    )
+}
+
+internal class AuctionBuyUseCaseImpl(
     private val dataSource: AuctionsAPI,
     private val translation: Translation,
     private val config: AuctionConfig,
     private val economyProvider: EconomyProvider,
     private val serializer: Serializer
-) : UseCase.Parametrized<AuctionBuyUseCase.Params, Boolean> {
+) : AuctionBuyUseCase {
 
-    class Params(
-        val auction: AuctionDTO,
-        val player: Player
-    )
-
-    override suspend operator fun invoke(input: Params): Boolean {
+    override suspend operator fun invoke(input: AuctionBuyUseCase.Params): Boolean {
         val receivedAuction = input.auction
         val player = input.player
         val auction = dataSource.fetchAuction(receivedAuction.id) ?: return false

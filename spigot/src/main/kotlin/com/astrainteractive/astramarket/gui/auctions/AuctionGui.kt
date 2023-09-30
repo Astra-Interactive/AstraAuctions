@@ -1,15 +1,20 @@
 package com.astrainteractive.astramarket.gui.auctions
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.AbstractAuctionGui
 import com.astrainteractive.astramarket.gui.AuctionViewModel
-import com.astrainteractive.astramarket.gui.di.AuctionGuiModule
+import com.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
+import com.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
+import com.astrainteractive.astramarket.plugin.AuctionConfig
+import com.astrainteractive.astramarket.plugin.Translation
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.async.BukkitDispatchers
+import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import java.util.*
@@ -17,8 +22,13 @@ import java.util.*
 class AuctionGui(
     player: Player,
     override val viewModel: AuctionViewModel,
-    module: AuctionGuiModule
-) : AbstractAuctionGui(player, module) {
+    override val config: AuctionConfig,
+    override val translation: Translation,
+    override val dispatchers: BukkitDispatchers,
+    override val auctionSortTranslationMapping: AuctionSortTranslationMapping,
+    private val serializer: Serializer,
+    private val auctionGuiFactory: AuctionGuiFactory,
+) : AbstractAuctionGui(player) {
 
     private val itemsInGui: List<AuctionDTO>
         get() = viewModel.auctionList.value
@@ -61,8 +71,8 @@ class AuctionGui(
     }
 
     override fun onExpiredOpenClicked() {
-        scope.launch(dispatchers.IO) {
-            val menu = guiModule.auctionGuiFactory(playerHolder.player, true).create()
+        componentScope.launch(dispatchers.IO) {
+            val menu = auctionGuiFactory.create(playerHolder.player, true)
             withContext(dispatchers.BukkitMain) { menu.open() }
         }
     }

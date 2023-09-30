@@ -2,7 +2,7 @@
 
 package com.astrainteractive.astramarket.util
 
-import com.astrainteractive.astramarket.domain.dto.AuctionDTO
+import com.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import com.astrainteractive.astramarket.gui.domain.models.AuctionSort
 import com.astrainteractive.astramarket.plugin.AuctionConfig
 import org.bukkit.Bukkit

@@ -3,7 +3,7 @@
 package com.astrainteractive.astramarket
 
 import com.astrainteractive.astramarket.command.CommandManager
-import com.astrainteractive.astramarket.di.impl.CommandsModuleImpl
+import com.astrainteractive.astramarket.command.di.CommandsModule
 import com.astrainteractive.astramarket.di.impl.RootModuleImpl
 import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
@@ -27,7 +27,7 @@ class AstraMarket : JavaPlugin() {
     override fun onEnable() {
         rootModule.plugin.initialize(this)
         rootModule.bStats.value
-        CommandManager(CommandsModuleImpl(rootModule))
+        CommandManager(CommandsModule.Default(rootModule))
         rootModule.vaultEconomyProvider
         GlobalEventListener.onEnable(this)
         GlobalInventoryClickEvent.onEnable(this)

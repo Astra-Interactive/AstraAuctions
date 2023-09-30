@@ -22,12 +22,12 @@ fun CommandManager.amarketCommand() = plugin.registerCommand("amarket") {
     when (args.getOrNull(0)) {
         "sell" -> sellCommand.invoke(this)
         "expired" -> scope.launch(dispatchers.IO) {
-            val menu = guiModule.auctionGuiFactory(sender, false).create()
+            val menu = auctionGuiFactory.create(sender, false)
             withContext(dispatchers.BukkitMain) { menu.open() }
         }
 
         "open", null -> scope.launch(dispatchers.IO) {
-            val menu = guiModule.auctionGuiFactory(sender, false).create()
+            val menu = auctionGuiFactory.create(sender, false)
             withContext(dispatchers.BukkitMain) { menu.open() }
         }
     }
@@ -53,7 +53,7 @@ private val CommandManager.sellCommand: Command.() -> Unit
         val item = player.inventory.itemInMainHand
 
         scope.launch(dispatchers.IO) {
-            useCasesModule.createAuctionUseCase.invoke(
+            createAuctionUseCase.invoke(
                 CreateAuctionUseCase.Params(
                     maxAuctionsAllowed = maxAuctionsAllowed,
                     player = player,
