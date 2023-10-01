@@ -11,13 +11,12 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 interface DataModule {
     val auctionApi: AuctionsAPI
-    val auctionMapper: AuctionMapper
 
     class Default(
         database: Database,
         dispatchers: KotlinDispatchers
     ) : DataModule {
-        override val auctionMapper: AuctionMapper by Provider {
+        private val auctionMapper: AuctionMapper by Provider {
             AuctionMapperImpl()
         }
 

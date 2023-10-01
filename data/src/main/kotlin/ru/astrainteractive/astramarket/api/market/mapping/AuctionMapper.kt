@@ -5,7 +5,7 @@ import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.db.market.entity.Auction
 import ru.astrainteractive.klibs.mikro.core.domain.Mapper
 
-interface AuctionMapper : Mapper<Auction, AuctionDTO>
+internal interface AuctionMapper : Mapper<Auction, AuctionDTO>
 
 internal class AuctionMapperImpl : AuctionMapper {
 

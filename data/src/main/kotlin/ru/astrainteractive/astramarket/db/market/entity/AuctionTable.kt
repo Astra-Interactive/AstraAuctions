@@ -5,7 +5,7 @@ import ru.astrainteractive.astralibs.orm.database.Constructable
 import ru.astrainteractive.astralibs.orm.database.Entity
 import ru.astrainteractive.astralibs.orm.database.Table
 
-object AuctionTable : Table<Int>("auctions") {
+internal object AuctionTable : Table<Int>("auctions") {
     override val id: Column<Int> = integer("id").primaryKey().autoIncrement()
     val discordId = text("discord_id").nullable()
     val minecraftUuid = text("minecraft_uuid")
@@ -15,7 +15,7 @@ object AuctionTable : Table<Int>("auctions") {
     val expired = bool("expired")
 }
 
-class Auction : Entity<Int>(AuctionTable) {
+internal class Auction : Entity<Int>(AuctionTable) {
     val id by AuctionTable.id
     val discordId by AuctionTable.discordId
     val minecraftUuid by AuctionTable.minecraftUuid
