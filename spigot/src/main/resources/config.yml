@@ -22,22 +22,22 @@ buttons:
     material: IRON_DOOR
     customModelData: 1
   previous:
-    material: PAPER
+    material: ARROW
     customModelData: 1
   next:
-    material: PAPER
+    material: ARROW
     customModelData: 1
   sort:
     material: SUNFLOWER
     customModelData: 1
   aauc:
-    material: DIAMOND
+    material: END_CRYSTAL
     customModelData: 1
   expired:
-    material: EMERALD
+    material: BARREL
     customModelData: 1
 connection:
-  sqlite: false
+  sqlite: true
   #mysql:
   #  database: "database_name"
   #  ip: "127.0.0.1"

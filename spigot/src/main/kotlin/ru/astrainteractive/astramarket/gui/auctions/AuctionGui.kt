@@ -22,13 +22,19 @@ import java.util.*
 class AuctionGui(
     player: Player,
     override val viewModel: AuctionViewModel,
-    override val config: AuctionConfig,
-    override val translation: Translation,
-    override val dispatchers: BukkitDispatchers,
-    override val auctionSortTranslationMapping: AuctionSortTranslationMapping,
+    config: AuctionConfig,
+    translation: Translation,
+    dispatchers: BukkitDispatchers,
+    auctionSortTranslationMapping: AuctionSortTranslationMapping,
     private val serializer: Serializer,
     private val auctionGuiFactory: AuctionGuiFactory,
-) : AbstractAuctionGui(player) {
+) : AbstractAuctionGui(
+    player = player,
+    config = config,
+    translation = translation,
+    dispatchers = dispatchers,
+    auctionSortTranslationMapping = auctionSortTranslationMapping
+) {
 
     private val itemsInGui: List<AuctionDTO>
         get() = viewModel.auctionList.value
@@ -36,9 +42,12 @@ class AuctionGui(
     override fun setMenuItems() {
         super.setMenuItems()
         expiredButton.also(clickListener::remember).setInventoryButton()
-        for (i in 0 until maxItemsPerPage) {
-            val index = maxItemsPerPage * page + i
-            val auctionItem = itemsInGui.getOrNull(index) ?: continue
+        var itemIndex = 0
+        buildSlots(GuiKey.AI) { i ->
+            val index = maxItemsPerPage * page + itemIndex
+            itemIndex++
+            val auctionItem = itemsInGui.getOrNull(index) ?: return@buildSlots null
+
             InventorySlot.Builder {
                 this.index = i
                 click = Click {
@@ -62,7 +71,10 @@ class AuctionGui(
                     meta.lore = lore
                     itemMeta = meta
                 }
-            }.also(clickListener::remember).setInventoryButton()
+            }
+        }.forEach {
+            clickListener.remember(it)
+            it.setInventoryButton()
         }
     }
 

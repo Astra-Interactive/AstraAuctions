@@ -16,8 +16,8 @@ import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
-import ru.astrainteractive.astramarket.api.market.di.ApiMarketModule
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
+import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
@@ -56,8 +56,8 @@ class RootModuleImpl : RootModule {
         }
     }
 
-    override val apiMarketModule: ApiMarketModule by Provider {
-        ApiMarketModule.Default(
+    override val dataModule: DataModule by Provider {
+        DataModule.Default(
             database = database.value,
             dispatchers = dispatchers.value
         )
@@ -68,9 +68,8 @@ class RootModuleImpl : RootModule {
             config = configuration.value,
             translation = translation.value,
             serializer = bukkitSerializer.value,
-            auctionApi = apiMarketModule.auctionApi,
+            auctionApi = dataModule.auctionApi,
             dispatchers = dispatchers.value,
-            auctionSortTranslationMapping = auctionGuiModule.guiDomainModule.auctionSortTranslationMapping
         )
     }
 
@@ -87,7 +86,6 @@ class RootModuleImpl : RootModule {
         PluginScope
     }
 
-    @OptIn(UnsafeApi::class)
     override val dispatchers: Single<BukkitDispatchers> = Single<BukkitDispatchers> {
         val plugin by plugin
         DefaultBukkitDispatchers(plugin)

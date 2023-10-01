@@ -27,5 +27,5 @@ dependencies {
     implementation(projects.data)
 }
 
-setupSpigotShadow()
+setupSpigotShadow(File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins"))
 setupSpigotProcessor()

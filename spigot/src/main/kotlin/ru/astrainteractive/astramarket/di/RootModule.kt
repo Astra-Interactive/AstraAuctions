@@ -9,7 +9,6 @@ import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astramarket.AstraMarket
-import ru.astrainteractive.astramarket.api.market.di.ApiMarketModule
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -32,6 +31,6 @@ interface RootModule : Module {
     val dispatchers: Single<BukkitDispatchers>
     val logger: Single<Logger>
 
-    val apiMarketModule: ApiMarketModule
+    val dataModule: DataModule
     val auctionGuiModule: AuctionGuiModule
 }

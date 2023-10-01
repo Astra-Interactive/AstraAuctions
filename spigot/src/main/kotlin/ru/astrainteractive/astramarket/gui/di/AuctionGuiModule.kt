@@ -7,7 +7,6 @@ import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionViewModelFactory
 import ru.astrainteractive.astramarket.gui.domain.di.GuiDomainModule
-import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.kdi.Module
@@ -29,7 +28,6 @@ interface AuctionGuiModule : Module {
         private val serializer: Serializer,
         private val auctionApi: AuctionsAPI,
         private val dispatchers: BukkitDispatchers,
-        private val auctionSortTranslationMapping: AuctionSortTranslationMapping
     ) : AuctionGuiModule {
         override val guiDomainModule: GuiDomainModule by Provider {
             GuiDomainModule.Default(
@@ -56,7 +54,7 @@ interface AuctionGuiModule : Module {
                 config = config,
                 translation = translation,
                 dispatchers = dispatchers,
-                auctionSortTranslationMapping = auctionSortTranslationMapping,
+                auctionSortTranslationMapping = guiDomainModule.auctionSortTranslationMapping,
                 serializer = serializer
             )
         }

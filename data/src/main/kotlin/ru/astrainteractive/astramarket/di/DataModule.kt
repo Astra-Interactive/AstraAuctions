@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.api.market.di
+package ru.astrainteractive.astramarket.di
 
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
@@ -9,14 +9,14 @@ import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
-interface ApiMarketModule {
+interface DataModule {
     val auctionApi: AuctionsAPI
     val auctionMapper: AuctionMapper
 
     class Default(
         database: Database,
         dispatchers: KotlinDispatchers
-    ) : ApiMarketModule {
+    ) : DataModule {
         override val auctionMapper: AuctionMapper by Provider {
             AuctionMapperImpl()
         }
