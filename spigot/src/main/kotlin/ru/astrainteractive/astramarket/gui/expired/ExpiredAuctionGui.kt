@@ -59,7 +59,7 @@ class ExpiredAuctionGui(
             InventorySlot.Builder {
                 this.index = i
                 click = Click {
-                    onAuctionItemClicked(getIndex(it.slot), it.click)
+                    onAuctionItemClicked(index, it.click)
                 }
                 itemStack = serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                     val meta = itemMeta!!
