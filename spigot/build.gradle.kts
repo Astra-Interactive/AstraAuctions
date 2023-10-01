@@ -27,5 +27,8 @@ dependencies {
     implementation(projects.data)
 }
 
-setupSpigotShadow(File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins"))
+File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->
+    if (file.exists()) setupSpigotShadow(file) else setupSpigotShadow()
+}
+
 setupSpigotProcessor()
