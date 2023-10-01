@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.gui
 
-import kotlinx.coroutines.launch
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
@@ -35,7 +34,7 @@ abstract class AbstractAuctionGui(
 
     override var menuTitle: String = translation.title
     override val menuSize: MenuSize = MenuSize.XL
-    abstract val viewModel: AuctionViewModel
+    abstract val viewModel: AuctionComponent
 
     protected object GuiKey {
         // Border
@@ -154,7 +153,7 @@ abstract class AbstractAuctionGui(
             InventorySlot.Builder {
                 index = i
                 itemStack = config.buttons.sort.toItemStack().apply {
-                    val sortDesc = auctionSortTranslationMapping.translate(viewModel.sortType)
+                    val sortDesc = auctionSortTranslationMapping.translate(viewModel.model.value.sortType)
                     setDisplayName("${translation.sort} $sortDesc")
                 }
                 click = Click {
@@ -170,7 +169,7 @@ abstract class AbstractAuctionGui(
     override var page: Int = 0
 
     override val maxItemsAmount: Int
-        get() = viewModel.maxItemsAmount
+        get() = viewModel.model.value.maxItemsAmount
 
     open fun onNextPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
@@ -194,14 +193,7 @@ abstract class AbstractAuctionGui(
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
-        componentScope.launch(dispatchers.IO) {
-            val result = viewModel.onAuctionItemClicked(i, clickType)
-            if (result) {
-                playerHolder.player.playSound(config.sounds.sold)
-            } else {
-                playerHolder.player.playSound(config.sounds.fail)
-            }
-        }
+        viewModel.onAuctionItemClicked(i, clickType)
     }
 
     abstract fun onExpiredOpenClicked()
@@ -237,7 +229,7 @@ abstract class AbstractAuctionGui(
 
     override fun onCreated() {
         playerHolder.player.playSound(config.sounds.open)
-        viewModel.auctionList.collectOn(dispatchers.IO) {
+        viewModel.model.collectOn(dispatchers.IO) {
             setMenuItems()
         }
     }

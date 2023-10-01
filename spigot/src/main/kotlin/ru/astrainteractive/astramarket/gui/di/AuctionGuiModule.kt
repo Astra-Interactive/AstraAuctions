@@ -4,8 +4,8 @@ import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
+import ru.astrainteractive.astramarket.gui.di.factory.AuctionComponentFactory
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
-import ru.astrainteractive.astramarket.gui.di.factory.AuctionViewModelFactory
 import ru.astrainteractive.astramarket.gui.domain.di.GuiDomainModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -16,7 +16,7 @@ import ru.astrainteractive.klibs.kdi.getValue
 interface AuctionGuiModule : Module {
     // Factories
     val auctionGuiFactory: AuctionGuiFactory
-    val auctionViewModelFactory: AuctionViewModelFactory
+    val auctionComponentFactory: AuctionComponentFactory
 
     // modules
     val guiDomainModule: GuiDomainModule
@@ -39,18 +39,19 @@ interface AuctionGuiModule : Module {
             )
         }
 
-        override val auctionViewModelFactory: AuctionViewModelFactory by Provider {
-            AuctionViewModelFactory(
+        override val auctionComponentFactory: AuctionComponentFactory by Provider {
+            AuctionComponentFactory(
                 dispatchers = dispatchers,
                 auctionsAPI = auctionApi,
                 serializer = serializer,
-                guiDomainModule = guiDomainModule
+                guiDomainModule = guiDomainModule,
+                config = config
             )
         }
 
         override val auctionGuiFactory: AuctionGuiFactory by Provider {
             AuctionGuiFactory(
-                auctionViewModelFactory = auctionViewModelFactory,
+                auctionComponentFactory = auctionComponentFactory,
                 config = config,
                 translation = translation,
                 dispatchers = dispatchers,

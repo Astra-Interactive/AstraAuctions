@@ -11,7 +11,7 @@ import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 
 class AuctionGuiFactory(
-    private val auctionViewModelFactory: AuctionViewModelFactory,
+    private val auctionComponentFactory: AuctionComponentFactory,
     private val config: AuctionConfig,
     private val translation: Translation,
     private val dispatchers: BukkitDispatchers,
@@ -22,7 +22,7 @@ class AuctionGuiFactory(
         return if (isExpired) {
             ExpiredAuctionGui(
                 player = player,
-                viewModel = auctionViewModelFactory.create(
+                viewModel = auctionComponentFactory.create(
                     player = player,
                     isExpired = isExpired
                 ),
@@ -36,7 +36,7 @@ class AuctionGuiFactory(
         } else {
             AuctionGui(
                 player = player,
-                viewModel = auctionViewModelFactory.create(
+                viewModel = auctionComponentFactory.create(
                     player = player,
                     isExpired = isExpired
                 ),

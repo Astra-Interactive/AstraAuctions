@@ -12,7 +12,7 @@ import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
-import ru.astrainteractive.astramarket.gui.AuctionViewModel
+import ru.astrainteractive.astramarket.gui.AuctionComponent
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
@@ -21,7 +21,7 @@ import java.util.*
 
 class AuctionGui(
     player: Player,
-    override val viewModel: AuctionViewModel,
+    override val viewModel: AuctionComponent,
     config: AuctionConfig,
     translation: Translation,
     dispatchers: BukkitDispatchers,
@@ -37,7 +37,7 @@ class AuctionGui(
 ) {
 
     private val itemsInGui: List<AuctionDTO>
-        get() = viewModel.auctionList.value
+        get() = viewModel.model.value.items
 
     override fun setMenuItems() {
         super.setMenuItems()
