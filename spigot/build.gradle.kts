@@ -24,8 +24,8 @@ dependencies {
     compileOnly(libs.minecraft.papi)
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
-    implementation(projects.domain)
+    implementation(projects.data)
 }
 
-setupSpigotShadow()
+setupSpigotShadow(File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins"))
 setupSpigotProcessor()
