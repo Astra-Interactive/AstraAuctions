@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.di.impl
 
-import kotlinx.coroutines.runBlocking
 import org.bstats.bukkit.Metrics
 import org.jetbrains.kotlin.tooling.core.UnsafeApi
 import ru.astrainteractive.astralibs.async.AsyncComponent
@@ -13,12 +12,12 @@ import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
-import ru.astrainteractive.astralibs.orm.DefaultDatabase
+import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
-import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.astramarket.di.RootModule
+import ru.astrainteractive.astramarket.di.factory.DatabaseFactory
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -45,15 +44,13 @@ class RootModuleImpl : RootModule {
         val configFileManager by configFileManager
         ConfigLoader().toClassOrDefault(configFileManager.configFile, ::AuctionConfig)
     }
-    override val database: Single<DefaultDatabase> = Single {
+    override val database: Single<Database> = Single {
         val config by configuration
-        runBlocking {
-            val (dbconnection, dbsyntax) = config.connection.toDBConnection()
-            val database = DefaultDatabase(dbconnection, dbsyntax)
-            database.openConnection()
-            AuctionTable.create(database)
-            database
-        }
+        val (dbConnection, dbSyntax) = config.connection.toDBConnection()
+        DatabaseFactory(
+            dbConnection = dbConnection,
+            dbSyntax = dbSyntax
+        ).create()
     }
 
     override val dataModule: DataModule by Provider {

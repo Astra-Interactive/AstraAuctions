@@ -7,7 +7,7 @@ import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
-import ru.astrainteractive.astralibs.orm.DefaultDatabase
+import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
@@ -23,7 +23,7 @@ interface RootModule : Module {
     val bukkitSerializer: Single<Serializer>
     val translation: Reloadable<Translation>
     val configuration: Reloadable<AuctionConfig>
-    val database: Single<DefaultDatabase>
+    val database: Single<Database>
     val bStats: Single<Metrics>
     val vaultEconomyProvider: Single<EconomyProvider>
 

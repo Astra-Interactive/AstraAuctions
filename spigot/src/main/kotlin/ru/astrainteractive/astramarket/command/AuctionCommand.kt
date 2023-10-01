@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.Command
 import ru.astrainteractive.astralibs.command.registerCommand
-import ru.astrainteractive.astramarket.gui.domain.usecases.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.gui.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.PluginPermission
 import ru.astrainteractive.astramarket.util.playSound
 

@@ -5,7 +5,7 @@ import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
-import ru.astrainteractive.astramarket.gui.domain.usecases.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.gui.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.kdi.Module

@@ -16,7 +16,7 @@ fun Player.playSound(sound: String) {
 }
 
 fun ItemStack.displayNameOrMaterialName(): String {
-    val name = itemMeta!!.displayName
+    val name = itemMeta?.displayName
     if (name.isNullOrEmpty()) {
         return type.name
     }

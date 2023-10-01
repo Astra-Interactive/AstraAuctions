@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui.domain.models
+package ru.astrainteractive.astramarket.gui.domain.model
 
 enum class AuctionSort {
     MATERIAL_DESC,

@@ -12,11 +12,11 @@ import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.util.uuid
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.models.AuctionSort
-import ru.astrainteractive.astramarket.gui.domain.usecases.AuctionBuyUseCase
-import ru.astrainteractive.astramarket.gui.domain.usecases.ExpireAuctionUseCase
-import ru.astrainteractive.astramarket.gui.domain.usecases.RemoveAuctionUseCase
-import ru.astrainteractive.astramarket.util.sortBy
+import ru.astrainteractive.astramarket.gui.domain.model.AuctionSort
+import ru.astrainteractive.astramarket.gui.domain.usecase.AuctionBuyUseCase
+import ru.astrainteractive.astramarket.gui.domain.usecase.ExpireAuctionUseCase
+import ru.astrainteractive.astramarket.gui.domain.usecase.RemoveAuctionUseCase
+import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.sortBy
 import ru.astrainteractive.klibs.mikro.core.util.next
 import ru.astrainteractive.klibs.mikro.core.util.prev
 

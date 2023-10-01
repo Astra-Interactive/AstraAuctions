@@ -1,13 +1,11 @@
-package ru.astrainteractive.astramarket.gui.domain.usecases
+package ru.astrainteractive.astramarket.gui.domain.usecase
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.encoding.Serializer
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.itemStack
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.itemStack
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID

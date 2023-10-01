@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui.domain.usecases
+package ru.astrainteractive.astramarket.gui.domain.usecase
 
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -6,8 +6,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.Serializer
 import ru.astrainteractive.astralibs.util.uuid
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astramarket.util.playSound
