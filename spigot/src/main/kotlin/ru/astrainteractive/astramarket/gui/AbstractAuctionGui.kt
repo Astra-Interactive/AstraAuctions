@@ -1,10 +1,8 @@
 package ru.astrainteractive.astramarket.gui
 
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
@@ -62,14 +60,24 @@ abstract class AbstractAuctionGui(
         const val EM = "x"
     }
 
-    protected val guiMap = listOf(
+    private val guiDefaultMap = listOf(
+        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
+        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
+        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
+        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
+        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
+        "${GuiKey.PR}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.BA}${GuiKey.FI}${GuiKey.EM}${GuiKey.EM}${GuiKey.NE}",
+    ).flatMap { it.map { it } }
+
+    private val guiCompactMap = listOf(
         "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
         "${GuiKey.BO}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.BO}",
         "${GuiKey.PR}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.NE}",
         "${GuiKey.BO}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.BO}",
         "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
         "${GuiKey.BO}${GuiKey.EM}${GuiKey.BA}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.FI}${GuiKey.EM}${GuiKey.BO}",
-    ).flatMap { it.map { it.toChar() } }
+    ).flatMap { it.map { it } }
+    protected val guiMap = if (config.auction.useCompactDesign) guiCompactMap else guiDefaultMap
 
     protected inline fun buildSlots(char: Char, transform: (index: Int) -> InventorySlot?): List<InventorySlot> {
         return guiMap.mapIndexed { i, c ->
@@ -92,7 +100,7 @@ abstract class AbstractAuctionGui(
     val borderButtons: List<InventorySlot> = buildSlots(GuiKey.BO) { i ->
         InventorySlot.Builder {
             index = i
-            itemStack = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+            itemStack = config.buttons.border.toItemStack().apply { setDisplayName(" ") }
         }
     }
 

@@ -29,6 +29,7 @@ data class AuctionConfig(
 
     @Serializable
     data class Auction(
+        val useCompactDesign: Boolean = true,
         val maxAuctionPerPlayer: Int = 5,
         val minPrice: Int = 10,
         val maxPrice: Int = 1000000,
@@ -54,7 +55,8 @@ data class AuctionConfig(
         val next: Button = Button(Material.PAPER.name),
         val sort: Button = Button(Material.SUNFLOWER.name),
         val aauc: Button = Button(Material.DIAMOND.name),
-        val expired: Button = Button(Material.EMERALD.name)
+        val expired: Button = Button(Material.EMERALD.name),
+        val border: Button = Button(Material.BLACK_STAINED_GLASS_PANE.name)
     )
 
     @Serializable

@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.di.impl
 
+import kotlinx.serialization.encodeToString
 import org.bstats.bukkit.Metrics
 import org.jetbrains.kotlin.tooling.core.UnsafeApi
 import ru.astrainteractive.astralibs.async.AsyncComponent
@@ -42,7 +43,11 @@ class RootModuleImpl : RootModule {
     }
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val configFileManager by configFileManager
-        ConfigLoader().toClassOrDefault(configFileManager.configFile, ::AuctionConfig)
+        runCatching {
+            ConfigLoader().unsafeParse<AuctionConfig>(configFileManager.configFile)
+        }.onSuccess {
+            configFileManager.configFile.writeText(ConfigLoader().yaml.encodeToString(it))
+        }.getOrNull() ?: AuctionConfig()
     }
     override val database: Single<Database> = Single {
         val config by configuration

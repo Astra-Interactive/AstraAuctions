@@ -1,4 +1,6 @@
 auction:
+  # After apply design of auction will be more compact
+  useCompactDesign: false
   # You can set custom amount using permission plugin
   # Example: astra_auctions.sell_max.10
   maxAuctionPerPlayer: 5
@@ -35,6 +37,9 @@ buttons:
     customModelData: 1
   expired:
     material: BARREL
+    customModelData: 1
+  border:
+    material: BLACK_STAINED_GLASS_PANE
     customModelData: 1
 connection:
   sqlite: true
