@@ -1,11 +1,15 @@
 package ru.astrainteractive.astramarket.command
 
+import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.registerCommand
 import ru.astrainteractive.astramarket.plugin.PluginPermission
+import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
 
 fun CommandManager.reloadCommand() = plugin.registerCommand("amarketreload") {
-    if (!PluginPermission.Reload.hasPermission(sender)) return@registerCommand
-    sender.sendMessage(translation.reloadStarted)
+    (sender as? Player)?.let { player ->
+        if (!permissionManager.hasPermission(player.uniqueId, PluginPermission.Reload)) return@registerCommand
+    }
+    stringSerializer.sendMessage(translation.general.reloadStarted, sender)
     plugin.reloadPlugin()
-    sender.sendMessage(translation.reloadSuccess)
+    stringSerializer.sendMessage(translation.general.reloadSuccess, sender)
 }

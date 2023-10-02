@@ -2,7 +2,8 @@ package ru.astrainteractive.astramarket.gui.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
 import ru.astrainteractive.astramarket.gui.auctions.AuctionGui
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
@@ -16,7 +17,8 @@ class AuctionGuiFactory(
     private val translation: Translation,
     private val dispatchers: BukkitDispatchers,
     private val auctionSortTranslationMapping: AuctionSortTranslationMapping,
-    private val serializer: Serializer
+    private val serializer: Encoder,
+    private val stringSerializer: KyoriComponentSerializer
 ) {
     fun create(player: Player, isExpired: Boolean): AbstractAuctionGui {
         return if (isExpired) {
@@ -32,6 +34,7 @@ class AuctionGuiFactory(
                 auctionSortTranslationMapping = auctionSortTranslationMapping,
                 serializer = serializer,
                 auctionGuiFactory = this,
+                stringSerializer = stringSerializer
             )
         } else {
             AuctionGui(
@@ -46,6 +49,7 @@ class AuctionGuiFactory(
                 auctionSortTranslationMapping = auctionSortTranslationMapping,
                 serializer = serializer,
                 auctionGuiFactory = this,
+                stringSerializer = stringSerializer
             )
         }
     }

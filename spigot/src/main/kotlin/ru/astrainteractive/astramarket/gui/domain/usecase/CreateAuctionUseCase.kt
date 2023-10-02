@@ -4,10 +4,12 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.util.uuid
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import kotlin.math.max
@@ -27,7 +29,8 @@ internal class CreateAuctionUseCaseImpl(
     private val dataSource: ru.astrainteractive.astramarket.api.market.AuctionsAPI,
     private val translation: Translation,
     private val config: AuctionConfig,
-    private val serializer: Serializer
+    private val serializer: Encoder,
+    private val stringSerializer: KyoriComponentSerializer
 ) : CreateAuctionUseCase {
 
     override suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean {
@@ -38,7 +41,7 @@ internal class CreateAuctionUseCaseImpl(
         var amount = input.amount
 
         if (item == null || item.type == Material.AIR) {
-            player.sendMessage(translation.wrongItemInHand)
+            stringSerializer.sendMessage(translation.auction.wrongItemInHand, player)
             player.playSound(config.sounds.fail)
             return false
         }
@@ -48,12 +51,12 @@ internal class CreateAuctionUseCaseImpl(
 
         val auctionsAmount = dataSource.countPlayerAuctions(player.uuid) ?: 0
         if (auctionsAmount >= maxAuctionsAllowed) {
-            player.sendMessage(translation.maxAuctions)
+            stringSerializer.sendMessage(translation.auction.maxAuctions, player)
             player.playSound(config.sounds.fail)
             return false
         }
         if (price > config.auction.maxPrice || price < config.auction.minPrice) {
-            player.sendMessage(translation.wrongPrice)
+            stringSerializer.sendMessage(translation.auction.wrongPrice, player)
             player.playSound(config.sounds.fail)
             return false
         }
@@ -72,15 +75,17 @@ internal class CreateAuctionUseCaseImpl(
         val result = dataSource.insertAuction(auction)
         if (result != null) {
             item.amount -= amount
-            player.sendMessage(translation.auctionAdded)
+            stringSerializer.sendMessage(translation.auction.auctionAdded, player)
             player.playSound(config.sounds.success)
             if (config.auction.announce) {
-                Bukkit.broadcastMessage(translation.broadcast.replace("%player%", player.name))
+                Bukkit.broadcast(
+                    stringSerializer.toComponent(translation.auction.broadcast.replace("%player%", player.name))
+                )
             }
             return true
         } else {
             player.playSound(config.sounds.fail)
-            player.sendMessage(translation.dbError)
+            stringSerializer.sendMessage(translation.general.dbError, player)
             return false
         }
     }

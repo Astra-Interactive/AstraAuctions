@@ -1,8 +1,6 @@
 package ru.astrainteractive.astramarket.plugin
 
 import kotlinx.serialization.Serializable
-import org.bukkit.Material
-import org.bukkit.inventory.ItemStack
 
 @Serializable
 data class AuctionConfig(
@@ -50,24 +48,18 @@ data class AuctionConfig(
 
     @Serializable
     data class Buttons(
-        val back: Button = Button(Material.IRON_DOOR.name),
-        val previous: Button = Button(Material.PAPER.name),
-        val next: Button = Button(Material.PAPER.name),
-        val sort: Button = Button(Material.SUNFLOWER.name),
-        val aauc: Button = Button(Material.DIAMOND.name),
-        val expired: Button = Button(Material.EMERALD.name),
-        val border: Button = Button(Material.BLACK_STAINED_GLASS_PANE.name)
+        val back: Button = Button("IRON_DOOR"),
+        val previous: Button = Button("PAPER"),
+        val next: Button = Button("PAPER"),
+        val sort: Button = Button("SUNFLOWER"),
+        val aauc: Button = Button("DIAMOND"),
+        val expired: Button = Button("EMERALD"),
+        val border: Button = Button("BLACK_STAINED_GLASS_PANE")
     )
 
     @Serializable
     data class Button(
         val material: String,
         val customModelData: Int = 0
-    ) {
-        fun toItemStack() = ItemStack(Material.getMaterial(material.uppercase()) ?: Material.PAPER).apply {
-            val meta = itemMeta!!
-            meta.setCustomModelData(customModelData)
-            itemMeta = meta
-        }
-    }
+    )
 }

@@ -11,15 +11,15 @@ internal class AuctionSortTranslationMappingImpl(
     private val translation: Translation
 ) : AuctionSortTranslationMapping {
     override fun translate(auctionSort: AuctionSort): String = when (auctionSort) {
-        AuctionSort.MATERIAL_DESC -> translation.sortMaterialDesc
-        AuctionSort.MATERIAL_ASC -> translation.sortMaterialAsc
-        AuctionSort.DATE_DESC -> translation.sortDateDesc
-        AuctionSort.DATE_ASC -> translation.sortDateAsc
-        AuctionSort.NAME_DESC -> translation.sortNameDesc
-        AuctionSort.NAME_ASC -> translation.sortNameAsc
-        AuctionSort.PRICE_DESC -> translation.sortPriceDesc
-        AuctionSort.PRICE_ASC -> translation.sortPriceAsc
-        AuctionSort.PLAYER_ASC -> translation.sortPlayerAsc
-        AuctionSort.PLAYER_DESC -> translation.sortPlayerDesc
+        AuctionSort.MATERIAL_DESC -> translation.auction.sortMaterialDesc
+        AuctionSort.MATERIAL_ASC -> translation.auction.sortMaterialAsc
+        AuctionSort.DATE_DESC -> translation.auction.sortDateDesc
+        AuctionSort.DATE_ASC -> translation.auction.sortDateAsc
+        AuctionSort.NAME_DESC -> translation.auction.sortNameDesc
+        AuctionSort.NAME_ASC -> translation.auction.sortNameAsc
+        AuctionSort.PRICE_DESC -> translation.auction.sortPriceDesc
+        AuctionSort.PRICE_ASC -> translation.auction.sortPriceAsc
+        AuctionSort.PLAYER_ASC -> translation.auction.sortPlayerAsc
+        AuctionSort.PLAYER_DESC -> translation.auction.sortPlayerDesc
     }
 }

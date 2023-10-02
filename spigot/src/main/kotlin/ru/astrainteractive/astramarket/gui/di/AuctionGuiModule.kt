@@ -2,7 +2,9 @@ package ru.astrainteractive.astramarket.gui.di
 
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.permission.PermissionManager
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionComponentFactory
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
@@ -25,9 +27,11 @@ interface AuctionGuiModule : Module {
         private val economyProvider: EconomyProvider,
         private val config: AuctionConfig,
         private val translation: Translation,
-        private val serializer: Serializer,
+        private val serializer: Encoder,
         private val auctionApi: AuctionsAPI,
         private val dispatchers: BukkitDispatchers,
+        private val stringSerializer: KyoriComponentSerializer,
+        private val permissionManager: PermissionManager
     ) : AuctionGuiModule {
         override val guiDomainModule: GuiDomainModule by Provider {
             GuiDomainModule.Default(
@@ -35,7 +39,9 @@ interface AuctionGuiModule : Module {
                 configuration = config,
                 economyProvider = economyProvider,
                 auctionsAPI = auctionApi,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer,
+                permissionManager = permissionManager
             )
         }
 
@@ -56,7 +62,8 @@ interface AuctionGuiModule : Module {
                 translation = translation,
                 dispatchers = dispatchers,
                 auctionSortTranslationMapping = guiDomainModule.auctionSortTranslationMapping,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer
             )
         }
     }

@@ -2,10 +2,12 @@ package ru.astrainteractive.astramarket.gui.domain.usecase
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.itemStack
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
@@ -26,7 +28,8 @@ internal class RemoveAuctionUseCaseImpl(
     private val dataSource: ru.astrainteractive.astramarket.api.market.AuctionsAPI,
     private val translation: Translation,
     private val config: AuctionConfig,
-    private val serializer: Serializer
+    private val serializer: Encoder,
+    private val stringSerializer: KyoriComponentSerializer
 ) : RemoveAuctionUseCase {
 
     override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
@@ -35,22 +38,22 @@ internal class RemoveAuctionUseCaseImpl(
         val auction = dataSource.fetchAuction(_auction.id) ?: return false
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
         if (owner.uniqueId != player.uniqueId) {
-            player.sendMessage(translation.notAuctionOwner)
+            stringSerializer.sendMessage(translation.auction.notAuctionOwner, player)
             return false
         }
         val item = auction.itemStack(serializer)
         if (player.inventory.firstEmpty() == -1) {
             player.playSound(config.sounds.fail)
-            player.sendMessage(translation.inventoryFull)
+            stringSerializer.sendMessage(translation.auction.inventoryFull, player)
             return false
         }
         val result = dataSource.deleteAuction(auction)
         return if (result != null) {
-            player.sendMessage(translation.auctionDeleted)
+            stringSerializer.sendMessage(translation.auction.auctionDeleted, player)
             player.inventory.addItem(item)
             true
         } else {
-            player.sendMessage(translation.unexpectedError)
+            stringSerializer.sendMessage(translation.general.unexpectedError, player)
             false
         }
     }

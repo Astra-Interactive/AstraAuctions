@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.gui
 
+import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -11,11 +12,13 @@ import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.astramarket.util.setDisplayName
+import ru.astrainteractive.astramarket.util.toItemStack
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
@@ -24,13 +27,14 @@ abstract class AbstractAuctionGui(
     protected val config: AuctionConfig,
     protected val translation: Translation,
     protected val dispatchers: BukkitDispatchers,
-    protected val auctionSortTranslationMapping: AuctionSortTranslationMapping
+    protected val auctionSortTranslationMapping: AuctionSortTranslationMapping,
+    protected val stringSerializer: KyoriComponentSerializer
 ) : PaginatedMenu() {
 
     override val playerHolder = DefaultPlayerHolder(player)
     protected val clickListener = MenuClickListener()
 
-    override var menuTitle: String = translation.title
+    override var menuTitle: Component = stringSerializer.toComponent(translation.menu.title)
     override val menuSize: MenuSize = MenuSize.XL
     abstract val viewModel: AuctionComponent
 
@@ -107,7 +111,11 @@ abstract class AbstractAuctionGui(
     override val backPageButton = buildSlot(GuiKey.BA) { i ->
         InventorySlot.Builder {
             index = i
-            itemStack = config.buttons.back.toItemStack().apply { setDisplayName(translation.back) }
+            itemStack = config.buttons.back.toItemStack().apply {
+                setDisplayName(
+                    stringSerializer.toComponent(translation.menu.back)
+                )
+            }
             click = Click {
                 onCloseClicked()
             }
@@ -117,7 +125,7 @@ abstract class AbstractAuctionGui(
         InventorySlot.Builder {
             index = i
             itemStack = config.buttons.next.toItemStack().apply {
-                setDisplayName(translation.next)
+                setDisplayName(stringSerializer.toComponent(translation.menu.next))
             }
             click = Click {
                 onNextPageClicked()
@@ -129,7 +137,7 @@ abstract class AbstractAuctionGui(
         InventorySlot.Builder {
             index = i
             itemStack = config.buttons.previous.toItemStack().apply {
-                setDisplayName(translation.prev)
+                setDisplayName(stringSerializer.toComponent(translation.menu.prev))
             }
             click = Click {
                 onPrevPageClicked()
@@ -140,7 +148,11 @@ abstract class AbstractAuctionGui(
     val expiredButton = buildSlot(GuiKey.AU) { i ->
         InventorySlot.Builder {
             index = i
-            itemStack = config.buttons.expired.toItemStack().apply { setDisplayName(translation.expired) }
+            itemStack = config.buttons.expired.toItemStack().apply {
+                setDisplayName(
+                    stringSerializer.toComponent(translation.menu.expired)
+                )
+            }
             click = Click {
                 onExpiredOpenClicked()
             }
@@ -149,7 +161,11 @@ abstract class AbstractAuctionGui(
     val aaucButton = buildSlot(GuiKey.AU) { i ->
         InventorySlot.Builder {
             index = i
-            itemStack = config.buttons.aauc.toItemStack().apply { setDisplayName(translation.aauc) }
+            itemStack = config.buttons.aauc.toItemStack().apply {
+                setDisplayName(
+                    stringSerializer.toComponent(translation.menu.aauc)
+                )
+            }
             click = Click {
                 onExpiredOpenClicked()
             }
@@ -162,7 +178,7 @@ abstract class AbstractAuctionGui(
                 index = i
                 itemStack = config.buttons.sort.toItemStack().apply {
                     val sortDesc = auctionSortTranslationMapping.translate(viewModel.model.value.sortType)
-                    setDisplayName("${translation.sort} $sortDesc")
+                    setDisplayName(stringSerializer.toComponent("${translation.menu.sort} $sortDesc"))
                 }
                 click = Click {
                     showPage(0)
@@ -192,7 +208,7 @@ abstract class AbstractAuctionGui(
     open fun onSortButtonClicked(isRightClick: Boolean) {
         playerHolder.player.playSound(config.sounds.open)
         viewModel.onSortButtonClicked(isRightClick)
-        sortButton.setInventoryButton()
+        sortButton.setInventorySlot()
     }
 
     open fun onCloseClicked() {
@@ -221,7 +237,7 @@ abstract class AbstractAuctionGui(
         val days = unit.toDays(time)
         val hours = unit.toHours(time) - days * 24
         val minutes = unit.toMinutes(time) - unit.toHours(time) * 60
-        return translation.timeAgoFormat
+        return translation.general.timeAgoFormat
             .replace("%days%", days.toString())
             .replace("%hours%", hours.toString())
             .replace("%minutes%", minutes.toString())
@@ -231,8 +247,8 @@ abstract class AbstractAuctionGui(
         inventory.clear()
         clickListener.clearClickListener()
         setManageButtons(clickListener)
-        borderButtons.forEach { it.setInventoryButton() }
-        sortButton.also(clickListener::remember).setInventoryButton()
+        borderButtons.forEach { it.setInventorySlot() }
+        sortButton.also(clickListener::remember).setInventorySlot()
     }
 
     override fun onCreated() {

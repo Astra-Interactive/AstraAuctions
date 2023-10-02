@@ -7,9 +7,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
 import ru.astrainteractive.astramarket.gui.AuctionComponent
@@ -17,7 +18,7 @@ import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import java.util.*
+import java.util.UUID
 
 class AuctionGui(
     player: Player,
@@ -26,14 +27,16 @@ class AuctionGui(
     translation: Translation,
     dispatchers: BukkitDispatchers,
     auctionSortTranslationMapping: AuctionSortTranslationMapping,
-    private val serializer: Serializer,
+    private val serializer: Encoder,
     private val auctionGuiFactory: AuctionGuiFactory,
+    stringSerializer: KyoriComponentSerializer
 ) : AbstractAuctionGui(
     player = player,
     config = config,
     translation = translation,
     dispatchers = dispatchers,
-    auctionSortTranslationMapping = auctionSortTranslationMapping
+    auctionSortTranslationMapping = auctionSortTranslationMapping,
+    stringSerializer = stringSerializer
 ) {
 
     private val itemsInGui: List<AuctionDTO>
@@ -41,7 +44,7 @@ class AuctionGui(
 
     override fun setMenuItems() {
         super.setMenuItems()
-        expiredButton.also(clickListener::remember).setInventoryButton()
+        expiredButton.also(clickListener::remember).setInventorySlot()
         var itemIndex = 0
         buildSlots(GuiKey.AI) { i ->
             val index = maxItemsPerPage * page + itemIndex
@@ -55,26 +58,37 @@ class AuctionGui(
                 }
                 itemStack = serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                     val meta = itemMeta!!
-                    val lore = meta.lore?.toMutableList() ?: mutableListOf()
-                    lore.add(translation.leftButton)
-                    lore.add(translation.middleClick)
-                    lore.add(translation.rightButton)
-                    lore.add(
-                        translation.auctionBy.replace(
-                            "%player_owner%",
-                            Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
+                    meta.lore(
+                        listOf(
+                            stringSerializer.toComponent(translation.auction.leftButton),
+                            stringSerializer.toComponent(translation.auction.middleClick),
+                            stringSerializer.toComponent(translation.auction.rightButton),
+                            stringSerializer.toComponent(
+                                translation.auction.auctionBy.replace(
+                                    "%player_owner%",
+                                    Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
+                                )
+                            ),
+                            stringSerializer.toComponent(
+                                translation.auction.auctionCreatedAgo.replace(
+                                    "%time%",
+                                    getTimeFormatted(auctionItem.time)
+                                )
+                            ),
+                            stringSerializer.toComponent(
+                                translation.auction.auctionPrice.replace(
+                                    "%price%",
+                                    auctionItem.price.toString()
+                                )
+                            ),
                         )
                     )
-                    lore.add(translation.auctionCreatedAgo.replace("%time%", getTimeFormatted(auctionItem.time)))
-                    lore.add(translation.auctionPrice.replace("%price%", auctionItem.price.toString()))
-
-                    meta.lore = lore
                     itemMeta = meta
                 }
             }
         }.forEach {
             clickListener.remember(it)
-            it.setInventoryButton()
+            it.setInventorySlot()
         }
     }
 

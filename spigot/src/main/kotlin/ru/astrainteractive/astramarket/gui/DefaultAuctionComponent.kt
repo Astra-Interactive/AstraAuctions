@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.util.uuid
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
@@ -27,7 +27,7 @@ class DefaultAuctionComponent(
     private val config: AuctionConfig,
     private val dispatchers: BukkitDispatchers,
     private val auctionsAPI: AuctionsAPI,
-    private val serializer: Serializer,
+    private val serializer: Encoder,
     private val auctionBuyUseCase: AuctionBuyUseCase,
     private val expireAuctionUseCase: ExpireAuctionUseCase,
     private val removeAuctionUseCase: RemoveAuctionUseCase

@@ -25,6 +25,7 @@ dependencies {
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
     implementation(projects.data)
+    implementation(projects.shared)
 }
 
 File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->

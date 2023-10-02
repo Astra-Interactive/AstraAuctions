@@ -3,13 +3,13 @@ package ru.astrainteractive.astramarket.gui.domain.util
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.gui.domain.model.AuctionSort
 import java.util.UUID
 
 object DtoExt {
-    fun AuctionDTO.itemStack(serializer: Serializer): ItemStack = serializer.fromByteArray<ItemStack>(
+    fun AuctionDTO.itemStack(serializer: Encoder): ItemStack = serializer.fromByteArray<ItemStack>(
         item
     )
     val AuctionDTO.owner: OfflinePlayer
@@ -21,7 +21,7 @@ object DtoExt {
      */
     fun List<AuctionDTO>.sortBy(
         sortType: AuctionSort,
-        serializer: Serializer
+        serializer: Encoder
     ): List<AuctionDTO> {
         return when (sortType) {
             AuctionSort.MATERIAL_DESC -> sortedByDescending { it.itemStack(serializer).type }

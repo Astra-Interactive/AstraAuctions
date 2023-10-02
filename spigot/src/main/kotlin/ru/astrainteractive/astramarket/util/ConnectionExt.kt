@@ -7,6 +7,8 @@ import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 
 fun AuctionConfig.Connection.toDBConnection(): Pair<DBConnection, DBSyntax> {
+    val mysql = this.mysql
+    val sqlite = this.sqlite
     val sqliteConnection = DBConnection.SQLite("dbv2_auction.db") to DBSyntax.SQLite
     if (sqlite || mysql == null) return sqliteConnection
     return DBConnection.MySQL(

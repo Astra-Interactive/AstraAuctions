@@ -1,7 +1,9 @@
 package ru.astrainteractive.astramarket.gui.domain.di
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.permission.PermissionManager
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMappingImpl
@@ -33,7 +35,9 @@ interface GuiDomainModule {
         translation: Translation,
         configuration: AuctionConfig,
         economyProvider: EconomyProvider,
-        serializer: Serializer
+        serializer: Encoder,
+        stringSerializer: KyoriComponentSerializer,
+        permissionManager: PermissionManager
     ) : GuiDomainModule {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
             AuctionSortTranslationMappingImpl(
@@ -46,7 +50,8 @@ interface GuiDomainModule {
                 translation = translation,
                 config = configuration,
                 economyProvider = economyProvider,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer,
             )
         }
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
@@ -54,14 +59,17 @@ interface GuiDomainModule {
                 dataSource = auctionsAPI,
                 translation = translation,
                 config = configuration,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer
             )
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by Provider {
             ExpireAuctionUseCaseImpl(
                 dataSource = auctionsAPI,
                 translation = translation,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer,
+                permissionManager = permissionManager
             )
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by Provider {
@@ -69,7 +77,8 @@ interface GuiDomainModule {
                 dataSource = auctionsAPI,
                 translation = translation,
                 config = configuration,
-                serializer = serializer
+                serializer = serializer,
+                stringSerializer = stringSerializer
             )
         }
     }

@@ -2,18 +2,21 @@ package ru.astrainteractive.astramarket.di.impl
 
 import kotlinx.serialization.encodeToString
 import org.bstats.bukkit.Metrics
-import org.jetbrains.kotlin.tooling.core.UnsafeApi
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
-import ru.astrainteractive.astralibs.async.PluginScope
-import ru.astrainteractive.astralibs.configloader.ConfigLoader
 import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
 import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.event.EventListener
 import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
 import ru.astrainteractive.astralibs.logging.Logger
+import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.orm.Database
+import ru.astrainteractive.astralibs.permission.BukkitPermissionManager
+import ru.astrainteractive.astralibs.permission.PermissionManager
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.serialization.YamlSerializer
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.DataModule
@@ -31,22 +34,25 @@ import ru.astrainteractive.klibs.kdi.getValue
 
 class RootModuleImpl : RootModule {
     override val plugin: Lateinit<AstraMarket> = Lateinit<AstraMarket>()
-    override val configFileManager: Single<DefaultSpigotFileManager> = Single {
-        val plugin by plugin
-        DefaultSpigotFileManager(plugin, name = "config.yml")
-    }
-    override val bukkitSerializer: Single<Serializer> = Single {
-        Serializer(BukkitIOStreamProvider)
+    override val bukkitSerializer: Single<Encoder> = Single {
+        Encoder(BukkitIOStreamProvider)
     }
     override val translation: Reloadable<Translation> = Reloadable {
-        Translation(plugin.value)
+        val fileManager = DefaultSpigotFileManager(plugin.value, name = "translations.yml")
+        val serializer = YamlSerializer()
+        runCatching {
+            serializer.unsafeParse<Translation>(fileManager.configFile)
+        }.onSuccess {
+            fileManager.configFile.writeText(serializer.yaml.encodeToString(it))
+        }.getOrNull() ?: Translation()
     }
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
-        val configFileManager by configFileManager
+        val fileManager = DefaultSpigotFileManager(plugin.value, name = "config.yml")
+        val serializer = YamlSerializer()
         runCatching {
-            ConfigLoader().unsafeParse<AuctionConfig>(configFileManager.configFile)
+            serializer.unsafeParse<AuctionConfig>(fileManager.configFile)
         }.onSuccess {
-            configFileManager.configFile.writeText(ConfigLoader().yaml.encodeToString(it))
+            fileManager.configFile.writeText(serializer.yaml.encodeToString(it))
         }.getOrNull() ?: AuctionConfig()
     }
     override val database: Single<Database> = Single {
@@ -56,6 +62,9 @@ class RootModuleImpl : RootModule {
             dbConnection = dbConnection,
             dbSyntax = dbSyntax
         ).create()
+    }
+    override val permissionManager: Single<PermissionManager> = Single {
+        BukkitPermissionManager()
     }
 
     override val dataModule: DataModule by Provider {
@@ -72,6 +81,8 @@ class RootModuleImpl : RootModule {
             serializer = bukkitSerializer.value,
             auctionApi = dataModule.auctionApi,
             dispatchers = dispatchers.value,
+            stringSerializer = stringSerializer.value,
+            permissionManager = permissionManager.value
         )
     }
 
@@ -83,9 +94,15 @@ class RootModuleImpl : RootModule {
         AnyEconomyProvider(plugin.value)
     }
 
-    @OptIn(UnsafeApi::class)
     override val scope: Single<AsyncComponent> = Single<AsyncComponent> {
-        PluginScope
+        AsyncComponent.Default()
+    }
+    override val inventoryClickEventListener: Single<EventListener> = Single {
+        DefaultInventoryClickEvent()
+    }
+
+    override val stringSerializer: Single<KyoriComponentSerializer> = Single {
+        KyoriComponentSerializer.Legacy
     }
 
     override val dispatchers: Single<BukkitDispatchers> = Single<BukkitDispatchers> {

@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.gui.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.encoding.Serializer
+import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.gui.AuctionComponent
 import ru.astrainteractive.astramarket.gui.DefaultAuctionComponent
@@ -13,7 +13,7 @@ class AuctionComponentFactory(
     private val guiDomainModule: GuiDomainModule,
     private val dispatchers: BukkitDispatchers,
     private val auctionsAPI: AuctionsAPI,
-    private val serializer: Serializer,
+    private val serializer: Encoder,
     private val config: AuctionConfig
 ) {
     fun create(player: Player, isExpired: Boolean): AuctionComponent {
