@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui
+package ru.astrainteractive.astramarket.presentation
 
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -16,9 +16,9 @@ import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.playSound
-import ru.astrainteractive.astramarket.util.setDisplayName
-import ru.astrainteractive.astramarket.util.toItemStack
+import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.playSound
+import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.setDisplayName
+import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.toItemStack
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
@@ -36,7 +36,7 @@ abstract class AbstractAuctionGui(
 
     override var menuTitle: Component = stringSerializer.toComponent(translation.menu.title)
     override val menuSize: MenuSize = MenuSize.XL
-    abstract val viewModel: AuctionComponent
+    abstract val auctionComponent: AuctionComponent
 
     protected object GuiKey {
         // Border
@@ -177,7 +177,7 @@ abstract class AbstractAuctionGui(
             InventorySlot.Builder {
                 index = i
                 itemStack = config.buttons.sort.toItemStack().apply {
-                    val sortDesc = auctionSortTranslationMapping.translate(viewModel.model.value.sortType)
+                    val sortDesc = auctionSortTranslationMapping.translate(auctionComponent.model.value.sortType)
                     setDisplayName(stringSerializer.toComponent("${translation.menu.sort} $sortDesc"))
                 }
                 click = Click {
@@ -193,7 +193,7 @@ abstract class AbstractAuctionGui(
     override var page: Int = 0
 
     override val maxItemsAmount: Int
-        get() = viewModel.model.value.maxItemsAmount
+        get() = auctionComponent.model.value.maxItemsAmount
 
     open fun onNextPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
@@ -207,7 +207,7 @@ abstract class AbstractAuctionGui(
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
         playerHolder.player.playSound(config.sounds.open)
-        viewModel.onSortButtonClicked(isRightClick)
+        auctionComponent.onSortButtonClicked(isRightClick)
         sortButton.setInventorySlot()
     }
 
@@ -217,7 +217,14 @@ abstract class AbstractAuctionGui(
     }
 
     open fun onAuctionItemClicked(i: Int, clickType: ClickType) {
-        viewModel.onAuctionItemClicked(i, clickType)
+        val sharedClickType = when (clickType) {
+            ClickType.LEFT, ClickType.SHIFT_LEFT -> AuctionComponent.ClickType.LEFT
+            ClickType.RIGHT,
+            ClickType.SHIFT_RIGHT -> AuctionComponent.ClickType.RIGHT
+            ClickType.MIDDLE -> AuctionComponent.ClickType.MIDDLE
+            else -> return
+        }
+        auctionComponent.onAuctionItemClicked(i, sharedClickType)
     }
 
     abstract fun onExpiredOpenClicked()
@@ -253,7 +260,7 @@ abstract class AbstractAuctionGui(
 
     override fun onCreated() {
         playerHolder.player.playSound(config.sounds.open)
-        viewModel.model.collectOn(dispatchers.IO) {
+        auctionComponent.model.collectOn(dispatchers.IO) {
             setMenuItems()
         }
     }

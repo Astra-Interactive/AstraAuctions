@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astramarket.command.CommandManager
-import ru.astrainteractive.astramarket.command.di.CommandsModule
+import ru.astrainteractive.astramarket.command.di.CommandContainer
 import ru.astrainteractive.astramarket.di.impl.RootModuleImpl
 
 /**
@@ -17,7 +17,7 @@ class AstraMarket : JavaPlugin() {
     override fun onEnable() {
         rootModule.plugin.initialize(this)
         rootModule.bStats.value
-        CommandManager(CommandsModule.Default(rootModule))
+        CommandManager(CommandContainer.Default(rootModule))
         rootModule.economyProvider
         rootModule.inventoryClickEventListener.value.onEnable(this)
     }

@@ -24,5 +24,4 @@ dependencies {
     "bukkitMainCompileOnly"(libs.minecraft.paper.api)
     // Local
     implementation(projects.data)
-    println("CONFS: ${project.configurations.names}")
 }

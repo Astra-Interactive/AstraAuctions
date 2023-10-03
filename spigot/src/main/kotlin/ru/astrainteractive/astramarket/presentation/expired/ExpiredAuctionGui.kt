@@ -1,7 +1,8 @@
-package ru.astrainteractive.astramarket.gui.auctions
+package ru.astrainteractive.astramarket.presentation.expired
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -13,23 +14,23 @@ import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
-import ru.astrainteractive.astramarket.gui.AuctionComponent
-import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.presentation.AbstractAuctionGui
+import ru.astrainteractive.astramarket.presentation.AuctionComponent
+import ru.astrainteractive.astramarket.presentation.di.factory.AuctionGuiFactory
 import java.util.UUID
 
 @Suppress("LongParameterList")
-class AuctionGui(
+class ExpiredAuctionGui(
     player: Player,
-    override val viewModel: AuctionComponent,
+    override val auctionComponent: AuctionComponent,
     config: AuctionConfig,
     translation: Translation,
     dispatchers: BukkitDispatchers,
     auctionSortTranslationMapping: AuctionSortTranslationMapping,
-    private val serializer: Encoder,
     private val auctionGuiFactory: AuctionGuiFactory,
+    private val serializer: Encoder,
     stringSerializer: KyoriComponentSerializer
 ) : AbstractAuctionGui(
     player = player,
@@ -40,18 +41,26 @@ class AuctionGui(
     stringSerializer = stringSerializer
 ) {
 
+    override var menuTitle: Component = stringSerializer.toComponent(translation.menu.expiredTitle)
+
     private val itemsInGui: List<AuctionDTO>
-        get() = viewModel.model.value.items
+        get() = auctionComponent.model.value.items
+
+    override fun onExpiredOpenClicked() {
+        componentScope.launch(dispatchers.IO) {
+            val menu = auctionGuiFactory.create(playerHolder.player, false)
+            withContext(dispatchers.BukkitMain) { menu.open() }
+        }
+    }
 
     override fun setMenuItems() {
         super.setMenuItems()
-        expiredButton.also(clickListener::remember).setInventorySlot()
+        aaucButton.also(clickListener::remember).setInventorySlot()
         var itemIndex = 0
         buildSlots(GuiKey.AI) { i ->
             val index = maxItemsPerPage * page + itemIndex
             itemIndex++
             val auctionItem = itemsInGui.getOrNull(index) ?: return@buildSlots null
-
             InventorySlot.Builder {
                 this.index = i
                 click = Click {
@@ -59,15 +68,15 @@ class AuctionGui(
                 }
                 itemStack = serializer.fromByteArray<ItemStack>(auctionItem.item).apply {
                     val meta = itemMeta!!
+                    val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
+                    val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"
                     meta.lore(
                         listOf(
-                            stringSerializer.toComponent(translation.auction.leftButton),
-                            stringSerializer.toComponent(translation.auction.middleClick),
                             stringSerializer.toComponent(translation.auction.rightButton),
                             stringSerializer.toComponent(
                                 translation.auction.auctionBy.replace(
                                     "%player_owner%",
-                                    Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
+                                    ownerName
                                 )
                             ),
                             stringSerializer.toComponent(
@@ -84,6 +93,7 @@ class AuctionGui(
                             ),
                         )
                     )
+                    meta.lore = lore
                     itemMeta = meta
                 }
             }
@@ -94,13 +104,6 @@ class AuctionGui(
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {
-        viewModel.close()
-    }
-
-    override fun onExpiredOpenClicked() {
-        componentScope.launch(dispatchers.IO) {
-            val menu = auctionGuiFactory.create(playerHolder.player, true)
-            withContext(dispatchers.BukkitMain) { menu.open() }
-        }
+        auctionComponent.close()
     }
 }

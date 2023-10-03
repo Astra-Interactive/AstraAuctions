@@ -13,9 +13,9 @@ import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.domain.di.BukkitDomainModule
 import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.presentation.di.AuctionGuiModule
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Module
 import ru.astrainteractive.klibs.kdi.Reloadable

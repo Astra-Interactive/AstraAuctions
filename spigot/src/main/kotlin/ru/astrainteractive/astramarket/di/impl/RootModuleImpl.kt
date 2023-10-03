@@ -24,10 +24,10 @@ import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.di.factory.DatabaseFactory
 import ru.astrainteractive.astramarket.domain.di.BukkitDomainModule
 import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.toDBConnection
+import ru.astrainteractive.astramarket.presentation.di.AuctionGuiModule
+import ru.astrainteractive.astramarket.util.ConnectionExt.toDBConnection
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.Reloadable

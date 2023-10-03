@@ -8,14 +8,14 @@ import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
-import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.presentation.di.factory.AuctionGuiFactory
 import ru.astrainteractive.klibs.kdi.Module
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
-interface CommandsModule : Module {
+interface CommandContainer : Module {
     val translation: Translation
     val configuration: AuctionConfig
     val plugin: AstraMarket
@@ -29,7 +29,7 @@ interface CommandsModule : Module {
 
     class Default(
         rootModule: RootModule
-    ) : CommandsModule {
+    ) : CommandContainer {
         override val translation: Translation by rootModule.translation
         override val configuration: AuctionConfig by rootModule.configuration
         override val plugin: AstraMarket by rootModule.plugin

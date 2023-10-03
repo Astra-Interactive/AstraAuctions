@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.util
+package ru.astrainteractive.astramarket.command.util
 
 import net.kyori.adventure.audience.Audience
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer

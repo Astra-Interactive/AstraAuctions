@@ -1,15 +1,15 @@
-package ru.astrainteractive.astramarket.gui.di.factory
+package ru.astrainteractive.astramarket.presentation.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
-import ru.astrainteractive.astramarket.gui.auctions.AuctionGui
-import ru.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.presentation.AbstractAuctionGui
+import ru.astrainteractive.astramarket.presentation.auctions.AuctionGui
+import ru.astrainteractive.astramarket.presentation.expired.ExpiredAuctionGui
 @Suppress("LongParameterList")
 class AuctionGuiFactory(
     private val auctionComponentFactory: AuctionComponentFactory,
@@ -24,7 +24,7 @@ class AuctionGuiFactory(
         return if (isExpired) {
             ExpiredAuctionGui(
                 player = player,
-                viewModel = auctionComponentFactory.create(
+                auctionComponent = auctionComponentFactory.create(
                     player = player,
                     isExpired = isExpired
                 ),
@@ -39,7 +39,7 @@ class AuctionGuiFactory(
         } else {
             AuctionGui(
                 player = player,
-                viewModel = auctionComponentFactory.create(
+                auctionComponent = auctionComponentFactory.create(
                     player = player,
                     isExpired = isExpired
                 ),

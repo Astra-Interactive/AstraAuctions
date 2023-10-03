@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui.di.factory
+package ru.astrainteractive.astramarket.presentation.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
@@ -6,9 +6,9 @@ import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
 import ru.astrainteractive.astramarket.domain.util.AuctionSorter
-import ru.astrainteractive.astramarket.gui.AuctionComponent
-import ru.astrainteractive.astramarket.gui.DefaultAuctionComponent
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
+import ru.astrainteractive.astramarket.presentation.AuctionComponent
+import ru.astrainteractive.astramarket.presentation.DefaultAuctionComponent
 
 class AuctionComponentFactory(
     private val sharedDomainModule: SharedDomainModule,

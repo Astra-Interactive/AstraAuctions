@@ -2,8 +2,8 @@ package ru.astrainteractive.astramarket.command
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.registerCommand
+import ru.astrainteractive.astramarket.command.util.KyoriExt.sendMessage
 import ru.astrainteractive.astramarket.plugin.PluginPermission
-import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
 
 fun CommandManager.reloadCommand() = plugin.registerCommand("amarketreload") {
     (sender as? Player)?.let { player ->

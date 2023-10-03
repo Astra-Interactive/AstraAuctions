@@ -28,7 +28,6 @@ dependencies {
     implementation(libs.minecraft.bstats)
     implementation(projects.data)
     implementation(projects.shared)
-
     implementation(projects.shared.dependencyProject.sourceSets.getByName("bukkitMain").output)
 }
 

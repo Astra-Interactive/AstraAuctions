@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.command
 
-import ru.astrainteractive.astramarket.command.di.CommandsModule
+import ru.astrainteractive.astramarket.command.di.CommandContainer
 
-class CommandManager(module: CommandsModule) : CommandsModule by module {
+class CommandManager(module: CommandContainer) : CommandContainer by module {
 
     init {
         reloadCommand()
