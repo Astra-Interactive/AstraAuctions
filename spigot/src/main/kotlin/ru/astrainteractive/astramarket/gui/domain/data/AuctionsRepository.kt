@@ -14,5 +14,10 @@ interface AuctionsRepository {
     suspend fun addItemToInventory(auctionDTO: AuctionDTO, uuid: UUID)
 
     suspend fun itemDesc(auctionDTO: AuctionDTO): String
+
     fun playerName(uuid: UUID): String?
+
+    fun hasExpirePermission(uuid: UUID): Boolean
+
+    suspend fun expireAuction(auctionDTO: AuctionDTO): Unit?
 }

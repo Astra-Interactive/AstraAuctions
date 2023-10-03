@@ -1,18 +1,11 @@
 package ru.astrainteractive.astramarket.gui.domain.usecase
 
-import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.encoding.Encoder
-import ru.astrainteractive.astralibs.permission.PermissionManager
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.itemStack
-import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.owner
-import ru.astrainteractive.astramarket.plugin.PluginPermission
+import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
+import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
-import ru.astrainteractive.astramarket.util.displayNameOrMaterialName
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
+import java.util.UUID
 
 /**
  * @param player admin or moderator
@@ -22,38 +15,42 @@ import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 interface ExpireAuctionUseCase : UseCase.Parametrized<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
         val auction: AuctionDTO,
-        val player: Player? = null
+        val playerUUID: UUID
     )
 }
 
 internal class ExpireAuctionUseCaseImpl(
-    private val dataSource: AuctionsAPI,
+    private val auctionsRepository: AuctionsRepository,
+    private val playerInteraction: PlayerInteraction,
     private val translation: Translation,
-    private val serializer: Encoder,
-    private val permissionManager: PermissionManager,
-    private val stringSerializer: KyoriComponentSerializer
 ) : ExpireAuctionUseCase {
 
     override suspend operator fun invoke(input: ExpireAuctionUseCase.Params): Boolean {
-        val player = input.player
+        val playerUUID = input.playerUUID
         val receivedAuction = input.auction
+        val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
 
-        if (player != null && !permissionManager.hasPermission(player.uniqueId, PluginPermission.Expire)) {
-            stringSerializer.sendMessage(translation.general.noPermissions, player)
+        if (!auctionsRepository.hasExpirePermission(playerUUID)) {
+            playerInteraction.sendTranslationMessage(playerUUID) { translation.general.noPermissions }
             return false
         }
-        val auction = dataSource.fetchAuction(receivedAuction.id) ?: return false
-        stringSerializer.sendMessage(
+        val auction = auctionsRepository.getAuctionOrNull(receivedAuction.id) ?: return false
+        val itemName = auctionsRepository.itemDesc(auction)
+        playerInteraction.sendTranslationMessage(ownerUUID) {
             translation.auction.notifyAuctionExpired
-                .replace("%item%", auction.itemStack(serializer).displayNameOrMaterialName())
-                .replace("%price%", auction.price.toString()),
-            auction.owner?.player
-        )
-        val result = dataSource.expireAuction(auction)
+                .replace("%item%", itemName)
+                .replace("%price%", auction.price.toString())
+        }
+
+        val result = auctionsRepository.expireAuction(auction)
         if (result == null) {
-            stringSerializer.sendMessage(translation.general.unexpectedError, player)
+            playerInteraction.sendTranslationMessage(playerUUID) {
+                translation.general.unexpectedError
+            }
         } else {
-            stringSerializer.sendMessage(translation.auction.auctionHasBeenExpired, player)
+            playerInteraction.sendTranslationMessage(playerUUID) {
+                translation.auction.auctionHasBeenExpired
+            }
         }
         return (result != null)
     }
