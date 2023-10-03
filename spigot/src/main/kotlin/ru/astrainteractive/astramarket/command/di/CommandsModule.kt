@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.command.di
 
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
+import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
@@ -24,6 +25,7 @@ interface CommandsModule : Module {
     val createAuctionUseCase: CreateAuctionUseCase
     val stringSerializer: KyoriComponentSerializer
     val permissionManager: PermissionManager
+    val encoder: Encoder
 
     class Default(
         rootModule: RootModule
@@ -42,5 +44,6 @@ interface CommandsModule : Module {
         }
         override val stringSerializer: KyoriComponentSerializer by rootModule.stringSerializer
         override val permissionManager: PermissionManager by rootModule.permissionManager
+        override val encoder: Encoder by rootModule.bukkitSerializer
     }
 }

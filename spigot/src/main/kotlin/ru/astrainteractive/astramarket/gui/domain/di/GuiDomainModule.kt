@@ -5,6 +5,8 @@ import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
+import ru.astrainteractive.astramarket.gui.domain.data.impl.BukkitAuctionsRepository
+import ru.astrainteractive.astramarket.gui.domain.data.impl.BukkitPlayerInteraction
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMappingImpl
 import ru.astrainteractive.astramarket.gui.domain.usecase.AuctionBuyUseCase
@@ -39,6 +41,18 @@ interface GuiDomainModule {
         stringSerializer: KyoriComponentSerializer,
         permissionManager: PermissionManager
     ) : GuiDomainModule {
+        private val auctionsRepository by Provider {
+            BukkitAuctionsRepository(
+                dataSource = auctionsAPI,
+                serializer = serializer,
+                permissionManager = permissionManager
+            )
+        }
+        private val playerInteraction by Provider {
+            BukkitPlayerInteraction(
+                stringSerializer = stringSerializer
+            )
+        }
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
             AuctionSortTranslationMappingImpl(
                 translation = translation
@@ -46,39 +60,34 @@ interface GuiDomainModule {
         }
         override val auctionBuyUseCase: AuctionBuyUseCase by Provider {
             AuctionBuyUseCaseImpl(
-                dataSource = auctionsAPI,
                 translation = translation,
                 config = configuration,
                 economyProvider = economyProvider,
-                serializer = serializer,
-                stringSerializer = stringSerializer,
+                auctionsRepository = auctionsRepository,
+                playerInteraction = playerInteraction
             )
         }
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
             CreateAuctionUseCaseImpl(
-                dataSource = auctionsAPI,
                 translation = translation,
                 config = configuration,
-                serializer = serializer,
-                stringSerializer = stringSerializer
+                auctionsRepository = auctionsRepository,
+                playerInteraction = playerInteraction
             )
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by Provider {
             ExpireAuctionUseCaseImpl(
-                dataSource = auctionsAPI,
                 translation = translation,
-                serializer = serializer,
-                stringSerializer = stringSerializer,
-                permissionManager = permissionManager
+                auctionsRepository = auctionsRepository,
+                playerInteraction = playerInteraction
             )
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by Provider {
             RemoveAuctionUseCaseImpl(
-                dataSource = auctionsAPI,
                 translation = translation,
                 config = configuration,
-                serializer = serializer,
-                stringSerializer = stringSerializer
+                auctionsRepository = auctionsRepository,
+                playerInteraction = playerInteraction
             )
         }
     }

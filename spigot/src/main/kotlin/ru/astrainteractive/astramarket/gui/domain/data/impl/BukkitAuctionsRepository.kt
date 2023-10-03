@@ -12,6 +12,7 @@ import ru.astrainteractive.astramarket.plugin.PluginPermission
 import ru.astrainteractive.astramarket.util.displayNameOrMaterialName
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 class BukkitAuctionsRepository(
     private val dataSource: AuctionsAPI,
     private val serializer: Encoder,

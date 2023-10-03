@@ -3,6 +3,7 @@ package ru.astrainteractive.astramarket.gui.domain.data
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import java.util.UUID
 
+@Suppress("TooManyFunctions")
 interface AuctionsRepository {
 
     suspend fun getAuctionOrNull(id: Int): AuctionDTO?

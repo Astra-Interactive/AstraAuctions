@@ -59,7 +59,7 @@ class DefaultAuctionComponent(
     }
 
     private suspend fun onExpiredAuctionClicked(auction: AuctionDTO): Boolean {
-        val param = RemoveAuctionUseCase.Params(auction, player)
+        val param = RemoveAuctionUseCase.Params(auction, player.uniqueId)
         return removeAuctionUseCase.invoke(param)
     }
 
@@ -67,9 +67,9 @@ class DefaultAuctionComponent(
         auction: AuctionDTO,
         clickType: ClickType
     ) = when (clickType) {
-        ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, player))
-        ClickType.RIGHT -> removeAuctionUseCase.invoke(RemoveAuctionUseCase.Params(auction, player))
-        ClickType.MIDDLE -> expireAuctionUseCase.invoke(ExpireAuctionUseCase.Params(auction, player))
+        ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, player.uniqueId))
+        ClickType.RIGHT -> removeAuctionUseCase.invoke(RemoveAuctionUseCase.Params(auction, player.uniqueId))
+        ClickType.MIDDLE -> expireAuctionUseCase.invoke(ExpireAuctionUseCase.Params(auction, player.uniqueId))
         else -> false
     }
 

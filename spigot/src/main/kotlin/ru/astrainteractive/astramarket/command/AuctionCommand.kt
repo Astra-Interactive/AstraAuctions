@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.Command
 import ru.astrainteractive.astralibs.command.registerCommand
+import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.gui.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.PluginPermission
 import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
@@ -40,10 +41,6 @@ private val CommandManager.sellCommand: Command.() -> Unit
         val player = sender as? Player ?: return@command
         if (!permissionManager.hasPermission(player.uniqueId, PluginPermission.Sell)) return@command
 
-        val maxAuctionsAllowed = permissionManager.maxPermissionSize(
-            player.uniqueId,
-            PluginPermission.SellMax
-        ) ?: configuration.auction.maxAuctionPerPlayer
         val price = argument(1) {
             it?.toFloatOrNull()
         }.onFailure {
@@ -56,16 +53,25 @@ private val CommandManager.sellCommand: Command.() -> Unit
         }.onFailure {
         }.successOrNull()?.value ?: return@command
         val item = player.inventory.itemInMainHand
-
+        val clonedItem = item.clone().apply {
+            this.amount = amount
+        }
+        val encodedItem = encoder.toByteArray(clonedItem)
         scope.launch(dispatchers.IO) {
-            createAuctionUseCase.invoke(
-                CreateAuctionUseCase.Params(
-                    maxAuctionsAllowed = maxAuctionsAllowed,
-                    playerUUID = player,
-                    price = price,
-                    amount = amount,
-                    item = item
-                )
+            val auctionDTO = AuctionDTO(
+                id = -1,
+                discordId = null,
+                minecraftUuid = player.uniqueId.toString(),
+                time = System.currentTimeMillis(),
+                item = encodedItem,
+                price = price,
+                expired = false
             )
+            val param = CreateAuctionUseCase.Params(
+                auctionDTO = auctionDTO,
+                playerUUID = player.uniqueId,
+            )
+            val result = createAuctionUseCase.invoke(param)
+            if (result) item.amount -= amount
         }
     }
