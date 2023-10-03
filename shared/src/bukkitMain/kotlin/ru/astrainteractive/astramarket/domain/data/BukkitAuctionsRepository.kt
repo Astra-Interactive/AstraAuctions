@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.domain.data
 
-import java.util.UUID
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -9,6 +8,7 @@ import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.plugin.PluginPermission
+import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class BukkitAuctionsRepository(
