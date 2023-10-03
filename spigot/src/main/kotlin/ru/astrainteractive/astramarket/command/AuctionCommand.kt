@@ -61,7 +61,7 @@ private val CommandManager.sellCommand: Command.() -> Unit
             createAuctionUseCase.invoke(
                 CreateAuctionUseCase.Params(
                     maxAuctionsAllowed = maxAuctionsAllowed,
-                    player = player,
+                    playerUUID = player,
                     price = price,
                     amount = amount,
                     item = item

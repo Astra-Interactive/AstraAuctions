@@ -20,4 +20,12 @@ interface AuctionsRepository {
     fun hasExpirePermission(uuid: UUID): Boolean
 
     suspend fun expireAuction(auctionDTO: AuctionDTO): Unit?
+
+    fun isItemValid(auctionDTO: AuctionDTO): Boolean
+
+    suspend fun countPlayerAuctions(uuid: UUID): Int
+
+    suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int
+
+    suspend fun insertAuction(auctionDTO: AuctionDTO): Int?
 }

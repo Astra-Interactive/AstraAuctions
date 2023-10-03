@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.gui.domain.data.impl
 
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
@@ -48,5 +49,22 @@ class BukkitAuctionsRepository(
 
     override suspend fun expireAuction(auctionDTO: AuctionDTO): Unit? {
         return dataSource.expireAuction(auctionDTO)
+    }
+
+    override fun isItemValid(auctionDTO: AuctionDTO): Boolean {
+        val itemStack = auctionDTO.itemStack(serializer)
+        return itemStack != null && itemStack.type != Material.AIR
+    }
+
+    override suspend fun countPlayerAuctions(uuid: UUID): Int {
+        return dataSource.countPlayerAuctions(uuid.toString()) ?: 0
+    }
+
+    override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int {
+        return permissionManager.maxPermissionSize(uuid, PluginPermission.SellMax) ?: 0
+    }
+
+    override suspend fun insertAuction(auctionDTO: AuctionDTO): Int? {
+        return dataSource.insertAuction(auctionDTO)
     }
 }

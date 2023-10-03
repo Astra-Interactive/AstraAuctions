@@ -18,6 +18,11 @@ class BukkitPlayerInteraction(
         sendTranslationMessage(uuid, message.invoke())
     }
 
+    override fun broadcast(string: String) {
+        val component = stringSerializer.toComponent(string)
+        Bukkit.broadcast(component)
+    }
+
     override fun playSound(uuid: UUID, sound: String) {
         Bukkit.getPlayer(uuid)?.playSound(sound)
     }
