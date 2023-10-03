@@ -1,14 +1,10 @@
 package ru.astrainteractive.astramarket.gui.domain.usecase
 
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.encoding.Encoder
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.itemStack
+import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
+import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
-import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -20,40 +16,42 @@ import java.util.UUID
 interface RemoveAuctionUseCase : UseCase.Parametrized<RemoveAuctionUseCase.Params, Boolean> {
     data class Params(
         val auction: ru.astrainteractive.astramarket.api.market.dto.AuctionDTO,
-        val player: Player
+        val playerUUID: UUID
     )
 }
 
 internal class RemoveAuctionUseCaseImpl(
-    private val dataSource: ru.astrainteractive.astramarket.api.market.AuctionsAPI,
+    private val auctionsRepository: AuctionsRepository,
+    private val playerInteraction: PlayerInteraction,
     private val translation: Translation,
     private val config: AuctionConfig,
-    private val serializer: Encoder,
-    private val stringSerializer: KyoriComponentSerializer
 ) : RemoveAuctionUseCase {
 
     override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
-        val (_auction, player) = input
-
-        val auction = dataSource.fetchAuction(_auction.id) ?: return false
+        val receivedAuction = input.auction
+        val playerUUID = input.playerUUID
+        val auction = auctionsRepository.getAuctionOrNull(receivedAuction.id) ?: return false
         val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
-        if (owner.uniqueId != player.uniqueId) {
-            stringSerializer.sendMessage(translation.auction.notAuctionOwner, player)
+        if (owner.uniqueId != playerUUID) {
+            playerInteraction.sendTranslationMessage(playerUUID) {
+                translation.auction.notAuctionOwner
+            }
             return false
         }
-        val item = auction.itemStack(serializer)
-        if (player.inventory.firstEmpty() == -1) {
-            player.playSound(config.sounds.fail)
-            stringSerializer.sendMessage(translation.auction.inventoryFull, player)
+
+        if (auctionsRepository.isInventoryFull(playerUUID)) {
+            playerInteraction.playSound(playerUUID) { config.sounds.fail }
+            playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.inventoryFull }
             return false
         }
-        val result = dataSource.deleteAuction(auction)
+
+        val result = auctionsRepository.deleteAuction(auction)
         return if (result != null) {
-            stringSerializer.sendMessage(translation.auction.auctionDeleted, player)
-            player.inventory.addItem(item)
+            playerInteraction.sendTranslationMessage(playerUUID, translation.auction.auctionDeleted)
+            auctionsRepository.addItemToInventory(auction, playerUUID)
             true
         } else {
-            stringSerializer.sendMessage(translation.general.unexpectedError, player)
+            playerInteraction.sendTranslationMessage(playerUUID, translation.general.unexpectedError)
             false
         }
     }
