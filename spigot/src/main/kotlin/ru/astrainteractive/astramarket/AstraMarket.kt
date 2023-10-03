@@ -18,7 +18,7 @@ class AstraMarket : JavaPlugin() {
         rootModule.plugin.initialize(this)
         rootModule.bStats.value
         CommandManager(CommandsModule.Default(rootModule))
-        rootModule.vaultEconomyProvider
+        rootModule.economyProvider
         rootModule.inventoryClickEventListener.value.onEnable(this)
     }
 

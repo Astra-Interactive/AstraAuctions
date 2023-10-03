@@ -25,14 +25,6 @@ fun Player.playSound(sound: String) {
     playSound(location, sound, 1f, 1f)
 }
 
-fun ItemStack.displayNameOrMaterialName(): String {
-    val name = itemMeta?.displayName
-    if (name.isNullOrEmpty()) {
-        return type.name
-    }
-    return name
-}
-
 fun AuctionConfig.Button.toItemStack() = ItemStack(Material.getMaterial(material.uppercase()) ?: Material.PAPER).apply {
     val meta = itemMeta!!
     meta.setCustomModelData(customModelData)

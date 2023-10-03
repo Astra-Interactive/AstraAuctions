@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui.domain.data
+package ru.astrainteractive.astramarket.domain.data
 
 import java.util.UUID
 

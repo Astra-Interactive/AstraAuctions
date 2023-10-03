@@ -1,11 +1,10 @@
-package ru.astrainteractive.astramarket.gui.domain.usecase
+package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
+import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -34,7 +33,9 @@ internal class CreateAuctionUseCaseImpl(
         }
 
         val maxAuctionsAllowed = auctionsRepository.maxAllowedAuctionsForPlayer(playerUUID)
+            ?: config.auction.maxAuctionPerPlayer
         val auctionsAmount = auctionsRepository.countPlayerAuctions(playerUUID)
+        println("Auctions: $auctionsAmount; max: $maxAuctionsAllowed")
         if (auctionsAmount >= maxAuctionsAllowed) {
             playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
             playerInteraction.playSound(playerUUID) { config.sounds.fail }

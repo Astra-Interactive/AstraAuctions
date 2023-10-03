@@ -1,7 +1,12 @@
+import ru.astrainteractive.gradleplugin.sourceset.JvmSourceSet.Companion.configureAstraSourceSet
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
 }
+
+configureAstraSourceSet("bukkit")
+
 dependencies {
     // Kotlin
     implementation(libs.bundles.kotlin)
@@ -15,6 +20,9 @@ dependencies {
     // Test
     testImplementation(libs.bundles.testing.kotlin)
     testImplementation(libs.tests.kotlin.test)
+    // Bukkit
+    "bukkitMainCompileOnly"(libs.minecraft.paper.api)
     // Local
     implementation(projects.data)
+    println("CONFS: ${project.configurations.names}")
 }

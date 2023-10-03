@@ -13,7 +13,7 @@ import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
+import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astramarket.util.playSound

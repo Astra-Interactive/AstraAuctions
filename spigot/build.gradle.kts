@@ -1,3 +1,4 @@
+
 import ru.astrainteractive.gradleplugin.setupSpigotProcessor
 import ru.astrainteractive.gradleplugin.setupSpigotShadow
 
@@ -15,6 +16,7 @@ dependencies {
     implementation(libs.klibs.kdi)
     implementation(libs.minecraft.astralibs.spigot.gui)
     implementation(libs.minecraft.astralibs.spigot.core)
+    implementation(project(mapOf("path" to ":shared")))
     // Test
     testImplementation(libs.bundles.testing.kotlin)
     testImplementation(libs.tests.kotlin.test)
@@ -26,6 +28,8 @@ dependencies {
     implementation(libs.minecraft.bstats)
     implementation(projects.data)
     implementation(projects.shared)
+
+    implementation(projects.shared.dependencyProject.sourceSets.getByName("bukkitMain").output)
 }
 
 File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->

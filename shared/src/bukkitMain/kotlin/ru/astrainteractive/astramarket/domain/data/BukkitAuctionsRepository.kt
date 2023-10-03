@@ -1,25 +1,35 @@
-package ru.astrainteractive.astramarket.gui.domain.data.impl
+package ru.astrainteractive.astramarket.domain.data
 
+import java.util.UUID
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.gui.domain.util.DtoExt.itemStack
 import ru.astrainteractive.astramarket.plugin.PluginPermission
-import ru.astrainteractive.astramarket.util.displayNameOrMaterialName
-import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class BukkitAuctionsRepository(
-    private val dataSource: AuctionsAPI,
+    private val auctionsApi: AuctionsAPI,
     private val serializer: Encoder,
     private val permissionManager: PermissionManager
 ) : AuctionsRepository {
+    private fun AuctionDTO.itemStack(serializer: Encoder): ItemStack {
+        return serializer.fromByteArray(item)
+    }
+
+    private fun ItemStack.displayNameOrMaterialName(): String {
+        val name = itemMeta?.displayName
+        if (name.isNullOrEmpty()) {
+            return type.name
+        }
+        return name
+    }
+
     override suspend fun getAuctionOrNull(id: Int): AuctionDTO? {
-        return dataSource.fetchAuction(id)
+        return auctionsApi.fetchAuction(id)
     }
 
     override suspend fun isInventoryFull(uuid: UUID): Boolean {
@@ -28,7 +38,7 @@ class BukkitAuctionsRepository(
     }
 
     override suspend fun deleteAuction(auctionDTO: AuctionDTO): Unit? {
-        return dataSource.deleteAuction(auctionDTO)
+        return auctionsApi.deleteAuction(auctionDTO)
     }
 
     override suspend fun addItemToInventory(auctionDTO: AuctionDTO, uuid: UUID) {
@@ -49,7 +59,7 @@ class BukkitAuctionsRepository(
     }
 
     override suspend fun expireAuction(auctionDTO: AuctionDTO): Unit? {
-        return dataSource.expireAuction(auctionDTO)
+        return auctionsApi.expireAuction(auctionDTO)
     }
 
     override fun isItemValid(auctionDTO: AuctionDTO): Boolean {
@@ -58,14 +68,14 @@ class BukkitAuctionsRepository(
     }
 
     override suspend fun countPlayerAuctions(uuid: UUID): Int {
-        return dataSource.countPlayerAuctions(uuid.toString()) ?: 0
+        return auctionsApi.countPlayerAuctions(uuid.toString()) ?: 0
     }
 
-    override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int {
-        return permissionManager.maxPermissionSize(uuid, PluginPermission.SellMax) ?: 0
+    override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int? {
+        return permissionManager.maxPermissionSize(uuid, PluginPermission.SellMax)
     }
 
     override suspend fun insertAuction(auctionDTO: AuctionDTO): Int? {
-        return dataSource.insertAuction(auctionDTO)
+        return auctionsApi.insertAuction(auctionDTO)
     }
 }

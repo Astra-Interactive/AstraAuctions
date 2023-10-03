@@ -1,6 +1,6 @@
-package ru.astrainteractive.astramarket.gui.domain.mapping
+package ru.astrainteractive.astramarket.domain.mapping
 
-import ru.astrainteractive.astramarket.gui.domain.model.AuctionSort
+import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.plugin.Translation
 
 interface AuctionSortTranslationMapping {

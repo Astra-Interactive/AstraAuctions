@@ -1,9 +1,8 @@
-package ru.astrainteractive.astramarket.gui
+package ru.astrainteractive.astramarket.presentation
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.bukkit.event.inventory.ClickType
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
@@ -64,15 +63,19 @@ class DefaultAuctionComponent(
 
     private suspend fun onAuctionClicked(
         auction: AuctionDTO,
-        clickType: ClickType
+        clickType: AuctionComponent.ClickType
     ) = when (clickType) {
-        ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, playerUUID))
-        ClickType.RIGHT -> removeAuctionUseCase.invoke(RemoveAuctionUseCase.Params(auction, playerUUID))
-        ClickType.MIDDLE -> expireAuctionUseCase.invoke(ExpireAuctionUseCase.Params(auction, playerUUID))
+        AuctionComponent.ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, playerUUID))
+        AuctionComponent.ClickType.RIGHT -> removeAuctionUseCase.invoke(
+            RemoveAuctionUseCase.Params(auction, playerUUID)
+        )
+        AuctionComponent.ClickType.MIDDLE -> expireAuctionUseCase.invoke(
+            ExpireAuctionUseCase.Params(auction, playerUUID)
+        )
         else -> false
     }
 
-    override fun onAuctionItemClicked(i: Int, clickType: ClickType) {
+    override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
         componentScope.launch(mainDispatcher) {
             val result = if (expired) {

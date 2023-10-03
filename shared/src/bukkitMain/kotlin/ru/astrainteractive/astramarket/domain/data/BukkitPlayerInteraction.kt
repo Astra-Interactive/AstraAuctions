@@ -1,9 +1,7 @@
-package ru.astrainteractive.astramarket.gui.domain.data.impl
+package ru.astrainteractive.astramarket.domain.data
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
-import ru.astrainteractive.astramarket.util.playSound
 import java.util.UUID
 
 class BukkitPlayerInteraction(
@@ -24,7 +22,9 @@ class BukkitPlayerInteraction(
     }
 
     override fun playSound(uuid: UUID, sound: String) {
-        Bukkit.getPlayer(uuid)?.playSound(sound)
+        Bukkit.getPlayer(uuid)?.let { player ->
+            player.playSound(player.location, sound, 1f, 1f)
+        }
     }
 
     override fun playSound(uuid: UUID, sound: () -> String) {

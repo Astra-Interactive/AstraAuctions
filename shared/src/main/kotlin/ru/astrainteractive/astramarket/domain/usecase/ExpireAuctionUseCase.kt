@@ -1,8 +1,8 @@
-package ru.astrainteractive.astramarket.gui.domain.usecase
+package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
+import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID

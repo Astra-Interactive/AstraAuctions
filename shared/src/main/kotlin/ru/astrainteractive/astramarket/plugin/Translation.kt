@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength")
+@file:Suppress("MaxLineLength", "LongParameterList")
 
 package ru.astrainteractive.astramarket.plugin
 

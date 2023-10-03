@@ -4,13 +4,13 @@ import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
 import ru.astrainteractive.astramarket.gui.auctions.AuctionGui
-import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.gui.expired.ExpiredAuctionGui
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-
+@Suppress("LongParameterList")
 class AuctionGuiFactory(
     private val auctionComponentFactory: AuctionComponentFactory,
     private val config: AuctionConfig,

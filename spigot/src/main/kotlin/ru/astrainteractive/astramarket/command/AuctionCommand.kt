@@ -6,10 +6,12 @@ import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.Command
 import ru.astrainteractive.astralibs.command.registerCommand
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.gui.domain.usecase.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.PluginPermission
 import ru.astrainteractive.astramarket.util.KyoriExt.sendMessage
 import ru.astrainteractive.astramarket.util.playSound
+import kotlin.math.max
+import kotlin.math.min
 
 fun CommandManager.amarketCommand() = plugin.registerCommand("amarket") {
     val sender = this.sender
@@ -48,13 +50,12 @@ private val CommandManager.sellCommand: Command.() -> Unit
             player.playSound(configuration.sounds.fail)
         }.successOrNull()?.value ?: return@command
 
-        val amount = argument(2) {
-            it?.toIntOrNull() ?: 1
-        }.onFailure {
-        }.successOrNull()?.value ?: return@command
+        val inputAmount = argument(2) {
+            it.toIntOrNull() ?: 1
+        }.successOrNull()?.value ?: 1
         val item = player.inventory.itemInMainHand
         val clonedItem = item.clone().apply {
-            this.amount = amount
+            this.amount = max(min(item.amount, inputAmount), 1)
         }
         val encodedItem = encoder.toByteArray(clonedItem)
         scope.launch(dispatchers.IO) {
@@ -72,6 +73,6 @@ private val CommandManager.sellCommand: Command.() -> Unit
                 playerUUID = player.uniqueId,
             )
             val result = createAuctionUseCase.invoke(param)
-            if (result) item.amount -= amount
+            if (result) item.amount -= inputAmount
         }
     }

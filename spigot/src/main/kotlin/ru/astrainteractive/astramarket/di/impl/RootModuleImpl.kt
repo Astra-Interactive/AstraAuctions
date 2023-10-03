@@ -22,6 +22,8 @@ import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.di.factory.DatabaseFactory
+import ru.astrainteractive.astramarket.domain.di.BukkitDomainModule
+import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -34,7 +36,7 @@ import ru.astrainteractive.klibs.kdi.getValue
 
 class RootModuleImpl : RootModule {
     override val plugin: Lateinit<AstraMarket> = Lateinit<AstraMarket>()
-    override val bukkitSerializer: Single<Encoder> = Single {
+    override val encoder: Single<Encoder> = Single {
         Encoder(BukkitIOStreamProvider)
     }
     override val translation: Reloadable<Translation> = Reloadable {
@@ -67,30 +69,11 @@ class RootModuleImpl : RootModule {
         BukkitPermissionManager()
     }
 
-    override val dataModule: DataModule by Provider {
-        DataModule.Default(
-            database = database.value,
-            dispatchers = dispatchers.value
-        )
-    }
-    override val auctionGuiModule: AuctionGuiModule by Provider {
-        AuctionGuiModule.Default(
-            economyProvider = vaultEconomyProvider.value,
-            config = configuration.value,
-            translation = translation.value,
-            serializer = bukkitSerializer.value,
-            auctionApi = dataModule.auctionApi,
-            dispatchers = dispatchers.value,
-            stringSerializer = stringSerializer.value,
-            permissionManager = permissionManager.value
-        )
-    }
-
     override val bStats: Single<Metrics> = Single {
         val plugin by plugin
         Metrics(plugin, 15771)
     }
-    override val vaultEconomyProvider = Single {
+    override val economyProvider = Single {
         AnyEconomyProvider(plugin.value)
     }
 
@@ -112,5 +95,42 @@ class RootModuleImpl : RootModule {
     override val logger: Single<Logger> = Single {
         val plugin by plugin
         Logger.buildWithSpigot("AstraMarket", plugin)
+    }
+
+    // Modules
+    override val dataModule: DataModule by Provider {
+        DataModule.Default(
+            database = database.value,
+            dispatchers = dispatchers.value
+        )
+    }
+    override val bukkitDomainModule: BukkitDomainModule by Provider {
+        BukkitDomainModule.Default(
+            dataModule = dataModule,
+            encoder = encoder.value,
+            stringSerializer = stringSerializer.value,
+            permissionManager = permissionManager.value
+        )
+    }
+    override val sharedDomainModule: SharedDomainModule by Provider {
+        SharedDomainModule.Default(
+            translation = translation.value,
+            configuration = configuration.value,
+            economyProvider = economyProvider.value,
+            auctionsRepository = bukkitDomainModule.auctionsRepository,
+            playerInteraction = bukkitDomainModule.playerInteraction
+        )
+    }
+    override val auctionGuiModule: AuctionGuiModule by Provider {
+        AuctionGuiModule.Default(
+            config = configuration.value,
+            translation = translation.value,
+            serializer = encoder.value,
+            auctionApi = dataModule.auctionApi,
+            dispatchers = dispatchers.value,
+            stringSerializer = stringSerializer.value,
+            bukkitDomainModule = bukkitDomainModule,
+            sharedDomainModule = sharedDomainModule
+        )
     }
 }

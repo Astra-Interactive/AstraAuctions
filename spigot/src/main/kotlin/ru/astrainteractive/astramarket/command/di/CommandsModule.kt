@@ -7,8 +7,8 @@ import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.RootModule
+import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
-import ru.astrainteractive.astramarket.gui.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.kdi.Module
@@ -40,10 +40,10 @@ interface CommandsModule : Module {
             rootModule.auctionGuiModule.auctionGuiFactory
         }
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
-            rootModule.auctionGuiModule.guiDomainModule.createAuctionUseCase
+            rootModule.sharedDomainModule.createAuctionUseCase
         }
         override val stringSerializer: KyoriComponentSerializer by rootModule.stringSerializer
         override val permissionManager: PermissionManager by rootModule.permissionManager
-        override val encoder: Encoder by rootModule.bukkitSerializer
+        override val encoder: Encoder by rootModule.encoder
     }
 }

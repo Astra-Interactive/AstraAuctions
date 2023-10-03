@@ -2,31 +2,34 @@ package ru.astrainteractive.astramarket.gui.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
+import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
+import ru.astrainteractive.astramarket.domain.util.AuctionSorter
 import ru.astrainteractive.astramarket.gui.AuctionComponent
 import ru.astrainteractive.astramarket.gui.DefaultAuctionComponent
-import ru.astrainteractive.astramarket.gui.domain.di.GuiDomainModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 
 class AuctionComponentFactory(
-    private val guiDomainModule: GuiDomainModule,
+    private val sharedDomainModule: SharedDomainModule,
     private val dispatchers: BukkitDispatchers,
     private val auctionsAPI: AuctionsAPI,
-    private val serializer: Encoder,
-    private val config: AuctionConfig
+    private val config: AuctionConfig,
+    private val playerInteraction: PlayerInteraction,
+    private val auctionSorter: AuctionSorter
 ) {
     fun create(player: Player, isExpired: Boolean): AuctionComponent {
         return DefaultAuctionComponent(
-            player,
+            player.uniqueId,
             isExpired,
-            auctionBuyUseCase = guiDomainModule.auctionBuyUseCase,
-            expireAuctionUseCase = guiDomainModule.expireAuctionUseCase,
-            removeAuctionUseCase = guiDomainModule.removeAuctionUseCase,
+            auctionBuyUseCase = sharedDomainModule.auctionBuyUseCase,
+            expireAuctionUseCase = sharedDomainModule.expireAuctionUseCase,
+            removeAuctionUseCase = sharedDomainModule.removeAuctionUseCase,
             dispatchers = dispatchers,
             auctionsAPI = auctionsAPI,
-            serializer = serializer,
-            config = config
+            config = config,
+            playerInteraction = playerInteraction,
+            auctionSorter = auctionSorter
         )
     }
 }

@@ -11,6 +11,8 @@ import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astralibs.permission.PermissionManager
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
+import ru.astrainteractive.astramarket.domain.di.BukkitDomainModule
+import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -21,12 +23,12 @@ import ru.astrainteractive.klibs.kdi.Single
 
 interface RootModule : Module {
     val plugin: Lateinit<AstraMarket>
-    val bukkitSerializer: Single<Encoder>
+    val encoder: Single<Encoder>
     val translation: Reloadable<Translation>
     val configuration: Reloadable<AuctionConfig>
     val database: Single<Database>
     val bStats: Single<Metrics>
-    val vaultEconomyProvider: Single<EconomyProvider>
+    val economyProvider: Single<EconomyProvider>
     val permissionManager: Single<PermissionManager>
 
     val scope: Single<AsyncComponent>
@@ -37,4 +39,6 @@ interface RootModule : Module {
 
     val dataModule: DataModule
     val auctionGuiModule: AuctionGuiModule
+    val bukkitDomainModule: BukkitDomainModule
+    val sharedDomainModule: SharedDomainModule
 }

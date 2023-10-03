@@ -13,14 +13,15 @@ import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.gui.AbstractAuctionGui
 import ru.astrainteractive.astramarket.gui.AuctionComponent
 import ru.astrainteractive.astramarket.gui.di.factory.AuctionGuiFactory
-import ru.astrainteractive.astramarket.gui.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import java.util.UUID
 
+@Suppress("LongParameterList")
 class ExpiredAuctionGui(
     player: Player,
     override val viewModel: AuctionComponent,

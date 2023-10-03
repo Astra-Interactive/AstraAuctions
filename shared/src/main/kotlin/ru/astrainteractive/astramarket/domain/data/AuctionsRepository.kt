@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.gui.domain.data
+package ru.astrainteractive.astramarket.domain.data
 
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import java.util.UUID
@@ -26,7 +26,7 @@ interface AuctionsRepository {
 
     suspend fun countPlayerAuctions(uuid: UUID): Int
 
-    suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int
+    suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int?
 
     suspend fun insertAuction(auctionDTO: AuctionDTO): Int?
 }

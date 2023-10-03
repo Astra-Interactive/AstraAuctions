@@ -1,8 +1,7 @@
-package ru.astrainteractive.astramarket.gui.domain.usecase
+package ru.astrainteractive.astramarket.domain.usecase
 
-import org.bukkit.Bukkit
-import ru.astrainteractive.astramarket.gui.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.gui.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
+import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
@@ -31,8 +30,8 @@ internal class RemoveAuctionUseCaseImpl(
         val receivedAuction = input.auction
         val playerUUID = input.playerUUID
         val auction = auctionsRepository.getAuctionOrNull(receivedAuction.id) ?: return false
-        val owner = Bukkit.getOfflinePlayer(UUID.fromString(auction.minecraftUuid))
-        if (owner.uniqueId != playerUUID) {
+        val ownerUUID = auction.minecraftUuid.let(UUID::fromString)
+        if (ownerUUID != playerUUID) {
             playerInteraction.sendTranslationMessage(playerUUID) {
                 translation.auction.notAuctionOwner
             }
