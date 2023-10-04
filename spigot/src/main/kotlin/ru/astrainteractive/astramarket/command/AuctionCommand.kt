@@ -3,9 +3,11 @@ package ru.astrainteractive.astramarket.command
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
-import ru.astrainteractive.astralibs.command.Command
 import ru.astrainteractive.astralibs.command.registerCommand
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.command.argument.FloatArgumentType
+import ru.astrainteractive.astramarket.command.argument.IntArgumentType
+import ru.astrainteractive.astramarket.command.argument.LabelArgument
 import ru.astrainteractive.astramarket.command.util.KyoriExt.sendMessage
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.plugin.PluginPermission
@@ -24,35 +26,17 @@ fun CommandManager.amarketCommand() = plugin.registerCommand("amarket") {
         stringSerializer.sendMessage(translation.general.noPermissions, sender)
         return@registerCommand
     }
-    when (args.getOrNull(0)) {
-        "sell" -> sellCommand.invoke(this)
-        "expired" -> scope.launch(dispatchers.IO) {
-            val menu = auctionGuiFactory.create(sender, false)
-            withContext(dispatchers.BukkitMain) { menu.open() }
-        }
+    argument(0, LabelArgument("sell")).onSuccess {
+        val player = sender as? Player ?: return@onSuccess
+        if (!permissionManager.hasPermission(player.uniqueId, PluginPermission.Sell)) return@onSuccess
 
-        "open", null -> scope.launch(dispatchers.IO) {
-            val menu = auctionGuiFactory.create(sender, false)
-            withContext(dispatchers.BukkitMain) { menu.open() }
-        }
-    }
-}
-
-private val CommandManager.sellCommand: Command.() -> Unit
-    get() = command@{
-        val player = sender as? Player ?: return@command
-        if (!permissionManager.hasPermission(player.uniqueId, PluginPermission.Sell)) return@command
-
-        val price = argument(1) {
-            it?.toFloatOrNull()
-        }.onFailure {
+        val price = argument(1, FloatArgumentType.Optional).onFailure {
             stringSerializer.sendMessage(translation.general.wrongArgs, player)
             player.playSound(configuration.sounds.fail)
-        }.successOrNull()?.value ?: return@command
+        }.resultOrNull() ?: return@onSuccess
 
-        val inputAmount = argument(2) {
-            it.toIntOrNull() ?: 1
-        }.successOrNull()?.value ?: 1
+        val inputAmount = argument(2, IntArgumentType.Optional).resultOrNull() ?: 1
+
         val item = player.inventory.itemInMainHand
         val clonedItem = item.clone().apply {
             this.amount = max(min(item.amount, inputAmount), 1)
@@ -76,3 +60,17 @@ private val CommandManager.sellCommand: Command.() -> Unit
             if (result) item.amount -= inputAmount
         }
     }
+    argument(0, LabelArgument("expired")).onSuccess {
+        scope.launch(dispatchers.IO) {
+            val menu = auctionGuiFactory.create(sender, false)
+            withContext(dispatchers.BukkitMain) { menu.open() }
+        }
+    }
+
+    if (listOf(null, "open").contains(args.getOrNull(0))) {
+        scope.launch(dispatchers.IO) {
+            val menu = auctionGuiFactory.create(sender, false)
+            withContext(dispatchers.BukkitMain) { menu.open() }
+        }
+    }
+}
