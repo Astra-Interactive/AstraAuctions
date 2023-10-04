@@ -1,6 +1,7 @@
 
 import ru.astrainteractive.gradleplugin.setupSpigotProcessor
 import ru.astrainteractive.gradleplugin.setupSpigotShadow
+import ru.astrainteractive.gradleplugin.sourceset.JvmSourceSetExt.bukkitMain
 
 plugins {
     kotlin("jvm")
@@ -27,8 +28,7 @@ dependencies {
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
     implementation(projects.data)
-    implementation(projects.shared)
-    implementation(projects.shared.dependencyProject.sourceSets.getByName("bukkitMain").output)
+    implementation(projects.shared.bukkitMain)
 }
 
 File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->
