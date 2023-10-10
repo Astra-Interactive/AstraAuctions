@@ -1,11 +1,14 @@
-import ru.astrainteractive.gradleplugin.sourceset.JvmSourceSet.Companion.configureAstraSourceSet
+// import ru.astrainteractive.gradleplugin.sourceset.JvmSourceSet.Companion.configureAstraSourceSet
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("ru.astrainteractive.gradleplugin.minecraft.multiplatform")
 }
 
-configureAstraSourceSet("bukkit")
+minecraftMultiplatform {
+    bukkit()
+}
 
 dependencies {
     // Kotlin

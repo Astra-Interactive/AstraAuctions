@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.di
 
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
-import ru.astrainteractive.astramarket.api.market.impl.AuctionsAPIImpl
+import ru.astrainteractive.astramarket.api.market.impl.AuctionsApiImpl
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapper
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapperImpl
 import ru.astrainteractive.klibs.kdi.Provider
@@ -21,7 +21,7 @@ interface DataModule {
         }
 
         override val auctionApi: AuctionsAPI by Provider {
-            AuctionsAPIImpl(
+            AuctionsApiImpl(
                 database = database,
                 auctionMapper = auctionMapper,
                 dispatchers = dispatchers

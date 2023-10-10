@@ -1,7 +1,7 @@
 buildscript {
     dependencies {
-        classpath("ru.astrainteractive.gradleplugin:convention:0.3.2")
-        classpath("ru.astrainteractive.gradleplugin:minecraft:0.3.2")
+        classpath("ru.astrainteractive.gradleplugin:convention:0.4.0")
+        classpath("ru.astrainteractive.gradleplugin:minecraft:0.4.0")
     }
 }
 

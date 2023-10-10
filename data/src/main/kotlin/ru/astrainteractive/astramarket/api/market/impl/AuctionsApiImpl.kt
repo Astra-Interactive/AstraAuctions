@@ -11,7 +11,7 @@ import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import kotlin.coroutines.CoroutineContext
 
-internal class AuctionsAPIImpl(
+internal class AuctionsApiImpl(
     private val database: Database,
     private val auctionMapper: AuctionMapper,
     dispatchers: KotlinDispatchers

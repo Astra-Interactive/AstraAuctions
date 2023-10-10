@@ -1,6 +1,6 @@
 @file:Suppress("Filename")
 
-package ru.astrainteractive.astramarket.util
+package ru.astrainteractive.astramarket.di.util
 
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax

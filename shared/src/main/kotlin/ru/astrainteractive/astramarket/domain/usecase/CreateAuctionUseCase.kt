@@ -35,7 +35,6 @@ internal class CreateAuctionUseCaseImpl(
         val maxAuctionsAllowed = auctionsRepository.maxAllowedAuctionsForPlayer(playerUUID)
             ?: config.auction.maxAuctionPerPlayer
         val auctionsAmount = auctionsRepository.countPlayerAuctions(playerUUID)
-        println("Auctions: $auctionsAmount; max: $maxAuctionsAllowed")
         if (auctionsAmount >= maxAuctionsAllowed) {
             playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
             playerInteraction.playSound(playerUUID) { config.sounds.fail }
@@ -48,18 +47,18 @@ internal class CreateAuctionUseCaseImpl(
         }
 
         val result = auctionsRepository.insertAuction(auction)
-        if (result != null) {
+        return if (result != null) {
             playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.auctionAdded }
             playerInteraction.playSound(playerUUID) { config.sounds.success }
             if (config.auction.announce) {
                 val playerName = auctionsRepository.playerName(playerUUID) ?: "-"
                 playerInteraction.broadcast(translation.auction.broadcast.replace("%player%", playerName))
             }
-            return true
+            true
         } else {
             playerInteraction.sendTranslationMessage(playerUUID) { translation.general.dbError }
             playerInteraction.playSound(playerUUID) { config.sounds.fail }
-            return false
+            false
         }
     }
 }
