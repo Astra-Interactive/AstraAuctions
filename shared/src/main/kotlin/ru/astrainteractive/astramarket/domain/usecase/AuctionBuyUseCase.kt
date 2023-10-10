@@ -75,10 +75,7 @@ internal class AuctionBuyUseCaseImpl(
             val itemName = auctionsRepository.itemDesc(auction)
             playerInteraction.sendTranslationMessage(playerUUID) {
                 translation.auction.notifyUserBuy
-                    .replace(
-                        "%player_owner%",
-                        ownerName ?: "-"
-                    )
+                    .replace("%player_owner%", ownerName ?: "-")
                     .replace("%price%", auction.price.toString())
                     .replace("%item%", itemName)
             }
