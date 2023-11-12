@@ -1,16 +1,17 @@
 package ru.astrainteractive.astramarket.domain.mapping
 
+import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.plugin.Translation
 
 interface AuctionSortTranslationMapping {
-    fun translate(auctionSort: AuctionSort): String
+    fun translate(auctionSort: AuctionSort): StringDesc.Raw
 }
 
 internal class AuctionSortTranslationMappingImpl(
     private val translation: Translation
 ) : AuctionSortTranslationMapping {
-    override fun translate(auctionSort: AuctionSort): String = when (auctionSort) {
+    override fun translate(auctionSort: AuctionSort): StringDesc.Raw = when (auctionSort) {
         AuctionSort.MATERIAL_DESC -> translation.auction.sortMaterialDesc
         AuctionSort.MATERIAL_ASC -> translation.auction.sortMaterialAsc
         AuctionSort.DATE_DESC -> translation.auction.sortDateDesc

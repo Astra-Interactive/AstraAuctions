@@ -2,21 +2,22 @@ package ru.astrainteractive.astramarket.data
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.string.StringDesc
 import java.util.UUID
 
 class BukkitPlayerInteractionBridge(
     private val stringSerializer: KyoriComponentSerializer
 ) : PlayerInteractionBridge {
-    override fun sendTranslationMessage(uuid: UUID, message: String) {
+    override fun sendTranslationMessage(uuid: UUID, message: StringDesc.Raw) {
         val component = stringSerializer.toComponent(message)
         Bukkit.getPlayer(uuid)?.sendMessage(component)
     }
 
-    override fun sendTranslationMessage(uuid: UUID, message: () -> String) {
+    override fun sendTranslationMessage(uuid: UUID, message: () -> StringDesc.Raw) {
         sendTranslationMessage(uuid, message.invoke())
     }
 
-    override fun broadcast(string: String) {
+    override fun broadcast(string: StringDesc.Raw) {
         val component = stringSerializer.toComponent(string)
         Bukkit.broadcast(component)
     }

@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
+import ru.astrainteractive.astralibs.string.replace
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.data.AuctionsBridge
 import ru.astrainteractive.astramarket.data.PlayerInteractionBridge

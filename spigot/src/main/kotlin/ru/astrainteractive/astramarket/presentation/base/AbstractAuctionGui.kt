@@ -13,6 +13,8 @@ import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.string.StringDesc
+import ru.astrainteractive.astralibs.string.replace
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -239,7 +241,7 @@ abstract class AbstractAuctionGui(
         setMenuItems()
     }
 
-    fun getTimeFormatted(sec: Long): String {
+    fun getTimeFormatted(sec: Long): StringDesc.Raw {
         val time = System.currentTimeMillis().minus(sec)
         val unit = TimeUnit.MILLISECONDS
         val days = unit.toDays(time)
