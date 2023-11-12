@@ -1,21 +1,20 @@
-package ru.astrainteractive.astramarket.domain.data
+package ru.astrainteractive.astramarket.data
 
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.Encoder
-import ru.astrainteractive.astralibs.permission.PermissionManager
+import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.plugin.PluginPermission
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
-class BukkitAuctionsRepository(
+class BukkitAuctionsBridge(
     private val auctionsApi: AuctionsAPI,
     private val serializer: Encoder,
-    private val permissionManager: PermissionManager
-) : AuctionsRepository {
+) : AuctionsBridge {
     private fun AuctionDTO.itemStack(serializer: Encoder): ItemStack {
         return serializer.fromByteArray(item)
     }
@@ -55,7 +54,7 @@ class BukkitAuctionsRepository(
     }
 
     override fun hasExpirePermission(uuid: UUID): Boolean {
-        return permissionManager.hasPermission(uuid, PluginPermission.Expire)
+        return Bukkit.getPlayer(uuid)?.toPermissible()?.hasPermission(PluginPermission.Expire) ?: false
     }
 
     override suspend fun expireAuction(auctionDTO: AuctionDTO): Unit? {
@@ -72,7 +71,7 @@ class BukkitAuctionsRepository(
     }
 
     override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int? {
-        return permissionManager.maxPermissionSize(uuid, PluginPermission.SellMax)
+        return Bukkit.getPlayer(uuid)?.toPermissible()?.maxPermissionSize(PluginPermission.SellMax)
     }
 
     override suspend fun insertAuction(auctionDTO: AuctionDTO): Int? {

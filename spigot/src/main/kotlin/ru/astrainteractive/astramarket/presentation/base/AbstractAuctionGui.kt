@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.presentation
+package ru.astrainteractive.astramarket.presentation.base
 
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
@@ -16,6 +16,7 @@ import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.setDisplayName
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.toItemStack

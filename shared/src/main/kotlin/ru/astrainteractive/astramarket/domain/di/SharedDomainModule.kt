@@ -1,8 +1,7 @@
 package ru.astrainteractive.astramarket.domain.di
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.data.di.SharedDataModule
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMappingImpl
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
@@ -32,8 +31,7 @@ interface SharedDomainModule {
         translation: Translation,
         configuration: AuctionConfig,
         economyProvider: EconomyProvider,
-        auctionsRepository: AuctionsRepository,
-        playerInteraction: PlayerInteraction
+        sharedDataModule: SharedDataModule
     ) : SharedDomainModule {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
             AuctionSortTranslationMappingImpl(
@@ -45,31 +43,31 @@ interface SharedDomainModule {
                 translation = translation,
                 config = configuration,
                 economyProvider = economyProvider,
-                auctionsRepository = auctionsRepository,
-                playerInteraction = playerInteraction
+                auctionsBridge = sharedDataModule.auctionBridge,
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge
             )
         }
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
             CreateAuctionUseCaseImpl(
                 translation = translation,
                 config = configuration,
-                auctionsRepository = auctionsRepository,
-                playerInteraction = playerInteraction
+                auctionsBridge = sharedDataModule.auctionBridge,
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge
             )
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by Provider {
             ExpireAuctionUseCaseImpl(
                 translation = translation,
-                auctionsRepository = auctionsRepository,
-                playerInteraction = playerInteraction
+                auctionsBridge = sharedDataModule.auctionBridge,
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge
             )
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by Provider {
             RemoveAuctionUseCaseImpl(
                 translation = translation,
                 config = configuration,
-                auctionsRepository = auctionsRepository,
-                playerInteraction = playerInteraction
+                auctionsBridge = sharedDataModule.auctionBridge,
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge
             )
         }
     }

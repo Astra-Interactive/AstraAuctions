@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.data.AuctionsBridge
+import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
@@ -12,7 +12,7 @@ import java.util.UUID
  * @param _auction auction to expire
  * @return boolean - true if success false if not
  */
-interface ExpireAuctionUseCase : UseCase.Parametrized<ExpireAuctionUseCase.Params, Boolean> {
+interface ExpireAuctionUseCase : UseCase.Suspended<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
         val auction: AuctionDTO,
         val playerUUID: UUID
@@ -20,8 +20,8 @@ interface ExpireAuctionUseCase : UseCase.Parametrized<ExpireAuctionUseCase.Param
 }
 
 internal class ExpireAuctionUseCaseImpl(
-    private val auctionsRepository: AuctionsRepository,
-    private val playerInteraction: PlayerInteraction,
+    private val auctionsBridge: AuctionsBridge,
+    private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
 ) : ExpireAuctionUseCase {
 
@@ -30,25 +30,25 @@ internal class ExpireAuctionUseCaseImpl(
         val receivedAuction = input.auction
         val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
 
-        if (!auctionsRepository.hasExpirePermission(playerUUID)) {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.general.noPermissions }
+        if (!auctionsBridge.hasExpirePermission(playerUUID)) {
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.noPermissions }
             return false
         }
-        val auction = auctionsRepository.getAuctionOrNull(receivedAuction.id) ?: return false
-        val itemName = auctionsRepository.itemDesc(auction)
-        playerInteraction.sendTranslationMessage(ownerUUID) {
+        val auction = auctionsBridge.getAuctionOrNull(receivedAuction.id) ?: return false
+        val itemName = auctionsBridge.itemDesc(auction)
+        playerInteractionBridge.sendTranslationMessage(ownerUUID) {
             translation.auction.notifyAuctionExpired
                 .replace("%item%", itemName)
                 .replace("%price%", auction.price.toString())
         }
 
-        val result = auctionsRepository.expireAuction(auction)
+        val result = auctionsBridge.expireAuction(auction)
         if (result == null) {
-            playerInteraction.sendTranslationMessage(playerUUID) {
+            playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.general.unexpectedError
             }
         } else {
-            playerInteraction.sendTranslationMessage(playerUUID) {
+            playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.auction.auctionHasBeenExpired
             }
         }

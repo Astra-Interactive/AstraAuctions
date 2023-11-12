@@ -1,14 +1,14 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.domain.data.AuctionsRepository
-import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
+import ru.astrainteractive.astramarket.data.AuctionsBridge
+import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
-interface CreateAuctionUseCase : UseCase.Parametrized<CreateAuctionUseCase.Params, Boolean> {
+interface CreateAuctionUseCase : UseCase.Suspended<CreateAuctionUseCase.Params, Boolean> {
     class Params(
         val playerUUID: UUID,
         val auctionDTO: AuctionDTO
@@ -16,8 +16,8 @@ interface CreateAuctionUseCase : UseCase.Parametrized<CreateAuctionUseCase.Param
 }
 
 internal class CreateAuctionUseCaseImpl(
-    private val auctionsRepository: AuctionsRepository,
-    private val playerInteraction: PlayerInteraction,
+    private val auctionsBridge: AuctionsBridge,
+    private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
     private val config: AuctionConfig,
 ) : CreateAuctionUseCase {
@@ -26,38 +26,38 @@ internal class CreateAuctionUseCaseImpl(
         val playerUUID = input.playerUUID
         val auction = input.auctionDTO
 
-        if (!auctionsRepository.isItemValid(input.auctionDTO)) {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.wrongItemInHand }
-            playerInteraction.playSound(playerUUID) { config.sounds.fail }
+        if (!auctionsBridge.isItemValid(input.auctionDTO)) {
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongItemInHand }
+            playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
 
-        val maxAuctionsAllowed = auctionsRepository.maxAllowedAuctionsForPlayer(playerUUID)
+        val maxAuctionsAllowed = auctionsBridge.maxAllowedAuctionsForPlayer(playerUUID)
             ?: config.auction.maxAuctionPerPlayer
-        val auctionsAmount = auctionsRepository.countPlayerAuctions(playerUUID)
+        val auctionsAmount = auctionsBridge.countPlayerAuctions(playerUUID)
         if (auctionsAmount >= maxAuctionsAllowed) {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
-            playerInteraction.playSound(playerUUID) { config.sounds.fail }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
+            playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
         if (auction.price > config.auction.maxPrice || auction.price < config.auction.minPrice) {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.wrongPrice }
-            playerInteraction.playSound(playerUUID) { config.sounds.fail }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongPrice }
+            playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
 
-        val result = auctionsRepository.insertAuction(auction)
+        val result = auctionsBridge.insertAuction(auction)
         return if (result != null) {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.auction.auctionAdded }
-            playerInteraction.playSound(playerUUID) { config.sounds.success }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.auctionAdded }
+            playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
             if (config.auction.announce) {
-                val playerName = auctionsRepository.playerName(playerUUID) ?: "-"
-                playerInteraction.broadcast(translation.auction.broadcast.replace("%player%", playerName))
+                val playerName = auctionsBridge.playerName(playerUUID) ?: "-"
+                playerInteractionBridge.broadcast(translation.auction.broadcast.replace("%player%", playerName))
             }
             true
         } else {
-            playerInteraction.sendTranslationMessage(playerUUID) { translation.general.dbError }
-            playerInteraction.playSound(playerUUID) { config.sounds.fail }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.dbError }
+            playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             false
         }
     }

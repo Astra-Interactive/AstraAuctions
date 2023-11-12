@@ -15,23 +15,23 @@ class AstraMarket : JavaPlugin() {
     private val rootModule = RootModuleImpl()
 
     override fun onEnable() {
-        rootModule.plugin.initialize(this)
-        rootModule.bStats.value
+        rootModule.bukkitCoreModule.plugin.initialize(this)
+        rootModule.bukkitCoreModule.bStats.value
         CommandManager(CommandContainer.Default(rootModule))
-        rootModule.economyProvider
-        rootModule.inventoryClickEventListener.value.onEnable(this)
+        rootModule.bukkitCoreModule.economyProvider
+        rootModule.bukkitCoreModule.inventoryClickEventListener.value.onEnable(this)
     }
 
     override fun onDisable() {
-        runBlocking { rootModule.database.value.closeConnection() }
+        runBlocking { rootModule.dataModule.database.closeConnection() }
         HandlerList.unregisterAll(this)
 
-        rootModule.scope.value.close()
-        rootModule.inventoryClickEventListener.value.onDisable()
+        rootModule.bukkitCoreModule.scope.value.close()
+        rootModule.bukkitCoreModule.inventoryClickEventListener.value.onDisable()
     }
 
     fun reloadPlugin() {
-        rootModule.configuration.reload()
-        rootModule.translation.reload()
+        rootModule.bukkitCoreModule.configuration.reload()
+        rootModule.bukkitCoreModule.translation.reload()
     }
 }

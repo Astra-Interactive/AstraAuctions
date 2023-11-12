@@ -1,8 +1,8 @@
-package ru.astrainteractive.astramarket.domain.data
+package ru.astrainteractive.astramarket.data
 
 import java.util.UUID
 
-interface PlayerInteraction {
+interface PlayerInteractionBridge {
 
     fun sendTranslationMessage(uuid: UUID, message: String)
 

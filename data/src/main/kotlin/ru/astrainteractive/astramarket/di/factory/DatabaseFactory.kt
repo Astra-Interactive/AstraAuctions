@@ -8,7 +8,7 @@ import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.kdi.Factory
 
-class DatabaseFactory(
+internal class DatabaseFactory(
     private val dbConnection: DBConnection,
     private val dbSyntax: DBSyntax,
 ) : Factory<Database> {

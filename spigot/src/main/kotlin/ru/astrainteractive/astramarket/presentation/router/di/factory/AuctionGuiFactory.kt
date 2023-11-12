@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.presentation.di.factory
+package ru.astrainteractive.astramarket.presentation.router.di.factory
 
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
@@ -7,8 +7,8 @@ import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.presentation.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.auctions.AuctionGui
+import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.expired.ExpiredAuctionGui
 @Suppress("LongParameterList")
 class AuctionGuiFactory(

@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.domain.util
+package ru.astrainteractive.astramarket.domain.usecase
 
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
@@ -7,14 +7,16 @@ import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import java.util.UUID
 
-class BukkitAuctionSorter(private val encoder: Encoder) : AuctionSorter {
+class BukkitSortAuctionsUseCase(private val encoder: Encoder) : SortAuctionsUseCase {
     private fun AuctionDTO.itemStack(serializer: Encoder): ItemStack {
-        return serializer.fromByteArray<ItemStack>(
+        return serializer.fromByteArray(
             item
         )
     }
 
-    override fun sort(sortType: AuctionSort, list: List<AuctionDTO>): List<AuctionDTO> {
+    override fun invoke(input: SortAuctionsUseCase.Input): SortAuctionsUseCase.Output {
+        val sortType = input.sortType
+        val list = input.list
         return when (sortType) {
             AuctionSort.MATERIAL_DESC -> list.sortedByDescending { it.itemStack(encoder).type }
             AuctionSort.MATERIAL_ASC -> list.sortedBy { it.itemStack(encoder).type }
@@ -37,6 +39,6 @@ class BukkitAuctionSorter(private val encoder: Encoder) : AuctionSorter {
             }
 
             else -> list
-        }
+        }.let(SortAuctionsUseCase::Output)
     }
 }

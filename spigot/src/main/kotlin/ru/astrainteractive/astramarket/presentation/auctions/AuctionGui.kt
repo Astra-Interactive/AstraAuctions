@@ -15,9 +15,9 @@ import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
-import ru.astrainteractive.astramarket.presentation.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
-import ru.astrainteractive.astramarket.presentation.di.factory.AuctionGuiFactory
+import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
+import ru.astrainteractive.astramarket.presentation.router.di.factory.AuctionGuiFactory
 import java.util.UUID
 
 @Suppress("LongParameterList")

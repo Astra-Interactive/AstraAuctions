@@ -4,16 +4,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
 import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.domain.data.PlayerInteraction
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.domain.usecase.RemoveAuctionUseCase
-import ru.astrainteractive.astramarket.domain.util.AuctionSorter
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
+import ru.astrainteractive.astramarket.domain.usecase.SortAuctionsUseCase
+import ru.astrainteractive.astramarket.presentation.di.AuctionComponentDependencies
 import ru.astrainteractive.klibs.mikro.core.util.next
 import ru.astrainteractive.klibs.mikro.core.util.prev
 import java.util.UUID
@@ -22,15 +19,10 @@ import java.util.UUID
 class DefaultAuctionComponent(
     private val playerUUID: UUID,
     private val expired: Boolean = false,
-    private val config: AuctionConfig,
-    private val dispatchers: BukkitDispatchers,
-    private val auctionsAPI: AuctionsAPI,
-    private val auctionBuyUseCase: AuctionBuyUseCase,
-    private val expireAuctionUseCase: ExpireAuctionUseCase,
-    private val removeAuctionUseCase: RemoveAuctionUseCase,
-    private val playerInteraction: PlayerInteraction,
-    private val auctionSorter: AuctionSorter
-) : AuctionComponent, AsyncComponent() {
+    private val dependencies: AuctionComponentDependencies
+) : AuctionComponent,
+    AsyncComponent(),
+    AuctionComponentDependencies by dependencies {
     private val mainDispatcher = dispatchers.IO.limitedParallelism(1)
 
     override val model = MutableStateFlow(AuctionComponent.Model())
@@ -50,8 +42,9 @@ class DefaultAuctionComponent(
     private fun sort() {
         componentScope.launch(mainDispatcher) {
             model.update { model ->
-                val sortedItems = auctionSorter.sort(model.sortType, model.items)
-                model.copy(items = sortedItems)
+                val input = SortAuctionsUseCase.Input(model.sortType, model.items)
+                val sortedItems = sortAuctionsUseCase.invoke(input)
+                model.copy(items = sortedItems.list)
             }
         }
     }
@@ -69,9 +62,11 @@ class DefaultAuctionComponent(
         AuctionComponent.ClickType.RIGHT -> removeAuctionUseCase.invoke(
             RemoveAuctionUseCase.Params(auction, playerUUID)
         )
+
         AuctionComponent.ClickType.MIDDLE -> expireAuctionUseCase.invoke(
             ExpireAuctionUseCase.Params(auction, playerUUID)
         )
+
         else -> false
     }
 
@@ -85,9 +80,9 @@ class DefaultAuctionComponent(
             }
             if (result) {
                 loadItems()
-                playerInteraction.playSound(playerUUID, config.sounds.sold)
+                playerInteractionBridge.playSound(playerUUID, config.sounds.sold)
             } else {
-                playerInteraction.playSound(playerUUID, config.sounds.fail)
+                playerInteractionBridge.playSound(playerUUID, config.sounds.fail)
             }
         }
     }

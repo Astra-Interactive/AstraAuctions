@@ -1,12 +1,12 @@
-package ru.astrainteractive.astramarket.domain.data
+package ru.astrainteractive.astramarket.data
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import java.util.UUID
 
-class BukkitPlayerInteraction(
+class BukkitPlayerInteractionBridge(
     private val stringSerializer: KyoriComponentSerializer
-) : PlayerInteraction {
+) : PlayerInteractionBridge {
     override fun sendTranslationMessage(uuid: UUID, message: String) {
         val component = stringSerializer.toComponent(message)
         Bukkit.getPlayer(uuid)?.sendMessage(component)
