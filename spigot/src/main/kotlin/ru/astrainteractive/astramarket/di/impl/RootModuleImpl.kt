@@ -1,7 +1,6 @@
 package ru.astrainteractive.astramarket.di.impl
 
 import ru.astrainteractive.astramarket.data.di.BukkitSharedDataModule
-import ru.astrainteractive.astramarket.data.di.SharedDataModule
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.astramarket.di.RootModule
@@ -26,24 +25,25 @@ class RootModuleImpl : RootModule {
             dispatchers = bukkitCoreModule.dispatchers.value
         )
     }
-    override val bukkitSharedDomainModule: BukkitSharedDomainModule by Provider {
-        BukkitSharedDomainModule(
-            encoder = bukkitCoreModule.encoder.value,
-        )
-    }
-    override val sharedDataModule: SharedDataModule by Provider {
-        BukkitSharedDataModule(
-            dataModule = dataModule,
-            encoder = bukkitCoreModule.encoder.value,
-            stringSerializer = bukkitCoreModule.stringSerializer.value
-        )
-    }
+
     override val sharedDomainModule: SharedDomainModule by Provider {
         SharedDomainModule.Default(
             translation = bukkitCoreModule.translation.value,
             configuration = bukkitCoreModule.configuration.value,
             economyProvider = bukkitCoreModule.economyProvider.value,
-            sharedDataModule = sharedDataModule
+            sharedDataModuleFactory = {
+                BukkitSharedDataModule(
+                    dataModule = dataModule,
+                    encoder = bukkitCoreModule.encoder.value,
+                    stringSerializer = bukkitCoreModule.stringSerializer.value
+                )
+            },
+            platformSharedDomainModuleFactory = {
+                BukkitSharedDomainModule(
+                    encoder = bukkitCoreModule.encoder.value,
+                )
+            }
+
         )
     }
     override val auctionGuiModule: AuctionGuiModule by Provider {

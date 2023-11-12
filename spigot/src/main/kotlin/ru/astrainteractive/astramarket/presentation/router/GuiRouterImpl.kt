@@ -17,8 +17,8 @@ class GuiRouterImpl(private val rootModule: RootModule) : GuiRouter {
             auctionsAPI = rootModule.dataModule.auctionApi,
             sharedDomainModule = rootModule.sharedDomainModule,
             config = rootModule.bukkitCoreModule.configuration.value,
-            playerInteractionBridge = rootModule.sharedDataModule.playerInteractionBridge,
-            sortAuctionsUseCase = rootModule.bukkitSharedDomainModule.sortAuctionsUseCase
+            playerInteractionBridge = rootModule.sharedDomainModule.sharedDataModule.playerInteractionBridge,
+            sortAuctionsUseCase = rootModule.sharedDomainModule.platformSharedDomainModule.sortAuctionsUseCase
         )
     }
 

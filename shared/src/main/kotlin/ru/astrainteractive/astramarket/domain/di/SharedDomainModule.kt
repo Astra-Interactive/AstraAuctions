@@ -14,10 +14,14 @@ import ru.astrainteractive.astramarket.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.domain.usecase.RemoveAuctionUseCaseImpl
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.klibs.kdi.Factory
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
 interface SharedDomainModule {
+    val sharedDataModule: SharedDataModule
+    val platformSharedDomainModule: PlatformSharedDomainModule
+
     // Mappers
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
 
@@ -31,8 +35,15 @@ interface SharedDomainModule {
         translation: Translation,
         configuration: AuctionConfig,
         economyProvider: EconomyProvider,
-        sharedDataModule: SharedDataModule
+        sharedDataModuleFactory: Factory<SharedDataModule>,
+        platformSharedDomainModuleFactory: Factory<PlatformSharedDomainModule>
     ) : SharedDomainModule {
+        override val sharedDataModule: SharedDataModule by Provider {
+            sharedDataModuleFactory.create()
+        }
+        override val platformSharedDomainModule: PlatformSharedDomainModule by Provider {
+            platformSharedDomainModuleFactory.create()
+        }
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
             AuctionSortTranslationMappingImpl(
                 translation = translation
