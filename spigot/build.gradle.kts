@@ -9,8 +9,8 @@ plugins {
 minecraftMultiplatform {
     dependencies {
         // Local
-        implementation(projects.shared.bukkitMain)
-        implementation(projects.shared)
+        implementation(projects.modules.shared.bukkitMain)
+        implementation(projects.modules.shared)
     }
 }
 dependencies {
@@ -32,11 +32,13 @@ dependencies {
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
     // Local
-    implementation(projects.data)
+    implementation(projects.modules.data)
 }
 
-File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->
-    if (file.exists()) setupSpigotShadow(file) else setupSpigotShadow()
-}
+val destination = File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins")
+    .takeIf(File::exists)
+    ?: File(rootDir, "jars")
+
+setupSpigotShadow(destination)
 
 setupSpigotProcessor()

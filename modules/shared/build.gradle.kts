@@ -26,5 +26,5 @@ dependencies {
     // Bukkit
     "bukkitMainCompileOnly"(libs.minecraft.paper.api)
     // Local
-    implementation(projects.data)
+    implementation(projects.modules.data)
 }
