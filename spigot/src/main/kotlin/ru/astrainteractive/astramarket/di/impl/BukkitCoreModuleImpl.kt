@@ -36,17 +36,19 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
     override val translation: Reloadable<Translation> = Reloadable {
         val fileManager = DefaultSpigotFileManager(plugin.value, name = "translations.yml")
         val serializer = YamlSerializer()
-        serializer.parseOrDefault<Translation>(fileManager.configFile, ::Translation).also {
-            serializer.writeIntoFile(it, fileManager.configFile)
-        }
+        serializer.parse<Translation>(fileManager.configFile)
+            .onFailure(Throwable::printStackTrace)
+            .getOrElse { Translation() }
+            .also { serializer.writeIntoFile(it, fileManager.configFile) }
     }
 
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val fileManager = DefaultSpigotFileManager(plugin.value, name = "config.yml")
         val serializer = YamlSerializer()
-        serializer.parseOrDefault<AuctionConfig>(fileManager.configFile, ::AuctionConfig).also {
-            serializer.writeIntoFile(it, fileManager.configFile)
-        }
+        serializer.parse<AuctionConfig>(fileManager.configFile)
+            .onFailure(Throwable::printStackTrace)
+            .getOrElse { AuctionConfig() }
+            .also { serializer.writeIntoFile(it, fileManager.configFile) }
     }
 
     override val bStats: Single<Metrics> = Single {
