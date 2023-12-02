@@ -180,8 +180,8 @@ abstract class AbstractAuctionGui(
             InventorySlot.Builder {
                 index = i
                 itemStack = config.buttons.sort.toItemStack().apply {
-                    val sortDesc = auctionSortTranslationMapping.translate(auctionComponent.model.value.sortType)
-                    setDisplayName(stringSerializer.toComponent("${translation.menu.sort} $sortDesc"))
+                    val sortDesc = auctionSortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
+                    setDisplayName(stringSerializer.toComponent("${translation.menu.sort.raw} $sortDesc"))
                 }
                 click = Click {
                     showPage(0)

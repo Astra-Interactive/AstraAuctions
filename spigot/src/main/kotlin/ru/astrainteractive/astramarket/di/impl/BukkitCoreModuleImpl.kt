@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.di.impl
 
-import kotlinx.serialization.encodeToString
 import org.bstats.bukkit.Metrics
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
@@ -37,21 +36,17 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
     override val translation: Reloadable<Translation> = Reloadable {
         val fileManager = DefaultSpigotFileManager(plugin.value, name = "translations.yml")
         val serializer = YamlSerializer()
-        runCatching {
-            serializer.unsafeParse<Translation>(fileManager.configFile)
-        }.onSuccess {
-            fileManager.configFile.writeText(serializer.yaml.encodeToString(it))
-        }.getOrNull() ?: Translation()
+        serializer.parseOrDefault<Translation>(fileManager.configFile, ::Translation).also {
+            serializer.writeIntoFile(it, fileManager.configFile)
+        }
     }
 
     override val configuration: Reloadable<AuctionConfig> = Reloadable {
         val fileManager = DefaultSpigotFileManager(plugin.value, name = "config.yml")
         val serializer = YamlSerializer()
-        runCatching {
-            serializer.unsafeParse<AuctionConfig>(fileManager.configFile)
-        }.onSuccess {
-            fileManager.configFile.writeText(serializer.yaml.encodeToString(it))
-        }.getOrNull() ?: AuctionConfig()
+        serializer.parseOrDefault<AuctionConfig>(fileManager.configFile, ::AuctionConfig).also {
+            serializer.writeIntoFile(it, fileManager.configFile)
+        }
     }
 
     override val bStats: Single<Metrics> = Single {
