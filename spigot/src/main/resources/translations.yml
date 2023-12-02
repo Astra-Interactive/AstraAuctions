@@ -1,117 +1,56 @@
-# EN ----------------------------------------------------------------------------------------------------------------------------------------
-general:
-  reload_started: '#dbbb18Plugin reload'
-  reload_complete: '#42f596Plugin reloaded'
-  no_permission: '#f55442You do not have permissions'
-  player_command: '#f55442This command is only for players'
-  wrong_args: '#f55442Wrong usage'
-  db_error: '#f55442Database error'
-  error: '#f55442Unexcpected error'
-  time_format: '%days%d. %hours%h. %minutes%m. ago'
-auction:
-  wrong_item: '#f55442Item in your hand is not avaliable for selling'
-  wrong_price: '#f55442Wrong price'
-  slot_added: '#18dbd1Market slot has been created'
-  inventory_full: '#f55442Inventory is full'
-  owner_not_buyer: '#f55442You can not buy your slot'
-  failed_to_pay: '#f55442Could not pay money'
-  notifyUserBuy: '#18dbd1You bought item #dbaa18%item%#18dbd1 from player #dbaa18%player_owner%#18dbd1
-    for #dbaa18%price%'
-  notifyOwnerUserBuy: '#18dbd1Player #dbaa18%player%#18dbd1 bought your item #dbaa18%item%#18dbd1
-    for #dbaa18%price%'
-  not_enough_money: '#f55442Not enough money'
-  broadcast: '#18dbd1Player #d6a213%player% #18dbd1created slot on /amarket'
-  auction_not_exist: '#f55442Market not exists'
-  auction_been_expired: '#d6a213Slot has been expired'
-  max_slots: '#f55442You already have maximum items on market'
-  auction_by: '&7Created: #d6a213%player_owner%'
-  auction_created_ago: '&7Time: #d6a213%time%'
-  auction_price: '&7Price: #d6a213%price%'
-  sort:
-    material_desc: '#FFFFFFby material #d6a213&l↑'
-    material_asc: '#FFFFFFby material #d6a213&l↓'
-    date_desc: '#FFFFFFby date #d6a213&l↑'
-    date_asc: '#FFFFFFby date #d6a213&l↓'
-    name_desc: '#FFFFFFby name #d6a213&l↑'
-    name_asc: '#FFFFFFby name #d6a213&l↓'
-    price_desc: '#FFFFFFby price #d6a213&l↑'
-    price_asc: '#FFFFFFby price #d6a213&l↓'
-    player_desc: '#FFFFFFby player #d6a213&l↑'
-    player_asc: '#FFFFFFby player #d6a213&l↓'
-  tab_completer:
-    price: '<price>'
-    amount: '<amount>'
 menu:
-  left_button: '#d6a213LBM #18dbd1- buy'
-  right_button: '#d6a213RBM #18dbd1- remove'
-  middle_click: '#d6a213MBM #18dbd1- expire'
-  not_auction_owner: '#f55442You not an owner'
-  auction_deleted: '#f55442Slot has been deleted'
-  title: '#1382d6Market'
-  title_expired: '#1382d6Expired'
-  back: '#18dbd1Back'
-  prev: '#18dbd1Previous'
-  aauc: '#18dbd1Market'
-  expired: '#18dbd1Expired'
-  next: '#18dbd1next'
-  sort: '#18dbd1Sort'
-  auction_expired_notify: '#f55442Your slot %item% for %price% has been expired now'
-
-# RU ----------------------------------------------------------------------------------------------------------------------------------------
-#general:
-#  reload_started: '#dbbb18Перезагрузка плагина'
-#  reload_complete: '#42f596Перезагрузка успешно завершена'
-#  no_permission: '#f55442У вас нет прав'
-#  player_command: '#f55442Эта команда только для игроков'
-#  wrong_args: '#f55442Неверное использование команды'
-#  db_error: '#f55442Произошла ошибка'
-#  error: '#f55442Произошла непредвиденная ошибка'
-#  time_format: '%days%дн. %hours%ч. %minutes%м. назад'
-#auction:
-#  wrong_item: '#f55442Предмет в вашей руке не подходит для продажи'
-#  wrong_price: '#f55442Неверный ценовой диапазон'
-#  slot_added: '#18dbd1Предмет добавлен на аукцион'
-#  inventory_full: '#f55442Инвентарь полон'
-#  owner_not_buyer: '#f55442Вы не можете купить собственный лот'
-#  failed_to_pay: '#f55442Не удалось выплатить деньги'
-#  notifyUserBuy: '#18dbd1Вы купили предмет #dbaa18%item%#18dbd1 у игрока #dbaa18%player_owner%#18dbd1
-#    за #dbaa18%price%'
-#  notifyOwnerUserBuy: '#18dbd1Игрок #dbaa18%player%#18dbd1 купил у вас #dbaa18%item%#18dbd1
-#    за #dbaa18%price%'
-#  not_enough_money: '#f55442У вас недостаточно денег'
-#  broadcast: '#18dbd1Игрок #d6a213%player% #18dbd1выставил на /aauc новый предмет'
-#  auction_not_exist: '#f55442Такой аукцион не существует'
-#  auction_been_expired: '#d6a213Вы просрочили слот!'
-#  max_slots: '#f55442У вас уже макстимальное число лотов'
-#  auction_by: '&7Выставил: #d6a213%player_owner%'
-#  auction_created_ago: '&7Время: #d6a213%time%'
-#  auction_price: '&7Стоимость: #d6a213%price%'
-#  sort:
-#    material_desc: '#FFFFFFпо материалу #d6a213&l↑'
-#    material_asc: '#FFFFFFпо материалу #d6a213&l↓'
-#    date_desc: '#FFFFFFпо дате #d6a213&l↑'
-#    date_asc: '#FFFFFFпо дате #d6a213&l↓'
-#    name_desc: '#FFFFFFпо имени #d6a213&l↑'
-#    name_asc: '#FFFFFFпо имени #d6a213&l↓'
-#    price_desc: '#FFFFFFпо цене #d6a213&l↑'
-#    price_asc: '#FFFFFFпо цене #d6a213&l↓'
-#    player_desc: '#FFFFFFпо игроку #d6a213&l↑'
-#    player_asc: '#FFFFFFпо игроку #d6a213&l↓'
-#  tab_completer:
-#    price: ЦЕНА
-#    amount: КОЛИЧЕСТВО
-#menu:
-#  left_button: '#d6a213ЛКМ #18dbd1- купить'
-#  right_button: '#d6a213ПКМ #18dbd1- убрать'
-#  middle_click: '#d6a213СКМ #18dbd1- убрать в истёкшие'
-#  not_auction_owner: '#f55442Вы не владелец этого слота'
-#  auction_deleted: '#f55442Слот удалён'
-#  title: '#1382d6Аукцион'
-#  title_expired: '#1382d6Истекшие'
-#  back: '#18dbd1Назад'
-#  prev: '#18dbd1Раньше'
-#  aauc: '#18dbd1Аукцион'
-#  expired: '#18dbd1Истекшие'
-#  next: '#18dbd1Дальше'
-#  sort: '#18dbd1Сортировка'
-#  auction_expired_notify: '#f55442Ваш слот %item% за %price% только что был просрочен'
+  title: "&#1382d6Аукцион"
+  expiredTitle: "&#1382d6Истекшие"
+  back: "&#18dbd1Назад"
+  prev: "&#18dbd1Раньше"
+  aauc: "&#18dbd1Аукцион"
+  expired: "&#18dbd1Истекшие"
+  next: "&#18dbd1Дальше"
+  sort: "&#18dbd1Сортировка"
+auction:
+  wrongItemInHand: "&#f55442Предмет в вашей руке не подходит для продажи"
+  wrongPrice: "&#f55442Неверный ценовой диапазон"
+  auctionAdded: "&#18dbd1Предмет добавлен на аукцион"
+  inventoryFull: "&#f55442Инвентарь полон"
+  ownerCantBeBuyer: "&#f55442Вы не можете купить собственный лот"
+  failedToPay: "&#f55442Не удалось выплатить деньги"
+  notifyUserBuy: "&#18dbd1Вы купили предмет &#dbaa18%item%&#18dbd1 у игрока &#dbaa18%player_owner%&#18dbd1\
+    \ за &#dbaa18%price%"
+  notifyOwnerUserBuy: "&#18dbd1Игрок &#dbaa18%player%&#18dbd1 купил у вас &#dbaa18%item%&#18dbd1\
+    \ за &#dbaa18%price%"
+  notEnoughMoney: "&#f55442У вас недостаточно денег"
+  broadcast: "&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /aauc новый предм\
+    ет"
+  tabCompleterPrice: "ЦЕНА"
+  tabCompleterAmount: "КОЛИЧЕСТВО"
+  auctionHasBeenExpired: "&#d6a213Вы просрочили слот!"
+  leftButton: "&#d6a213ЛКМ &#18dbd1- купить"
+  rightButton: "&#d6a213ПКМ &#18dbd1- убрать"
+  middleClick: "&#d6a213СКМ &#18dbd1- убрать в истёкшие"
+  notAuctionOwner: "&#f55442Вы не владелец этого слота"
+  auctionDeleted: "&#f55442Слот удалён"
+  notifyAuctionExpired: "&#f55442Ваш слот %item% за %price% только что был просроч\
+    ен"
+  maxAuctions: "&#f55442У вас уже макстимальное число лотов"
+  auctionBy: "&7Выставил: &#d6a213%player_owner%"
+  auctionCreatedAgo: "&7Время: &#d6a213%time%"
+  auctionPrice: "&7Стоимость: &#d6a213%price%"
+  sortMaterialDesc: "&#FFFFFFпо материалу &#d6a213&l↑"
+  sortMaterialAsc: "&#FFFFFFпо материалу &#d6a213&l↓"
+  sortDateDesc: "&#FFFFFFпо дате &#d6a213&l↑"
+  sortDateAsc: "&#FFFFFFпо дате &#d6a213&l↓"
+  sortNameDesc: "&#FFFFFFпо имени &#d6a213&l↑"
+  sortNameAsc: "&#FFFFFFпо имени &#d6a213&l↓"
+  sortPriceDesc: "&#FFFFFFпо цене &#d6a213&l↑"
+  sortPriceAsc: "&#FFFFFFпо цене &#d6a213&l↓"
+  sortPlayerDesc: "&#FFFFFFпо игроку &#d6a213&l↑"
+  sortPlayerAsc: "&#FFFFFFпо игроку &#d6a213&l↓"
+general:
+  reloadStarted: "&#dbbb18Перезагрузка плагина"
+  reloadSuccess: "&#42f596Перезагрузка успешно завершена"
+  noPermissions: "&#f55442У вас нет прав"
+  onlyForPlayers: "&#f55442Эта команда только для игроков"
+  wrongArgs: "&#f55442Неверное использование команды"
+  dbError: "&#f55442Произошла ошибка"
+  unexpectedError: "&#f55442Произошла непредвиденная ошибка"
+  timeAgoFormat: "%days%дн. %hours%ч. %minutes%м. назад"

@@ -4,8 +4,15 @@ import ru.astrainteractive.gradleplugin.setupSpigotShadow
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
+    id("ru.astrainteractive.gradleplugin.minecraft.multiplatform")
 }
-
+minecraftMultiplatform {
+    dependencies {
+        // Local
+        implementation(projects.modules.shared.bukkitMain)
+        implementation(projects.modules.shared)
+    }
+}
 dependencies {
     // Kotlin
     implementation(libs.bundles.kotlin)
@@ -24,11 +31,14 @@ dependencies {
     compileOnly(libs.minecraft.papi)
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
-    implementation(projects.data)
+    // Local
+    implementation(projects.modules.data)
 }
 
-File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\anarchy\\plugins").let { file ->
-    if (file.exists()) setupSpigotShadow(file) else setupSpigotShadow()
-}
+val destination = File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins")
+    .takeIf(File::exists)
+    ?: File(rootDir, "jars")
+
+setupSpigotShadow(destination)
 
 setupSpigotProcessor()

@@ -40,5 +40,6 @@ dependencyResolutionManagement {
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AstraMarket"
-include("data")
-include("spigot")
+include(":modules:data")
+include(":modules:shared")
+include(":spigot")

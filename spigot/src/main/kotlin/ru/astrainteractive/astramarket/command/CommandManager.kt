@@ -1,12 +1,16 @@
 package ru.astrainteractive.astramarket.command
 
-import ru.astrainteractive.astramarket.command.di.CommandsModule
+import ru.astrainteractive.astralibs.string.BukkitTranslationContext
+import ru.astrainteractive.astramarket.command.di.CommandContainer
 
-class CommandManager(module: CommandsModule) : CommandsModule by module {
+class CommandManager(
+    module: CommandContainer
+) : CommandContainer by module,
+    BukkitTranslationContext by module.translationContext {
 
     init {
+        auctionCommandFactory.create()
         reloadCommand()
-        amarketCommand()
         tabCompleter()
     }
 }
