@@ -28,19 +28,18 @@ class AuctionCommandParser : CommandParser<AuctionCommand.Result> {
                 )
             }
 
-            "open" -> {
-                val player = sender as? Player
-                player ?: return AuctionCommand.Result.NotPlayer
-                AuctionCommand.Result.OpenAuctions(player)
-            }
-
             "expired" -> {
                 val player = sender as? Player
                 player ?: return AuctionCommand.Result.NotPlayer
                 AuctionCommand.Result.OpenExpired(player)
             }
 
-            else -> AuctionCommand.Result.WrongUsage
+            // Open and else
+            else -> {
+                val player = sender as? Player
+                player ?: return AuctionCommand.Result.NotPlayer
+                AuctionCommand.Result.OpenAuctions(player)
+            }
         }
     }
 }
