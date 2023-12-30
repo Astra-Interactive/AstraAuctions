@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.api.market.dto
 
 import ru.astrainteractive.astralibs.encoding.IO
 
-data class AuctionDTO(
+data class MarketSlot(
     val id: Int,
     val discordId: String?,
     val minecraftUuid: String,

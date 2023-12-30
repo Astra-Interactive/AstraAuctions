@@ -17,7 +17,7 @@ class BukkitSharedDataModule(
 ) : SharedDataModule {
     override val auctionBridge: AuctionsBridge by Provider {
         BukkitAuctionsBridge(
-            auctionsApi = dataModule.auctionApi,
+            marketApi = dataModule.auctionApi,
             serializer = encoder,
         )
     }

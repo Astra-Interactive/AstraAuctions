@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.data.AuctionsBridge
 import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
@@ -12,7 +12,7 @@ import java.util.UUID
 interface CreateAuctionUseCase : UseCase.Suspended<CreateAuctionUseCase.Params, Boolean> {
     class Params(
         val playerUUID: UUID,
-        val auctionDTO: AuctionDTO
+        val marketSlot: MarketSlot
     )
 }
 
@@ -25,9 +25,9 @@ internal class CreateAuctionUseCaseImpl(
 
     override suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean {
         val playerUUID = input.playerUUID
-        val auction = input.auctionDTO
+        val auction = input.marketSlot
 
-        if (!auctionsBridge.isItemValid(input.auctionDTO)) {
+        if (!auctionsBridge.isItemValid(input.marketSlot)) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongItemInHand }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false

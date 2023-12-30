@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase
@@ -49,13 +49,13 @@ class DefaultAuctionComponent(
         }
     }
 
-    private suspend fun onExpiredAuctionClicked(auction: AuctionDTO): Boolean {
+    private suspend fun onExpiredAuctionClicked(auction: MarketSlot): Boolean {
         val param = RemoveAuctionUseCase.Params(auction, playerUUID)
         return removeAuctionUseCase.invoke(param)
     }
 
     private suspend fun onAuctionClicked(
-        auction: AuctionDTO,
+        auction: MarketSlot,
         clickType: AuctionComponent.ClickType
     ) = when (clickType) {
         AuctionComponent.ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, playerUUID))
@@ -90,9 +90,9 @@ class DefaultAuctionComponent(
     override fun loadItems() {
         componentScope.launch(mainDispatcher) {
             val items = if (!expired) {
-                auctionsAPI.getAuctions(expired)
+                marketApi.getSlots(expired)
             } else {
-                auctionsAPI.getUserAuctions(playerUUID.toString(), expired)
+                marketApi.getUserSlots(playerUUID.toString(), expired)
             }
             model.update { model -> model.copy(items = items.orEmpty()) }
             sort()

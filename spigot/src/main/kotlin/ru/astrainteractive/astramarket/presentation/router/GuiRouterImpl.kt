@@ -14,7 +14,7 @@ class GuiRouterImpl(private val rootModule: RootModule) : GuiRouter {
     private val auctionComponentFactory: AuctionComponentFactory by Provider {
         AuctionComponentFactory(
             dispatchers = rootModule.bukkitCoreModule.dispatchers.value,
-            auctionsAPI = rootModule.dataModule.auctionApi,
+            marketApi = rootModule.dataModule.auctionApi,
             sharedDomainModule = rootModule.sharedDomainModule,
             config = rootModule.bukkitCoreModule.configuration.value,
             playerInteractionBridge = rootModule.sharedDomainModule.sharedDataModule.playerInteractionBridge,

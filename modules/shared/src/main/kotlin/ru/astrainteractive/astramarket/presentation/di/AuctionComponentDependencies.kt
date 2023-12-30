@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.presentation.di
 
 import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
+import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase
@@ -12,7 +12,7 @@ import ru.astrainteractive.astramarket.plugin.AuctionConfig
 interface AuctionComponentDependencies {
     val config: AuctionConfig
     val dispatchers: BukkitDispatchers
-    val auctionsAPI: AuctionsAPI
+    val marketApi: MarketApi
     val auctionBuyUseCase: AuctionBuyUseCase
     val expireAuctionUseCase: ExpireAuctionUseCase
     val removeAuctionUseCase: RemoveAuctionUseCase

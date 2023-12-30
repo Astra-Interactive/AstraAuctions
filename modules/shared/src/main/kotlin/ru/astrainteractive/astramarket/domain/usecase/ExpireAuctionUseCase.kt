@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.data.AuctionsBridge
 import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -15,7 +15,7 @@ import java.util.UUID
  */
 interface ExpireAuctionUseCase : UseCase.Suspended<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
-        val auction: AuctionDTO,
+        val auction: MarketSlot,
         val playerUUID: UUID
     )
 }

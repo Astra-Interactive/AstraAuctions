@@ -32,7 +32,7 @@ dependencies {
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.minecraft.bstats)
     // Local
-    implementation(projects.modules.data)
+    implementation(projects.modules.apiMarket)
 }
 
 val destination = File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins")

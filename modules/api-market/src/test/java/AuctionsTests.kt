@@ -2,7 +2,7 @@ import kotlinx.coroutines.runBlocking
 import ru.astrainteractive.astralibs.encoding.IO
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
+import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
@@ -23,11 +23,11 @@ class AuctionsTests {
         )
     }
     private var module: DataModule? = null
-    private val auctionsApi: AuctionsAPI
+    private val marketApi: MarketApi
         get() = module?.auctionApi ?: error("Module is null")
 
-    private val randomAuction: ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-        get() = ru.astrainteractive.astramarket.api.market.dto.AuctionDTO(
+    private val randomAuction: ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+        get() = ru.astrainteractive.astramarket.api.market.dto.MarketSlot(
             id = -1,
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
@@ -58,33 +58,33 @@ class AuctionsTests {
     fun `Insert, fetch, expire same auction`(): Unit = runBlocking {
         val auction = randomAuction
         // Insert and fetch
-        val id = auctionsApi.insertAuction(auction)!!
-        var auctionDTO = auctionsApi.fetchAuction(id)!!
+        val id = marketApi.insertSlot(auction)!!
+        var auctionDTO = marketApi.getSlot(id)!!
         assertEquals(auctionDTO.minecraftUuid, auction.minecraftUuid)
         // Get unexpiredAuctions
-        var amount = auctionsApi.getUserAuctions(auctionDTO.minecraftUuid, false)!!.size
+        var amount = marketApi.getUserSlots(auctionDTO.minecraftUuid, false)!!.size
         assertEquals(amount, 1)
         // Expire
-        auctionsApi.expireAuction(auctionDTO)
+        marketApi.expireSlot(auctionDTO)
         assertEquals(auctionDTO.expired, false)
-        auctionDTO = auctionsApi.fetchAuction(id)!!
+        auctionDTO = marketApi.getSlot(id)!!
         assertEquals(auctionDTO.expired, true)
         // Get expiredAuctions
-        amount = auctionsApi.getUserAuctions(auctionDTO.minecraftUuid, true)!!.size
+        amount = marketApi.getUserSlots(auctionDTO.minecraftUuid, true)!!.size
         assertEquals(amount, 1)
         // Get unexpiredAuctions
-        amount = auctionsApi.getUserAuctions(auctionDTO.minecraftUuid, false)!!.size
+        amount = marketApi.getUserSlots(auctionDTO.minecraftUuid, false)!!.size
         assertEquals(amount, 0)
         // Count auctions
-        amount = auctionsApi.countPlayerAuctions(auctionDTO.minecraftUuid)!!
+        amount = marketApi.countPlayerSlots(auctionDTO.minecraftUuid)!!
         assertEquals(amount, 1)
         // Delete and count auction
-        auctionsApi.deleteAuction(auctionDTO)
-        amount = auctionsApi.countPlayerAuctions(auctionDTO.minecraftUuid)!!
+        marketApi.deleteSlot(auctionDTO)
+        amount = marketApi.countPlayerSlots(auctionDTO.minecraftUuid)!!
         assertEquals(amount, 0)
         val oldAuctionDTO = randomAuction.copy(time = 0)
-        auctionsApi.insertAuction(oldAuctionDTO)
-        amount = auctionsApi.getAuctionsOlderThan(System.currentTimeMillis() - 1)!!.size
+        marketApi.insertSlot(oldAuctionDTO)
+        amount = marketApi.getSlotsOlderThan(System.currentTimeMillis() - 1)!!.size
         assertEquals(amount, 1)
     }
 }

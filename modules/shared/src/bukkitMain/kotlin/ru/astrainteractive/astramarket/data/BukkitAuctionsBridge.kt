@@ -5,17 +5,17 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
-import ru.astrainteractive.astramarket.api.market.AuctionsAPI
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.MarketApi
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.plugin.PluginPermission
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class BukkitAuctionsBridge(
-    private val auctionsApi: AuctionsAPI,
+    private val marketApi: MarketApi,
     private val serializer: Encoder,
 ) : AuctionsBridge {
-    private fun AuctionDTO.itemStack(serializer: Encoder): ItemStack {
+    private fun MarketSlot.itemStack(serializer: Encoder): ItemStack {
         return serializer.fromByteArray(item)
     }
 
@@ -27,8 +27,8 @@ class BukkitAuctionsBridge(
         return name
     }
 
-    override suspend fun getAuctionOrNull(id: Int): AuctionDTO? {
-        return auctionsApi.fetchAuction(id)
+    override suspend fun getAuctionOrNull(id: Int): MarketSlot? {
+        return marketApi.getSlot(id)
     }
 
     override suspend fun isInventoryFull(uuid: UUID): Boolean {
@@ -36,17 +36,17 @@ class BukkitAuctionsBridge(
         return isFull
     }
 
-    override suspend fun deleteAuction(auctionDTO: AuctionDTO): Unit? {
-        return auctionsApi.deleteAuction(auctionDTO)
+    override suspend fun deleteAuction(marketSlot: MarketSlot): Unit? {
+        return marketApi.deleteSlot(marketSlot)
     }
 
-    override suspend fun addItemToInventory(auctionDTO: AuctionDTO, uuid: UUID) {
-        val item = auctionDTO.itemStack(serializer)
+    override suspend fun addItemToInventory(marketSlot: MarketSlot, uuid: UUID) {
+        val item = marketSlot.itemStack(serializer)
         Bukkit.getPlayer(uuid)?.inventory?.addItem(item)
     }
 
-    override suspend fun itemDesc(auctionDTO: AuctionDTO): String {
-        return auctionDTO.itemStack(serializer).displayNameOrMaterialName()
+    override suspend fun itemDesc(marketSlot: MarketSlot): String {
+        return marketSlot.itemStack(serializer).displayNameOrMaterialName()
     }
 
     override fun playerName(uuid: UUID): String? {
@@ -57,24 +57,24 @@ class BukkitAuctionsBridge(
         return Bukkit.getPlayer(uuid)?.toPermissible()?.hasPermission(PluginPermission.Expire) ?: false
     }
 
-    override suspend fun expireAuction(auctionDTO: AuctionDTO): Unit? {
-        return auctionsApi.expireAuction(auctionDTO)
+    override suspend fun expireAuction(marketSlot: MarketSlot): Unit? {
+        return marketApi.expireSlot(marketSlot)
     }
 
-    override fun isItemValid(auctionDTO: AuctionDTO): Boolean {
-        val itemStack = auctionDTO.itemStack(serializer)
+    override fun isItemValid(marketSlot: MarketSlot): Boolean {
+        val itemStack = marketSlot.itemStack(serializer)
         return itemStack != null && itemStack.type != Material.AIR
     }
 
     override suspend fun countPlayerAuctions(uuid: UUID): Int {
-        return auctionsApi.countPlayerAuctions(uuid.toString()) ?: 0
+        return marketApi.countPlayerSlots(uuid.toString()) ?: 0
     }
 
     override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int? {
         return Bukkit.getPlayer(uuid)?.toPermissible()?.maxPermissionSize(PluginPermission.SellMax)
     }
 
-    override suspend fun insertAuction(auctionDTO: AuctionDTO): Int? {
-        return auctionsApi.insertAuction(auctionDTO)
+    override suspend fun insertAuction(marketSlot: MarketSlot): Int? {
+        return marketApi.insertSlot(marketSlot)
     }
 }

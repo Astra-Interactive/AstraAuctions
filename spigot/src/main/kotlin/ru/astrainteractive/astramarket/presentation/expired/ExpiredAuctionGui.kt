@@ -13,7 +13,7 @@ import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.plugin.AuctionConfig
 import ru.astrainteractive.astramarket.plugin.Translation
@@ -44,7 +44,7 @@ class ExpiredAuctionGui(
 
     override var menuTitle: Component = stringSerializer.toComponent(translation.menu.expiredTitle)
 
-    private val itemsInGui: List<AuctionDTO>
+    private val itemsInGui: List<MarketSlot>
         get() = auctionComponent.model.value.items
 
     override fun onExpiredOpenClicked() {

@@ -14,7 +14,7 @@ import java.util.UUID
  */
 interface RemoveAuctionUseCase : UseCase.Suspended<RemoveAuctionUseCase.Params, Boolean> {
     data class Params(
-        val auction: ru.astrainteractive.astramarket.api.market.dto.AuctionDTO,
+        val auction: ru.astrainteractive.astramarket.api.market.dto.MarketSlot,
         val playerUUID: UUID
     )
 }
