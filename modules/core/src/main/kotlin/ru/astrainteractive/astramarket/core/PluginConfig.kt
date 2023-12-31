@@ -1,9 +1,9 @@
-package ru.astrainteractive.astramarket.plugin
+package ru.astrainteractive.astramarket.core
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AuctionConfig(
+data class PluginConfig(
     val auction: Auction = Auction(),
     val sounds: Sounds = Sounds(),
     val buttons: Buttons = Buttons(),

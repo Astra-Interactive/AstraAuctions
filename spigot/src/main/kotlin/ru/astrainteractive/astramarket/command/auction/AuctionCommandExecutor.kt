@@ -31,7 +31,7 @@ class AuctionCommandExecutor(
                     this.amount = max(min(itemInstance.amount, input.amount), 1)
                 }
                 val encodedItem = encoder.toByteArray(clonedItem)
-                scope.launch(dispatchers.BukkitAsync) {
+                scope.launch(dispatchers.IO) {
                     val marketSlot = MarketSlot(
                         id = -1,
                         discordId = null,
@@ -46,7 +46,7 @@ class AuctionCommandExecutor(
                         playerUUID = input.player.uniqueId,
                     )
                     val useCaseResult = createAuctionUseCase.invoke(param)
-                    withContext(dispatchers.BukkitMain) {
+                    withContext(dispatchers.Main) {
                         if (useCaseResult) itemInstance.amount -= input.amount
                     }
                 }

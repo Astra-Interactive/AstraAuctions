@@ -1,43 +1,38 @@
 package ru.astrainteractive.astramarket.presentation.base
 
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
-import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.menu.clicker.Click
-import ru.astrainteractive.astralibs.menu.clicker.MenuClickListener
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.menu.InventorySlot
-import ru.astrainteractive.astralibs.menu.menu.Menu
 import ru.astrainteractive.astralibs.menu.menu.MenuSize
 import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.menu.menu.editMeta
+import ru.astrainteractive.astralibs.menu.menu.setDisplayName
+import ru.astrainteractive.astralibs.menu.menu.setIndex
+import ru.astrainteractive.astralibs.menu.menu.setItemStack
+import ru.astrainteractive.astralibs.menu.menu.setOnClickListener
 import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
+import ru.astrainteractive.astramarket.presentation.base.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.playSound
-import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.setDisplayName
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.toItemStack
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
     player: Player,
-    protected val config: AuctionConfig,
-    protected val translation: Translation,
-    protected val dispatchers: BukkitDispatchers,
-    protected val auctionSortTranslationMapping: AuctionSortTranslationMapping,
-    protected val stringSerializer: KyoriComponentSerializer
-) : PaginatedMenu() {
+    dependencies: AuctionGuiDependencies
+) : PaginatedMenu(), AuctionGuiDependencies by dependencies {
 
     override val playerHolder = DefaultPlayerHolder(player)
-    protected val clickListener = MenuClickListener()
 
-    override var menuTitle: Component = stringSerializer.toComponent(translation.menu.title)
+    override var menuTitle: Component = with(translationContext) { translation.menu.title.toComponent() }
     override val menuSize: MenuSize = MenuSize.XL
     abstract val auctionComponent: AuctionComponent
 
@@ -96,99 +91,70 @@ abstract class AbstractAuctionGui(
         }.filterNotNull()
     }
 
-    protected inline fun buildSlot(char: Char, transform: (index: Int) -> InventorySlot): InventorySlot {
+    private fun getSlotIndexByChar(char: Char): Int {
         val i = guiMap.indexOf(char)
         if (i == -1) {
             error("Could not find $char in inventory map")
         }
-        return transform.invoke(i)
+        return i
     }
 
     val borderButtons: List<InventorySlot> = buildSlots(GuiKey.BO) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.border.toItemStack().apply { setDisplayName(" ") }
-        }
+        InventorySlot.Builder()
+            .setIndex(i)
+            .setItemStack(config.buttons.border.toItemStack())
+            .setDisplayName(" ")
+            .build()
     }
 
-    override val backPageButton = buildSlot(GuiKey.BA) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.back.toItemStack().apply {
-                setDisplayName(
-                    stringSerializer.toComponent(translation.menu.back)
-                )
-            }
-            click = Click {
-                onCloseClicked()
-            }
-        }
-    }
-    override val nextPageButton = buildSlot(GuiKey.NE) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.next.toItemStack().apply {
-                setDisplayName(stringSerializer.toComponent(translation.menu.next))
-            }
-            click = Click {
-                onNextPageClicked()
-            }
-        }
-    }
+    override val backPageButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.BA))
+        .setItemStack(config.buttons.back.toItemStack())
+        .editMeta { with(translationContext) { displayName(translation.menu.back.toComponent()) } }
+        .setOnClickListener { onCloseClicked() }
+        .build()
 
-    override val prevPageButton = buildSlot(GuiKey.PR) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.previous.toItemStack().apply {
-                setDisplayName(stringSerializer.toComponent(translation.menu.prev))
-            }
-            click = Click {
-                onPrevPageClicked()
-            }
-        }
-    }
+    override val nextPageButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.NE))
+        .setItemStack(config.buttons.next.toItemStack())
+        .editMeta { with(translationContext) { displayName(translation.menu.next.toComponent()) } }
+        .setOnClickListener { onNextPageClicked() }
+        .build()
 
-    val expiredButton = buildSlot(GuiKey.AU) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.expired.toItemStack().apply {
-                setDisplayName(
-                    stringSerializer.toComponent(translation.menu.expired)
-                )
-            }
-            click = Click {
-                onExpiredOpenClicked()
-            }
-        }
-    }
-    val aaucButton = buildSlot(GuiKey.AU) { i ->
-        InventorySlot.Builder {
-            index = i
-            itemStack = config.buttons.aauc.toItemStack().apply {
-                setDisplayName(
-                    stringSerializer.toComponent(translation.menu.aauc)
-                )
-            }
-            click = Click {
-                onExpiredOpenClicked()
-            }
-        }
-    }
+    override val prevPageButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.PR))
+        .setItemStack(config.buttons.previous.toItemStack())
+        .editMeta { with(translationContext) { displayName(translation.menu.prev.toComponent()) } }
+        .setOnClickListener { onPrevPageClicked() }
+        .build()
 
-    val sortButton: InventorySlot
-        get() = buildSlot(GuiKey.FI) { i ->
-            InventorySlot.Builder {
-                index = i
-                itemStack = config.buttons.sort.toItemStack().apply {
-                    val sortDesc = auctionSortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
-                    setDisplayName(stringSerializer.toComponent("${translation.menu.sort.raw} $sortDesc"))
-                }
-                click = Click {
-                    showPage(0)
-                    onSortButtonClicked(it.isRightClick)
-                }
-            }
+    val expiredButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.AU))
+        .setItemStack(config.buttons.expired.toItemStack())
+        .editMeta { with(translationContext) { displayName(translation.menu.expired.toComponent()) } }
+        .setOnClickListener { onExpiredOpenClicked() }
+        .build()
+
+    val aaucButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.AU))
+        .setItemStack(config.buttons.expired.toItemStack())
+        .editMeta { with(translationContext) { displayName(translation.menu.aauc.toComponent()) } }
+        .setOnClickListener { onExpiredOpenClicked() }
+        .build()
+
+    val sortButton = InventorySlot.Builder()
+        .setIndex(getSlotIndexByChar(GuiKey.FI))
+        .setItemStack(config.buttons.expired.toItemStack())
+        .editMeta {
+            val sortDesc = sortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
+            val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
+            with(translationContext) { displayName(desc.toComponent()) }
         }
+        .setOnClickListener {
+            showPage(0)
+            onSortButtonClicked(it.isRightClick)
+        }
+        .build()
 
     override val maxItemsPerPage: Int
         get() = guiMap.count { it == GuiKey.AI }
@@ -224,6 +190,7 @@ abstract class AbstractAuctionGui(
             ClickType.LEFT, ClickType.SHIFT_LEFT -> AuctionComponent.ClickType.LEFT
             ClickType.RIGHT,
             ClickType.SHIFT_RIGHT -> AuctionComponent.ClickType.RIGHT
+
             ClickType.MIDDLE -> AuctionComponent.ClickType.MIDDLE
             else -> return
         }
@@ -232,13 +199,12 @@ abstract class AbstractAuctionGui(
 
     abstract fun onExpiredOpenClicked()
     override fun onInventoryClicked(e: InventoryClickEvent) {
+        super.onInventoryClicked(e)
         e.isCancelled = true
-        if (e.clickedInventory?.holder !is Menu) return
-        clickListener.onClick(e)
     }
 
     override fun onPageChanged() {
-        setMenuItems()
+        render()
     }
 
     fun getTimeFormatted(sec: Long): StringDesc.Raw {
@@ -253,18 +219,17 @@ abstract class AbstractAuctionGui(
             .replace("%minutes%", minutes.toString())
     }
 
-    open fun setMenuItems() {
-        inventory.clear()
-        clickListener.clearClickListener()
-        setManageButtons(clickListener)
+    override fun render() {
+        super.render()
         borderButtons.forEach { it.setInventorySlot() }
-        sortButton.also(clickListener::remember).setInventorySlot()
+        sortButton.setInventorySlot()
     }
 
     override fun onCreated() {
         playerHolder.player.playSound(config.sounds.open)
-        auctionComponent.model.collectOn(dispatchers.IO) {
-            setMenuItems()
-        }
+        auctionComponent.model
+            .onEach { render() }
+            .flowOn(dispatchers.IO)
+            .launchIn(componentScope)
     }
 }

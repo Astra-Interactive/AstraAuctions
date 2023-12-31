@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.domain.mapping
 
 import ru.astrainteractive.astralibs.string.StringDesc
+import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
-import ru.astrainteractive.astramarket.plugin.Translation
 
 interface AuctionSortTranslationMapping {
     fun translate(auctionSort: AuctionSort): StringDesc.Raw

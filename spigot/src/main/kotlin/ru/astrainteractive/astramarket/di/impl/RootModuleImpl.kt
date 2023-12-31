@@ -1,8 +1,11 @@
 package ru.astrainteractive.astramarket.di.impl
 
+import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
+import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
+import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.di.BukkitSharedDataModule
+import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.di.DataModule
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.di.util.ConnectionExt.toDBConnection
 import ru.astrainteractive.astramarket.domain.di.BukkitSharedDomainModule
@@ -12,28 +15,32 @@ import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
 class RootModuleImpl : RootModule {
-
     override val bukkitCoreModule: BukkitCoreModule by lazy {
         BukkitCoreModuleImpl()
     }
-    override val dataModule: DataModule by Provider {
-        val config by bukkitCoreModule.configuration
+    override val coreModule: CoreModule by lazy {
+        CoreModule.Default(
+            dataFolder = bukkitCoreModule.plugin.value.dataFolder,
+            dispatchers = DefaultBukkitDispatchers(bukkitCoreModule.plugin.value),
+            economyProvider = AnyEconomyProvider(bukkitCoreModule.plugin.value)
+        )
+    }
+    override val apiMarketModule: ApiMarketModule by Provider {
+        val config by coreModule.config
         val (dbConnection, dbSyntax) = config.connection.toDBConnection()
-        DataModule.Default(
+        ApiMarketModule.Default(
             dbConnection = dbConnection,
             dbSyntax = dbSyntax,
-            dispatchers = bukkitCoreModule.dispatchers.value
+            dispatchers = coreModule.dispatchers
         )
     }
 
     override val sharedDomainModule: SharedDomainModule by Provider {
         SharedDomainModule.Default(
-            translation = bukkitCoreModule.translation.value,
-            configuration = bukkitCoreModule.configuration.value,
-            economyProvider = bukkitCoreModule.economyProvider.value,
+            coreModule = coreModule,
+            apiMarketModule = apiMarketModule,
             sharedDataModuleFactory = {
                 BukkitSharedDataModule(
-                    dataModule = dataModule,
                     encoder = bukkitCoreModule.encoder.value,
                     stringSerializer = bukkitCoreModule.stringSerializer.value
                 )
@@ -43,7 +50,6 @@ class RootModuleImpl : RootModule {
                     encoder = bukkitCoreModule.encoder.value,
                 )
             }
-
         )
     }
     override val auctionGuiModule: AuctionGuiModule by Provider {

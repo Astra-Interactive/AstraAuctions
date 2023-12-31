@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.plugin
+package ru.astrainteractive.astramarket.core
 
 import ru.astrainteractive.astralibs.permission.Permission
 

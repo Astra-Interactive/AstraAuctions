@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.data.di
 
-import ru.astrainteractive.astramarket.data.AuctionsBridge
-import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
+import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.data.bridge.PlayerInteractionBridge
 
 interface SharedDataModule {
     val auctionBridge: AuctionsBridge

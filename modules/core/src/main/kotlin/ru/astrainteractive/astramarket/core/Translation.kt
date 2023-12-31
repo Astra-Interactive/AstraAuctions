@@ -1,6 +1,6 @@
 @file:Suppress("MaxLineLength", "LongParameterList")
 
-package ru.astrainteractive.astramarket.plugin
+package ru.astrainteractive.astramarket.core
 
 import kotlinx.serialization.Serializable
 import org.jetbrains.kotlin.com.google.gson.annotations.SerializedName

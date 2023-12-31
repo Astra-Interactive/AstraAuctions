@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.minecraft.bstats)
     // Local
     implementation(projects.modules.apiMarket)
+    implementation(projects.modules.core)
 }
 
 val destination = File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins")

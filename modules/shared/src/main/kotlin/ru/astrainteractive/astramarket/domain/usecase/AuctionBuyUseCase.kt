@@ -2,11 +2,12 @@ package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.string.replace
+import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
-import ru.astrainteractive.astramarket.data.AuctionsBridge
-import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -24,9 +25,10 @@ interface AuctionBuyUseCase : UseCase.Suspended<AuctionBuyUseCase.Params, Boolea
 
 internal class AuctionBuyUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
+    private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
-    private val config: AuctionConfig,
+    private val config: PluginConfig,
     private val economyProvider: EconomyProvider,
 ) : AuctionBuyUseCase {
 
@@ -37,7 +39,7 @@ internal class AuctionBuyUseCaseImpl(
         val playerName = auctionsBridge.playerName(playerUUID)
         val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
         val ownerName = auctionsBridge.playerName(ownerUUID)
-        val auction = auctionsBridge.getAuctionOrNull(receivedAuction.id) ?: return false
+        val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         if (auction.minecraftUuid == playerUUID.toString()) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.auction.ownerCantBeBuyer
@@ -69,7 +71,7 @@ internal class AuctionBuyUseCaseImpl(
             return false
         }
 
-        val result = auctionsBridge.deleteAuction(auction)
+        val result = marketApi.deleteSlot(auction)
         if (result != null) {
             auctionsBridge.addItemToInventory(auction, playerUUID)
             playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }

@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.api.CommandParser
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
-import ru.astrainteractive.astramarket.plugin.PluginPermission
+import ru.astrainteractive.astramarket.core.PluginPermission
 
 class AuctionCommandParser : CommandParser<AuctionCommand.Result> {
     override fun parse(args: Array<out String>, sender: CommandSender): AuctionCommand.Result {

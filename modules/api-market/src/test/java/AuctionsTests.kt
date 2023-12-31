@@ -4,7 +4,7 @@ import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
-import ru.astrainteractive.astramarket.di.DataModule
+import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
 import java.io.File
 import java.util.UUID
@@ -16,15 +16,15 @@ import kotlin.test.assertEquals
 
 class AuctionsTests {
     private val moduleFactory = {
-        DataModule.Default(
+        ApiMarketModule.Default(
             dispatchers = DefaultKotlinDispatchers,
             dbSyntax = DBSyntax.SQLite,
-            dbConnection = DBConnection.SQLite("db")
+            dbConnection = DBConnection.SQLite("db.db")
         )
     }
-    private var module: DataModule? = null
+    private var module: ApiMarketModule? = null
     private val marketApi: MarketApi
-        get() = module?.auctionApi ?: error("Module is null")
+        get() = module?.marketApi ?: error("Module is null")
 
     private val randomAuction: ru.astrainteractive.astramarket.api.market.dto.MarketSlot
         get() = ru.astrainteractive.astramarket.api.market.dto.MarketSlot(
@@ -39,6 +39,7 @@ class AuctionsTests {
 
     @BeforeTest
     fun setup(): Unit = runBlocking {
+        File("db.db").delete()
         val module = moduleFactory.invoke()
         module.database.openConnection()
         AuctionTable.create(module.database)
@@ -48,9 +49,6 @@ class AuctionsTests {
     @AfterTest
     fun destroy(): Unit = runBlocking {
         module?.database?.closeConnection()
-        (module?.database?.dbConnection as? DBConnection.SQLite)?.let {
-            File(it.dbName).delete()
-        }
         module = null
     }
 

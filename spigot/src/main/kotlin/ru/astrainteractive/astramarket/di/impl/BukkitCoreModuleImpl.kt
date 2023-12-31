@@ -1,27 +1,19 @@
 package ru.astrainteractive.astramarket.di.impl
 
 import org.bstats.bukkit.Metrics
-import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astralibs.async.BukkitDispatchers
-import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
-import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
 import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.event.EventListener
-import ru.astrainteractive.astralibs.filemanager.DefaultSpigotFileManager
+import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.serialization.YamlSerializer
 import ru.astrainteractive.astralibs.string.BukkitTranslationContext
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.Reloadable
 import ru.astrainteractive.klibs.kdi.Single
 import ru.astrainteractive.klibs.kdi.getValue
 
@@ -33,35 +25,9 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
         Encoder(BukkitIOStreamProvider)
     }
 
-    override val translation: Reloadable<Translation> = Reloadable {
-        val fileManager = DefaultSpigotFileManager(plugin.value, name = "translations.yml")
-        val serializer = YamlSerializer()
-        serializer.parse<Translation>(fileManager.configFile)
-            .onFailure(Throwable::printStackTrace)
-            .getOrElse { Translation() }
-            .also { serializer.writeIntoFile(it, fileManager.configFile) }
-    }
-
-    override val configuration: Reloadable<AuctionConfig> = Reloadable {
-        val fileManager = DefaultSpigotFileManager(plugin.value, name = "config.yml")
-        val serializer = YamlSerializer()
-        serializer.parse<AuctionConfig>(fileManager.configFile)
-            .onFailure(Throwable::printStackTrace)
-            .getOrElse { AuctionConfig() }
-            .also { serializer.writeIntoFile(it, fileManager.configFile) }
-    }
-
     override val bStats: Single<Metrics> = Single {
         val plugin by plugin
         Metrics(plugin, 15771)
-    }
-
-    override val economyProvider = Single {
-        AnyEconomyProvider(plugin.value)
-    }
-
-    override val scope: Single<AsyncComponent> = Single<AsyncComponent> {
-        AsyncComponent.Default()
     }
 
     override val inventoryClickEventListener: Single<EventListener> = Single {
@@ -72,11 +38,6 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
         KyoriComponentSerializer.Legacy
     }
 
-    override val dispatchers: Single<BukkitDispatchers> = Single<BukkitDispatchers> {
-        val plugin by plugin
-        DefaultBukkitDispatchers(plugin)
-    }
-
     override val logger: Single<Logger> = Single {
         val plugin by plugin
         Logger.buildWithSpigot("AstraMarket", plugin)
@@ -84,5 +45,17 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
 
     override val translationContext: BukkitTranslationContext by Provider {
         BukkitTranslationContext.Default { stringSerializer.value }
+    }
+
+    override val lifecycle: Lifecycle by lazy {
+        Lifecycle.Lambda(
+            onEnable = {
+                bStats
+                inventoryClickEventListener.value.onEnable(plugin.value)
+            },
+            onDisable = {
+                inventoryClickEventListener.value.onEnable(plugin.value)
+            }
+        )
     }
 }

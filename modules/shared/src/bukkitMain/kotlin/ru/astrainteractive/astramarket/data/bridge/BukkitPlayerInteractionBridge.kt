@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.data
+package ru.astrainteractive.astramarket.data.bridge
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
@@ -8,13 +8,9 @@ import java.util.UUID
 class BukkitPlayerInteractionBridge(
     private val stringSerializer: KyoriComponentSerializer
 ) : PlayerInteractionBridge {
-    override fun sendTranslationMessage(uuid: UUID, message: StringDesc.Raw) {
-        val component = stringSerializer.toComponent(message)
-        Bukkit.getPlayer(uuid)?.sendMessage(component)
-    }
-
     override fun sendTranslationMessage(uuid: UUID, message: () -> StringDesc.Raw) {
-        sendTranslationMessage(uuid, message.invoke())
+        val component = stringSerializer.toComponent(message.invoke())
+        Bukkit.getPlayer(uuid)?.sendMessage(component)
     }
 
     override fun broadcast(string: StringDesc.Raw) {
@@ -22,13 +18,9 @@ class BukkitPlayerInteractionBridge(
         Bukkit.broadcast(component)
     }
 
-    override fun playSound(uuid: UUID, sound: String) {
-        Bukkit.getPlayer(uuid)?.let { player ->
-            player.playSound(player.location, sound, 1f, 1f)
-        }
-    }
-
     override fun playSound(uuid: UUID, sound: () -> String) {
-        playSound(uuid, sound.invoke())
+        Bukkit.getPlayer(uuid)?.let { player ->
+            player.playSound(player.location, sound.invoke(), 1f, 1f)
+        }
     }
 }

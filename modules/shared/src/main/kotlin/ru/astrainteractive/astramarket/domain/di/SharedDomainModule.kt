@@ -1,7 +1,8 @@
 package ru.astrainteractive.astramarket.domain.di
 
-import ru.astrainteractive.astralibs.economy.EconomyProvider
+import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.di.SharedDataModule
+import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMappingImpl
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
@@ -12,8 +13,6 @@ import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCaseImpl
 import ru.astrainteractive.astramarket.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.domain.usecase.RemoveAuctionUseCaseImpl
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
 import ru.astrainteractive.klibs.kdi.Factory
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
@@ -32,9 +31,8 @@ interface SharedDomainModule {
     val removeAuctionUseCase: RemoveAuctionUseCase
 
     class Default(
-        translation: Translation,
-        configuration: AuctionConfig,
-        economyProvider: EconomyProvider,
+        coreModule: CoreModule,
+        apiMarketModule: ApiMarketModule,
         sharedDataModuleFactory: Factory<SharedDataModule>,
         platformSharedDomainModuleFactory: Factory<PlatformSharedDomainModule>
     ) : SharedDomainModule {
@@ -46,39 +44,43 @@ interface SharedDomainModule {
         }
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
             AuctionSortTranslationMappingImpl(
-                translation = translation
+                translation = coreModule.translation.value
             )
         }
         override val auctionBuyUseCase: AuctionBuyUseCase by Provider {
             AuctionBuyUseCaseImpl(
-                translation = translation,
-                config = configuration,
-                economyProvider = economyProvider,
+                translation = coreModule.translation.value,
+                config = coreModule.config.value,
+                economyProvider = coreModule.economyProvider,
                 auctionsBridge = sharedDataModule.auctionBridge,
-                playerInteractionBridge = sharedDataModule.playerInteractionBridge
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge,
+                marketApi = apiMarketModule.marketApi
             )
         }
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
             CreateAuctionUseCaseImpl(
-                translation = translation,
-                config = configuration,
+                translation = coreModule.translation.value,
+                config = coreModule.config.value,
                 auctionsBridge = sharedDataModule.auctionBridge,
-                playerInteractionBridge = sharedDataModule.playerInteractionBridge
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge,
+                marketApi = apiMarketModule.marketApi
             )
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by Provider {
             ExpireAuctionUseCaseImpl(
-                translation = translation,
+                translation = coreModule.translation.value,
                 auctionsBridge = sharedDataModule.auctionBridge,
-                playerInteractionBridge = sharedDataModule.playerInteractionBridge
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge,
+                marketApi = apiMarketModule.marketApi
             )
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by Provider {
             RemoveAuctionUseCaseImpl(
-                translation = translation,
-                config = configuration,
+                translation = coreModule.translation.value,
+                config = coreModule.config.value,
                 auctionsBridge = sharedDataModule.auctionBridge,
-                playerInteractionBridge = sharedDataModule.playerInteractionBridge
+                playerInteractionBridge = sharedDataModule.playerInteractionBridge,
+                marketApi = apiMarketModule.marketApi
             )
         }
     }

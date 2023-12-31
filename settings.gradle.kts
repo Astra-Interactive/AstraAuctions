@@ -42,4 +42,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AstraMarket"
 include(":modules:api-market")
 include(":modules:shared")
+include(":modules:core")
 include(":spigot")

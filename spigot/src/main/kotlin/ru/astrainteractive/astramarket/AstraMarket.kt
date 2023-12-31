@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket
 
-import kotlinx.coroutines.runBlocking
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
+import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.CommandManager
 import ru.astrainteractive.astramarket.command.di.CommandContainer
 import ru.astrainteractive.astramarket.di.impl.RootModuleImpl
@@ -10,28 +10,28 @@ import ru.astrainteractive.astramarket.di.impl.RootModuleImpl
 /**
  * Initial class for your plugin
  */
-class AstraMarket : JavaPlugin() {
+class AstraMarket : JavaPlugin(), Lifecycle {
 
     private val rootModule = RootModuleImpl()
+    private val lifecycle: List<Lifecycle>
+        get() = listOf(
+            rootModule.coreModule.lifecycle,
+            rootModule.bukkitCoreModule.lifecycle,
+            rootModule.apiMarketModule.lifecycle
+        )
 
     override fun onEnable() {
         rootModule.bukkitCoreModule.plugin.initialize(this)
-        rootModule.bukkitCoreModule.bStats.value
         CommandManager(CommandContainer.Default(rootModule))
-        rootModule.bukkitCoreModule.economyProvider
-        rootModule.bukkitCoreModule.inventoryClickEventListener.value.onEnable(this)
+        lifecycle.forEach(Lifecycle::onEnable)
     }
 
     override fun onDisable() {
-        runBlocking { rootModule.dataModule.database.closeConnection() }
         HandlerList.unregisterAll(this)
-
-        rootModule.bukkitCoreModule.scope.value.close()
-        rootModule.bukkitCoreModule.inventoryClickEventListener.value.onDisable()
+        lifecycle.forEach(Lifecycle::onDisable)
     }
 
-    fun reloadPlugin() {
-        rootModule.bukkitCoreModule.configuration.reload()
-        rootModule.bukkitCoreModule.translation.reload()
+    override fun onReload() {
+        lifecycle.forEach(Lifecycle::onReload)
     }
 }

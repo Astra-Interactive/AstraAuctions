@@ -16,9 +16,9 @@ import ru.astrainteractive.klibs.mikro.core.util.prev
 import java.util.UUID
 
 @Suppress("LongParameterList")
-class DefaultAuctionComponent(
+internal class DefaultAuctionComponent(
     private val playerUUID: UUID,
-    private val expired: Boolean = false,
+    private val isExpired: Boolean = false,
     private val dependencies: AuctionComponentDependencies
 ) : AuctionComponent,
     AsyncComponent(),
@@ -73,26 +73,26 @@ class DefaultAuctionComponent(
     override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
         componentScope.launch(mainDispatcher) {
-            val result = if (expired) {
+            val result = if (isExpired) {
                 onExpiredAuctionClicked(auction)
             } else {
                 onAuctionClicked(auction, clickType)
             }
             if (result) {
                 loadItems()
-                playerInteractionBridge.playSound(playerUUID, config.sounds.sold)
+                playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
             } else {
-                playerInteractionBridge.playSound(playerUUID, config.sounds.fail)
+                playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             }
         }
     }
 
     override fun loadItems() {
         componentScope.launch(mainDispatcher) {
-            val items = if (!expired) {
-                marketApi.getSlots(expired)
+            val items = if (!isExpired) {
+                marketApi.getSlots(isExpired)
             } else {
-                marketApi.getUserSlots(playerUUID.toString(), expired)
+                marketApi.getUserSlots(playerUUID.toString(), isExpired)
             }
             model.update { model -> model.copy(items = items.orEmpty()) }
             sort()

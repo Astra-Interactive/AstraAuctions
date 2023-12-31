@@ -27,4 +27,5 @@ dependencies {
     "bukkitMainCompileOnly"(libs.minecraft.paper.api)
     // Local
     implementation(projects.modules.apiMarket)
+    implementation(projects.modules.core)
 }
