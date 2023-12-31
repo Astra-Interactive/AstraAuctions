@@ -12,6 +12,7 @@ import ru.astrainteractive.astralibs.string.BukkitTranslationContext
 import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
+import ru.astrainteractive.klibs.kdi.Factory
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.Single
@@ -23,11 +24,6 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
 
     override val encoder: Single<Encoder> = Single {
         Encoder(BukkitIOStreamProvider)
-    }
-
-    override val bStats: Single<Metrics> = Single {
-        val plugin by plugin
-        Metrics(plugin, 15771)
     }
 
     override val inventoryClickEventListener: Single<EventListener> = Single {
@@ -47,10 +43,15 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
         BukkitTranslationContext.Default { stringSerializer.value }
     }
 
+    private val bStatsFactory = Factory {
+        val plugin by plugin
+        Metrics(plugin, 15771)
+    }
+
     override val lifecycle: Lifecycle by lazy {
         Lifecycle.Lambda(
             onEnable = {
-                bStats
+                bStatsFactory.create()
                 inventoryClickEventListener.value.onEnable(plugin.value)
             },
             onDisable = {

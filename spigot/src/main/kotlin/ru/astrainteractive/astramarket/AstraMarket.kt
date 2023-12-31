@@ -3,8 +3,6 @@ package ru.astrainteractive.astramarket
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.command.CommandManager
-import ru.astrainteractive.astramarket.command.di.CommandContainer
 import ru.astrainteractive.astramarket.di.impl.RootModuleImpl
 
 /**
@@ -17,12 +15,12 @@ class AstraMarket : JavaPlugin(), Lifecycle {
         get() = listOf(
             rootModule.coreModule.lifecycle,
             rootModule.bukkitCoreModule.lifecycle,
-            rootModule.apiMarketModule.lifecycle
+            rootModule.apiMarketModule.lifecycle,
+            rootModule.commandModule.lifecycle
         )
 
     override fun onEnable() {
         rootModule.bukkitCoreModule.plugin.initialize(this)
-        CommandManager(CommandContainer.Default(rootModule))
         lifecycle.forEach(Lifecycle::onEnable)
     }
 

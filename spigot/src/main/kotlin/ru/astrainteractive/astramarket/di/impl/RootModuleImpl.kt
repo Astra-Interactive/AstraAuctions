@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.di.impl
 
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
 import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
+import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.di.BukkitSharedDataModule
 import ru.astrainteractive.astramarket.di.ApiMarketModule
@@ -54,5 +55,8 @@ class RootModuleImpl : RootModule {
     }
     override val auctionGuiModule: AuctionGuiModule by Provider {
         AuctionGuiModule.Default(this)
+    }
+    override val commandModule: CommandModule by lazy {
+        CommandModule.Default(this)
     }
 }

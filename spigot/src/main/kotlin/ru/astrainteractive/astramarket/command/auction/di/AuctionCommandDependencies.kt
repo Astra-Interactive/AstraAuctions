@@ -22,7 +22,7 @@ interface AuctionCommandDependencies {
     val dispatchers: KotlinDispatchers
     val createAuctionUseCase: CreateAuctionUseCase
 
-    class Impl(rootModule: RootModule) : AuctionCommandDependencies {
+    class Default(rootModule: RootModule) : AuctionCommandDependencies {
         override val plugin: JavaPlugin by rootModule.bukkitCoreModule.plugin
         override val translationContext: BukkitTranslationContext = rootModule.bukkitCoreModule.translationContext
         override val translation: Translation by rootModule.coreModule.translation
