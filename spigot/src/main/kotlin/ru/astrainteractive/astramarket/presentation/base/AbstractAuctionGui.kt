@@ -107,54 +107,60 @@ abstract class AbstractAuctionGui(
             .build()
     }
 
-    override val backPageButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.BA))
-        .setItemStack(config.buttons.back.toItemStack())
-        .editMeta { with(translationContext) { displayName(translation.menu.back.toComponent()) } }
-        .setOnClickListener { onCloseClicked() }
-        .build()
+    override val backPageButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.BA))
+            .setItemStack(config.buttons.back.toItemStack())
+            .editMeta { with(translationContext) { displayName(translation.menu.back.toComponent()) } }
+            .setOnClickListener { onCloseClicked() }
+            .build()
 
-    override val nextPageButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.NE))
-        .setItemStack(config.buttons.next.toItemStack())
-        .editMeta { with(translationContext) { displayName(translation.menu.next.toComponent()) } }
-        .setOnClickListener { onNextPageClicked() }
-        .build()
+    override val nextPageButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.NE))
+            .setItemStack(config.buttons.next.toItemStack())
+            .editMeta { with(translationContext) { displayName(translation.menu.next.toComponent()) } }
+            .setOnClickListener { onNextPageClicked() }
+            .build()
 
-    override val prevPageButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.PR))
-        .setItemStack(config.buttons.previous.toItemStack())
-        .editMeta { with(translationContext) { displayName(translation.menu.prev.toComponent()) } }
-        .setOnClickListener { onPrevPageClicked() }
-        .build()
+    override val prevPageButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.PR))
+            .setItemStack(config.buttons.previous.toItemStack())
+            .editMeta { with(translationContext) { displayName(translation.menu.prev.toComponent()) } }
+            .setOnClickListener { onPrevPageClicked() }
+            .build()
 
-    val expiredButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.AU))
-        .setItemStack(config.buttons.expired.toItemStack())
-        .editMeta { with(translationContext) { displayName(translation.menu.expired.toComponent()) } }
-        .setOnClickListener { onExpiredOpenClicked() }
-        .build()
+    val expiredButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.AU))
+            .setItemStack(config.buttons.expired.toItemStack())
+            .editMeta { with(translationContext) { displayName(translation.menu.expired.toComponent()) } }
+            .setOnClickListener { onExpiredOpenClicked() }
+            .build()
 
-    val aaucButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.AU))
-        .setItemStack(config.buttons.expired.toItemStack())
-        .editMeta { with(translationContext) { displayName(translation.menu.aauc.toComponent()) } }
-        .setOnClickListener { onExpiredOpenClicked() }
-        .build()
+    val aaucButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.AU))
+            .setItemStack(config.buttons.expired.toItemStack())
+            .editMeta { with(translationContext) { displayName(translation.menu.aauc.toComponent()) } }
+            .setOnClickListener { onExpiredOpenClicked() }
+            .build()
 
-    val sortButton = InventorySlot.Builder()
-        .setIndex(getSlotIndexByChar(GuiKey.FI))
-        .setItemStack(config.buttons.expired.toItemStack())
-        .editMeta {
-            val sortDesc = sortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
-            val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
-            with(translationContext) { displayName(desc.toComponent()) }
-        }
-        .setOnClickListener {
-            showPage(0)
-            onSortButtonClicked(it.isRightClick)
-        }
-        .build()
+    val sortButton: InventorySlot
+        get() = InventorySlot.Builder()
+            .setIndex(getSlotIndexByChar(GuiKey.FI))
+            .setItemStack(config.buttons.expired.toItemStack())
+            .editMeta {
+                val sortDesc = sortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
+                val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
+                with(translationContext) { displayName(desc.toComponent()) }
+            }
+            .setOnClickListener {
+                showPage(0)
+                onSortButtonClicked(it.isRightClick)
+            }
+            .build()
 
     override val maxItemsPerPage: Int
         get() = guiMap.count { it == GuiKey.AI }
