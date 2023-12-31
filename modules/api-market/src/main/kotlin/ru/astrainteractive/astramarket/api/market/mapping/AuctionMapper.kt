@@ -1,0 +1,26 @@
+package ru.astrainteractive.astramarket.api.market.mapping
+
+import ru.astrainteractive.astralibs.encoding.IO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.db.market.entity.Auction
+import ru.astrainteractive.klibs.mikro.core.domain.Mapper
+
+internal interface AuctionMapper : Mapper<Auction, MarketSlot>
+
+internal class AuctionMapperImpl : AuctionMapper {
+
+    override fun toDTO(it: Auction): MarketSlot =
+        MarketSlot(
+            id = it.id,
+            discordId = it.discordId,
+            minecraftUuid = it.minecraftUuid,
+            time = it.time,
+            item = IO.ByteArray(it.item),
+            price = it.price,
+            expired = it.expired == 1
+        )
+
+    override fun fromDTO(it: MarketSlot): Auction {
+        error("Not implemented")
+    }
+}

@@ -1,10 +1,11 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.data.AuctionsBridge
-import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.api.market.MarketApi
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -15,13 +16,14 @@ import java.util.UUID
  */
 interface ExpireAuctionUseCase : UseCase.Suspended<ExpireAuctionUseCase.Params, Boolean> {
     class Params(
-        val auction: AuctionDTO,
+        val auction: MarketSlot,
         val playerUUID: UUID
     )
 }
 
 internal class ExpireAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
+    private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
 ) : ExpireAuctionUseCase {
@@ -35,7 +37,7 @@ internal class ExpireAuctionUseCaseImpl(
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.noPermissions }
             return false
         }
-        val auction = auctionsBridge.getAuctionOrNull(receivedAuction.id) ?: return false
+        val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         val itemName = auctionsBridge.itemDesc(auction)
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
             translation.auction.notifyAuctionExpired
@@ -43,7 +45,7 @@ internal class ExpireAuctionUseCaseImpl(
                 .replace("%price%", auction.price.toString())
         }
 
-        val result = auctionsBridge.expireAuction(auction)
+        val result = marketApi.expireSlot(auction)
         if (result == null) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.general.unexpectedError

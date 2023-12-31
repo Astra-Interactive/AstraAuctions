@@ -1,9 +1,10 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
-import ru.astrainteractive.astramarket.data.AuctionsBridge
-import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.api.market.MarketApi
+import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -14,22 +15,23 @@ import java.util.UUID
  */
 interface RemoveAuctionUseCase : UseCase.Suspended<RemoveAuctionUseCase.Params, Boolean> {
     data class Params(
-        val auction: ru.astrainteractive.astramarket.api.market.dto.AuctionDTO,
+        val auction: ru.astrainteractive.astramarket.api.market.dto.MarketSlot,
         val playerUUID: UUID
     )
 }
 
 internal class RemoveAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
+    private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
-    private val config: AuctionConfig,
+    private val config: PluginConfig,
 ) : RemoveAuctionUseCase {
 
     override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
         val receivedAuction = input.auction
         val playerUUID = input.playerUUID
-        val auction = auctionsBridge.getAuctionOrNull(receivedAuction.id) ?: return false
+        val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         val ownerUUID = auction.minecraftUuid.let(UUID::fromString)
         if (ownerUUID != playerUUID) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
@@ -44,13 +46,13 @@ internal class RemoveAuctionUseCaseImpl(
             return false
         }
 
-        val result = auctionsBridge.deleteAuction(auction)
+        val result = marketApi.deleteSlot(auction)
         return if (result != null) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID, translation.auction.auctionDeleted)
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.auctionDeleted }
             auctionsBridge.addItemToInventory(auction, playerUUID)
             true
         } else {
-            playerInteractionBridge.sendTranslationMessage(playerUUID, translation.general.unexpectedError)
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.unexpectedError }
             false
         }
     }

@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.command.auction
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.CommandExecutor
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.presentation.router.GuiRouter
@@ -31,8 +31,8 @@ class AuctionCommandExecutor(
                     this.amount = max(min(itemInstance.amount, input.amount), 1)
                 }
                 val encodedItem = encoder.toByteArray(clonedItem)
-                scope.launch(dispatchers.BukkitAsync) {
-                    val auctionDTO = AuctionDTO(
+                scope.launch(dispatchers.IO) {
+                    val marketSlot = MarketSlot(
                         id = -1,
                         discordId = null,
                         minecraftUuid = input.player.uniqueId.toString(),
@@ -42,11 +42,11 @@ class AuctionCommandExecutor(
                         expired = false
                     )
                     val param = CreateAuctionUseCase.Params(
-                        auctionDTO = auctionDTO,
+                        marketSlot = marketSlot,
                         playerUUID = input.player.uniqueId,
                     )
                     val useCaseResult = createAuctionUseCase.invoke(param)
-                    withContext(dispatchers.BukkitMain) {
+                    withContext(dispatchers.Main) {
                         if (useCaseResult) itemInstance.amount -= input.amount
                     }
                 }

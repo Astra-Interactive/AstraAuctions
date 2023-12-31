@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase
@@ -16,9 +16,9 @@ import ru.astrainteractive.klibs.mikro.core.util.prev
 import java.util.UUID
 
 @Suppress("LongParameterList")
-class DefaultAuctionComponent(
+internal class DefaultAuctionComponent(
     private val playerUUID: UUID,
-    private val expired: Boolean = false,
+    private val isExpired: Boolean = false,
     private val dependencies: AuctionComponentDependencies
 ) : AuctionComponent,
     AsyncComponent(),
@@ -49,13 +49,13 @@ class DefaultAuctionComponent(
         }
     }
 
-    private suspend fun onExpiredAuctionClicked(auction: AuctionDTO): Boolean {
+    private suspend fun onExpiredAuctionClicked(auction: MarketSlot): Boolean {
         val param = RemoveAuctionUseCase.Params(auction, playerUUID)
         return removeAuctionUseCase.invoke(param)
     }
 
     private suspend fun onAuctionClicked(
-        auction: AuctionDTO,
+        auction: MarketSlot,
         clickType: AuctionComponent.ClickType
     ) = when (clickType) {
         AuctionComponent.ClickType.LEFT -> auctionBuyUseCase.invoke(AuctionBuyUseCase.Params(auction, playerUUID))
@@ -73,26 +73,26 @@ class DefaultAuctionComponent(
     override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
         componentScope.launch(mainDispatcher) {
-            val result = if (expired) {
+            val result = if (isExpired) {
                 onExpiredAuctionClicked(auction)
             } else {
                 onAuctionClicked(auction, clickType)
             }
             if (result) {
                 loadItems()
-                playerInteractionBridge.playSound(playerUUID, config.sounds.sold)
+                playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
             } else {
-                playerInteractionBridge.playSound(playerUUID, config.sounds.fail)
+                playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             }
         }
     }
 
     override fun loadItems() {
         componentScope.launch(mainDispatcher) {
-            val items = if (!expired) {
-                auctionsAPI.getAuctions(expired)
+            val items = if (!isExpired) {
+                marketApi.getSlots(isExpired)
             } else {
-                auctionsAPI.getUserAuctions(playerUUID.toString(), expired)
+                marketApi.getUserSlots(playerUUID.toString(), isExpired)
             }
             model.update { model -> model.copy(items = items.orEmpty()) }
             sort()

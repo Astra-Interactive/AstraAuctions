@@ -2,56 +2,42 @@ package ru.astrainteractive.astramarket.presentation.router
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.bukkit.entity.Player
 import ru.astrainteractive.astramarket.di.RootModule
-import ru.astrainteractive.astramarket.presentation.router.di.factory.AuctionComponentFactory
+import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.router.di.factory.AuctionGuiFactory
-import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
 class GuiRouterImpl(private val rootModule: RootModule) : GuiRouter {
-    private val scope = rootModule.bukkitCoreModule.scope.value
-    private val dispatchers = rootModule.bukkitCoreModule.dispatchers.value
-    private val auctionComponentFactory: AuctionComponentFactory by Provider {
-        AuctionComponentFactory(
-            dispatchers = rootModule.bukkitCoreModule.dispatchers.value,
-            auctionsAPI = rootModule.dataModule.auctionApi,
-            sharedDomainModule = rootModule.sharedDomainModule,
-            config = rootModule.bukkitCoreModule.configuration.value,
-            playerInteractionBridge = rootModule.sharedDomainModule.sharedDataModule.playerInteractionBridge,
-            sortAuctionsUseCase = rootModule.sharedDomainModule.platformSharedDomainModule.sortAuctionsUseCase
-        )
-    }
+    private val scope = rootModule.coreModule.scope.value
+    private val dispatchers = rootModule.coreModule.dispatchers
 
-    private val auctionGuiFactory: AuctionGuiFactory by Provider {
-        AuctionGuiFactory(
-            auctionComponentFactory = auctionComponentFactory,
-            config = rootModule.bukkitCoreModule.configuration.value,
-            translation = rootModule.bukkitCoreModule.translation.value,
-            dispatchers = rootModule.bukkitCoreModule.dispatchers.value,
-            auctionSortTranslationMapping = rootModule.sharedDomainModule.auctionSortTranslationMapping,
-            serializer = rootModule.bukkitCoreModule.encoder.value,
-            stringSerializer = rootModule.bukkitCoreModule.stringSerializer.value
-        )
+    private fun createGui(player: Player, isExpired: Boolean): AbstractAuctionGui {
+        return AuctionGuiFactory(
+            player = player,
+            isExpired = isExpired,
+            coreModule = rootModule.coreModule,
+            apiMarketModule = rootModule.apiMarketModule,
+            bukkitCoreModule = rootModule.bukkitCoreModule,
+            router = this,
+            sharedDomainModule = rootModule.sharedDomainModule
+        ).create()
     }
 
     override fun navigate(route: GuiRouter.Route) {
-        scope.launch(dispatchers.BukkitAsync) {
+        scope.launch(dispatchers.IO) {
             val gui = when (route) {
-                is GuiRouter.Route.Auctions -> {
-                    auctionGuiFactory.create(
-                        player = route.player,
-                        isExpired = false
-                    )
-                }
+                is GuiRouter.Route.Auctions -> createGui(
+                    player = route.player,
+                    isExpired = false
+                )
 
-                is GuiRouter.Route.ExpiredAuctions -> {
-                    auctionGuiFactory.create(
-                        player = route.player,
-                        isExpired = true
-                    )
-                }
+                is GuiRouter.Route.ExpiredAuctions -> createGui(
+                    player = route.player,
+                    isExpired = true
+                )
             }
-            withContext(rootModule.bukkitCoreModule.dispatchers.value.BukkitMain) {
+            withContext(rootModule.coreModule.dispatchers.Main) {
                 gui.open()
             }
         }

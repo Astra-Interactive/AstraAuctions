@@ -1,33 +1,35 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
 import ru.astrainteractive.astralibs.string.replace
-import ru.astrainteractive.astramarket.api.market.dto.AuctionDTO
-import ru.astrainteractive.astramarket.data.AuctionsBridge
-import ru.astrainteractive.astramarket.data.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.plugin.AuctionConfig
-import ru.astrainteractive.astramarket.plugin.Translation
+import ru.astrainteractive.astramarket.api.market.MarketApi
+import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 interface CreateAuctionUseCase : UseCase.Suspended<CreateAuctionUseCase.Params, Boolean> {
     class Params(
         val playerUUID: UUID,
-        val auctionDTO: AuctionDTO
+        val marketSlot: MarketSlot
     )
 }
 
 internal class CreateAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
+    private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
     private val translation: Translation,
-    private val config: AuctionConfig,
+    private val config: PluginConfig,
 ) : CreateAuctionUseCase {
 
     override suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean {
         val playerUUID = input.playerUUID
-        val auction = input.auctionDTO
+        val auction = input.marketSlot
 
-        if (!auctionsBridge.isItemValid(input.auctionDTO)) {
+        if (!auctionsBridge.isItemValid(input.marketSlot)) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongItemInHand }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
@@ -35,7 +37,7 @@ internal class CreateAuctionUseCaseImpl(
 
         val maxAuctionsAllowed = auctionsBridge.maxAllowedAuctionsForPlayer(playerUUID)
             ?: config.auction.maxAuctionPerPlayer
-        val auctionsAmount = auctionsBridge.countPlayerAuctions(playerUUID)
+        val auctionsAmount = marketApi.countPlayerSlots(playerUUID.toString()) ?: 0
         if (auctionsAmount >= maxAuctionsAllowed) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
@@ -47,7 +49,7 @@ internal class CreateAuctionUseCaseImpl(
             return false
         }
 
-        val result = auctionsBridge.insertAuction(auction)
+        val result = marketApi.insertSlot(auction)
         return if (result != null) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.auctionAdded }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
