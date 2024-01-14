@@ -28,7 +28,9 @@ class ExpiredAuctionGui(
     dependencies = dependencies
 ) {
 
-    override var menuTitle: Component = with(translationContext) { translation.menu.expiredTitle.toComponent() }
+    override val menuTitle: Component by lazy {
+        translation.menu.expiredTitle.let(kyoriComponentSerializer::toComponent)
+    }
 
     private val itemsInGui: List<MarketSlot>
         get() = auctionComponent.model.value.items
@@ -47,23 +49,21 @@ class ExpiredAuctionGui(
                 .editMeta {
                     val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
                     val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"
-                    with(translationContext) {
-                        listOf(
-                            translation.auction.rightButton.toComponent(),
-                            translation.auction.auctionBy.replace(
-                                "%player_owner%",
-                                ownerName
-                            ).toComponent(),
-                            translation.auction.auctionCreatedAgo.replace(
-                                "%time%",
-                                getTimeFormatted(auctionItem.time).raw
-                            ).toComponent(),
-                            translation.auction.auctionPrice.replace(
-                                "%price%",
-                                auctionItem.price.toString()
-                            ).toComponent(),
-                        )
-                    }.run(::lore)
+                    listOf(
+                        translation.auction.rightButton.let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionBy.replace(
+                            "%player_owner%",
+                            ownerName
+                        ).let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionCreatedAgo.replace(
+                            "%time%",
+                            getTimeFormatted(auctionItem.time).raw
+                        ).let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionPrice.replace(
+                            "%price%",
+                            auctionItem.price.toString()
+                        ).let(kyoriComponentSerializer::toComponent),
+                    ).run(::lore)
                 }
                 .setOnClickListener { onAuctionItemClicked(index, it.click) }
                 .build()
@@ -76,6 +76,7 @@ class ExpiredAuctionGui(
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {
+        super.onInventoryClose(it)
         auctionComponent.close()
     }
 }

@@ -32,7 +32,9 @@ abstract class AbstractAuctionGui(
 
     override val playerHolder = DefaultPlayerHolder(player)
 
-    override var menuTitle: Component = with(translationContext) { translation.menu.title.toComponent() }
+    override val menuTitle: Component by lazy {
+        translation.menu.title.let(kyoriComponentSerializer::toComponent)
+    }
     override val menuSize: MenuSize = MenuSize.XL
     abstract val auctionComponent: AuctionComponent
 
@@ -79,7 +81,8 @@ abstract class AbstractAuctionGui(
         "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
         "${GuiKey.BO}${GuiKey.EM}${GuiKey.BA}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.FI}${GuiKey.EM}${GuiKey.BO}",
     ).flatMap { it.map { it } }
-    protected val guiMap = if (config.auction.useCompactDesign) guiCompactMap else guiDefaultMap
+    protected val guiMap: List<Char>
+        get() = if (config.auction.useCompactDesign) guiCompactMap else guiDefaultMap
 
     protected inline fun buildSlots(char: Char, transform: (index: Int) -> InventorySlot?): List<InventorySlot> {
         return guiMap.mapIndexed { i, c ->
@@ -111,7 +114,7 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder()
             .setIndex(getSlotIndexByChar(GuiKey.BA))
             .setItemStack(config.buttons.back.toItemStack())
-            .editMeta { with(translationContext) { displayName(translation.menu.back.toComponent()) } }
+            .editMeta { displayName(translation.menu.back.let(kyoriComponentSerializer::toComponent)) }
             .setOnClickListener { onCloseClicked() }
             .build()
 
@@ -119,7 +122,7 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder()
             .setIndex(getSlotIndexByChar(GuiKey.NE))
             .setItemStack(config.buttons.next.toItemStack())
-            .editMeta { with(translationContext) { displayName(translation.menu.next.toComponent()) } }
+            .editMeta { displayName(translation.menu.next.let(kyoriComponentSerializer::toComponent)) }
             .setOnClickListener { onNextPageClicked() }
             .build()
 
@@ -127,7 +130,7 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder()
             .setIndex(getSlotIndexByChar(GuiKey.PR))
             .setItemStack(config.buttons.previous.toItemStack())
-            .editMeta { with(translationContext) { displayName(translation.menu.prev.toComponent()) } }
+            .editMeta { displayName(translation.menu.prev.let(kyoriComponentSerializer::toComponent)) }
             .setOnClickListener { onPrevPageClicked() }
             .build()
 
@@ -135,7 +138,7 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder()
             .setIndex(getSlotIndexByChar(GuiKey.AU))
             .setItemStack(config.buttons.expired.toItemStack())
-            .editMeta { with(translationContext) { displayName(translation.menu.expired.toComponent()) } }
+            .editMeta { displayName(translation.menu.expired.let(kyoriComponentSerializer::toComponent)) }
             .setOnClickListener { onExpiredOpenClicked() }
             .build()
 
@@ -143,7 +146,7 @@ abstract class AbstractAuctionGui(
         get() = InventorySlot.Builder()
             .setIndex(getSlotIndexByChar(GuiKey.AU))
             .setItemStack(config.buttons.expired.toItemStack())
-            .editMeta { with(translationContext) { displayName(translation.menu.aauc.toComponent()) } }
+            .editMeta { displayName(translation.menu.aauc.let(kyoriComponentSerializer::toComponent)) }
             .setOnClickListener { onExpiredOpenClicked() }
             .build()
 
@@ -154,7 +157,7 @@ abstract class AbstractAuctionGui(
             .editMeta {
                 val sortDesc = sortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
                 val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
-                with(translationContext) { displayName(desc.toComponent()) }
+                displayName(desc.let(kyoriComponentSerializer::toComponent))
             }
             .setOnClickListener {
                 showPage(0)
@@ -204,6 +207,7 @@ abstract class AbstractAuctionGui(
     }
 
     abstract fun onExpiredOpenClicked()
+
     override fun onInventoryClicked(e: InventoryClickEvent) {
         super.onInventoryClicked(e)
         e.isCancelled = true
@@ -236,6 +240,6 @@ abstract class AbstractAuctionGui(
         auctionComponent.model
             .onEach { render() }
             .flowOn(dispatchers.IO)
-            .launchIn(componentScope)
+            .launchIn(menuScope)
     }
 }

@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.di.impl
 
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
-import ru.astrainteractive.astralibs.economy.AnyEconomyProvider
+import ru.astrainteractive.astralibs.economy.EconomyProviderFactory
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.di.BukkitSharedDataModule
@@ -23,7 +23,7 @@ class RootModuleImpl : RootModule {
         CoreModule.Default(
             dataFolder = bukkitCoreModule.plugin.value.dataFolder,
             dispatchers = DefaultBukkitDispatchers(bukkitCoreModule.plugin.value),
-            economyProvider = AnyEconomyProvider(bukkitCoreModule.plugin.value)
+            economyProvider = EconomyProviderFactory(bukkitCoreModule.plugin.value).create()
         )
     }
     override val apiMarketModule: ApiMarketModule by Provider {
@@ -43,7 +43,7 @@ class RootModuleImpl : RootModule {
             sharedDataModuleFactory = {
                 BukkitSharedDataModule(
                     encoder = bukkitCoreModule.encoder.value,
-                    stringSerializer = bukkitCoreModule.stringSerializer.value
+                    stringSerializer = bukkitCoreModule.kyoriComponentSerializer.value
                 )
             },
             platformSharedDomainModuleFactory = {

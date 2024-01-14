@@ -5,18 +5,18 @@ import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
 import ru.astrainteractive.astralibs.encoding.Encoder
 import ru.astrainteractive.astralibs.event.EventListener
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
+import ru.astrainteractive.astralibs.logging.JUtilFileLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.string.BukkitTranslationContext
-import ru.astrainteractive.astralibs.util.buildWithSpigot
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
 import ru.astrainteractive.klibs.kdi.Factory
 import ru.astrainteractive.klibs.kdi.Lateinit
-import ru.astrainteractive.klibs.kdi.Provider
+import ru.astrainteractive.klibs.kdi.Reloadable
 import ru.astrainteractive.klibs.kdi.Single
 import ru.astrainteractive.klibs.kdi.getValue
+import java.io.File
 
 class BukkitCoreModuleImpl : BukkitCoreModule {
 
@@ -30,17 +30,16 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
         DefaultInventoryClickEvent()
     }
 
-    override val stringSerializer: Single<KyoriComponentSerializer> = Single {
+    override val kyoriComponentSerializer: Reloadable<KyoriComponentSerializer> = Reloadable {
         KyoriComponentSerializer.Legacy
     }
 
     override val logger: Single<Logger> = Single {
-        val plugin by plugin
-        Logger.buildWithSpigot("AstraMarket", plugin)
-    }
-
-    override val translationContext: BukkitTranslationContext by Provider {
-        BukkitTranslationContext.Default { stringSerializer.value }
+        JUtilFileLogger(
+            tag = "AstraMarket",
+            folder = File(plugin.value.dataFolder, "logs"),
+            logger = plugin.value.logger
+        )
     }
 
     private val bStatsFactory = Factory {

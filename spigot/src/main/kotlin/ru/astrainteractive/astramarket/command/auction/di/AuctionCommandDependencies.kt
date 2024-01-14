@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.command.auction.di
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.encoding.Encoder
-import ru.astrainteractive.astralibs.string.BukkitTranslationContext
+import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
@@ -14,7 +14,7 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 interface AuctionCommandDependencies {
     val plugin: JavaPlugin
-    val translationContext: BukkitTranslationContext
+    val kyoriComponentSerializer: KyoriComponentSerializer
     val translation: Translation
     val router: GuiRouter
     val encoder: Encoder
@@ -24,7 +24,7 @@ interface AuctionCommandDependencies {
 
     class Default(rootModule: RootModule) : AuctionCommandDependencies {
         override val plugin: JavaPlugin by rootModule.bukkitCoreModule.plugin
-        override val translationContext: BukkitTranslationContext = rootModule.bukkitCoreModule.translationContext
+        override val kyoriComponentSerializer by rootModule.bukkitCoreModule.kyoriComponentSerializer
         override val translation: Translation by rootModule.coreModule.translation
         override val router: GuiRouter by Provider {
             rootModule.auctionGuiModule.router

@@ -1,9 +1,7 @@
 package ru.astrainteractive.astramarket.command.common
 
-import ru.astrainteractive.astralibs.command.registerCommand
-import ru.astrainteractive.astralibs.command.registerTabCompleter
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
-import ru.astrainteractive.astralibs.util.withEntry
+import ru.astrainteractive.astralibs.util.StringListExt.withEntry
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
 import ru.astrainteractive.astramarket.core.PluginPermission
@@ -12,16 +10,19 @@ import ru.astrainteractive.klibs.kdi.Factory
 class CommonCommandFactory(dependencies: CommonCommandDependencies) :
     Factory<Unit>,
     CommonCommandDependencies by dependencies {
-    private fun createReloadCommand() = plugin.registerCommand("amarketreload") {
-        if (!sender.toPermissible().hasPermission(PluginPermission.Reload)) return@registerCommand
-        with(translationContext) {
-            sender.sendMessage(translation.general.reloadStarted)
-            (plugin as AstraMarket).onReload()
-            sender.sendMessage(translation.general.reloadSuccess)
+    private fun createReloadCommand() {
+        plugin.getCommand("amarketreload")?.setExecutor { sender, command, label, args ->
+            if (!sender.toPermissible().hasPermission(PluginPermission.Reload)) return@setExecutor true
+            with(kyoriComponentSerializer) {
+                sender.sendMessage(translation.general.reloadStarted.let(::toComponent))
+                (plugin as AstraMarket).onReload()
+                sender.sendMessage(translation.general.reloadSuccess.let(::toComponent))
+            }
+            true
         }
     }
 
-    private fun createTabCompleter() = plugin.registerTabCompleter("amarket") {
+    private fun createTabCompleter() = plugin.getCommand("amarket")?.setTabCompleter { sender, command, label, args ->
         when (val size = args.size) {
             0 -> listOf("amarket")
             1 -> listOf("sell", "open", "expired").withEntry(args.last())

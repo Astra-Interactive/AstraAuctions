@@ -42,25 +42,23 @@ class AuctionGui(
                 .setIndex(i)
                 .setItemStack(serializer.fromByteArray<ItemStack>(auctionItem.item))
                 .editMeta {
-                    with(translationContext) {
-                        listOf(
-                            translation.auction.leftButton.toComponent(),
-                            translation.auction.middleClick.toComponent(),
-                            translation.auction.rightButton.toComponent(),
-                            translation.auction.auctionBy.replace(
-                                "%player_owner%",
-                                Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
-                            ).toComponent(),
-                            translation.auction.auctionCreatedAgo.replace(
-                                "%time%",
-                                getTimeFormatted(auctionItem.time).raw
-                            ).toComponent(),
-                            translation.auction.auctionPrice.replace(
-                                "%price%",
-                                auctionItem.price.toString()
-                            ).toComponent(),
-                        ).run(::lore)
-                    }
+                    listOf(
+                        translation.auction.leftButton.let(kyoriComponentSerializer::toComponent),
+                        translation.auction.middleClick.let(kyoriComponentSerializer::toComponent),
+                        translation.auction.rightButton.let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionBy.replace(
+                            "%player_owner%",
+                            Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
+                        ).let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionCreatedAgo.replace(
+                            "%time%",
+                            getTimeFormatted(auctionItem.time).raw
+                        ).let(kyoriComponentSerializer::toComponent),
+                        translation.auction.auctionPrice.replace(
+                            "%price%",
+                            auctionItem.price.toString()
+                        ).let(kyoriComponentSerializer::toComponent),
+                    ).run(::lore)
                 }
                 .setOnClickListener { onAuctionItemClicked(index, it.click) }
                 .build()
@@ -68,6 +66,7 @@ class AuctionGui(
     }
 
     override fun onInventoryClose(it: InventoryCloseEvent) {
+        super.onInventoryClose(it)
         auctionComponent.close()
     }
 
