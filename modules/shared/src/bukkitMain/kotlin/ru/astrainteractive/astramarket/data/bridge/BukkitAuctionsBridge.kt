@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.data.bridge
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
@@ -11,9 +11,9 @@ import java.util.UUID
 
 @Suppress("TooManyFunctions")
 class BukkitAuctionsBridge(
-    private val encoder: Encoder,
+    private val encoder: ObjectEncoder,
 ) : AuctionsBridge {
-    private fun MarketSlot.itemStack(serializer: Encoder): ItemStack {
+    private fun MarketSlot.itemStack(serializer: ObjectEncoder): ItemStack {
         return serializer.fromByteArray(item)
     }
 

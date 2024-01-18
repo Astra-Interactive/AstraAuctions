@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.presentation.base.di
 
-import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
@@ -18,7 +18,7 @@ interface AuctionGuiDependencies {
     val translation: Translation
     val dispatchers: KotlinDispatchers
     val sortTranslationMapping: AuctionSortTranslationMapping
-    val serializer: Encoder
+    val serializer: ObjectEncoder
     val kyoriComponentSerializer: KyoriComponentSerializer
     val router: GuiRouter
 
@@ -34,7 +34,7 @@ interface AuctionGuiDependencies {
         override val sortTranslationMapping: AuctionSortTranslationMapping by Provider {
             sharedDomainModule.auctionSortTranslationMapping
         }
-        override val serializer: Encoder by bukkitCoreModule.encoder
+        override val serializer: ObjectEncoder by bukkitCoreModule.encoder
         override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
     }
 }
