@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
-import ru.astrainteractive.astralibs.string.replace
+import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.core.Translation

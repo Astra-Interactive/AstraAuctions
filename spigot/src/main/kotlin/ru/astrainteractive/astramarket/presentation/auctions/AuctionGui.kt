@@ -9,7 +9,7 @@ import ru.astrainteractive.astralibs.menu.menu.editMeta
 import ru.astrainteractive.astralibs.menu.menu.setIndex
 import ru.astrainteractive.astralibs.menu.menu.setItemStack
 import ru.astrainteractive.astralibs.menu.menu.setOnClickListener
-import ru.astrainteractive.astralibs.string.replace
+import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui

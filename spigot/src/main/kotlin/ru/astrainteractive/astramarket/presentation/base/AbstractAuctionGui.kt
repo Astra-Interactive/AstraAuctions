@@ -17,7 +17,7 @@ import ru.astrainteractive.astralibs.menu.menu.setIndex
 import ru.astrainteractive.astralibs.menu.menu.setItemStack
 import ru.astrainteractive.astralibs.menu.menu.setOnClickListener
 import ru.astrainteractive.astralibs.string.StringDesc
-import ru.astrainteractive.astralibs.string.replace
+import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.base.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.playSound

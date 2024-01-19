@@ -4,6 +4,8 @@ import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.filemanager.impl.JVMResourceFileManager
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
+import ru.astrainteractive.astralibs.serialization.SerializerExt.parse
+import ru.astrainteractive.astralibs.serialization.SerializerExt.writeIntoFile
 import ru.astrainteractive.astralibs.serialization.YamlSerializer
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation

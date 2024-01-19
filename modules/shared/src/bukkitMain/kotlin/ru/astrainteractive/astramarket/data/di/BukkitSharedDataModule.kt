@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.data.di
 
-import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.data.bridge.BukkitAuctionsBridge
@@ -10,7 +10,7 @@ import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
 class BukkitSharedDataModule(
-    encoder: Encoder,
+    encoder: ObjectEncoder,
     stringSerializer: KyoriComponentSerializer,
 ) : SharedDataModule {
     override val auctionBridge: AuctionsBridge by Provider {

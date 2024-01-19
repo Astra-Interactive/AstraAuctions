@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.api.market.mapping
 
-import ru.astrainteractive.astralibs.encoding.IO
+import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
 import ru.astrainteractive.astramarket.db.market.entity.Auction
 import ru.astrainteractive.klibs.mikro.core.domain.Mapper
@@ -15,7 +15,7 @@ internal class AuctionMapperImpl : AuctionMapper {
             discordId = it.discordId,
             minecraftUuid = it.minecraftUuid,
             time = it.time,
-            item = IO.ByteArray(it.item),
+            item = EncodedObject.ByteArray(it.item),
             price = it.price,
             expired = it.expired == 1
         )

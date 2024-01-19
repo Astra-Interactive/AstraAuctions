@@ -1,8 +1,9 @@
+package ru.astrainteractive.astramarket.api.market
+
 import kotlinx.coroutines.runBlocking
-import ru.astrainteractive.astralibs.encoding.IO
+import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
-import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
@@ -14,7 +15,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AuctionsTests {
+class MarketApiTest {
     private val moduleFactory = {
         ApiMarketModule.Default(
             dispatchers = DefaultKotlinDispatchers,
@@ -32,7 +33,7 @@ class AuctionsTests {
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
-            item = IO.ByteArray(ByteArray(0)),
+            item = EncodedObject.ByteArray(ByteArray(0)),
             price = Random.nextInt().toFloat(),
             expired = false
         )
@@ -43,7 +44,7 @@ class AuctionsTests {
         val module = moduleFactory.invoke()
         module.database.openConnection()
         AuctionTable.create(module.database)
-        this@AuctionsTests.module = module
+        this@MarketApiTest.module = module
     }
 
     @AfterTest

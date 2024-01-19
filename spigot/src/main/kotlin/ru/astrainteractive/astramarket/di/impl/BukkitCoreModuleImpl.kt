@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.di.impl
 
 import org.bstats.bukkit.Metrics
-import ru.astrainteractive.astralibs.encoding.BukkitIOStreamProvider
-import ru.astrainteractive.astralibs.encoding.Encoder
+import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.event.EventListener
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.logging.JUtilFileLogger
@@ -22,8 +22,8 @@ class BukkitCoreModuleImpl : BukkitCoreModule {
 
     override val plugin: Lateinit<AstraMarket> = Lateinit<AstraMarket>()
 
-    override val encoder: Single<Encoder> = Single {
-        Encoder(BukkitIOStreamProvider)
+    override val encoder: Single<ObjectEncoder> = Single {
+        BukkitObjectEncoder()
     }
 
     override val inventoryClickEventListener: Single<EventListener> = Single {
