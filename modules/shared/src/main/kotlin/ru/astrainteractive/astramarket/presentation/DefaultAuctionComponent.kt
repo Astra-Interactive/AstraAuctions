@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.domain.usecase.ExpireAuctionUseCase

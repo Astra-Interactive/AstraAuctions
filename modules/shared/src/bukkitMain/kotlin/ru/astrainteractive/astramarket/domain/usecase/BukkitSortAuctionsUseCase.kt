@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.domain.usecase
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import java.util.UUID
 

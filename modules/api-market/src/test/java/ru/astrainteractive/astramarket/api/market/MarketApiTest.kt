@@ -27,8 +27,8 @@ class MarketApiTest {
     private val marketApi: MarketApi
         get() = module?.marketApi ?: error("Module is null")
 
-    private val randomAuction: ru.astrainteractive.astramarket.api.market.dto.MarketSlot
-        get() = ru.astrainteractive.astramarket.api.market.dto.MarketSlot(
+    private val randomAuction: ru.astrainteractive.astramarket.api.market.model.MarketSlot
+        get() = ru.astrainteractive.astramarket.api.market.model.MarketSlot(
             id = -1,
             discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),

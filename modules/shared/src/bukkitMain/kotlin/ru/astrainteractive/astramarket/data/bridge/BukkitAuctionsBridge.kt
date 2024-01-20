@@ -5,7 +5,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
 import java.util.UUID
 

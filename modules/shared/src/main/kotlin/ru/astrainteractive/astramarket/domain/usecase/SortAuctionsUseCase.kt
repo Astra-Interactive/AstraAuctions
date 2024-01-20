@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.domain.usecase
 
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 

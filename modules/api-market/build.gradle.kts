@@ -6,9 +6,9 @@ dependencies {
     // Kotlin
     implementation(libs.bundles.kotlin)
     // AstraLibs
-    implementation(libs.minecraft.astralibs.ktxcore)
-    implementation(libs.minecraft.astralibs.spigot.core)
-    implementation(libs.minecraft.astralibs.spigot.gui)
+    implementation(libs.minecraft.astralibs.core)
+    implementation(libs.minecraft.astralibs.core.bukkit)
+    implementation(libs.minecraft.astralibs.menu.bukkit)
     implementation(libs.minecraft.astralibs.orm)
     implementation(libs.klibs.kdi)
     implementation(libs.minecraft.bstats)

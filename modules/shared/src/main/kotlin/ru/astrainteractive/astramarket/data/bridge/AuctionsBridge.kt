@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.data.bridge
 
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import java.util.UUID
 
 @Suppress("TooManyFunctions")

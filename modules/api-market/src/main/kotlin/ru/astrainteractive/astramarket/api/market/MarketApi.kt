@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.api.market
 
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 
 interface MarketApi {
     suspend fun insertSlot(marketSlot: MarketSlot): Int?

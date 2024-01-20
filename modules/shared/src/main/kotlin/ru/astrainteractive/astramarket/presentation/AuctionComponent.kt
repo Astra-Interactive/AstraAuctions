@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.presentation
 
 import kotlinx.coroutines.flow.StateFlow
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.domain.model.AuctionSort
 
 interface AuctionComponent {

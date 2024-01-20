@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.api.market.dto
+package ru.astrainteractive.astramarket.api.market.model
 
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 

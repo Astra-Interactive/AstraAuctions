@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.api.market.mapping
 
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
-import ru.astrainteractive.astramarket.api.market.dto.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.db.market.entity.Auction
 import ru.astrainteractive.klibs.mikro.core.domain.Mapper
 
