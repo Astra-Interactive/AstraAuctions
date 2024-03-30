@@ -8,14 +8,18 @@ import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
-import ru.astrainteractive.astralibs.menu.menu.InventorySlot
-import ru.astrainteractive.astralibs.menu.menu.MenuSize
-import ru.astrainteractive.astralibs.menu.menu.PaginatedMenu
-import ru.astrainteractive.astralibs.menu.menu.editMeta
-import ru.astrainteractive.astralibs.menu.menu.setDisplayName
-import ru.astrainteractive.astralibs.menu.menu.setIndex
-import ru.astrainteractive.astralibs.menu.menu.setItemStack
-import ru.astrainteractive.astralibs.menu.menu.setOnClickListener
+import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
+import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
+import ru.astrainteractive.astralibs.menu.inventory.model.PageContext
+import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showNextPage
+import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
+import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.editMeta
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setDisplayName
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
 import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
@@ -28,14 +32,14 @@ import java.util.concurrent.TimeUnit
 abstract class AbstractAuctionGui(
     player: Player,
     dependencies: AuctionGuiDependencies
-) : PaginatedMenu(), AuctionGuiDependencies by dependencies {
+) : PaginatedInventoryMenu(), AuctionGuiDependencies by dependencies {
 
     override val playerHolder = DefaultPlayerHolder(player)
 
-    override val menuTitle: Component by lazy {
+    override val title: Component by lazy {
         translation.menu.title.let(kyoriComponentSerializer::toComponent)
     }
-    override val menuSize: MenuSize = MenuSize.XL
+    override val inventorySize: InventorySize = InventorySize.XL
     abstract val auctionComponent: AuctionComponent
 
     protected object GuiKey {
@@ -81,6 +85,7 @@ abstract class AbstractAuctionGui(
         "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
         "${GuiKey.BO}${GuiKey.EM}${GuiKey.BA}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.FI}${GuiKey.EM}${GuiKey.BO}",
     ).flatMap { it.map { it } }
+
     protected val guiMap: List<Char>
         get() = if (config.auction.useCompactDesign) guiCompactMap else guiDefaultMap
 
@@ -109,14 +114,6 @@ abstract class AbstractAuctionGui(
             .setDisplayName(" ")
             .build()
     }
-
-    override val backPageButton: InventorySlot
-        get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.BA))
-            .setItemStack(config.buttons.back.toItemStack())
-            .editMeta { displayName(translation.menu.back.let(kyoriComponentSerializer::toComponent)) }
-            .setOnClickListener { onCloseClicked() }
-            .build()
 
     override val nextPageButton: InventorySlot
         get() = InventorySlot.Builder()
@@ -165,22 +162,20 @@ abstract class AbstractAuctionGui(
             }
             .build()
 
-    override val maxItemsPerPage: Int
-        get() = guiMap.count { it == GuiKey.AI }
-
-    override var page: Int = 0
-
-    override val maxItemsAmount: Int
-        get() = auctionComponent.model.value.maxItemsAmount
+    override var pageContext: PageContext = PageContext(
+        page = 0,
+        maxItemsPerPage = guiMap.count { it == GuiKey.AI },
+        maxItems = 0
+    )
 
     open fun onNextPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        showPage(page + 1)
+        showNextPage()
     }
 
     open fun onPrevPageClicked() {
         playerHolder.player.playSound(config.sounds.open)
-        showPage(page - 1)
+        showPrevPage()
     }
 
     open fun onSortButtonClicked(isRightClick: Boolean) {
@@ -213,10 +208,6 @@ abstract class AbstractAuctionGui(
         e.isCancelled = true
     }
 
-    override fun onPageChanged() {
-        render()
-    }
-
     fun getTimeFormatted(sec: Long): StringDesc.Raw {
         val time = System.currentTimeMillis().minus(sec)
         val unit = TimeUnit.MILLISECONDS
@@ -235,9 +226,14 @@ abstract class AbstractAuctionGui(
         sortButton.setInventorySlot()
     }
 
-    override fun onCreated() {
+    override fun onInventoryCreated() {
         playerHolder.player.playSound(config.sounds.open)
         auctionComponent.model
+            .onEach {
+                pageContext = pageContext.copy(
+                    maxItems = auctionComponent.model.value.maxItemsAmount
+                )
+            }
             .onEach { render() }
             .flowOn(dispatchers.IO)
             .launchIn(menuScope)

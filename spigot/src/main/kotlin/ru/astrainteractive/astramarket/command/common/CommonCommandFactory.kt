@@ -5,10 +5,8 @@ import ru.astrainteractive.astralibs.util.StringListExt.withEntry
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
 import ru.astrainteractive.astramarket.core.PluginPermission
-import ru.astrainteractive.klibs.kdi.Factory
 
 class CommonCommandFactory(dependencies: CommonCommandDependencies) :
-    Factory<Unit>,
     CommonCommandDependencies by dependencies {
     private fun createReloadCommand() {
         plugin.getCommand("amarketreload")?.setExecutor { sender, command, label, args ->
@@ -32,7 +30,7 @@ class CommonCommandFactory(dependencies: CommonCommandDependencies) :
         }
     }
 
-    override fun create() {
+    fun register() {
         createTabCompleter()
         createReloadCommand()
     }

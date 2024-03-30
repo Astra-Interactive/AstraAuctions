@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.command.di
 
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
+import ru.astrainteractive.astramarket.command.auction.AuctionCommandRegistry
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.command.common.CommonCommandFactory
 import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
@@ -16,10 +16,10 @@ interface CommandModule {
                 onEnable = {
                     CommonCommandFactory(
                         dependencies = CommonCommandDependencies.Default(rootModule)
-                    ).create()
-                    AuctionCommandFactory(
+                    ).register()
+                    AuctionCommandRegistry(
                         dependencies = AuctionCommandDependencies.Default(rootModule)
-                    ).create()
+                    ).register()
                 }
             )
         }

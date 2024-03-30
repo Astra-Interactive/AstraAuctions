@@ -30,7 +30,6 @@ class MarketApiTest {
     private val randomAuction: ru.astrainteractive.astramarket.api.market.model.MarketSlot
         get() = ru.astrainteractive.astramarket.api.market.model.MarketSlot(
             id = -1,
-            discordId = UUID.randomUUID().toString(),
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
             item = EncodedObject.ByteArray(ByteArray(0)),
