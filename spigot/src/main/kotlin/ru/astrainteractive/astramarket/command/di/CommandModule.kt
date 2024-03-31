@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.command.di
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandRegistry
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
-import ru.astrainteractive.astramarket.command.common.CommonCommandFactory
+import ru.astrainteractive.astramarket.command.common.CommonCommandRegistry
 import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
 import ru.astrainteractive.astramarket.di.RootModule
 
@@ -14,7 +14,7 @@ interface CommandModule {
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
                 onEnable = {
-                    CommonCommandFactory(
+                    CommonCommandRegistry(
                         dependencies = CommonCommandDependencies.Default(rootModule)
                     ).register()
                     AuctionCommandRegistry(

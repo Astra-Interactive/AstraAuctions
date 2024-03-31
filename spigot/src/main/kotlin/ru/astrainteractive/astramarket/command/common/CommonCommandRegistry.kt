@@ -6,7 +6,7 @@ import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
 import ru.astrainteractive.astramarket.core.PluginPermission
 
-class CommonCommandFactory(dependencies: CommonCommandDependencies) :
+class CommonCommandRegistry(dependencies: CommonCommandDependencies) :
     CommonCommandDependencies by dependencies {
     private fun createReloadCommand() {
         plugin.getCommand("amarketreload")?.setExecutor { sender, command, label, args ->
