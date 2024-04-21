@@ -9,4 +9,5 @@ dependencies {
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.klibs.kdi)
+    implementation(libs.klibs.mikro.core)
 }

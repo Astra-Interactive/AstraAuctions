@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.data.bridge
 
 import org.bukkit.Bukkit
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.string.StringDesc
 import java.util.UUID
 

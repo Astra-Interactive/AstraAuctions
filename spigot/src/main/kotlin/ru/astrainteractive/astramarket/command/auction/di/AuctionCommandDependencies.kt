@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.command.auction.di
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
