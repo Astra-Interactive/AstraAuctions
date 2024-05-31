@@ -5,15 +5,15 @@ on:
       - master
 jobs:
   gradle_validation:
-    uses: ./.github/workflows/gradle-wrapper-validation.yml
+    uses: ./.github/workflows/call-gradle-wrapper-validation.yml
   detekt_validation:
     needs: gradle_validation
-    uses: ./.github/workflows/detekt-validation.yml
+    uses: ./.github/workflows/call-detekt-validation.yml
   tests_validation:
     needs: gradle_validation
-    uses: ./.github/workflows/tests-validation.yml
+    uses: ./.github/workflows/call-tests-validation.yml
   create_artifact:
     needs: [ gradle_validation, detekt_validation, tests_validation ]
-    uses: ./.github/workflows/create-artifacts.yml
+    uses: ./.github/workflows/call-create-artifacts.yml
     secrets:
       ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}

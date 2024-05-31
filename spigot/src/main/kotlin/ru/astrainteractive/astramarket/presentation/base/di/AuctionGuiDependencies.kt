@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.presentation.base.di
 
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.CoreModule

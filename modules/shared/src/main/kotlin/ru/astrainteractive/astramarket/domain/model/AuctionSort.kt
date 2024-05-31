@@ -10,5 +10,5 @@ enum class AuctionSort {
     PRICE_DESC,
     PRICE_ASC,
     PLAYER_ASC,
-    PLAYER_DESC;
+    PLAYER_DESC
 }

@@ -1,29 +1,29 @@
 package ru.astrainteractive.astramarket.command.auction
 
-import org.bukkit.command.CommandSender
-import ru.astrainteractive.astralibs.command.api.Command
+import ru.astrainteractive.astralibs.command.api.context.BukkitCommandContext
+import ru.astrainteractive.astralibs.command.api.sideeffect.BukkitCommandSideEffect
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 
-class AuctionCommandResultHandler(
+class AuctionCommandSideEffect(
     private val dependencies: AuctionCommandDependencies
-) : Command.ResultHandler<AuctionCommand.Result>,
+) : BukkitCommandSideEffect<AuctionCommand.Result>,
     AuctionCommandDependencies by dependencies {
-    override fun handle(commandSender: CommandSender, result: AuctionCommand.Result) {
+    override fun handle(commandContext: BukkitCommandContext, result: AuctionCommand.Result) {
         when (result) {
             AuctionCommand.Result.NoPermission -> with(kyoriComponentSerializer) {
-                commandSender.sendMessage(translation.general.noPermissions.let(::toComponent))
+                commandContext.sender.sendMessage(translation.general.noPermissions.let(::toComponent))
             }
 
             AuctionCommand.Result.NotPlayer -> with(kyoriComponentSerializer) {
-                commandSender.sendMessage(translation.general.onlyForPlayers.let(::toComponent))
+                commandContext.sender.sendMessage(translation.general.onlyForPlayers.let(::toComponent))
             }
 
             AuctionCommand.Result.WrongPrice -> with(kyoriComponentSerializer) {
-                commandSender.sendMessage(translation.auction.wrongPrice.let(::toComponent))
+                commandContext.sender.sendMessage(translation.auction.wrongPrice.let(::toComponent))
             }
 
             AuctionCommand.Result.WrongUsage -> with(kyoriComponentSerializer) {
-                commandSender.sendMessage(translation.general.wrongArgs.let(::toComponent))
+                commandContext.sender.sendMessage(translation.general.wrongArgs.let(::toComponent))
             }
 
             is AuctionCommand.Result.OpenExpired,

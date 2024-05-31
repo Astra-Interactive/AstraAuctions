@@ -5,11 +5,12 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.menu.menu.InventorySlot
-import ru.astrainteractive.astralibs.menu.menu.editMeta
-import ru.astrainteractive.astralibs.menu.menu.setIndex
-import ru.astrainteractive.astralibs.menu.menu.setItemStack
-import ru.astrainteractive.astralibs.menu.menu.setOnClickListener
+import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.getIndex
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.editMeta
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
 import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
@@ -28,7 +29,7 @@ class ExpiredAuctionGui(
     dependencies = dependencies
 ) {
 
-    override val menuTitle: Component by lazy {
+    override val title: Component by lazy {
         translation.menu.expiredTitle.let(kyoriComponentSerializer::toComponent)
     }
 
@@ -40,7 +41,7 @@ class ExpiredAuctionGui(
         aaucButton.setInventorySlot()
         var itemIndex = 0
         buildSlots(GuiKey.AI) { i ->
-            val index = maxItemsPerPage * page + itemIndex
+            val index = pageContext.getIndex(itemIndex)
             itemIndex++
             val auctionItem = itemsInGui.getOrNull(index) ?: return@buildSlots null
             InventorySlot.Builder()
@@ -75,8 +76,8 @@ class ExpiredAuctionGui(
         router.navigate(route)
     }
 
-    override fun onInventoryClose(it: InventoryCloseEvent) {
-        super.onInventoryClose(it)
+    override fun onInventoryClosed(it: InventoryCloseEvent) {
+        super.onInventoryClosed(it)
         auctionComponent.close()
     }
 }

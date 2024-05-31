@@ -4,11 +4,11 @@ import org.bstats.bukkit.Metrics
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.event.EventListener
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.logging.JUtilFileLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
-import ru.astrainteractive.astralibs.serialization.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.AstraMarket
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
 import ru.astrainteractive.klibs.kdi.Factory

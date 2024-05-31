@@ -1,54 +1,34 @@
 [versions]
 # Kotlin
-kotlin-version = "1.9.0"
-kotlin-coroutines = "1.6.3"
-kotlin-json = "1.5.0-RC"
-kotlin-kaml = "0.50.0"
+kotlin-version = "1.9.23" # https://github.com/JetBrains/kotlin
+kotlin-coroutines = "1.8.0" # https://github.com/Kotlin/kotlinx.coroutines
+kotlin-json = "1.6.3" # https://github.com/Kotlin/kotlinx.serialization
+kotlin-kaml = "0.58.0" # https://github.com/charleskorn/kaml
 
 # Drivers
-driver-jdbc = "3.36.0.3"
-driver-mysql = "8.0.20"
+driver-jdbc = "3.45.3.0" # https://github.com/xerial/sqlite-jdbc
+driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
-
+# klibs
+klibs-gradleplugin = "1.2.0" # https://github.com/makeevrserg/gradle-plugin
+klibs-mikro = "1.6.0-beta" # https://github.com/makeevrserg/klibs.mikro
+klibs-kdi = "1.3.2" # https://github.com/makeevrserg/klibs.kdi
 
 # Minecraft
-minecraft-version = "1.19.2"
-minecraft-velocity = "3.1.1"
-minecraft-spigot = "1.20.1-R0.1-SNAPSHOT"
-minecraft-papi = "2.11.2"
-minecraft-protocollib = "4.8.0"
-minecraft-wg = "7.0.7"
-minecraft-vault = "1.7"
-minecraft-coreprotect = "21.2"
-minecraft-astralibs = "3.0.0-alpha02"
-minecraft-bstats = "3.0.0"
-minecraft-mockbukkit = "v1.19-SNAPSHOT"
-
-# Testing
-tests-org-testing = "7.1.0"
-tests-junit = "4.12"
-tests-mockito = "4.0.0"
-tests-junit-jupiter-api = "5.9.1"
-tests-junit-bom = "5.7.0"
-
-# Fabric
-minecraft-fabric-loom = "1.0-SNAPSHOT"
-minecraft-fabric-kotlin = "1.8.1+kotlin.1.7.0"
-minecraft-fabric-loader = "0.14.9"
-minecraft-fabric-api = "0.60.0+1.19.2"
-
-# Forge
-minecraft-forge-net = "5.1.61"
-minecrft-forge-version = "1.19.2-43.1.52"
+minecraft-velocity = "3.3.0-SNAPSHOT" # https://github.com/PaperMC/Velocity
+minecraft-spigot = "1.20.4-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
+minecraft-papi = "2.11.5" # https://github.com/PlaceholderAPI/PlaceholderAPI
+minecraft-protocollib = "4.8.0" # https://github.com/dmulloy2/ProtocolLib
+minecraft-vault = "1.7" # https://github.com/MilkBowl/VaultAPI
+minecraft-astralibs = "3.1.0-alpha" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-bstats = "3.0.0" # https://github.com/Bastian/bStats
+minecraft-mockbukkit = "v1.19-SNAPSHOT" #https://github.com/MockBukkit/MockBukkit
 
 # Shadow
-gradle-shadow = "7.1.2"
+gradle-shadow = "7.1.2" # https://github.com/johnrengelman/shadow
 
 # BuildConfig
-gradle-buildconfig = "3.1.0"
-
-# Exposed
-exposed = "0.38.1"
+gradle-buildconfig = "3.1.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
 
 [libraries]
 # Kotlin
@@ -69,13 +49,6 @@ driver-mysql = { module = "mysql:mysql-connector-java", version.ref = "driver-my
 # Testing
 tests-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test" }
 
-# Exposed
-exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
-exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
-
-
 # Minecraft
 minecraft-paper-api = { module = "io.papermc.paper:paper-api", version.ref = "minecraft-spigot" }
 minecraft-spigot-api = { module = "org.spigotmc:spigot-api", version.ref = "minecraft-spigot" }
@@ -88,38 +61,44 @@ minecraft-bstats = { module = "org.bstats:bstats-bukkit", version.ref = "minecra
 minecraft-mockbukkit = { module = "com.github.MockBukkit:MockBukkit", version.ref = "minecraft-mockbukkit" }
 
 # klibs
-klibs-kdi = { module = "ru.astrainteractive.klibs:kdi", version.strictly = "1.1.0" }
-klibs-mikro = { module = "ru.astrainteractive.klibs:mikro-core", version.strictly = "1.4.0" }
+klibs-mikro-core = { module = "ru.astrainteractive.klibs:mikro-core", version.ref = "klibs-mikro" }
+klibs-kdi = { module = "ru.astrainteractive.klibs:kdi", version.ref = "klibs-kdi" }
 
 # AstraLibs
 minecraft-astralibs-orm = { module = "ru.astrainteractive.astralibs:orm", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core = { module = "ru.astrainteractive.astralibs:core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-menu-bukkit = { module = "ru.astrainteractive.astralibs:menu-bukkit", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-bukkit = { module = "ru.astrainteractive.astralibs:core-bukkit", version.ref = "minecraft-astralibs" }
-
-# Fabric
-minecraft-fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "minecraft-fabric-kotlin" }
-minecraft-fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "minecraft-fabric-loader" }
-minecraft-fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "minecraft-fabric-api" }
-minecraft-mojang = { module = "com.mojang:minecraft", version.ref = "minecraft-version" }
+minecraft-astralibs-command = { module = "ru.astrainteractive.astralibs:command", version.ref = "minecraft-astralibs" }
+minecraft-astralibs-command-bukkit = { module = "ru.astrainteractive.astralibs:command-bukkit", version.ref = "minecraft-astralibs" }
 
 [bundles]
-exposed = ["exposed-java-time", "exposed-jdbc", "exposed-dao", "exposed-core"]
 minecraft-bukkit = ["minecraft-paper-api", "minecraft-spigot-api", "minecraft-spigot-core", "minecraft-vaultapi", "minecraft-papi"]
 testing-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "driver-jdbc", "driver-mysql", "kotlin-serialization", "kotlin-serializationJson"]
 kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-gradle"]
 
 
 [plugins]
+
 # Kotlin
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin-version" }
 kotlin-gradle = { id = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-version" }
 
-# Minecraft
-minecraft-fabric-loom = { id = "fabric-loom", version.ref = "minecraft-fabric-loom" }
-minecraft-forge-net = { id = "net.minecraftforge.gradle", version.ref = "minecraft-forge-net" }
-
 # Gradle
 gradle-shadow = { id = "com.github.johnrengelman.shadow", version.ref = "gradle-shadow" }
 gradle-buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "gradle-buildconfig" }
+
+# klibs - core
+klibs-gradle-detekt = { id = "ru.astrainteractive.gradleplugin.detekt", version.ref = "klibs-gradleplugin" }
+klibs-gradle-detekt-compose = { id = "ru.astrainteractive.gradleplugin.detekt.compose", version.ref = "klibs-gradleplugin" }
+klibs-gradle-dokka-root = { id = "ru.astrainteractive.gradleplugin.dokka.root", version.ref = "klibs-gradleplugin" }
+klibs-gradle-dokka-module = { id = "ru.astrainteractive.gradleplugin.dokka.module", version.ref = "klibs-gradleplugin" }
+klibs-gradle-java-core = { id = "ru.astrainteractive.gradleplugin.java.core", version.ref = "klibs-gradleplugin" }
+klibs-gradle-stub-javadoc = { id = "ru.astrainteractive.gradleplugin.stub.javadoc", version.ref = "klibs-gradleplugin" }
+klibs-gradle-publication = { id = "ru.astrainteractive.gradleplugin.publication", version.ref = "klibs-gradleplugin" }
+klibs-gradle-rootinfo = { id = "ru.astrainteractive.gradleplugin.root.info", version.ref = "klibs-gradleplugin" }
+
+# klibs - minecraft
+klibs-gradle-minecraft-empty = { id = "ru.astrainteractive.gradleplugin.minecraft.empty", version.ref = "klibs-gradleplugin" }
+klibs-gradle-minecraft-multiplatform = { id = "ru.astrainteractive.gradleplugin.minecraft.multiplatform", version.ref = "klibs-gradleplugin" }

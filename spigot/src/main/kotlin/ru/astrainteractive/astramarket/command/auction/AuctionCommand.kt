@@ -2,9 +2,9 @@ package ru.astrainteractive.astramarket.command.auction
 
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.command.api.Command
+import ru.astrainteractive.astralibs.command.api.command.BukkitCommand
 
-interface AuctionCommand : Command<AuctionCommand.Result, AuctionCommand.Result> {
+interface AuctionCommand : BukkitCommand {
     sealed interface Result {
         data object NoPermission : Result
         data object WrongUsage : Result

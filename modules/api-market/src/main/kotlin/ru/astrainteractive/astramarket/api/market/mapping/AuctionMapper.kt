@@ -12,7 +12,6 @@ internal class AuctionMapperImpl : AuctionMapper {
     override fun toDTO(it: Auction): MarketSlot =
         MarketSlot(
             id = it.id,
-            discordId = it.discordId,
             minecraftUuid = it.minecraftUuid,
             time = it.time,
             item = EncodedObject.ByteArray(it.item),

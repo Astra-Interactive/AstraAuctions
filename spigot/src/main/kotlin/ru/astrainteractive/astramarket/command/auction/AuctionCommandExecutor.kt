@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.command.auction
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.astrainteractive.astralibs.command.api.CommandExecutor
+import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
@@ -34,7 +34,6 @@ class AuctionCommandExecutor(
                 scope.launch(dispatchers.IO) {
                     val marketSlot = MarketSlot(
                         id = -1,
-                        discordId = null,
                         minecraftUuid = input.player.uniqueId.toString(),
                         time = System.currentTimeMillis(),
                         item = encodedItem,

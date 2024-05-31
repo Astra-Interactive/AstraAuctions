@@ -11,12 +11,13 @@ import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import kotlin.coroutines.CoroutineContext
 
-internal class MarketApiImpl(
+internal class SqlMarketApi(
     private val database: Database,
     private val auctionMapper: AuctionMapper,
     dispatchers: KotlinDispatchers
 ) : MarketApi {
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
+
     private suspend fun <T> runCatchingWithContext(
         context: CoroutineContext,
         block: suspend CoroutineScope.() -> T
@@ -24,11 +25,12 @@ internal class MarketApiImpl(
         withContext(context, block)
     }
 
-    override suspend fun insertSlot(marketSlot: MarketSlot): Int? = runCatchingWithContext(
+    override suspend fun insertSlot(
+        marketSlot: MarketSlot
+    ): Int? = runCatchingWithContext(
         limitedIoDispatcher
     ) {
         AuctionTable.insert(database) {
-            this[AuctionTable.discordId] = marketSlot.discordId
             this[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
             this[AuctionTable.time] = marketSlot.time
             this[AuctionTable.item] = marketSlot.item.value
@@ -37,9 +39,9 @@ internal class MarketApiImpl(
         }
     }.getOrNull()
 
-    override suspend fun expireSlot(marketSlot: MarketSlot) = runCatchingWithContext(
-        limitedIoDispatcher
-    ) {
+    override suspend fun expireSlot(
+        marketSlot: MarketSlot
+    ): Unit? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.id.eq(marketSlot.id)
         }.firstOrNull()?.let {
@@ -83,12 +85,12 @@ internal class MarketApiImpl(
     ): MarketSlot? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.id.eq(id)
-        }.map(auctionMapper::toDTO).firstOrNull()
+        }.map(auctionMapper::toDTO).first()
     }.getOrNull()
 
     override suspend fun deleteSlot(
         marketSlot: MarketSlot
-    ) = runCatchingWithContext(limitedIoDispatcher) {
+    ): Unit? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.delete<Auction>(database) {
             AuctionTable.id.eq(marketSlot.id)
         }
