@@ -24,6 +24,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://nexus.scarsz.me/content/groups/public/")

@@ -4,9 +4,9 @@ import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.filemanager.impl.JVMResourceFileManager
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astralibs.serialization.SerializerExt.parse
-import ru.astrainteractive.astralibs.serialization.SerializerExt.writeIntoFile
-import ru.astrainteractive.astralibs.serialization.YamlSerializer
+import ru.astrainteractive.astralibs.serialization.StringFormatExt.parse
+import ru.astrainteractive.astralibs.serialization.StringFormatExt.writeIntoFile
+import ru.astrainteractive.astralibs.serialization.YamlStringFormat
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.klibs.kdi.Dependency
@@ -31,7 +31,7 @@ interface CoreModule {
 
         override val translation: Reloadable<Translation> = Reloadable {
             val fileManager = JVMResourceFileManager("translations.yml", dataFolder, this::class.java)
-            val serializer = YamlSerializer()
+            val serializer = YamlStringFormat()
             serializer.parse<Translation>(fileManager.configFile)
                 .onFailure(Throwable::printStackTrace)
                 .getOrElse { Translation() }
@@ -40,7 +40,7 @@ interface CoreModule {
 
         override val config: Reloadable<PluginConfig> = Reloadable {
             val fileManager = JVMResourceFileManager("config.yml", dataFolder, this::class.java)
-            val serializer = YamlSerializer()
+            val serializer = YamlStringFormat()
             serializer.parse<PluginConfig>(fileManager.configFile)
                 .onFailure(Throwable::printStackTrace)
                 .getOrElse { PluginConfig() }

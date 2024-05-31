@@ -3,9 +3,8 @@ package ru.astrainteractive.astramarket.presentation.di
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.presentation.router.GuiRouter
 import ru.astrainteractive.astramarket.presentation.router.GuiRouterImpl
-import ru.astrainteractive.klibs.kdi.Module
 
-interface AuctionGuiModule : Module {
+interface AuctionGuiModule {
     val router: GuiRouter
 
     @Suppress("LongParameterList")
