@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
@@ -24,90 +25,38 @@ import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.base.di.AuctionGuiDependencies
+import ru.astrainteractive.astramarket.presentation.invmap.AuctionInventoryMap
+import ru.astrainteractive.astramarket.presentation.invmap.AuctionInventoryMap.AuctionSlotKey
+import ru.astrainteractive.astramarket.presentation.invmap.DefaultAuctionInventoryMap
+import ru.astrainteractive.astramarket.presentation.invmap.InventoryMapExt.countKeys
+import ru.astrainteractive.astramarket.presentation.invmap.InventoryMapExt.indexOf
+import ru.astrainteractive.astramarket.presentation.invmap.InventoryMapExt.withKeySlot
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.presentation.util.ItemStackExt.toItemStack
 import java.util.concurrent.TimeUnit
+
+class Cls(serializer: KyoriComponentSerializer) : KyoriComponentSerializer by serializer
 
 @Suppress("TooManyFunctions")
 abstract class AbstractAuctionGui(
     player: Player,
     dependencies: AuctionGuiDependencies
-) : PaginatedInventoryMenu(), AuctionGuiDependencies by dependencies {
+) : PaginatedInventoryMenu(),
+    AuctionGuiDependencies by dependencies,
+    KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
 
     override val playerHolder = DefaultPlayerHolder(player)
 
     override val title: Component by lazy {
-        translation.menu.title.let(kyoriComponentSerializer::toComponent)
+        translation.menu.title.component
     }
     override val inventorySize: InventorySize = InventorySize.XL
     abstract val auctionComponent: AuctionComponent
 
-    protected object GuiKey {
-        // Border
-        const val BO = 'A'
+    protected val inventoryMap: AuctionInventoryMap
+        get() = if (config.auction.useCompactDesign) DefaultAuctionInventoryMap else DefaultAuctionInventoryMap
 
-        // Prev
-        const val PR = 'B'
-
-        // Next
-        const val NE = 'C'
-
-        // Auction/Expired
-        const val AU = 'D'
-
-        // Back
-        const val BA = 'E'
-
-        // Filter
-        const val FI = 'F'
-
-        // Auction item
-        const val AI = 'G'
-
-        // Empty
-        const val EM = "x"
-    }
-
-    private val guiDefaultMap = listOf(
-        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
-        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
-        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
-        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
-        "${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}",
-        "${GuiKey.PR}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.BA}${GuiKey.FI}${GuiKey.EM}${GuiKey.EM}${GuiKey.NE}",
-    ).flatMap { it.map { it } }
-
-    private val guiCompactMap = listOf(
-        "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
-        "${GuiKey.BO}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.BO}",
-        "${GuiKey.PR}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.NE}",
-        "${GuiKey.BO}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.AI}${GuiKey.BO}",
-        "${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}${GuiKey.BO}",
-        "${GuiKey.BO}${GuiKey.EM}${GuiKey.BA}${GuiKey.EM}${GuiKey.EM}${GuiKey.AU}${GuiKey.FI}${GuiKey.EM}${GuiKey.BO}",
-    ).flatMap { it.map { it } }
-
-    protected val guiMap: List<Char>
-        get() = if (config.auction.useCompactDesign) guiCompactMap else guiDefaultMap
-
-    protected inline fun buildSlots(char: Char, transform: (index: Int) -> InventorySlot?): List<InventorySlot> {
-        return guiMap.mapIndexed { i, c ->
-            if (c != char) {
-                return@mapIndexed null
-            } else {
-                transform.invoke(i)
-            }
-        }.filterNotNull()
-    }
-
-    private fun getSlotIndexByChar(char: Char): Int {
-        val i = guiMap.indexOf(char)
-        if (i == -1) {
-            error("Could not find $char in inventory map")
-        }
-        return i
-    }
-
-    val borderButtons: List<InventorySlot> = buildSlots(GuiKey.BO) { i ->
+    val borderButtons: List<InventorySlot> = inventoryMap.withKeySlot(AuctionSlotKey.BO) { i ->
         InventorySlot.Builder()
             .setIndex(i)
             .setItemStack(config.buttons.border.toItemStack())
@@ -117,44 +66,44 @@ abstract class AbstractAuctionGui(
 
     override val nextPageButton: InventorySlot
         get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.NE))
+            .setIndex(inventoryMap.indexOf(AuctionSlotKey.NE))
             .setItemStack(config.buttons.next.toItemStack())
-            .editMeta { displayName(translation.menu.next.let(kyoriComponentSerializer::toComponent)) }
+            .editMeta { displayName(translation.menu.next.component) }
             .setOnClickListener { onNextPageClicked() }
             .build()
 
     override val prevPageButton: InventorySlot
         get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.PR))
+            .setIndex(inventoryMap.indexOf(AuctionSlotKey.PR))
             .setItemStack(config.buttons.previous.toItemStack())
-            .editMeta { displayName(translation.menu.prev.let(kyoriComponentSerializer::toComponent)) }
+            .editMeta { displayName(translation.menu.prev.component) }
             .setOnClickListener { onPrevPageClicked() }
             .build()
 
     val expiredButton: InventorySlot
         get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.AU))
+            .setIndex(inventoryMap.indexOf(AuctionSlotKey.AU))
             .setItemStack(config.buttons.expired.toItemStack())
-            .editMeta { displayName(translation.menu.expired.let(kyoriComponentSerializer::toComponent)) }
+            .editMeta { displayName(translation.menu.expired.component) }
             .setOnClickListener { onExpiredOpenClicked() }
             .build()
 
     val aaucButton: InventorySlot
         get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.AU))
+            .setIndex(inventoryMap.indexOf(AuctionSlotKey.AU))
             .setItemStack(config.buttons.expired.toItemStack())
-            .editMeta { displayName(translation.menu.aauc.let(kyoriComponentSerializer::toComponent)) }
+            .editMeta { displayName(translation.menu.aauc.component) }
             .setOnClickListener { onExpiredOpenClicked() }
             .build()
 
     val sortButton: InventorySlot
         get() = InventorySlot.Builder()
-            .setIndex(getSlotIndexByChar(GuiKey.FI))
+            .setIndex(inventoryMap.indexOf(AuctionSlotKey.FI))
             .setItemStack(config.buttons.expired.toItemStack())
             .editMeta {
                 val sortDesc = sortTranslationMapping.translate(auctionComponent.model.value.sortType).raw
                 val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
-                displayName(desc.let(kyoriComponentSerializer::toComponent))
+                displayName(desc.component)
             }
             .setOnClickListener {
                 showPage(0)
@@ -164,7 +113,7 @@ abstract class AbstractAuctionGui(
 
     override var pageContext: PageContext = PageContext(
         page = 0,
-        maxItemsPerPage = guiMap.count { it == GuiKey.AI },
+        maxItemsPerPage = inventoryMap.countKeys(AuctionSlotKey.AI),
         maxItems = 0
     )
 

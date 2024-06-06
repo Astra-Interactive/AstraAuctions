@@ -16,6 +16,8 @@ import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.base.di.AuctionGuiDependencies
+import ru.astrainteractive.astramarket.presentation.invmap.AuctionInventoryMap.AuctionSlotKey
+import ru.astrainteractive.astramarket.presentation.invmap.InventoryMapExt.withKeySlot
 import ru.astrainteractive.astramarket.presentation.router.GuiRouter
 import java.util.UUID
 
@@ -40,13 +42,13 @@ class ExpiredAuctionGui(
         super.render()
         aaucButton.setInventorySlot()
         var itemIndex = 0
-        buildSlots(GuiKey.AI) { i ->
+        inventoryMap.withKeySlot(AuctionSlotKey.AI) { i ->
             val index = pageContext.getIndex(itemIndex)
             itemIndex++
-            val auctionItem = itemsInGui.getOrNull(index) ?: return@buildSlots null
+            val auctionItem = itemsInGui.getOrNull(index) ?: return@withKeySlot null
             InventorySlot.Builder()
                 .setIndex(i)
-                .setItemStack(serializer.fromByteArray<ItemStack>(auctionItem.item))
+                .setItemStack(objectEncoder.fromByteArray<ItemStack>(auctionItem.item))
                 .editMeta {
                     val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
                     val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"

@@ -18,7 +18,7 @@ interface AuctionGuiDependencies {
     val translation: Translation
     val dispatchers: KotlinDispatchers
     val sortTranslationMapping: AuctionSortTranslationMapping
-    val serializer: ObjectEncoder
+    val objectEncoder: ObjectEncoder
     val kyoriComponentSerializer: KyoriComponentSerializer
     val router: GuiRouter
 
@@ -34,7 +34,7 @@ interface AuctionGuiDependencies {
         override val sortTranslationMapping: AuctionSortTranslationMapping by Provider {
             sharedDomainModule.auctionSortTranslationMapping
         }
-        override val serializer: ObjectEncoder by bukkitCoreModule.encoder
+        override val objectEncoder: ObjectEncoder by bukkitCoreModule.encoder
         override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
     }
 }

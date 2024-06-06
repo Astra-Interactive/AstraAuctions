@@ -15,6 +15,8 @@ import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
 import ru.astrainteractive.astramarket.presentation.base.di.AuctionGuiDependencies
+import ru.astrainteractive.astramarket.presentation.invmap.AuctionInventoryMap.AuctionSlotKey
+import ru.astrainteractive.astramarket.presentation.invmap.InventoryMapExt.withKeySlot
 import ru.astrainteractive.astramarket.presentation.router.GuiRouter
 import java.util.UUID
 
@@ -35,13 +37,13 @@ class AuctionGui(
         super.render()
         expiredButton.setInventorySlot()
         var itemIndex = 0
-        buildSlots(GuiKey.AI) { i ->
+        inventoryMap.withKeySlot(AuctionSlotKey.AI) { i ->
             val index = pageContext.getIndex(itemIndex)
             itemIndex++
-            val auctionItem = itemsInGui.getOrNull(index) ?: return@buildSlots null
+            val auctionItem = itemsInGui.getOrNull(index) ?: return@withKeySlot null
             InventorySlot.Builder()
                 .setIndex(i)
-                .setItemStack(serializer.fromByteArray<ItemStack>(auctionItem.item))
+                .setItemStack(objectEncoder.fromByteArray<ItemStack>(auctionItem.item))
                 .editMeta {
                     listOf(
                         translation.auction.leftButton.let(kyoriComponentSerializer::toComponent),
