@@ -1,6 +1,6 @@
 @file:Suppress("Filename")
 
-package ru.astrainteractive.astramarket.presentation.util
+package ru.astrainteractive.astramarket.gui.util
 
 import org.bukkit.Material
 import org.bukkit.entity.Player

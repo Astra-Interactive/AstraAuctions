@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.presentation.invmap
+package ru.astrainteractive.astramarket.gui.invmap
 
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 

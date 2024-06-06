@@ -1,8 +1,8 @@
-package ru.astrainteractive.astramarket.presentation.di
+package ru.astrainteractive.astramarket.gui.di
 
 import ru.astrainteractive.astramarket.di.RootModule
-import ru.astrainteractive.astramarket.presentation.router.GuiRouter
-import ru.astrainteractive.astramarket.presentation.router.GuiRouterImpl
+import ru.astrainteractive.astramarket.gui.router.GuiRouter
+import ru.astrainteractive.astramarket.gui.router.GuiRouterImpl
 
 interface AuctionGuiModule {
     val router: GuiRouter

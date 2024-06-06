@@ -11,7 +11,7 @@ import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.di.util.ConnectionExt.toDBConnection
 import ru.astrainteractive.astramarket.domain.di.BukkitSharedDomainModule
 import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
-import ru.astrainteractive.astramarket.presentation.di.AuctionGuiModule
+import ru.astrainteractive.astramarket.gui.di.AuctionGuiModule
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 

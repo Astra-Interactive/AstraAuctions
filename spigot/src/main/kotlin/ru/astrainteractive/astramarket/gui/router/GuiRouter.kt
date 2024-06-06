@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.presentation.router
+package ru.astrainteractive.astramarket.gui.router
 
 import org.bukkit.entity.Player
 

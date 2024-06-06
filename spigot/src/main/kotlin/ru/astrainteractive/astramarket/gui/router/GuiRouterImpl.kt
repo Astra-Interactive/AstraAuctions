@@ -1,11 +1,11 @@
-package ru.astrainteractive.astramarket.presentation.router
+package ru.astrainteractive.astramarket.gui.router
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.bukkit.entity.Player
 import ru.astrainteractive.astramarket.di.RootModule
-import ru.astrainteractive.astramarket.presentation.base.AbstractAuctionGui
-import ru.astrainteractive.astramarket.presentation.router.di.factory.AuctionGuiFactory
+import ru.astrainteractive.astramarket.gui.base.AbstractAuctionGui
+import ru.astrainteractive.astramarket.gui.router.di.factory.AuctionGuiFactory
 import ru.astrainteractive.klibs.kdi.getValue
 
 class GuiRouterImpl(private val rootModule: RootModule) : GuiRouter {

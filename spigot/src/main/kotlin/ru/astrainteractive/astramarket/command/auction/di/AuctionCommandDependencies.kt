@@ -7,7 +7,7 @@ import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
-import ru.astrainteractive.astramarket.presentation.router.GuiRouter
+import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers

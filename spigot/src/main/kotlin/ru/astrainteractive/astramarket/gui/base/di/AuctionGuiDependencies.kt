@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.presentation.base.di
+package ru.astrainteractive.astramarket.gui.base.di
 
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
@@ -8,7 +8,7 @@ import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
 import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.presentation.router.GuiRouter
+import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers

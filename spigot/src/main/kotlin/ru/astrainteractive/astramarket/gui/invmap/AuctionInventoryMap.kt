@@ -1,6 +1,6 @@
-package ru.astrainteractive.astramarket.presentation.invmap
+package ru.astrainteractive.astramarket.gui.invmap
 
-import ru.astrainteractive.astramarket.presentation.invmap.AuctionInventoryMap.AuctionSlotKey
+import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap.AuctionSlotKey
 
 interface AuctionInventoryMap : InventoryMap<AuctionSlotKey> {
     enum class AuctionSlotKey {
