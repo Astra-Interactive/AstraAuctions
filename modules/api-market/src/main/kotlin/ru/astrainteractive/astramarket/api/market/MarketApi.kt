@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.api.market
 
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
 
 interface MarketApi {
     /**
@@ -20,13 +21,13 @@ interface MarketApi {
      * @return slots with specified [MarketSlot.minecraftUuid]
      * @throws Exception
      */
-    suspend fun getUserSlots(uuid: String, expired: Boolean): List<MarketSlot>?
+    suspend fun getUserSlots(uuid: String, isExpired: Boolean): List<MarketSlot>?
 
     /**
      * @return list of all slots
      * @throws Exception
      */
-    suspend fun getSlots(expired: Boolean): List<MarketSlot>?
+    suspend fun getSlots(isExpired: Boolean): List<MarketSlot>?
 
     /**
      * @return slots where [MarketSlot.time] more than [millis]
@@ -51,4 +52,10 @@ interface MarketApi {
      * @throws Exception
      */
     suspend fun countPlayerSlots(uuid: String): Int?
+
+    /**
+     * @return uuid of player who currently have active/expired slots
+     * @throws Exception
+     */
+    suspend fun findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots>
 }

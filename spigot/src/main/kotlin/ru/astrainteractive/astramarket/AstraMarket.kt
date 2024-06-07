@@ -16,7 +16,8 @@ class AstraMarket : JavaPlugin(), Lifecycle {
             rootModule.coreModule.lifecycle,
             rootModule.bukkitCoreModule.lifecycle,
             rootModule.apiMarketModule.lifecycle,
-            rootModule.commandModule.lifecycle
+            rootModule.commandModule.lifecycle,
+            rootModule.workerModule.lifecycle
         )
 
     override fun onEnable() {

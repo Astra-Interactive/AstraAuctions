@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.core
 
 import kotlinx.serialization.Serializable
+import kotlin.time.Duration.Companion.days
 
 @Serializable
 data class PluginConfig(
@@ -33,7 +34,7 @@ data class PluginConfig(
         val maxPrice: Int = 1000000,
         val taxPercent: Int = 0,
         val announce: Boolean = true,
-        val maxTime: Long = 20L // 1*24*60*60*1000
+        val maxTimeSeconds: Long = 7.days.inWholeMilliseconds // 1*24*60*60*1000
     )
 
     @Serializable

@@ -3,6 +3,7 @@ package ru.astrainteractive.astramarket.command.auction
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.command.api.command.BukkitCommand
+import java.util.UUID
 
 interface AuctionCommand : BukkitCommand {
     sealed interface Result {
@@ -10,8 +11,13 @@ interface AuctionCommand : BukkitCommand {
         data object WrongUsage : Result
         data object NotPlayer : Result
         data object WrongPrice : Result
-        class OpenExpired(val player: Player) : Result
-        class OpenAuctions(val player: Player) : Result
+        class OpenSlots(
+            val player: Player,
+            val isExpired: Boolean,
+            val targetPlayerUUID: UUID?
+        ) : Result
+
+        class OpenPlayers(val player: Player, val isExpired: Boolean) : Result
         class Sell(
             val player: Player,
             val itemInstance: ItemStack,

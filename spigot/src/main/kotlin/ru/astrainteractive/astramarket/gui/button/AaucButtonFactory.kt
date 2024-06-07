@@ -20,7 +20,7 @@ class AaucButtonFactory(
         click: Click
     ) = InventorySlot.Builder()
         .setIndex(index)
-        .setItemStack(config.buttons.expired.toItemStack())
+        .setItemStack(config.buttons.aauc.toItemStack())
         .editMeta { displayName(translation.menu.aauc.component) }
         .setOnClickListener(click)
         .build()

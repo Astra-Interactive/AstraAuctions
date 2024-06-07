@@ -15,8 +15,13 @@ object InventoryMapExt {
         transform: (index: Int) -> InventorySlot?
     ): List<InventorySlot> {
         return flatMap
-            .filter { entryGuiKey -> entryGuiKey == key }
-            .mapIndexed { i, _ -> transform.invoke(i) }
+            .mapIndexed { i, k ->
+                if (key != k) {
+                    null
+                } else {
+                    transform.invoke(i)
+                }
+            }
             .filterNotNull()
     }
 

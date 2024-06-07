@@ -6,13 +6,16 @@ import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
-import ru.astrainteractive.astramarket.domain.mapping.AuctionSortTranslationMapping
+import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
+import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
+import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
 interface ButtonFactoryDependency {
-    val sortTranslationMapping: AuctionSortTranslationMapping
+    val auctionSortTranslationMapping: AuctionSortTranslationMapping
+    val playersSortTranslationMapping: PlayerSortTranslationMapping
     val config: PluginConfig
     val translation: Translation
     val kyoriComponentSerializer: KyoriComponentSerializer
@@ -20,11 +23,15 @@ interface ButtonFactoryDependency {
 
     class Default(
         coreModule: CoreModule,
-        sharedDomainModule: SharedDomainModule,
+        marketDomainModule: MarketDomainModule,
         bukkitCoreModule: BukkitCoreModule,
+        playersMarketModule: PlayersMarketModule
     ) : ButtonFactoryDependency {
-        override val sortTranslationMapping: AuctionSortTranslationMapping by Provider {
-            sharedDomainModule.auctionSortTranslationMapping
+        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
+            marketDomainModule.auctionSortTranslationMapping
+        }
+        override val playersSortTranslationMapping: PlayerSortTranslationMapping by Provider {
+            playersMarketModule.playerSortTranslationMapping
         }
         override val config: PluginConfig by coreModule.config
         override val translation: Translation by coreModule.translation

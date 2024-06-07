@@ -39,7 +39,7 @@ dependencies {
     implementation(projects.modules.core)
 }
 
-val destination = File("D:\\Minecraft Servers\\Servers\\esmp-configuration\\smp\\plugins")
+val destination = File("/Users/romanmakeev/Desktop/Server/SMP/smp/plugins")
     .takeIf(File::exists)
     ?: File(rootDir, "jars")
 

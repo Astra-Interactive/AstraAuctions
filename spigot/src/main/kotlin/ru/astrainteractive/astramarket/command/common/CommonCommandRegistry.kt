@@ -1,5 +1,7 @@
 package ru.astrainteractive.astramarket.command.common
 
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astralibs.util.StringListExt.withEntry
 import ru.astrainteractive.astramarket.AstraMarket
@@ -23,8 +25,15 @@ class CommonCommandRegistry(dependencies: CommonCommandDependencies) :
     private fun createTabCompleter() = plugin.getCommand("amarket")?.setTabCompleter { sender, command, label, args ->
         when (val size = args.size) {
             0 -> listOf("amarket")
-            1 -> listOf("sell", "open", "expired").withEntry(args.last())
-            2 -> listOf(translation.auction.tabCompleterPrice.raw).withEntry(args.last())
+            1 -> listOf("sell", "open", "expired", "players").withEntry(args.last())
+            2 -> {
+                val arg = args.getOrNull(0)
+                when {
+                    arg == "open" || arg == "expired" -> Bukkit.getOnlinePlayers().map(Player::getName)
+                    else -> listOf<String>()
+                }
+            }
+
             3 -> listOf(translation.auction.tabCompleterAmount.raw).withEntry(args.last())
             else -> listOf<String>()
         }

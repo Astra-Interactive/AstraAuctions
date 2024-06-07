@@ -17,11 +17,18 @@ class ExpiredButtonFactory(
 
     fun render(
         index: Int,
+        isExpired: Boolean,
         click: Click
     ) = InventorySlot.Builder()
         .setIndex(index)
         .setItemStack(config.buttons.expired.toItemStack())
-        .editMeta { displayName(translation.menu.expired.component) }
+        .editMeta {
+            if (isExpired) {
+                displayName(translation.menu.expired.component)
+            } else {
+                displayName(translation.menu.new.component)
+            }
+        }
         .setOnClickListener(click)
         .build()
 }

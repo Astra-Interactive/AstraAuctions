@@ -6,9 +6,11 @@ import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapper
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.db.market.entity.Auction
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
 internal class SqlMarketApi(
@@ -53,20 +55,20 @@ internal class SqlMarketApi(
 
     override suspend fun getUserSlots(
         uuid: String,
-        expired: Boolean
+        isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.minecraftUuid.eq(uuid).and(
-                AuctionTable.expired.eq(if (expired) 1 else 0)
+                AuctionTable.expired.eq(if (isExpired) 1 else 0)
             )
         }.map(auctionMapper::toDTO)
     }.getOrNull()
 
     override suspend fun getSlots(
-        expired: Boolean
+        isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.find(database, constructor = Auction) {
-            AuctionTable.expired.eq(if (expired) 1 else 0)
+            AuctionTable.expired.eq(if (isExpired) 1 else 0)
         }.map(auctionMapper::toDTO)
     }.getOrNull()
 
@@ -103,4 +105,16 @@ internal class SqlMarketApi(
             AuctionTable.minecraftUuid.eq(uuid)
         }
     }.getOrNull()
+
+    override suspend fun findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots> {
+        return AuctionTable.all(database, Auction)
+            .map(auctionMapper::toDTO)
+            .groupBy(MarketSlot::minecraftUuid)
+            .map { (uuid, slots) ->
+                PlayerAndSlots(
+                    minecraftUUID = UUID.fromString(uuid),
+                    slots = slots
+                )
+            }
+    }
 }

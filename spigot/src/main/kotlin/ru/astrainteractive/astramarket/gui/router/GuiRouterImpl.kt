@@ -2,40 +2,54 @@ package ru.astrainteractive.astramarket.gui.router
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.bukkit.entity.Player
 import ru.astrainteractive.astramarket.di.RootModule
-import ru.astrainteractive.astramarket.gui.base.AbstractAuctionGui
-import ru.astrainteractive.astramarket.gui.router.di.factory.AuctionGuiFactory
-import ru.astrainteractive.klibs.kdi.getValue
+import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
+import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
+import ru.astrainteractive.astramarket.gui.players.PlayersGui
+import ru.astrainteractive.astramarket.gui.slots.SlotsGui
 
 class GuiRouterImpl(private val rootModule: RootModule) : GuiRouter {
     private val scope = rootModule.coreModule.scope.value
     private val dispatchers = rootModule.coreModule.dispatchers
-
-    private fun createGui(player: Player, isExpired: Boolean): AbstractAuctionGui {
-        return AuctionGuiFactory(
-            player = player,
-            isExpired = isExpired,
-            coreModule = rootModule.coreModule,
-            apiMarketModule = rootModule.apiMarketModule,
-            bukkitCoreModule = rootModule.bukkitCoreModule,
-            router = this,
-            sharedDomainModule = rootModule.sharedDomainModule
-        ).create()
-    }
+    private val dependencies = AuctionGuiDependencies.Default(
+        coreModule = rootModule.coreModule,
+        marketDomainModule = rootModule.marketModule.marketDomainModule,
+        bukkitCoreModule = rootModule.bukkitCoreModule,
+        router = this@GuiRouterImpl
+    )
+    private val menuDrawerContext = MenuDrawerContext.Default(
+        coreModule = rootModule.coreModule,
+        marketDomainModule = rootModule.marketModule.marketDomainModule,
+        bukkitCoreModule = rootModule.bukkitCoreModule,
+        playersMarketModule = rootModule.playersMarketModule
+    )
 
     override fun navigate(route: GuiRouter.Route) {
         scope.launch(dispatchers.IO) {
             val gui = when (route) {
-                is GuiRouter.Route.Auctions -> createGui(
-                    player = route.player,
-                    isExpired = false
-                )
+                is GuiRouter.Route.Slots -> {
+                    SlotsGui(
+                        player = route.player,
+                        dependencies = dependencies,
+                        menuDrawerContext = menuDrawerContext,
+                        auctionComponent = rootModule.marketModule.createAuctionComponent(
+                            playerUUID = route.player.uniqueId,
+                            isExpired = route.isExpired,
+                            targetPlayerUUID = route.targetPlayerUUID
+                        )
+                    )
+                }
 
-                is GuiRouter.Route.ExpiredAuctions -> createGui(
-                    player = route.player,
-                    isExpired = true
-                )
+                is GuiRouter.Route.Players -> {
+                    PlayersGui(
+                        player = route.player,
+                        dependencies = dependencies,
+                        menuDrawerContext = menuDrawerContext,
+                        playersMarketComponent = rootModule.playersMarketModule.createPlayersMarketComponent(
+                            isExpired = route.isExpired
+                        )
+                    )
+                }
             }
             withContext(rootModule.coreModule.dispatchers.Main) {
                 gui.open()
