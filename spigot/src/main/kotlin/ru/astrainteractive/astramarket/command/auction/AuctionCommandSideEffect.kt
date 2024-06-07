@@ -26,9 +26,9 @@ class AuctionCommandSideEffect(
                 commandContext.sender.sendMessage(translation.general.wrongArgs.let(::toComponent))
             }
 
-            is AuctionCommand.Result.OpenExpired,
+            is AuctionCommand.Result.OpenPlayers,
             is AuctionCommand.Result.Sell,
-            is AuctionCommand.Result.OpenAuctions -> Unit
+            is AuctionCommand.Result.OpenSlots -> Unit
         }
     }
 }

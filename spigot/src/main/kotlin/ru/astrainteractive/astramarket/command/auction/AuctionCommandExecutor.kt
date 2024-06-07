@@ -5,8 +5,8 @@ import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
-import ru.astrainteractive.astramarket.domain.usecase.CreateAuctionUseCase
-import ru.astrainteractive.astramarket.presentation.router.GuiRouter
+import ru.astrainteractive.astramarket.gui.router.GuiRouter
+import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
 import kotlin.math.max
 import kotlin.math.min
 
@@ -15,13 +15,20 @@ class AuctionCommandExecutor(
 ) : CommandExecutor<AuctionCommand.Result>, AuctionCommandDependencies by dependencies {
     override fun execute(input: AuctionCommand.Result) {
         when (input) {
-            is AuctionCommand.Result.OpenAuctions -> {
-                val route = GuiRouter.Route.Auctions(input.player)
+            is AuctionCommand.Result.OpenSlots -> {
+                val route = GuiRouter.Route.Slots(
+                    player = input.player,
+                    isExpired = input.isExpired,
+                    targetPlayerUUID = input.targetPlayerUUID
+                )
                 router.navigate(route)
             }
 
-            is AuctionCommand.Result.OpenExpired -> {
-                val route = GuiRouter.Route.ExpiredAuctions(input.player)
+            is AuctionCommand.Result.OpenPlayers -> {
+                val route = GuiRouter.Route.Players(
+                    player = input.player,
+                    isExpired = input.isExpired
+                )
                 router.navigate(route)
             }
 

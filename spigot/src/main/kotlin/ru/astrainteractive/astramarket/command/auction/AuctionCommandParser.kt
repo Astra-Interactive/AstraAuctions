@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.command.auction
 
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.command.api.context.BukkitCommandContext
 import ru.astrainteractive.astralibs.command.api.parser.BukkitCommandParser
@@ -28,17 +29,29 @@ class AuctionCommandParser : BukkitCommandParser<AuctionCommand.Result> {
                 )
             }
 
-            "expired" -> {
+            "players" -> {
                 val player = commandContext.sender as? Player
                 player ?: return AuctionCommand.Result.NotPlayer
-                AuctionCommand.Result.OpenExpired(player)
+                AuctionCommand.Result.OpenPlayers(
+                    player = player,
+                    isExpired = false
+                )
             }
 
             // Open and else
             else -> {
                 val player = commandContext.sender as? Player
                 player ?: return AuctionCommand.Result.NotPlayer
-                AuctionCommand.Result.OpenAuctions(player)
+                val targetPlayerUuid = commandContext.args
+                    .getOrNull(1)
+                    ?.let(Bukkit::getPlayer)
+                    ?.uniqueId
+
+                AuctionCommand.Result.OpenSlots(
+                    player = player,
+                    isExpired = commandContext.args.getOrNull(0) == "expired",
+                    targetPlayerUUID = targetPlayerUuid
+                )
             }
         }
     }

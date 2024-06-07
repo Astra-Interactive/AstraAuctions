@@ -26,6 +26,8 @@ data class Translation(
         val aauc: StringDesc.Raw = StringDesc.Raw("&#18dbd1Аукцион"),
         @SerializedName("menu.expired")
         val expired: StringDesc.Raw = StringDesc.Raw("&#18dbd1Истекшие"),
+        @SerializedName("menu.new")
+        val new: StringDesc.Raw = StringDesc.Raw("&#18dbd1Новые"),
         @SerializedName("menu.next")
         val next: StringDesc.Raw = StringDesc.Raw("&#18dbd1Дальше"),
         @SerializedName("menu.sort")
@@ -60,6 +62,8 @@ data class Translation(
         val broadcast: StringDesc.Raw = StringDesc.Raw(
             "&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /aauc новый предмет"
         ),
+        @SerializedName("menu.player.auctions_amount")
+        val auctionsAmount: StringDesc.Raw = StringDesc.Raw("&7Количество: %amount%"),
         @SerializedName("auction.tab_completer.price")
         val tabCompleterPrice: StringDesc.Raw = StringDesc.Raw("ЦЕНА"),
         @SerializedName("auction.tab_completer.amount")
@@ -87,6 +91,8 @@ data class Translation(
         val auctionBy: StringDesc.Raw = StringDesc.Raw("&7Выставил: &#d6a213%player_owner%"),
         @SerializedName("auction.auction_created_ago")
         val auctionCreatedAgo: StringDesc.Raw = StringDesc.Raw("&7Время: &#d6a213%time%"),
+        @SerializedName("auction.auction_last")
+        val auctionLast: StringDesc.Raw = StringDesc.Raw("&7Последний слот: &#d6a213%time%"),
         @SerializedName("auction.auction_price")
         val auctionPrice: StringDesc.Raw = StringDesc.Raw("&7Стоимость: &#d6a213%price%"),
         @SerializedName("auction.sort.material_desc")
@@ -99,6 +105,10 @@ data class Translation(
         val sortDateAsc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо дате &#d6a213&l↓"),
         @SerializedName("auction.sort.name_desc")
         val sortNameDesc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо имени &#d6a213&l↑"),
+        @SerializedName("auction.sort.amount_asc")
+        val sortAmountAsc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо количеству &#d6a213&l↓"),
+        @SerializedName("auction.sort.amount_desc")
+        val sortAmountDesc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо количеству &#d6a213&l↑"),
         @SerializedName("auction.sort.name_asc")
         val sortNameAsc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо имени &#d6a213&l↓"),
         @SerializedName("auction.sort.price_desc")

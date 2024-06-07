@@ -4,14 +4,16 @@ import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
 import ru.astrainteractive.astralibs.economy.EconomyProviderFactory
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.data.di.BukkitSharedDataModule
 import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.astramarket.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.di.RootModule
 import ru.astrainteractive.astramarket.di.util.ConnectionExt.toDBConnection
-import ru.astrainteractive.astramarket.domain.di.BukkitSharedDomainModule
-import ru.astrainteractive.astramarket.domain.di.SharedDomainModule
-import ru.astrainteractive.astramarket.presentation.di.AuctionGuiModule
+import ru.astrainteractive.astramarket.gui.router.di.RouterModule
+import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
+import ru.astrainteractive.astramarket.market.di.MarketModule
+import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.worker.di.WorkerModule
 import ru.astrainteractive.klibs.kdi.Provider
 import ru.astrainteractive.klibs.kdi.getValue
 
@@ -36,27 +38,39 @@ class RootModuleImpl : RootModule {
         )
     }
 
-    override val sharedDomainModule: SharedDomainModule by Provider {
-        SharedDomainModule.Default(
+    override val marketModule: MarketModule by Provider {
+        MarketModule.Default(
             coreModule = coreModule,
             apiMarketModule = apiMarketModule,
-            sharedDataModuleFactory = {
-                BukkitSharedDataModule(
+            marketDataModuleFactory = {
+                BukkitMarketDataModule(
                     encoder = bukkitCoreModule.encoder.value,
                     stringSerializer = bukkitCoreModule.kyoriComponentSerializer.value
                 )
             },
-            platformSharedDomainModuleFactory = {
-                BukkitSharedDomainModule(
+            platformMarketDomainModuleFactory = {
+                BukkitMarketDomainModule(
                     encoder = bukkitCoreModule.encoder.value,
                 )
             }
         )
     }
-    override val auctionGuiModule: AuctionGuiModule by Provider {
-        AuctionGuiModule.Default(this)
+    override val routerModule: RouterModule by Provider {
+        RouterModule.Default(this)
     }
     override val commandModule: CommandModule by lazy {
         CommandModule.Default(this)
+    }
+    override val playersMarketModule: PlayersMarketModule by lazy {
+        PlayersMarketModule.Default(
+            coreModule = coreModule,
+            apiMarketModule = apiMarketModule
+        )
+    }
+    override val workerModule: WorkerModule by lazy {
+        WorkerModule.Default(
+            apiMarketModule = apiMarketModule,
+            coreModule = coreModule
+        )
     }
 }
