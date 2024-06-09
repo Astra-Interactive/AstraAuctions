@@ -15,6 +15,7 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.getIndex
 import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isFirstPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isLastPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showNextPage
+import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
@@ -89,6 +90,7 @@ class PlayersGui(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
+                showPage(0)
                 playersMarketComponent.toggleExpired()
             }
         )

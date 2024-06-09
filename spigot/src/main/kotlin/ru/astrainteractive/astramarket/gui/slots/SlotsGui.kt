@@ -95,7 +95,10 @@ class SlotsGui(
         get() = expiredButtonFactory.render(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = true,
-            click = { auctionComponent.toggleExpired() }
+            click = {
+                showPage(0)
+                auctionComponent.toggleExpired()
+            }
         )
 
     private val aaucButton: InventorySlot
