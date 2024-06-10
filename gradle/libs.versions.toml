@@ -1,6 +1,6 @@
 [versions]
 # Kotlin
-kotlin-version = "1.9.23" # https://github.com/JetBrains/kotlin
+kotlin-version = "2.0.0" # https://github.com/JetBrains/kotlin
 kotlin-coroutines = "1.8.1" # https://github.com/Kotlin/kotlinx.coroutines
 kotlin-json = "1.7.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlin-kaml = "0.60.0" # https://github.com/charleskorn/kaml
