@@ -6,13 +6,7 @@ plugins {
     kotlin("plugin.serialization")
     id("ru.astrainteractive.gradleplugin.minecraft.multiplatform")
 }
-minecraftMultiplatform {
-    dependencies {
-        // Local
-        implementation(projects.modules.shared.bukkitMain)
-        implementation(projects.modules.shared)
-    }
-}
+
 dependencies {
     // Kotlin
     implementation(libs.bundles.kotlin)
@@ -37,6 +31,13 @@ dependencies {
     // Local
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)
+    implementation(projects.modules.coreBukkit)
+    implementation(projects.modules.periodic)
+    implementation(projects.modules.marketPlayers)
+    implementation(projects.modules.marketView)
+    implementation(projects.modules.marketViewBukkit)
+    implementation(projects.modules.guiBukkit)
+    implementation(projects.modules.commandBukkit)
 }
 
 val destination = File("/Users/romanmakeev/Desktop/Server/SMP/smp/plugins")

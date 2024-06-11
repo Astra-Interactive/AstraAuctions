@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.core.di
 
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astralibs.filemanager.impl.JVMResourceFileManager
+import ru.astrainteractive.astralibs.filemanager.impl.JVMFileManager
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.parse
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.writeIntoFile
@@ -30,7 +30,7 @@ interface CoreModule {
     ) : CoreModule {
 
         override val translation: Reloadable<Translation> = Reloadable {
-            val fileManager = JVMResourceFileManager("translations.yml", dataFolder, this::class.java)
+            val fileManager = JVMFileManager("translations.yml", dataFolder)
             val serializer = YamlStringFormat()
             serializer.parse<Translation>(fileManager.configFile)
                 .onFailure(Throwable::printStackTrace)
@@ -39,7 +39,7 @@ interface CoreModule {
         }
 
         override val config: Reloadable<PluginConfig> = Reloadable {
-            val fileManager = JVMResourceFileManager("config.yml", dataFolder, this::class.java)
+            val fileManager = JVMFileManager("config.yml", dataFolder)
             val serializer = YamlStringFormat()
             serializer.parse<PluginConfig>(fileManager.configFile)
                 .onFailure(Throwable::printStackTrace)

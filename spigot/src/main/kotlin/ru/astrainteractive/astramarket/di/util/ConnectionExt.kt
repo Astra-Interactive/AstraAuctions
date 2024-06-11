@@ -6,7 +6,7 @@ import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astramarket.core.PluginConfig
 
-object ConnectionExt {
+internal object ConnectionExt {
     fun PluginConfig.Connection.toDBConnection(): Pair<DBConnection, DBSyntax> {
         val mysql = this.mysql
         val sqlite = this.sqlite
