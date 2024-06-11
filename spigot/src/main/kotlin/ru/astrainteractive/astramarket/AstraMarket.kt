@@ -1,16 +1,16 @@
 package ru.astrainteractive.astramarket
 
 import org.bukkit.event.HandlerList
-import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.di.impl.RootModuleImpl
+import ru.astrainteractive.astramarket.core.AstraMarketPlugin
+import ru.astrainteractive.astramarket.di.RootModule
 
 /**
  * Initial class for your plugin
  */
-class AstraMarket : JavaPlugin(), Lifecycle {
+class AstraMarket : AstraMarketPlugin() {
 
-    private val rootModule = RootModuleImpl()
+    private val rootModule = RootModule.Default()
     private val lifecycle: List<Lifecycle>
         get() = listOf(
             rootModule.coreModule.lifecycle,

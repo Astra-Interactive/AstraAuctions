@@ -2,6 +2,8 @@ package ru.astrainteractive.astramarket.api.market.impl
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapper
@@ -17,7 +19,9 @@ internal class SqlMarketApi(
     private val database: Database,
     private val auctionMapper: AuctionMapper,
     dispatchers: KotlinDispatchers
-) : MarketApi {
+) : MarketApi,
+    Logger by JUtiltLogger("SqlMarketApi") {
+
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
 
     private suspend fun <T> runCatchingWithContext(
@@ -25,13 +29,11 @@ internal class SqlMarketApi(
         block: suspend CoroutineScope.() -> T
     ): Result<T> = runCatching {
         withContext(context, block)
-    }
+    }.onFailure { throwable -> debug { throwable.stackTraceToString() } }
 
     override suspend fun insertSlot(
         marketSlot: MarketSlot
-    ): Int? = runCatchingWithContext(
-        limitedIoDispatcher
-    ) {
+    ): Int? = runCatchingWithContext(limitedIoDispatcher) {
         AuctionTable.insert(database) {
             this[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
             this[AuctionTable.time] = marketSlot.time
@@ -106,8 +108,10 @@ internal class SqlMarketApi(
         }
     }.getOrNull()
 
-    override suspend fun findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots> {
-        return AuctionTable.all(database, Auction)
+    override suspend fun findPlayersWithSlots(
+        isExpired: Boolean
+    ): List<PlayerAndSlots> = runCatchingWithContext(limitedIoDispatcher) {
+        AuctionTable.all(database, Auction)
             .map(auctionMapper::toDTO)
             .groupBy(MarketSlot::minecraftUuid)
             .map { (uuid, slots) ->
@@ -116,5 +120,5 @@ internal class SqlMarketApi(
                     slots = slots
                 )
             }
-    }
+    }.getOrNull().orEmpty()
 }

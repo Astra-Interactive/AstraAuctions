@@ -42,6 +42,12 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AstraMarket"
 include(":modules:api-market")
-include(":modules:shared")
+include(":modules:market-view")
+include(":modules:market-view-bukkit")
+include(":modules:market-players")
 include(":modules:core")
+include(":modules:core-bukkit")
+include(":modules:gui-bukkit")
+include(":modules:periodic")
+include(":modules:command-bukkit")
 include(":spigot")
