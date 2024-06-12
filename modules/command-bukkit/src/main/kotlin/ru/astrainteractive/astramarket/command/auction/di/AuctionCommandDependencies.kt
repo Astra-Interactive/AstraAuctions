@@ -2,11 +2,11 @@ package ru.astrainteractive.astramarket.command.auction.di
 
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.plugin.java.JavaPlugin
-import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.di.MarketModule
@@ -20,7 +20,7 @@ internal interface AuctionCommandDependencies {
     val kyoriComponentSerializer: KyoriComponentSerializer
     val translation: Translation
     val router: GuiRouter
-    val encoder: ObjectEncoder
+    val itemStackEncoder: ItemStackEncoder
     val scope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val createAuctionUseCase: CreateAuctionUseCase
@@ -37,9 +37,7 @@ internal interface AuctionCommandDependencies {
         override val router: GuiRouter by Provider {
             routerModule.router
         }
-        override val encoder: ObjectEncoder by Provider {
-            bukkitCoreModule.encoder.value
-        }
+        override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
         override val scope: CoroutineScope by coreModule.scope
         override val dispatchers: KotlinDispatchers = coreModule.dispatchers
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {

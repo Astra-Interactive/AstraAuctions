@@ -3,19 +3,16 @@ package ru.astrainteractive.astramarket.market.data.bridge
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
 internal class BukkitAuctionsBridge(
-    private val encoder: ObjectEncoder,
+    private val itemStackEncoder: ItemStackEncoder,
 ) : AuctionsBridge {
-    private fun MarketSlot.itemStack(serializer: ObjectEncoder): ItemStack {
-        return serializer.fromByteArray(item)
-    }
 
     private fun ItemStack.displayNameOrMaterialName(): String {
         val name = itemMeta?.displayName
@@ -31,12 +28,12 @@ internal class BukkitAuctionsBridge(
     }
 
     override suspend fun addItemToInventory(marketSlot: MarketSlot, uuid: UUID) {
-        val item = marketSlot.itemStack(encoder)
+        val item = itemStackEncoder.toItemStack(marketSlot.item)
         Bukkit.getPlayer(uuid)?.inventory?.addItem(item)
     }
 
     override suspend fun itemDesc(marketSlot: MarketSlot): String {
-        return marketSlot.itemStack(encoder).displayNameOrMaterialName()
+        return itemStackEncoder.toItemStack(marketSlot.item).displayNameOrMaterialName()
     }
 
     override fun playerName(uuid: UUID): String? {
@@ -48,7 +45,7 @@ internal class BukkitAuctionsBridge(
     }
 
     override fun isItemValid(marketSlot: MarketSlot): Boolean {
-        val itemStack = marketSlot.itemStack(encoder)
+        val itemStack = itemStackEncoder.toItemStack(marketSlot.item)
         return itemStack != null && itemStack.type != Material.AIR
     }
 

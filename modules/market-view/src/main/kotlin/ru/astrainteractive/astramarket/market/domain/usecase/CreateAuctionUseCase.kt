@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
@@ -55,7 +54,7 @@ internal class CreateAuctionUseCaseImpl(
             playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
             if (config.auction.announce) {
                 val playerName = auctionsBridge.playerName(playerUUID) ?: "-"
-                playerInteractionBridge.broadcast(translation.auction.broadcast.replace("%player%", playerName))
+                playerInteractionBridge.broadcast(translation.auction.broadcast(playerName))
             }
             true
         } else {

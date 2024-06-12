@@ -26,14 +26,20 @@ internal class CommonCommandRegistry(dependencies: CommonCommandDependencies) :
             0 -> listOf("amarket")
             1 -> listOf("sell", "open", "expired", "players").withEntry(args.last())
             2 -> {
-                val arg = args.getOrNull(0)
-                when {
-                    arg == "open" || arg == "expired" -> Bukkit.getOnlinePlayers().map(Player::getName)
-                    else -> listOf<String>()
+                when (args.getOrNull(0)) {
+                    "open", "expired" -> Bukkit.getOnlinePlayers().map(Player::getName)
+                    "sell" -> listOf(translation.auction.tabCompleterAmount.raw).withEntry(args.last())
+                    else -> emptyList()
                 }
             }
 
-            3 -> listOf(translation.auction.tabCompleterAmount.raw).withEntry(args.last())
+            3 -> {
+                when (args.getOrNull(0)) {
+                    "sell" -> listOf(translation.auction.tabCompleterPrice.raw).withEntry(args.last())
+                    else -> emptyList()
+                }
+            }
+
             else -> listOf<String>()
         }
     }

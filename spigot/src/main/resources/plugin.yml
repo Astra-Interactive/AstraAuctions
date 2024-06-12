@@ -7,10 +7,8 @@ authors: [ "${authors}" ]
 author: "${author}"
 website: "${url}"
 api-version: 1.18
-softdepend: [ ]
+softdepend: [ Vault, EssentialsX ]
 #libraries: [ "${libraries}" ]
-loadbefore: [Vault]
-depend: [Vault]
 libraries:
   - org.bstats:bstats-bukkit:3.0.0
 commands:

@@ -8,7 +8,6 @@ import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.addL
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.button.di.ButtonFactoryDependency
 import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
@@ -21,26 +20,39 @@ internal class ExpiredMarketItemButtonFactory(
 ) : ButtonFactoryDependency by dependency,
     KyoriComponentSerializer by dependency.kyoriComponentSerializer {
 
+    @Suppress("LongParameterList")
     fun render(
         index: Int,
         click: Click,
-        auctionItem: MarketSlot
+        auctionItem: MarketSlot,
+        isOwner: Boolean,
+        hasExpirePermission: Boolean,
+        hasRemovePermission: Boolean
     ) = InventorySlot.Builder()
         .setIndex(index)
-        .setItemStack(objectEncoder.fromByteArray(auctionItem.item))
-        .addLore(translation.auction.rightButton.component)
+        .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
+        .apply {
+            if (hasExpirePermission) addLore(translation.auction.expireSlot.component)
+            if (hasRemovePermission || (auctionItem.expired && isOwner)) {
+                addLore(translation.auction.removeSlot.component)
+            }
+            addLore(translation.auction.buySlot.component)
+        }
+        .apply {
+            if (!isOwner) return@apply
+            addLore(translation.auction.removeSlot.component)
+        }
         .addLore {
             val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
             val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"
-            translation.auction.auctionBy.replace("%player_owner%", ownerName).component
+            translation.auction.auctionBy(ownerName).component
         }
         .addLore {
             val time = auctionItem.time.milliseconds.getTimeFormatted(translation.general.timeAgoFormat).raw
-            translation.auction.auctionCreatedAgo.replace("%time%", time).component
+            translation.auction.auctionCreatedAgo(time).component
         }
         .addLore {
-            val price = auctionItem.price.toString()
-            translation.auction.auctionPrice.replace("%price%", price).component
+            translation.auction.auctionPrice(auctionItem.price).component
         }
         .setOnClickListener(click)
         .build()

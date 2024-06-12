@@ -8,6 +8,8 @@ import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astramarket.core.AstraMarketPlugin
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
 import ru.astrainteractive.klibs.kdi.Factory
 import ru.astrainteractive.klibs.kdi.Lateinit
 import ru.astrainteractive.klibs.kdi.Reloadable
@@ -18,7 +20,7 @@ interface BukkitCoreModule {
     val lifecycle: Lifecycle
 
     val plugin: Lateinit<AstraMarketPlugin>
-    val encoder: Single<ObjectEncoder>
+    val itemStackEncoder: ItemStackEncoder
 
     val inventoryClickEventListener: Single<EventListener>
     val kyoriComponentSerializer: Reloadable<KyoriComponentSerializer>
@@ -27,8 +29,12 @@ interface BukkitCoreModule {
 
         override val plugin: Lateinit<AstraMarketPlugin> = Lateinit()
 
-        override val encoder: Single<ObjectEncoder> = Single {
+        private val encoder: ObjectEncoder by lazy {
             BukkitObjectEncoder()
+        }
+
+        override val itemStackEncoder: ItemStackEncoder by lazy {
+            ItemStackEncoderImpl(encoder)
         }
 
         override val inventoryClickEventListener: Single<EventListener> = Single {
