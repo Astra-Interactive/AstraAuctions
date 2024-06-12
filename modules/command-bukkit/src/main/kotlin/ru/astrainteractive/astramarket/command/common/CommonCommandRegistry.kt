@@ -28,14 +28,14 @@ internal class CommonCommandRegistry(dependencies: CommonCommandDependencies) :
             2 -> {
                 when (args.getOrNull(0)) {
                     "open", "expired" -> Bukkit.getOnlinePlayers().map(Player::getName)
-                    "sell" -> listOf(translation.auction.tabCompleterAmount.raw).withEntry(args.last())
+                    "sell" -> listOf(translation.auction.tabCompleterPrice.raw).withEntry(args.last())
                     else -> emptyList()
                 }
             }
 
             3 -> {
                 when (args.getOrNull(0)) {
-                    "sell" -> listOf(translation.auction.tabCompleterPrice.raw).withEntry(args.last())
+                    "sell" -> listOf(translation.auction.tabCompleterAmount.raw).withEntry(args.last())
                     else -> emptyList()
                 }
             }
