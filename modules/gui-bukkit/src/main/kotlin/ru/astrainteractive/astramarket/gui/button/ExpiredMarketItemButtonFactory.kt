@@ -20,14 +20,28 @@ internal class ExpiredMarketItemButtonFactory(
 ) : ButtonFactoryDependency by dependency,
     KyoriComponentSerializer by dependency.kyoriComponentSerializer {
 
+    @Suppress("LongParameterList")
     fun render(
         index: Int,
         click: Click,
-        auctionItem: MarketSlot
+        auctionItem: MarketSlot,
+        isOwner: Boolean,
+        hasExpirePermission: Boolean,
+        hasRemovePermission: Boolean
     ) = InventorySlot.Builder()
         .setIndex(index)
         .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
-        .addLore(translation.auction.rightButton.component)
+        .apply {
+            if (hasExpirePermission) addLore(translation.auction.expireSlot.component)
+            if (hasRemovePermission || (auctionItem.expired && isOwner)) {
+                addLore(translation.auction.removeSlot.component)
+            }
+            addLore(translation.auction.buySlot.component)
+        }
+        .apply {
+            if (!isOwner) return@apply
+            addLore(translation.auction.removeSlot.component)
+        }
         .addLore {
             val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
             val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"

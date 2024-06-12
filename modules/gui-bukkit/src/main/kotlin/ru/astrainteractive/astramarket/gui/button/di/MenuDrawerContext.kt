@@ -3,7 +3,6 @@ package ru.astrainteractive.astramarket.gui.button.di
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.gui.button.AaucButtonFactory
-import ru.astrainteractive.astramarket.gui.button.AuctionMarketItemButtonFactory
 import ru.astrainteractive.astramarket.gui.button.AuctionSortButtonFactory
 import ru.astrainteractive.astramarket.gui.button.BackButtonFactory
 import ru.astrainteractive.astramarket.gui.button.BorderButtonFactory
@@ -24,7 +23,6 @@ internal interface MenuDrawerContext {
     val aaucButtonFactory: AaucButtonFactory
     val auctionSortButtonFactory: AuctionSortButtonFactory
     val expiredMarketItemButtonFactory: ExpiredMarketItemButtonFactory
-    val auctionMarketItemButtonFactory: AuctionMarketItemButtonFactory
     val playersSortButtonFactory: PlayersSortButtonFactory
     val playerItemButtonFactory: PlayerItemButtonFactory
     val backButtonFactory: BackButtonFactory
@@ -48,8 +46,6 @@ internal interface MenuDrawerContext {
         override val aaucButtonFactory = AaucButtonFactory(dependency)
         override val auctionSortButtonFactory = AuctionSortButtonFactory(dependency)
         override val expiredMarketItemButtonFactory = ExpiredMarketItemButtonFactory(dependency)
-        override val auctionMarketItemButtonFactory =
-            AuctionMarketItemButtonFactory(dependency)
         override val playersSortButtonFactory = PlayersSortButtonFactory(dependency)
         override val playerItemButtonFactory = PlayerItemButtonFactory(dependency)
         override val backButtonFactory = BackButtonFactory(dependency)

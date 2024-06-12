@@ -21,6 +21,8 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
+import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
@@ -152,10 +154,14 @@ internal class SlotsGui(
                     .items
                     .getOrNull(index)
                     ?: return@withKeySlot null
+                val permissible = playerHolder.player.toPermissible()
                 expiredMarketItemButtonFactory.render(
                     auctionItem = auctionItem,
                     index = slotIndex,
                     click = { onAuctionItemClicked(index, it.click) },
+                    isOwner = auctionItem.minecraftUuid == playerHolder.player.uniqueId.toString(),
+                    hasExpirePermission = permissible.hasPermission(PluginPermission.Expire),
+                    hasRemovePermission = permissible.hasPermission(PluginPermission.RemoveSlot)
                 )
             }
         }

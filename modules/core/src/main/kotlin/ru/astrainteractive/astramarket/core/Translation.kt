@@ -63,7 +63,7 @@ data class Translation(
         private val broadcast: StringDesc.Raw = StringDesc.Raw(
             "&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /aauc новый предмет"
         ),
-        @SerializedName("menu.player.auctions_amount")
+        @SerializedName("player.auctions_amount")
         private val auctionsAmount: StringDesc.Raw = StringDesc.Raw("&7Количество: %amount%"),
         @SerializedName("tab_completer.price")
         val tabCompleterPrice: StringDesc.Raw = StringDesc.Raw("ЦЕНА"),
@@ -71,17 +71,17 @@ data class Translation(
         val tabCompleterAmount: StringDesc.Raw = StringDesc.Raw("КОЛИЧЕСТВО"),
         @SerializedName("auction_been_expired")
         val auctionHasBeenExpired: StringDesc.Raw = StringDesc.Raw("&#d6a213Вы просрочили слот!"),
-        @SerializedName("menu.left_button")
-        val leftButton: StringDesc.Raw = StringDesc.Raw("&#d6a213ЛКМ &#18dbd1- купить"),
-        @SerializedName("menu.right_button")
-        val rightButton: StringDesc.Raw = StringDesc.Raw("&#d6a213ПКМ &#18dbd1- убрать"),
-        @SerializedName("menu.middle_click")
-        val middleClick: StringDesc.Raw = StringDesc.Raw("&#d6a213СКМ &#18dbd1- убрать в истёкшие"),
-        @SerializedName("menu.not_auction_owner")
+        @SerializedName("left_button")
+        val buySlot: StringDesc.Raw = StringDesc.Raw("&#d6a213ЛКМ &#18dbd1- купить"),
+        @SerializedName("right_button")
+        val removeSlot: StringDesc.Raw = StringDesc.Raw("&#d6a213ПКМ &#18dbd1- убрать"),
+        @SerializedName("middle_click")
+        val expireSlot: StringDesc.Raw = StringDesc.Raw("&#d6a213СКМ &#18dbd1- убрать в истёкшие"),
+        @SerializedName("not_auction_owner")
         val notAuctionOwner: StringDesc.Raw = StringDesc.Raw("&#f55442Вы не владелец этого слота"),
-        @SerializedName("menu.auction_deleted")
+        @SerializedName("auction_deleted")
         val auctionDeleted: StringDesc.Raw = StringDesc.Raw("&#f55442Слот удалён"),
-        @SerializedName("menu.auction_expired_notify")
+        @SerializedName("auction_expired_notify")
         private val notifyAuctionExpired: StringDesc.Raw = StringDesc.Raw(
             "&#f55442Ваш слот %item% за %price% только что был просрочен"
         ),
@@ -132,7 +132,7 @@ data class Translation(
 
         fun auctionCreatedAgo(time: String): StringDesc.Raw {
             return auctionCreatedAgo
-                .replace("%pricetime%", time)
+                .replace("%time%", time)
         }
 
         fun auctionBy(playerOwner: String): StringDesc.Raw {
