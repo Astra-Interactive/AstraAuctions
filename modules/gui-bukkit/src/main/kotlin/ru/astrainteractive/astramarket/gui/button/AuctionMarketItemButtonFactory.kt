@@ -26,7 +26,7 @@ internal class AuctionMarketItemButtonFactory(
         auctionItem: MarketSlot
     ) = InventorySlot.Builder()
         .setIndex(index)
-        .setItemStack(objectEncoder.fromByteArray(auctionItem.item))
+        .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
         .addLore(translation.auction.leftButton.component)
         .addLore(translation.auction.middleClick.component)
         .addLore(translation.auction.rightButton.component)

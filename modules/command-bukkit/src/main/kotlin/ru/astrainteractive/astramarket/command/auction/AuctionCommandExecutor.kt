@@ -37,7 +37,7 @@ internal class AuctionCommandExecutor(
                 val clonedItem = itemInstance.clone().apply {
                     this.amount = max(min(itemInstance.amount, input.amount), 1)
                 }
-                val encodedItem = encoder.toByteArray(clonedItem)
+                val encodedItem = itemStackEncoder.toByteArray(clonedItem)
                 scope.launch(dispatchers.IO) {
                     val marketSlot = MarketSlot(
                         id = -1,

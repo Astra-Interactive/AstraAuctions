@@ -29,8 +29,7 @@ internal class ExpireWorker(
         marketApi.getSlots(isExpired = false)
             .orEmpty()
             .filter { currentTime - it.time.milliseconds > maxAuctionLifeTime }
-            .map {
-                async { marketApi.expireSlot(it) }
-            }.awaitAll()
+            .map { async { marketApi.expireSlot(it) } }
+            .awaitAll()
     }
 }

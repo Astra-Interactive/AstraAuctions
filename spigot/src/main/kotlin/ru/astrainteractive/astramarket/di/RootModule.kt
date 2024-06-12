@@ -54,13 +54,13 @@ internal interface RootModule {
                 apiMarketModule = apiMarketModule,
                 marketDataModuleFactory = {
                     BukkitMarketDataModule(
-                        encoder = bukkitCoreModule.encoder.value,
+                        itemStackEncoder = bukkitCoreModule.itemStackEncoder,
                         stringSerializer = bukkitCoreModule.kyoriComponentSerializer.value
                     )
                 },
                 platformMarketDomainModuleFactory = {
                     BukkitMarketDomainModule(
-                        encoder = bukkitCoreModule.encoder.value,
+                        itemStackEncoder = bukkitCoreModule.itemStackEncoder,
                     )
                 }
             )

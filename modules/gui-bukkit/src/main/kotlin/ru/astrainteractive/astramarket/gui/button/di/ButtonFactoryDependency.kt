@@ -1,11 +1,11 @@
 package ru.astrainteractive.astramarket.gui.button.di
 
-import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
 import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
@@ -19,7 +19,7 @@ internal interface ButtonFactoryDependency {
     val config: PluginConfig
     val translation: Translation
     val kyoriComponentSerializer: KyoriComponentSerializer
-    val objectEncoder: ObjectEncoder
+    val itemStackEncoder: ItemStackEncoder
 
     class Default(
         coreModule: CoreModule,
@@ -36,6 +36,6 @@ internal interface ButtonFactoryDependency {
         override val config: PluginConfig by coreModule.config
         override val translation: Translation by coreModule.translation
         override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
-        override val objectEncoder: ObjectEncoder by bukkitCoreModule.encoder
+        override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
     }
 }

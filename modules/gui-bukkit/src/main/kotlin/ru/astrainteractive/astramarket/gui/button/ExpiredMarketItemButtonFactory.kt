@@ -27,7 +27,7 @@ internal class ExpiredMarketItemButtonFactory(
         auctionItem: MarketSlot
     ) = InventorySlot.Builder()
         .setIndex(index)
-        .setItemStack(objectEncoder.fromByteArray(auctionItem.item))
+        .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
         .addLore(translation.auction.rightButton.component)
         .addLore {
             val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
