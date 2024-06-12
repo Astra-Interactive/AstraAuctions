@@ -21,7 +21,7 @@ internal class AaucButtonFactory(
     ) = InventorySlot.Builder()
         .setIndex(index)
         .setItemStack(config.buttons.aauc.toItemStack())
-        .editMeta { displayName(translation.menu.aauc.component) }
+        .editMeta { displayName(translation.menu.market.component) }
         .setOnClickListener(click)
         .build()
 }

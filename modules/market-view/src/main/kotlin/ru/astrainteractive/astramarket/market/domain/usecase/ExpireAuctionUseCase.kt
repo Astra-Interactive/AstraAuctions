@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.Translation
@@ -40,9 +39,10 @@ internal class ExpireAuctionUseCaseImpl(
         val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         val itemName = auctionsBridge.itemDesc(auction)
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
-            translation.auction.notifyAuctionExpired
-                .replace("%item%", itemName)
-                .replace("%price%", auction.price.toString())
+            translation.auction.notifyAuctionExpired(
+                item = itemName,
+                price = auction.price
+            )
         }
 
         val result = marketApi.expireSlot(auction)

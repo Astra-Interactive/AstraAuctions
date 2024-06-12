@@ -8,7 +8,6 @@ import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.addL
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.button.di.ButtonFactoryDependency
 import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
@@ -32,15 +31,14 @@ internal class AuctionMarketItemButtonFactory(
         .addLore(translation.auction.rightButton.component)
         .addLore {
             val owner = Bukkit.getOfflinePlayer(UUID.fromString(auctionItem.minecraftUuid)).name ?: "NULL"
-            translation.auction.auctionBy.replace("%player_owner%", owner).component
+            translation.auction.auctionBy(owner).component
         }
         .addLore {
             val time = auctionItem.time.milliseconds.getTimeFormatted(translation.general.timeAgoFormat).raw
-            translation.auction.auctionCreatedAgo.replace("%time%", time).component
+            translation.auction.auctionCreatedAgo(time).component
         }
         .addLore {
-            val price = auctionItem.price.toString()
-            translation.auction.auctionPrice.replace("%price%", price).component
+            translation.auction.auctionPrice(auctionItem.price).component
         }
         .setOnClickListener(click)
         .build()

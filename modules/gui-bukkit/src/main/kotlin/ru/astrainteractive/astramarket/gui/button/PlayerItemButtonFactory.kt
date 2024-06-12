@@ -11,7 +11,6 @@ import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.edit
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setMaterial
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.gui.button.di.ButtonFactoryDependency
 import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
@@ -46,16 +45,14 @@ internal class PlayerItemButtonFactory(
             val auctionsAmount = playerAndSlots.slots
                 .filter { it.expired == isExpired }
                 .size
-            translation.auction.auctionsAmount
-                .replace("%amount%", "$auctionsAmount")
-                .component
+            translation.auction.auctionsAmount(auctionsAmount).component
         }
         .addLore {
             val time = playerAndSlots.slots
                 .maxBy { it.time }
                 .time.milliseconds
                 .getTimeFormatted(translation.general.timeAgoFormat).raw
-            translation.auction.auctionLast.replace("%time%", time).component
+            translation.auction.auctionLast(time).component
         }
         .setOnClickListener(click)
         .build()

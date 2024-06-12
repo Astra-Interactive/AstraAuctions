@@ -50,7 +50,7 @@ internal class SlotsGui(
             ?.name
             ?.let { name -> Component.text(": $name") }
             ?: Component.empty()
-        translation.menu.title.component.append(playerNameComponent)
+        translation.menu.market.component.append(playerNameComponent)
     }
     override val inventorySize: InventorySize = InventorySize.XL
 

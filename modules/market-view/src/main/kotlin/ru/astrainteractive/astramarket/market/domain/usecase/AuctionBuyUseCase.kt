@@ -1,7 +1,6 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
@@ -77,16 +76,18 @@ internal class AuctionBuyUseCaseImpl(
             playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
             val itemName = auctionsBridge.itemDesc(auction)
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.notifyUserBuy
-                    .replace("%player_owner%", ownerName ?: "-")
-                    .replace("%price%", auction.price.toString())
-                    .replace("%item%", itemName)
+                translation.auction.notifyUserBuy(
+                    playerOwner = ownerName ?: "-",
+                    itemName = itemName,
+                    price = auction.price
+                )
             }
             playerInteractionBridge.sendTranslationMessage(ownerUUID) {
-                translation.auction.notifyOwnerUserBuy
-                    .replace("%player%", playerName ?: "-")
-                    .replace("%item%", itemName)
-                    .replace("%price%", auction.price.toString())
+                translation.auction.notifyOwnerUserBuy(
+                    playerName = playerName ?: "-",
+                    itemName = itemName,
+                    price = auction.price
+                )
             }
         } else {
             economyProvider.addMoney(playerUUID, auction.price.toDouble())
