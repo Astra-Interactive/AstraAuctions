@@ -1,5 +1,7 @@
 package ru.astrainteractive.astramarket
 
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.core.AstraMarketPlugin
@@ -26,11 +28,13 @@ class AstraMarket : AstraMarketPlugin() {
     }
 
     override fun onDisable() {
+        Bukkit.getOnlinePlayers().forEach(Player::closeInventory)
         HandlerList.unregisterAll(this)
         lifecycle.forEach(Lifecycle::onDisable)
     }
 
     override fun onReload() {
+        Bukkit.getOnlinePlayers().forEach(Player::closeInventory)
         lifecycle.forEach(Lifecycle::onReload)
     }
 }
