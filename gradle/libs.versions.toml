@@ -16,11 +16,11 @@ klibs-kdi = "1.4.5" # https://github.com/makeevrserg/klibs.kdi
 
 # Minecraft
 minecraft-velocity = "4.0.0-SNAPSHOT" # https://github.com/PaperMC/Velocity
-minecraft-spigot = "1.21-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
+minecraft-spigot = "1.20.6-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
 minecraft-papi = "2.11.6" # https://github.com/PlaceholderAPI/PlaceholderAPI
 minecraft-protocollib = "5.1.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
-minecraft-astralibs = "3.9.0" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-astralibs = "3.7.1" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.0.2" # https://github.com/Bastian/bStats
 minecraft-mockbukkit = "v3.92.1" #https://github.com/MockBukkit/MockBukkit
 
