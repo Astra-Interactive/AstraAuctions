@@ -1,8 +1,12 @@
 package ru.astrainteractive.astramarket.command.auction
 
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
@@ -12,7 +16,11 @@ import kotlin.math.min
 
 internal class AuctionCommandExecutor(
     private val dependencies: AuctionCommandDependencies
-) : CommandExecutor<AuctionCommand.Result>, AuctionCommandDependencies by dependencies {
+) : CommandExecutor<AuctionCommand.Result>,
+    AuctionCommandDependencies by dependencies,
+    Logger by JUtiltLogger("AuctionCommandExecutor") {
+    private val mutex = Mutex()
+
     override fun execute(input: AuctionCommand.Result) {
         when (input) {
             is AuctionCommand.Result.OpenSlots -> {
@@ -32,13 +40,17 @@ internal class AuctionCommandExecutor(
                 router.navigate(route)
             }
 
-            is AuctionCommand.Result.Sell -> {
-                val itemInstance = input.itemInstance
-                val clonedItem = itemInstance.clone().apply {
-                    this.amount = max(min(itemInstance.amount, input.amount), 1)
-                }
-                val encodedItem = itemStackEncoder.toByteArray(clonedItem)
-                scope.launch(dispatchers.IO) {
+            is AuctionCommand.Result.Sell -> scope.launch(limitedIoDispatcher) {
+                mutex.withLock {
+                    val itemInstance = input.itemInstance
+                    val clonedItem = itemInstance.clone().apply {
+                        this.amount = max(min(itemInstance.amount, input.amount), 1)
+                    }
+                    val encodedItem = itemStackEncoder.toByteArray(clonedItem)
+                    info { "User ${input.player.name} selling ${input.amount} of $itemInstance" }
+
+                    if (itemInstance.amount <= 0) return@launch
+                    withContext(dispatchers.Main) { itemInstance.amount -= input.amount }
                     val marketSlot = MarketSlot(
                         id = -1,
                         minecraftUuid = input.player.uniqueId.toString(),
@@ -53,7 +65,7 @@ internal class AuctionCommandExecutor(
                     )
                     val useCaseResult = createAuctionUseCase.invoke(param)
                     withContext(dispatchers.Main) {
-                        if (useCaseResult) itemInstance.amount -= input.amount
+                        if (!useCaseResult) itemInstance.amount += input.amount
                     }
                 }
             }
