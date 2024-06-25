@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.command.auction.di
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
@@ -23,6 +24,7 @@ internal interface AuctionCommandDependencies {
     val itemStackEncoder: ItemStackEncoder
     val scope: CoroutineScope
     val dispatchers: KotlinDispatchers
+    val limitedIoDispatcher: CoroutineDispatcher
     val createAuctionUseCase: CreateAuctionUseCase
 
     class Default(
@@ -43,5 +45,6 @@ internal interface AuctionCommandDependencies {
         override val createAuctionUseCase: CreateAuctionUseCase by Provider {
             marketModule.marketDomainModule.createAuctionUseCase
         }
+        override val limitedIoDispatcher: CoroutineDispatcher = dispatchers.IO.limitedParallelism(1)
     }
 }

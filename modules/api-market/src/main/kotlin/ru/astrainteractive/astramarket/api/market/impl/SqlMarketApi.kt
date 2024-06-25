@@ -1,6 +1,8 @@
 package ru.astrainteractive.astramarket.api.market.impl
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
@@ -18,22 +20,21 @@ import kotlin.coroutines.CoroutineContext
 internal class SqlMarketApi(
     private val database: Database,
     private val auctionMapper: AuctionMapper,
-    dispatchers: KotlinDispatchers
+    private val dispatchers: KotlinDispatchers
 ) : MarketApi,
     Logger by JUtiltLogger("SqlMarketApi") {
-
-    private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
+    private val mutex = Mutex()
 
     private suspend fun <T> runCatchingWithContext(
         context: CoroutineContext,
         block: suspend CoroutineScope.() -> T
     ): Result<T> = runCatching {
-        withContext(context, block)
+        mutex.withLock { withContext(context, block) }
     }.onFailure { throwable -> debug { throwable.stackTraceToString() } }
 
     override suspend fun insertSlot(
         marketSlot: MarketSlot
-    ): Int? = runCatchingWithContext(limitedIoDispatcher) {
+    ): Int? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.insert(database) {
             this[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
             this[AuctionTable.time] = marketSlot.time
@@ -45,7 +46,7 @@ internal class SqlMarketApi(
 
     override suspend fun expireSlot(
         marketSlot: MarketSlot
-    ): Unit? = runCatchingWithContext(limitedIoDispatcher) {
+    ): Unit? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.id.eq(marketSlot.id)
         }.firstOrNull()?.let {
@@ -58,7 +59,7 @@ internal class SqlMarketApi(
     override suspend fun getUserSlots(
         uuid: String,
         isExpired: Boolean
-    ): List<MarketSlot>? = runCatchingWithContext(limitedIoDispatcher) {
+    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.minecraftUuid.eq(uuid).and(
                 AuctionTable.expired.eq(if (isExpired) 1 else 0)
@@ -68,7 +69,7 @@ internal class SqlMarketApi(
 
     override suspend fun getSlots(
         isExpired: Boolean
-    ): List<MarketSlot>? = runCatchingWithContext(limitedIoDispatcher) {
+    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.expired.eq(if (isExpired) 1 else 0)
         }.map(auctionMapper::toDTO)
@@ -76,7 +77,7 @@ internal class SqlMarketApi(
 
     override suspend fun getSlotsOlderThan(
         millis: Long
-    ): List<MarketSlot>? = runCatchingWithContext(limitedIoDispatcher) {
+    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
         val currentTime = System.currentTimeMillis()
         val time = currentTime - millis
         AuctionTable.find(database, constructor = Auction) {
@@ -86,7 +87,7 @@ internal class SqlMarketApi(
 
     override suspend fun getSlot(
         id: Int
-    ): MarketSlot? = runCatchingWithContext(limitedIoDispatcher) {
+    ): MarketSlot? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.find(database, constructor = Auction) {
             AuctionTable.id.eq(id)
         }.map(auctionMapper::toDTO).first()
@@ -94,7 +95,7 @@ internal class SqlMarketApi(
 
     override suspend fun deleteSlot(
         marketSlot: MarketSlot
-    ): Unit? = runCatchingWithContext(limitedIoDispatcher) {
+    ): Unit? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.delete<Auction>(database) {
             AuctionTable.id.eq(marketSlot.id)
         }
@@ -102,7 +103,7 @@ internal class SqlMarketApi(
 
     override suspend fun countPlayerSlots(
         uuid: String
-    ): Int? = runCatchingWithContext(limitedIoDispatcher) {
+    ): Int? = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.count(database) {
             AuctionTable.minecraftUuid.eq(uuid)
         }
@@ -110,7 +111,7 @@ internal class SqlMarketApi(
 
     override suspend fun findPlayersWithSlots(
         isExpired: Boolean
-    ): List<PlayerAndSlots> = runCatchingWithContext(limitedIoDispatcher) {
+    ): List<PlayerAndSlots> = runCatchingWithContext(dispatchers.IO) {
         AuctionTable.all(database, Auction)
             .map(auctionMapper::toDTO)
             .groupBy(MarketSlot::minecraftUuid)

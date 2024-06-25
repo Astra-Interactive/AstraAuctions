@@ -2,9 +2,10 @@ package ru.astrainteractive.astramarket.market.presentation
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
@@ -24,7 +25,7 @@ internal class DefaultAuctionComponent(
 ) : AuctionComponent,
     AsyncComponent(),
     AuctionComponentDependencies by dependencies {
-    private val dispatcher = dispatchers.IO.limitedParallelism(1)
+    private val mutex = Mutex()
 
     override val model = MutableStateFlow(
         AuctionComponent.Model(
@@ -44,7 +45,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun sort() {
-        componentScope.launch(dispatcher) {
+        componentScope.launchWithLock(mutex, dispatchers.IO) {
             model.update { model ->
                 val input = SortAuctionsUseCase.Input(model.sortType, model.items)
                 val sortedItems = sortAuctionsUseCase.invoke(input)
@@ -79,7 +80,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun loadItems() {
-        componentScope.launch(dispatcher) {
+        componentScope.launchWithLock(mutex, dispatchers.IO) {
             val items = when {
                 targetPlayerUUID != null -> {
                     marketApi.getUserSlots(
@@ -97,9 +98,16 @@ internal class DefaultAuctionComponent(
 
     override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
-        componentScope.launch(dispatcher) {
+        componentScope.launchWithLock(mutex, dispatchers.IO) {
             val result = when (model.value.isExpired) {
-                true -> onExpiredAuctionClicked(auction)
+                true -> {
+                    if (auction.minecraftUuid == playerUUID.toString()) {
+                        onExpiredAuctionClicked(auction)
+                    } else {
+                        onAuctionClicked(auction, clickType)
+                    }
+                }
+
                 false -> onAuctionClicked(auction, clickType)
             }
             if (result) {
