@@ -41,14 +41,21 @@ internal class AuctionCommandExecutor(
 
             is AuctionCommand.Result.Sell -> scope.launchWithLock(mutex, limitedIoDispatcher) {
                 val itemInstance = input.itemInstance
+                val calculatedAmount = max(min(itemInstance.amount, input.amount), 1)
                 val clonedItem = itemInstance.clone().apply {
-                    this.amount = max(min(itemInstance.amount, input.amount), 1)
+                    amount = calculatedAmount
                 }
                 val encodedItem = itemStackEncoder.toByteArray(clonedItem)
-                info { "User ${input.player.name} selling ${input.amount} of $itemInstance" }
+
+                info {
+                    buildString {
+                        append("User ${input.player.name} trying to sell ${input.amount}")
+                        append("Calculated amount $calculatedAmount of $itemInstance")
+                    }
+                }
 
                 if (itemInstance.amount <= 0) return@launchWithLock
-                withContext(dispatchers.Main) { itemInstance.amount -= input.amount }
+                withContext(dispatchers.Main) { itemInstance.amount -= calculatedAmount }
                 val marketSlot = MarketSlot(
                     id = -1,
                     minecraftUuid = input.player.uniqueId.toString(),
@@ -63,7 +70,7 @@ internal class AuctionCommandExecutor(
                 )
                 val useCaseResult = createAuctionUseCase.invoke(param)
                 withContext(dispatchers.Main) {
-                    if (!useCaseResult) itemInstance.amount += input.amount
+                    if (!useCaseResult) itemInstance.amount += calculatedAmount
                 }
             }
 
