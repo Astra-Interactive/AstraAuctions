@@ -22,7 +22,7 @@ minecraft-protocollib = "5.1.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
 minecraft-astralibs = "3.9.2" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.0.2" # https://github.com/Bastian/bStats
-minecraft-mockbukkit = "3.93.0" #https://github.com/MockBukkit/MockBukkit
+minecraft-mockbukkit = "v3.93.2" #https://github.com/MockBukkit/MockBukkit
 
 # Shadow
 gradle-shadow = "7.1.2" # https://github.com/johnrengelman/shadow
