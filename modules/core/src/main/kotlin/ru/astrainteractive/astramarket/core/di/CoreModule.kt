@@ -2,7 +2,6 @@ package ru.astrainteractive.astramarket.core.di
 
 import ru.astrainteractive.astralibs.async.AsyncComponent
 import ru.astrainteractive.astralibs.economy.EconomyProvider
-import ru.astrainteractive.astralibs.filemanager.impl.JVMFileManager
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.parse
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.writeIntoFile
@@ -30,21 +29,21 @@ interface CoreModule {
     ) : CoreModule {
 
         override val translation: Reloadable<Translation> = Reloadable {
-            val fileManager = JVMFileManager("translations.yml", dataFolder)
+            val file = dataFolder.resolve("translations.yml")
             val serializer = YamlStringFormat()
-            serializer.parse<Translation>(fileManager.configFile)
+            serializer.parse<Translation>(file)
                 .onFailure(Throwable::printStackTrace)
                 .getOrElse { Translation() }
-                .also { serializer.writeIntoFile(it, fileManager.configFile) }
+                .also { serializer.writeIntoFile(it, file) }
         }
 
         override val config: Reloadable<PluginConfig> = Reloadable {
-            val fileManager = JVMFileManager("config.yml", dataFolder)
+            val file = dataFolder.resolve("config.yml")
             val serializer = YamlStringFormat()
-            serializer.parse<PluginConfig>(fileManager.configFile)
+            serializer.parse<PluginConfig>(file)
                 .onFailure(Throwable::printStackTrace)
                 .getOrElse { PluginConfig() }
-                .also { serializer.writeIntoFile(it, fileManager.configFile) }
+                .also { serializer.writeIntoFile(it, file) }
         }
         override val scope: Dependency<AsyncComponent> = Single {
             AsyncComponent.Default()

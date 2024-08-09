@@ -73,11 +73,6 @@ internal class AuctionCommandExecutor(
                     if (!useCaseResult) itemInstance.amount += calculatedAmount
                 }
             }
-
-            AuctionCommand.Result.WrongUsage,
-            AuctionCommand.Result.NoPermission,
-            AuctionCommand.Result.NotPlayer,
-            AuctionCommand.Result.WrongPrice -> Unit
         }
     }
 }
