@@ -20,9 +20,9 @@ minecraft-spigot = "1.21-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
 minecraft-papi = "2.11.6" # https://github.com/PlaceholderAPI/PlaceholderAPI
 minecraft-protocollib = "5.1.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
-minecraft-astralibs = "3.12.0" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-astralibs = "3.12.1" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.0.2" # https://github.com/Bastian/bStats
-minecraft-mockbukkit = "3.96.1" #https://github.com/MockBukkit/MockBukkit
+minecraft-mockbukkit = "v3.98.0" #https://github.com/MockBukkit/MockBukkit
 
 # Shadow
 gradle-shadow = "7.1.2" # https://github.com/johnrengelman/shadow
