@@ -1,7 +1,11 @@
 package ru.astrainteractive.astramarket.di
 
+import net.milkbowl.vault.economy.Economy
+import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
-import ru.astrainteractive.astralibs.economy.EconomyProviderFactory
+import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
@@ -25,7 +29,7 @@ internal interface RootModule {
     val playersMarketModule: PlayersMarketModule
     val workerModule: WorkerModule
 
-    class Default : RootModule {
+    class Default : RootModule, Logger by JUtiltLogger("RootModule") {
         override val bukkitCoreModule: BukkitCoreModule by lazy {
             BukkitCoreModule.Default()
         }
@@ -34,7 +38,24 @@ internal interface RootModule {
             CoreModule.Default(
                 dataFolder = bukkitCoreModule.plugin.value.dataFolder,
                 dispatchers = DefaultBukkitDispatchers(bukkitCoreModule.plugin.value),
-                economyProvider = EconomyProviderFactory(bukkitCoreModule.plugin.value).create()
+                getEconomyProvider = getEconomyProviderById@{ currencyId ->
+                    val registrations = Bukkit.getServer().servicesManager.getRegistrations(Economy::class.java)
+                    if (currencyId == null) {
+                        return@getEconomyProviderById VaultEconomyProvider(
+                            bukkitCoreModule.plugin.value
+                        )
+                    }
+                    val specificEconomyProvider = registrations
+                        .firstOrNull { it.provider.currencyNameSingular() == currencyId }
+                        ?.provider
+                        ?.let(::VaultEconomyProvider)
+                    if (specificEconomyProvider == null) {
+                        error { "#economyProvider could not find economy with currency: $currencyId" }
+                    } else {
+                        return@getEconomyProviderById specificEconomyProvider
+                    }
+                    error("EconomyProvider could not find economy with currency: $currencyId")
+                }
             )
         }
 

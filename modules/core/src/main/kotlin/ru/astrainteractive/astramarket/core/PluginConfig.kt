@@ -1,5 +1,7 @@
 package ru.astrainteractive.astramarket.core
 
+import com.charleskorn.kaml.YamlComment
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.time.Duration.Companion.days
 
@@ -34,7 +36,10 @@ data class PluginConfig(
         val maxPrice: Int = 1000000,
         val taxPercent: Int = 0,
         val announce: Boolean = true,
-        val maxTimeSeconds: Long = 7.days.inWholeMilliseconds // 1*24*60*60*1000
+        val maxTimeSeconds: Long = 7.days.inWholeMilliseconds, // 1*24*60*60*1000
+        @SerialName("currency_id")
+        @YamlComment("The id of currency you want to use")
+        val currencyId: String? = null
     )
 
     @Serializable

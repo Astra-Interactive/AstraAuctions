@@ -4,13 +4,15 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.core.AstraMarketPlugin
 import ru.astrainteractive.astramarket.di.RootModule
 
 /**
  * Initial class for your plugin
  */
-class AstraMarket : AstraMarketPlugin() {
+class AstraMarket : AstraMarketPlugin(), Logger by JUtiltLogger("AstraMarket") {
 
     private val rootModule = RootModule.Default()
     private val lifecycle: List<Lifecycle>
@@ -25,6 +27,8 @@ class AstraMarket : AstraMarketPlugin() {
     override fun onEnable() {
         rootModule.bukkitCoreModule.plugin.initialize(this)
         lifecycle.forEach(Lifecycle::onEnable)
+        // Init economy provider
+        rootModule.coreModule.economyProvider
     }
 
     override fun onDisable() {
