@@ -25,11 +25,13 @@ interface CoreModule {
     class Default(
         dataFolder: File,
         override val dispatchers: KotlinDispatchers,
-        override val economyProvider: EconomyProvider
+        private val getEconomyProvider: (id: String?) -> EconomyProvider
     ) : CoreModule {
 
         override val translation: Reloadable<Translation> = Reloadable {
             val file = dataFolder.resolve("translations.yml")
+            if (!file.parentFile.exists()) file.parentFile.mkdirs()
+            if (!file.exists()) file.createNewFile()
             val serializer = YamlStringFormat()
             serializer.parse<Translation>(file)
                 .onFailure(Throwable::printStackTrace)
@@ -39,12 +41,19 @@ interface CoreModule {
 
         override val config: Reloadable<PluginConfig> = Reloadable {
             val file = dataFolder.resolve("config.yml")
+            if (!file.parentFile.exists()) file.parentFile.mkdirs()
+            if (!file.exists()) file.createNewFile()
             val serializer = YamlStringFormat()
             serializer.parse<PluginConfig>(file)
                 .onFailure(Throwable::printStackTrace)
                 .getOrElse { PluginConfig() }
                 .also { serializer.writeIntoFile(it, file) }
         }
+
+        override val economyProvider: EconomyProvider by lazy {
+            getEconomyProvider.invoke(config.value.auction.currencyId)
+        }
+
         override val scope: Dependency<AsyncComponent> = Single {
             AsyncComponent.Default()
         }

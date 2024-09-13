@@ -1,6 +1,8 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
 import ru.astrainteractive.astralibs.economy.EconomyProvider
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
@@ -29,7 +31,7 @@ internal class AuctionBuyUseCaseImpl(
     private val translation: Translation,
     private val config: PluginConfig,
     private val economyProvider: EconomyProvider,
-) : AuctionBuyUseCase {
+) : AuctionBuyUseCase, Logger by JUtiltLogger("AuctionBuyUseCase") {
 
     @Suppress("LongMethod")
     override suspend operator fun invoke(input: AuctionBuyUseCase.Params): Boolean {

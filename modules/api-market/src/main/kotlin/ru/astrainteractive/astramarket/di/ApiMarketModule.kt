@@ -6,7 +6,7 @@ import ru.astrainteractive.astralibs.orm.DBConnection
 import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astramarket.api.market.MarketApi
-import ru.astrainteractive.astramarket.api.market.impl.SqlMarketApi
+import ru.astrainteractive.astramarket.api.market.impl.ExposedMarketApi
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapper
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapperImpl
 import ru.astrainteractive.astramarket.di.factory.DatabaseFactory
@@ -36,7 +36,7 @@ interface ApiMarketModule {
         }
 
         override val marketApi: MarketApi by Provider {
-            SqlMarketApi(
+            ExposedMarketApi(
                 database = database,
                 auctionMapper = auctionMapper,
                 dispatchers = dispatchers

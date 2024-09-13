@@ -17,7 +17,7 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import java.util.UUID
 import kotlin.coroutines.CoroutineContext
 
-internal class SqlMarketApi(
+internal class ExposedMarketApi(
     private val database: Database,
     private val auctionMapper: AuctionMapper,
     private val dispatchers: KotlinDispatchers
@@ -30,7 +30,7 @@ internal class SqlMarketApi(
         block: suspend CoroutineScope.() -> T
     ): Result<T> = runCatching {
         mutex.withLock { withContext(context, block) }
-    }.onFailure { throwable -> debug { throwable.stackTraceToString() } }
+    }.onFailure { throwable -> error(throwable) { "Error during execution" } }
 
     override suspend fun insertSlot(
         marketSlot: MarketSlot

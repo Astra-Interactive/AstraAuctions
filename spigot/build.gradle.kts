@@ -40,7 +40,7 @@ dependencies {
     implementation(projects.modules.commandBukkit)
 }
 
-val destination = File("/Userss/romanmakeev/Desktop/Server/SMP/smp/plugins")
+val destination = File("/home/makeevrserg/Desktop/server/data/plugins")
     .takeIf(File::exists)
     ?: File(rootDir, "jars")
 
