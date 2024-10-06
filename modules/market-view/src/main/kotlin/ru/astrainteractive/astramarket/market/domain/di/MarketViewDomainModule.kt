@@ -14,7 +14,7 @@ import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCas
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCaseImpl
 
-interface MarketDomainModule {
+interface MarketViewDomainModule {
     val marketDataModule: MarketDataModule
     val platformMarketDomainModule: PlatformMarketDomainModule
 
@@ -32,16 +32,17 @@ interface MarketDomainModule {
         apiMarketModule: ApiMarketModule,
         override val marketDataModule: MarketDataModule,
         override val platformMarketDomainModule: PlatformMarketDomainModule
-    ) : MarketDomainModule {
+    ) : MarketViewDomainModule {
+
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             AuctionSortTranslationMappingImpl(
-                translation = coreModule.translation.cachedValue
+                translationKrate = coreModule.translationKrate
             )
         }
         override val auctionBuyUseCase: AuctionBuyUseCase by lazy {
             AuctionBuyUseCaseImpl(
-                translation = coreModule.translation.cachedValue,
-                config = coreModule.config.cachedValue,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
                 economyProviderFactory = coreModule.economyProviderFactory,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
@@ -50,8 +51,8 @@ interface MarketDomainModule {
         }
         override val createAuctionUseCase: CreateAuctionUseCase by lazy {
             CreateAuctionUseCaseImpl(
-                translation = coreModule.translation.cachedValue,
-                config = coreModule.config.cachedValue,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
@@ -59,7 +60,7 @@ interface MarketDomainModule {
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by lazy {
             ExpireAuctionUseCaseImpl(
-                translation = coreModule.translation.cachedValue,
+                translationKrate = coreModule.translationKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
@@ -67,8 +68,8 @@ interface MarketDomainModule {
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by lazy {
             RemoveAuctionUseCaseImpl(
-                translation = coreModule.translation.cachedValue,
-                config = coreModule.config.cachedValue,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi

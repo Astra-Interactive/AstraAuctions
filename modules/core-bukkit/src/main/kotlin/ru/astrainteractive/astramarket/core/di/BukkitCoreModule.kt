@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.core.di
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.serialization.StringFormat
 import org.bstats.bukkit.Metrics
 import ru.astrainteractive.astralibs.async.CoroutineFeature
@@ -27,7 +28,6 @@ interface BukkitCoreModule : CoreModule {
 
     val plugin: LifecyclePlugin
     val itemStackEncoder: ItemStackEncoder
-
     val inventoryClickEventListener: EventListener
     val kyoriComponentSerializer: Krate<KyoriComponentSerializer>
 
@@ -46,28 +46,16 @@ interface BukkitCoreModule : CoreModule {
 
         private fun createBStats() = Metrics(plugin, 15771)
 
-        override val lifecycle: Lifecycle by lazy {
-            Lifecycle.Lambda(
-                onEnable = {
-                    createBStats()
-                    inventoryClickEventListener.onEnable(plugin)
-                },
-                onDisable = {
-                    inventoryClickEventListener.onEnable(plugin)
-                }
-            )
-        }
-
         override val yamlStringFormat: StringFormat = YamlStringFormat()
 
-        override val config: Krate<PluginConfig> = ConfigKrateFactory.create(
+        override val configKrate: Krate<PluginConfig> = ConfigKrateFactory.create(
             fileNameWithoutExtension = "config",
             stringFormat = yamlStringFormat,
             dataFolder = plugin.dataFolder,
             factory = ::PluginConfig
         )
 
-        override val translation: Krate<Translation> = ConfigKrateFactory.create(
+        override val translationKrate: Krate<Translation> = ConfigKrateFactory.create(
             fileNameWithoutExtension = "translations",
             stringFormat = yamlStringFormat,
             dataFolder = plugin.dataFolder,
@@ -80,5 +68,23 @@ interface BukkitCoreModule : CoreModule {
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
             BukkitCurrencyEconomyProviderFactory(plugin)
+
+        override val lifecycle: Lifecycle by lazy {
+            Lifecycle.Lambda(
+                onEnable = {
+                    createBStats()
+                    inventoryClickEventListener.onEnable(plugin)
+                },
+                onDisable = {
+                    inventoryClickEventListener.onDisable()
+                    scope.cancel()
+                },
+                onReload = {
+                    kyoriComponentSerializer.loadAndGet()
+                    configKrate.loadAndGet()
+                    translationKrate.loadAndGet()
+                }
+            )
+        }
     }
 }

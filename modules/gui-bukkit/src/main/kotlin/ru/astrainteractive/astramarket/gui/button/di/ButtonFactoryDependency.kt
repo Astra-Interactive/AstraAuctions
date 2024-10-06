@@ -7,9 +7,9 @@ import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.util.getValue
-import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
+import ru.astrainteractive.astramarket.market.domain.di.MarketViewDomainModule
 import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
 
 internal interface ButtonFactoryDependency {
@@ -22,18 +22,18 @@ internal interface ButtonFactoryDependency {
 
     class Default(
         coreModule: CoreModule,
-        marketDomainModule: MarketDomainModule,
+        marketViewDomainModule: MarketViewDomainModule,
         bukkitCoreModule: BukkitCoreModule,
-        playersMarketModule: PlayersMarketModule
+        playersMarketViewModule: PlayersMarketViewModule
     ) : ButtonFactoryDependency {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
-            marketDomainModule.auctionSortTranslationMapping
+            marketViewDomainModule.auctionSortTranslationMapping
         }
         override val playersSortTranslationMapping: PlayerSortTranslationMapping by lazy {
-            playersMarketModule.playerSortTranslationMapping
+            playersMarketViewModule.playerSortTranslationMapping
         }
-        override val config: PluginConfig by coreModule.config
-        override val translation: Translation by coreModule.translation
+        override val config: PluginConfig by coreModule.configKrate
+        override val translation: Translation by coreModule.translationKrate
         override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
     }

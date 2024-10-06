@@ -17,7 +17,7 @@ internal interface CommonCommandDependencies {
         coreModule: CoreModule
     ) : CommonCommandDependencies {
         override val plugin: LifecyclePlugin = bukkitCoreModule.plugin
-        override val translation: Translation by coreModule.translation
+        override val translation: Translation by coreModule.translationKrate
         override val kyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
     }
 }

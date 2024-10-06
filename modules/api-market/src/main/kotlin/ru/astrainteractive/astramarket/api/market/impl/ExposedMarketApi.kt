@@ -38,6 +38,17 @@ internal class ExposedMarketApi(
         mutex.withLock { withContext(context, block) }
     }.onFailure { throwable -> error(throwable) { "Error during execution" } }
 
+    private fun toMarketSlot(resultRow: ResultRow): MarketSlot {
+        return MarketSlot(
+            id = resultRow[AuctionTable.id].value,
+            time = resultRow[AuctionTable.time],
+            minecraftUuid = resultRow[AuctionTable.minecraftUuid],
+            item = EncodedObject.ByteArray(resultRow[AuctionTable.item]),
+            price = resultRow[AuctionTable.price],
+            expired = resultRow[AuctionTable.expired]
+        )
+    }
+
     override suspend fun insertSlot(
         marketSlot: MarketSlot
     ) = runCatchingWithContext(dispatchers.IO) {
@@ -55,80 +66,82 @@ internal class ExposedMarketApi(
     override suspend fun expireSlot(
         marketSlot: MarketSlot
     ): Unit? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable.update(
-            where = { AuctionTable.id.eq(marketSlot.id) },
-            body = {
-                it[AuctionTable.expired] = true
-            }
-        )
+        transaction(databaseFlow.first()) {
+            AuctionTable.update(
+                where = { AuctionTable.id.eq(marketSlot.id) },
+                body = {
+                    it[AuctionTable.expired] = true
+                }
+            )
+        }
         Unit
     }.getOrNull()
-
-    private fun toMarketSlot(resultRow: ResultRow): MarketSlot {
-        return MarketSlot(
-            id = resultRow[AuctionTable.id].value,
-            time = resultRow[AuctionTable.time],
-            minecraftUuid = resultRow[AuctionTable.minecraftUuid],
-            item = EncodedObject.ByteArray(resultRow[AuctionTable.item]),
-            price = resultRow[AuctionTable.price],
-            expired = resultRow[AuctionTable.expired]
-        )
-    }
 
     override suspend fun getUserSlots(
         uuid: String,
         isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable
-            .selectAll()
-            .where {
-                AuctionTable.minecraftUuid
-                    .eq(uuid)
-                    .and(AuctionTable.expired.eq(isExpired))
-            }.map(::toMarketSlot)
+        transaction(databaseFlow.first()) {
+            AuctionTable
+                .selectAll()
+                .where {
+                    AuctionTable.minecraftUuid
+                        .eq(uuid)
+                        .and(AuctionTable.expired.eq(isExpired))
+                }.map(::toMarketSlot)
+        }
     }.getOrNull()
 
     override suspend fun getSlots(
         isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable.selectAll()
-            .where { AuctionTable.expired.eq(isExpired) }
-            .map(::toMarketSlot)
+        transaction(databaseFlow.first()) {
+            AuctionTable.selectAll()
+                .where { AuctionTable.expired.eq(isExpired) }
+                .map(::toMarketSlot)
+        }
     }.getOrNull()
 
     override suspend fun getSlotsOlderThan(
         millis: Long
     ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
-        val currentTime = System.currentTimeMillis()
-        val time = currentTime - millis
-        AuctionTable.selectAll()
-            .where { AuctionTable.time.less(time) }
-            .map(::toMarketSlot)
+        transaction(databaseFlow.first()) {
+            val currentTime = System.currentTimeMillis()
+            val time = currentTime - millis
+            AuctionTable.selectAll()
+                .where { AuctionTable.time.less(time) }
+                .map(::toMarketSlot)
+        }
     }.getOrNull()
 
     override suspend fun getSlot(
         id: Int
     ): MarketSlot? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable.selectAll()
-            .where { AuctionTable.id.eq(id) }
-            .map(::toMarketSlot)
-            .firstOrNull()
+        transaction(databaseFlow.first()) {
+            AuctionTable.selectAll()
+                .where { AuctionTable.id.eq(id) }
+                .map(::toMarketSlot)
+                .firstOrNull()
+        }
     }.getOrNull()
 
     override suspend fun deleteSlot(
         marketSlot: MarketSlot
     ): Unit? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable
-            .deleteWhere { AuctionTable.id.eq(marketSlot.id) }
+        transaction(databaseFlow.first()) {
+            AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) }
+        }
         Unit
     }.getOrNull()
 
     override suspend fun countPlayerSlots(
         uuid: String
     ): Int? = runCatchingWithContext(dispatchers.IO) {
-        AuctionTable.selectAll()
-            .where { AuctionTable.minecraftUuid.eq(uuid) }
-            .count()
-            .toInt()
+        transaction(databaseFlow.first()) {
+            AuctionTable.selectAll()
+                .where { AuctionTable.minecraftUuid.eq(uuid) }
+                .count()
+                .toInt()
+        }
     }.getOrNull()
 }

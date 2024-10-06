@@ -11,7 +11,7 @@ import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
-import ru.astrainteractive.astramarket.market.di.MarketModule
+import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
@@ -30,20 +30,16 @@ internal interface AuctionCommandDependencies {
         coreModule: CoreModule,
         bukkitCoreModule: BukkitCoreModule,
         routerModule: RouterModule,
-        marketModule: MarketModule
+        marketViewModule: MarketViewModule
     ) : AuctionCommandDependencies {
         override val plugin: JavaPlugin = bukkitCoreModule.plugin
         override val kyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
-        override val translation: Translation by coreModule.translation
-        override val router: GuiRouter by lazy {
-            routerModule.router
-        }
+        override val translation: Translation by coreModule.translationKrate
+        override val router: GuiRouter = routerModule.router
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
         override val scope: CoroutineScope = coreModule.scope
         override val dispatchers: KotlinDispatchers = coreModule.dispatchers
-        override val createAuctionUseCase: CreateAuctionUseCase by lazy {
-            marketModule.marketDomainModule.createAuctionUseCase
-        }
+        override val createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase
         override val limitedIoDispatcher: CoroutineDispatcher = dispatchers.IO.limitedParallelism(1)
     }
 }

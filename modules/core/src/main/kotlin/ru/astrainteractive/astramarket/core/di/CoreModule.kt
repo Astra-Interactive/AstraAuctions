@@ -12,8 +12,8 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 interface CoreModule {
     val lifecycle: Lifecycle
 
-    val config: Krate<PluginConfig>
-    val translation: Krate<Translation>
+    val configKrate: Krate<PluginConfig>
+    val translationKrate: Krate<Translation>
     val scope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val yamlStringFormat: StringFormat

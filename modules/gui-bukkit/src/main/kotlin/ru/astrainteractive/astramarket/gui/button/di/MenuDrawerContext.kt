@@ -12,8 +12,8 @@ import ru.astrainteractive.astramarket.gui.button.NextPageButtonFactory
 import ru.astrainteractive.astramarket.gui.button.PlayerItemButtonFactory
 import ru.astrainteractive.astramarket.gui.button.PlayersSortButtonFactory
 import ru.astrainteractive.astramarket.gui.button.PrevPageButtonFactory
-import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
-import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.market.domain.di.MarketViewDomainModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 
 internal interface MenuDrawerContext {
     val borderButtonRenderer: BorderButtonFactory
@@ -29,15 +29,15 @@ internal interface MenuDrawerContext {
 
     class Default(
         coreModule: CoreModule,
-        marketDomainModule: MarketDomainModule,
+        marketViewDomainModule: MarketViewDomainModule,
         bukkitCoreModule: BukkitCoreModule,
-        playersMarketModule: PlayersMarketModule
+        playersMarketViewModule: PlayersMarketViewModule
     ) : MenuDrawerContext {
         private val dependency: ButtonFactoryDependency = ButtonFactoryDependency.Default(
             coreModule = coreModule,
-            marketDomainModule = marketDomainModule,
+            marketViewDomainModule = marketViewDomainModule,
             bukkitCoreModule = bukkitCoreModule,
-            playersMarketModule = playersMarketModule
+            playersMarketViewModule = playersMarketViewModule
         )
         override val borderButtonRenderer = BorderButtonFactory(dependency)
         override val nextPageButtonFactory = NextPageButtonFactory(dependency)

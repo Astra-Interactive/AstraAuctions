@@ -11,9 +11,9 @@ import ru.astrainteractive.astramarket.core.LifecyclePlugin
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
-import ru.astrainteractive.astramarket.market.di.MarketModule
+import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
-import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.worker.di.WorkerModule
 
 internal interface RootModule {
@@ -22,9 +22,9 @@ internal interface RootModule {
     val coreModule: BukkitCoreModule
     val apiMarketModule: ApiMarketModule
     val routerModule: RouterModule
-    val marketModule: MarketModule
+    val marketViewModule: MarketViewModule
     val commandModule: CommandModule
-    val playersMarketModule: PlayersMarketModule
+    val playersMarketViewModule: PlayersMarketViewModule
     val workerModule: WorkerModule
 
     class Default(plugin: LifecyclePlugin) : RootModule, Logger by JUtiltLogger("RootModule") {
@@ -36,7 +36,7 @@ internal interface RootModule {
             dataFolder = coreModule.plugin.dataFolder
         )
 
-        override val marketModule: MarketModule = MarketModule.Default(
+        override val marketViewModule: MarketViewModule = MarketViewModule.Default(
             coreModule = coreModule,
             apiMarketModule = apiMarketModule,
             marketDataModule = BukkitMarketDataModule(
@@ -48,23 +48,23 @@ internal interface RootModule {
             )
         )
 
-        override val playersMarketModule: PlayersMarketModule = PlayersMarketModule.Default(
+        override val playersMarketViewModule: PlayersMarketViewModule = PlayersMarketViewModule.Default(
             coreModule = coreModule,
             apiMarketModule = apiMarketModule
         )
 
         override val routerModule: RouterModule = RouterModule.Default(
             coreModule = coreModule,
-            marketModule = marketModule,
+            marketViewModule = marketViewModule,
             bukkitCoreModule = coreModule,
-            playersMarketModule = playersMarketModule
+            playersMarketViewModule = playersMarketViewModule
         )
 
         override val commandModule: CommandModule = CommandModule.Default(
             coreModule = coreModule,
             bukkitCoreModule = coreModule,
             routerModule = routerModule,
-            marketModule = marketModule
+            marketViewModule = marketViewModule
         )
 
         override val workerModule: WorkerModule = WorkerModule.Default(

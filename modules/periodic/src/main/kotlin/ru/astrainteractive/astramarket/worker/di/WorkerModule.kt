@@ -17,7 +17,7 @@ interface WorkerModule {
             ExpireWorker(
                 marketApi = apiMarketModule.marketApi,
                 dispatchers = coreModule.dispatchers,
-                configKrate = coreModule.config
+                configKrate = coreModule.configKrate
             )
         }
         override val lifecycle: Lifecycle = Lifecycle.Lambda(

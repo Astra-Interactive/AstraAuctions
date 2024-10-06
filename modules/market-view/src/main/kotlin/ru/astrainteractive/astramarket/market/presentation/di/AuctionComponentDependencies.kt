@@ -6,7 +6,7 @@ import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
+import ru.astrainteractive.astramarket.market.domain.di.MarketViewDomainModule
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
@@ -26,15 +26,15 @@ internal interface AuctionComponentDependencies {
     class Default(
         coreModule: CoreModule,
         apiMarketModule: ApiMarketModule,
-        marketDomainModule: MarketDomainModule,
+        marketViewDomainModule: MarketViewDomainModule,
     ) : AuctionComponentDependencies {
-        override val config: PluginConfig by coreModule.config
+        override val config: PluginConfig by coreModule.configKrate
         override val dispatchers: KotlinDispatchers = coreModule.dispatchers
         override val marketApi: MarketApi = apiMarketModule.marketApi
-        override val auctionBuyUseCase: AuctionBuyUseCase = marketDomainModule.auctionBuyUseCase
-        override val expireAuctionUseCase: ExpireAuctionUseCase = marketDomainModule.expireAuctionUseCase
-        override val removeAuctionUseCase: RemoveAuctionUseCase = marketDomainModule.removeAuctionUseCase
-        override val playerInteractionBridge = marketDomainModule.marketDataModule.playerInteractionBridge
-        override val sortAuctionsUseCase = marketDomainModule.platformMarketDomainModule.sortAuctionsUseCase
+        override val auctionBuyUseCase: AuctionBuyUseCase = marketViewDomainModule.auctionBuyUseCase
+        override val expireAuctionUseCase: ExpireAuctionUseCase = marketViewDomainModule.expireAuctionUseCase
+        override val removeAuctionUseCase: RemoveAuctionUseCase = marketViewDomainModule.removeAuctionUseCase
+        override val playerInteractionBridge = marketViewDomainModule.marketDataModule.playerInteractionBridge
+        override val sortAuctionsUseCase = marketViewDomainModule.platformMarketDomainModule.sortAuctionsUseCase
     }
 }
