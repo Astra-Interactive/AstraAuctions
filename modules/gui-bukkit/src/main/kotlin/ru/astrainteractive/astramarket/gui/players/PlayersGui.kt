@@ -18,7 +18,14 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
+import ru.astrainteractive.astramarket.gui.button.allSlots
+import ru.astrainteractive.astramarket.gui.button.back
+import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
+import ru.astrainteractive.astramarket.gui.button.expiredSlots
+import ru.astrainteractive.astramarket.gui.button.nextPage
+import ru.astrainteractive.astramarket.gui.button.playerItem
+import ru.astrainteractive.astramarket.gui.button.playersSort
+import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
 import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap.AuctionSlotKey
@@ -34,11 +41,10 @@ internal class PlayersGui(
     private val playersMarketComponent: PlayersMarketComponent,
     player: Player,
     dependencies: AuctionGuiDependencies,
-    menuDrawerContext: MenuDrawerContext
+    private val buttonContext: ButtonContext
 ) : PaginatedInventoryMenu(),
     AuctionGuiDependencies by dependencies,
-    KyoriComponentSerializer by dependencies.kyoriComponentSerializer,
-    MenuDrawerContext by menuDrawerContext {
+    KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
     override val inventorySize: InventorySize = InventorySize.XL
 
     private val inventoryMap: AuctionInventoryMap
@@ -55,7 +61,7 @@ internal class PlayersGui(
     )
 
     override val prevPageButton: InventorySlot
-        get() = prevPageButtonFactory.render(
+        get() = buttonContext.prevPage(
             index = inventoryMap.indexOf(AuctionSlotKey.PR),
             click = {
                 playerHolder.player.playSound(config.sounds.open)
@@ -64,7 +70,7 @@ internal class PlayersGui(
         )
 
     override val nextPageButton: InventorySlot
-        get() = nextPageButtonFactory.render(
+        get() = buttonContext.nextPage(
             index = inventoryMap.indexOf(AuctionSlotKey.NE),
             click = {
                 playerHolder.player.playSound(config.sounds.open)
@@ -73,7 +79,7 @@ internal class PlayersGui(
         )
 
     private val sortButton: InventorySlot
-        get() = playersSortButtonFactory.render(
+        get() = buttonContext.playersSort(
             index = inventoryMap.indexOf(AuctionSlotKey.FI),
             sortType = playersMarketComponent.model.value.sort,
             click = {
@@ -86,7 +92,7 @@ internal class PlayersGui(
         )
 
     private val expiredButton: InventorySlot
-        get() = expiredButtonFactory.render(
+        get() = buttonContext.expiredSlots(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
@@ -95,8 +101,21 @@ internal class PlayersGui(
             }
         )
 
+    private val allSlots: InventorySlot
+        get() = buttonContext.allSlots(
+            index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            click = {
+                val route = GuiRouter.Route.Slots(
+                    player = playerHolder.player,
+                    isExpired = playersMarketComponent.model.value.isExpired,
+                    targetPlayerUUID = null
+                )
+                router.navigate(route)
+            }
+        )
+
     private val closeButton: InventorySlot
-        get() = backButtonFactory.render(
+        get() = buttonContext.back(
             index = inventoryMap.indexOf(AuctionSlotKey.BA),
             click = { playerHolder.player.closeInventory() }
         )
@@ -113,7 +132,7 @@ internal class PlayersGui(
                     .playersAndSlots
                     .filter { it.slots.any { slot -> slot.expired == isExpired } }
                     .getOrNull(index) ?: return@withKeySlot null
-                playerItemButtonFactory.render(
+                buttonContext.playerItem(
                     playerAndSlots = items,
                     index = slotIndex,
                     isExpired = playersMarketComponent.model.value.isExpired,
@@ -149,6 +168,7 @@ internal class PlayersGui(
         sortButton.setInventorySlot()
         expiredButton.setInventorySlot()
         closeButton.setInventorySlot()
+        allSlots.setInventorySlot()
         slots.forEach { it.setInventorySlot() }
     }
 

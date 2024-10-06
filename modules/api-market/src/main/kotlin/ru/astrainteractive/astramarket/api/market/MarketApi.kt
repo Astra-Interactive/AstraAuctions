@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.api.market
 
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
+import java.util.UUID
 
 interface MarketApi {
     /**
@@ -52,10 +53,20 @@ interface MarketApi {
      * @throws Exception
      */
     suspend fun countPlayerSlots(uuid: String): Int?
+}
 
-    /**
-     * @return uuid of player who currently have active/expired slots
-     * @throws Exception
-     */
-    suspend fun findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots>
+/**
+ * @return uuid of player who currently have active/expired slots
+ * @throws Exception
+ */
+suspend fun MarketApi.findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots> {
+    return getSlots(isExpired)
+        .orEmpty()
+        .groupBy(MarketSlot::minecraftUuid)
+        .map { (uuid, slots) ->
+            PlayerAndSlots(
+                minecraftUUID = UUID.fromString(uuid),
+                slots = slots
+            )
+        }
 }

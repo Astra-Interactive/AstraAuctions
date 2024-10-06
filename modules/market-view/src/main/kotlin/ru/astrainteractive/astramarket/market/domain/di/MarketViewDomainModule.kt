@@ -13,11 +13,8 @@ import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCas
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCaseImpl
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCaseImpl
-import ru.astrainteractive.klibs.kdi.Factory
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 
-interface MarketDomainModule {
+interface MarketViewDomainModule {
     val marketDataModule: MarketDataModule
     val platformMarketDomainModule: PlatformMarketDomainModule
 
@@ -33,51 +30,46 @@ interface MarketDomainModule {
     class Default(
         coreModule: CoreModule,
         apiMarketModule: ApiMarketModule,
-        marketDataModuleFactory: Factory<MarketDataModule>,
-        platformMarketDomainModuleFactory: Factory<PlatformMarketDomainModule>
-    ) : MarketDomainModule {
-        override val marketDataModule: MarketDataModule by Provider {
-            marketDataModuleFactory.create()
-        }
-        override val platformMarketDomainModule: PlatformMarketDomainModule by Provider {
-            platformMarketDomainModuleFactory.create()
-        }
-        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
+        override val marketDataModule: MarketDataModule,
+        override val platformMarketDomainModule: PlatformMarketDomainModule
+    ) : MarketViewDomainModule {
+
+        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             AuctionSortTranslationMappingImpl(
-                translation = coreModule.translation.value
+                translationKrate = coreModule.translationKrate
             )
         }
-        override val auctionBuyUseCase: AuctionBuyUseCase by Provider {
+        override val auctionBuyUseCase: AuctionBuyUseCase by lazy {
             AuctionBuyUseCaseImpl(
-                translation = coreModule.translation.value,
-                config = coreModule.config.value,
-                economyProvider = coreModule.economyProvider,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
+                economyProviderFactory = coreModule.economyProviderFactory,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
             )
         }
-        override val createAuctionUseCase: CreateAuctionUseCase by Provider {
+        override val createAuctionUseCase: CreateAuctionUseCase by lazy {
             CreateAuctionUseCaseImpl(
-                translation = coreModule.translation.value,
-                config = coreModule.config.value,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
             )
         }
-        override val expireAuctionUseCase: ExpireAuctionUseCase by Provider {
+        override val expireAuctionUseCase: ExpireAuctionUseCase by lazy {
             ExpireAuctionUseCaseImpl(
-                translation = coreModule.translation.value,
+                translationKrate = coreModule.translationKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
             )
         }
-        override val removeAuctionUseCase: RemoveAuctionUseCase by Provider {
+        override val removeAuctionUseCase: RemoveAuctionUseCase by lazy {
             RemoveAuctionUseCaseImpl(
-                translation = coreModule.translation.value,
-                config = coreModule.config.value,
+                translationKrate = coreModule.translationKrate,
+                configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi

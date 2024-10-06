@@ -1,14 +1,16 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astralibs.economy.EconomyProvider
 import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
+import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -28,13 +30,16 @@ internal class AuctionBuyUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
     private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
-    private val translation: Translation,
-    private val config: PluginConfig,
-    private val economyProvider: EconomyProvider,
-) : AuctionBuyUseCase, Logger by JUtiltLogger("AuctionBuyUseCase") {
+    private val translationKrate: Krate<Translation>,
+    private val configKrate: Krate<PluginConfig>,
+    private val economyProviderFactory: CurrencyEconomyProviderFactory,
+) : AuctionBuyUseCase, Logger by JUtiltLogger("AstraMarket-AuctionBuyUseCase") {
+    private val config by configKrate
+    private val translation by translationKrate
 
     @Suppress("LongMethod")
     override suspend operator fun invoke(input: AuctionBuyUseCase.Params): Boolean {
+        val economyProvider = economyProviderFactory.findDefault() ?: return false
         val receivedAuction = input.auction
         val playerUUID = input.playerUUID
         val playerName = auctionsBridge.playerName(playerUUID)

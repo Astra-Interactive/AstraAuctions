@@ -1,10 +1,10 @@
-import ru.astrainteractive.gradleplugin.setupSpigotProcessor
-import ru.astrainteractive.gradleplugin.setupSpigotShadow
+import ru.astrainteractive.gradleplugin.property.extension.ModelPropertyValueExt.requireProjectInfo
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("ru.astrainteractive.gradleplugin.minecraft.multiplatform")
+    alias(libs.plugins.klibs.minecraft.shadow)
+    alias(libs.plugins.klibs.minecraft.resource.processor)
 }
 
 dependencies {
@@ -12,8 +12,7 @@ dependencies {
     implementation(libs.bundles.kotlin)
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
-    implementation(libs.minecraft.astralibs.orm)
-    implementation(libs.klibs.kdi)
+    implementation(libs.minecraft.astralibs.exposed)
     implementation(libs.klibs.mikro.core)
     implementation(libs.minecraft.astralibs.menu.bukkit)
     implementation(libs.minecraft.astralibs.core.bukkit)
@@ -40,10 +39,30 @@ dependencies {
     implementation(projects.modules.commandBukkit)
 }
 
-val destination = File("/home/makeevrserg/Desktop/server/data/plugins")
-    .takeIf(File::exists)
-    ?: File(rootDir, "jars")
+minecraftProcessResource {
+    spigotResourceProcessor.process()
+}
 
-setupSpigotShadow(destination)
+setupShadow {
+    requireShadowJarTask {
+        destination = File("/home/makeevrserg/Desktop/server/data/plugins")
+            .takeIf { it.exists() }
+            ?: File(rootDir, "jars")
 
-setupSpigotProcessor()
+        val projectInfo = requireProjectInfo
+        isReproducibleFileOrder = true
+        mergeServiceFiles()
+        dependsOn(configurations)
+        archiveClassifier.set(null as String?)
+        relocate("org.bstats", projectInfo.group)
+
+        minimize {
+            exclude(dependency(libs.exposed.jdbc.get()))
+            exclude(dependency(libs.exposed.dao.get()))
+            exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.version.get()}"))
+        }
+        archiveVersion.set(projectInfo.versionString)
+        archiveBaseName.set(projectInfo.name)
+        destinationDirectory.set(destination.get())
+    }
+}

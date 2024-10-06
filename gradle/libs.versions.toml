@@ -10,9 +10,10 @@ driver-jdbc = "3.46.1.3" # https://github.com/xerial/sqlite-jdbc
 driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
-klibs-gradleplugin = "1.3.4" # https://github.com/makeevrserg/gradle-plugin
+klibs-gradleplugin = "1.4.0" # https://github.com/makeevrserg/gradle-plugin
 klibs-mikro = "1.8.8" # https://github.com/makeevrserg/klibs.mikro
 klibs-kdi = "1.4.8" # https://github.com/makeevrserg/klibs.kdi
+klibs-kstorage = "3.1.3" # https://github.com/makeevrserg/klibs.kstorage
 
 # Minecraft
 minecraft-velocity = "4.0.0-SNAPSHOT" # https://github.com/PaperMC/Velocity
@@ -20,15 +21,21 @@ minecraft-spigot = "1.21-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
 minecraft-papi = "2.11.6" # https://github.com/PlaceholderAPI/PlaceholderAPI
 minecraft-protocollib = "5.1.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
-minecraft-astralibs = "3.14.1" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-astralibs = "3.15.0" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.1.0" # https://github.com/Bastian/bStats
 minecraft-mockbukkit = "3.129.1" #https://github.com/MockBukkit/MockBukkit
+
+# Exposed
+ktor = "2.3.12"
 
 # Shadow
 gradle-shadow = "7.1.2" # https://github.com/johnrengelman/shadow
 
 # BuildConfig
 gradle-buildconfig = "5.5.0" # https://github.com/gmazzo/gradle-buildconfig-plugin
+
+# Exposed
+exposed = "0.55.0" # https://github.com/JetBrains/Exposed
 
 [libraries]
 # Kotlin
@@ -38,6 +45,12 @@ kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", v
 kotlin-serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-json" }
 kotlin-serializationKaml = { module = "com.charleskorn.kaml:kaml", version.ref = "kotlin-kaml" }
 kotlin-gradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-version" }
+
+# Exposed
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-dao = { module = "org.jetbrains.exposed:exposed-dao", version.ref = "exposed" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 
 # Shadow
 gradle-shadow = { module = "gradle.plugin.com.github.johnrengelman:shadow", version.ref = "gradle-shadow" }
@@ -63,9 +76,11 @@ minecraft-mockbukkit = { module = "com.github.MockBukkit:MockBukkit", version.re
 # klibs
 klibs-mikro-core = { module = "ru.astrainteractive.klibs:mikro-core", version.ref = "klibs-mikro" }
 klibs-kdi = { module = "ru.astrainteractive.klibs:kdi", version.ref = "klibs-kdi" }
+klibs-kstorage = { module = "ru.astrainteractive.klibs:kstorage", version.ref = "klibs-kstorage" }
+
 
 # AstraLibs
-minecraft-astralibs-orm = { module = "ru.astrainteractive.astralibs:orm", version.ref = "minecraft-astralibs" }
+minecraft-astralibs-exposed = { module = "ru.astrainteractive.astralibs:exposed", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core = { module = "ru.astrainteractive.astralibs:core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-menu-bukkit = { module = "ru.astrainteractive.astralibs:menu-bukkit", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-bukkit = { module = "ru.astrainteractive.astralibs:core-bukkit", version.ref = "minecraft-astralibs" }
@@ -73,10 +88,10 @@ minecraft-astralibs-command = { module = "ru.astrainteractive.astralibs:command"
 minecraft-astralibs-command-bukkit = { module = "ru.astrainteractive.astralibs:command-bukkit", version.ref = "minecraft-astralibs" }
 
 [bundles]
+exposed = ["exposed-java-time", "exposed-jdbc", "exposed-dao", "exposed-core"]
 minecraft-bukkit = ["minecraft-paper-api", "minecraft-spigot-api", "minecraft-spigot-core", "minecraft-vaultapi", "minecraft-papi"]
 testing-kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "driver-jdbc", "driver-mysql", "kotlin-serialization", "kotlin-serializationJson"]
 kotlin = ["kotlin-coroutines-core", "kotlin-coroutines-coreJvm", "kotlin-serialization", "kotlin-serializationJson", "kotlin-serializationKaml", "kotlin-gradle"]
-
 
 [plugins]
 
@@ -100,5 +115,5 @@ klibs-gradle-publication = { id = "ru.astrainteractive.gradleplugin.publication"
 klibs-gradle-rootinfo = { id = "ru.astrainteractive.gradleplugin.root.info", version.ref = "klibs-gradleplugin" }
 
 # klibs - minecraft
-klibs-gradle-minecraft-empty = { id = "ru.astrainteractive.gradleplugin.minecraft.empty", version.ref = "klibs-gradleplugin" }
-klibs-gradle-minecraft-multiplatform = { id = "ru.astrainteractive.gradleplugin.minecraft.multiplatform", version.ref = "klibs-gradleplugin" }
+klibs-minecraft-resource-processor = { id = "ru.astrainteractive.gradleplugin.minecraft.resource-processor", version.ref = "klibs-gradleplugin" }
+klibs-minecraft-shadow = { id = "ru.astrainteractive.gradleplugin.minecraft.shadow", version.ref = "klibs-gradleplugin" }

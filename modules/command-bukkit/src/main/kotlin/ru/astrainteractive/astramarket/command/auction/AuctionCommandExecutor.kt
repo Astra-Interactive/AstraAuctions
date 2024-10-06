@@ -17,7 +17,7 @@ internal class AuctionCommandExecutor(
     private val dependencies: AuctionCommandDependencies
 ) : CommandExecutor<AuctionCommand.Result>,
     AuctionCommandDependencies by dependencies,
-    Logger by JUtiltLogger("AuctionCommandExecutor") {
+    Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor") {
     private val mutex = Mutex()
 
     override fun execute(input: AuctionCommand.Result) {

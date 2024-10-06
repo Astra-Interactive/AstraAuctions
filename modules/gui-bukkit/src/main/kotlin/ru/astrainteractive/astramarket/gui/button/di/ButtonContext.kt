@@ -6,36 +6,34 @@ import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
+import ru.astrainteractive.astramarket.core.util.getValue
+import ru.astrainteractive.astramarket.market.domain.di.MarketViewDomainModule
 import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 
-internal interface ButtonFactoryDependency {
+internal interface ButtonContext : KyoriComponentSerializer {
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
     val playersSortTranslationMapping: PlayerSortTranslationMapping
     val config: PluginConfig
     val translation: Translation
-    val kyoriComponentSerializer: KyoriComponentSerializer
     val itemStackEncoder: ItemStackEncoder
 
     class Default(
         coreModule: CoreModule,
-        marketDomainModule: MarketDomainModule,
+        marketViewDomainModule: MarketViewDomainModule,
         bukkitCoreModule: BukkitCoreModule,
-        playersMarketModule: PlayersMarketModule
-    ) : ButtonFactoryDependency {
-        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
-            marketDomainModule.auctionSortTranslationMapping
+        playersMarketViewModule: PlayersMarketViewModule
+    ) : ButtonContext,
+        KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer.cachedValue {
+        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
+            marketViewDomainModule.auctionSortTranslationMapping
         }
-        override val playersSortTranslationMapping: PlayerSortTranslationMapping by Provider {
-            playersMarketModule.playerSortTranslationMapping
+        override val playersSortTranslationMapping: PlayerSortTranslationMapping by lazy {
+            playersMarketViewModule.playerSortTranslationMapping
         }
-        override val config: PluginConfig by coreModule.config
-        override val translation: Translation by coreModule.translation
-        override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
+        override val config: PluginConfig by coreModule.configKrate
+        override val translation: Translation by coreModule.translationKrate
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
     }
 }

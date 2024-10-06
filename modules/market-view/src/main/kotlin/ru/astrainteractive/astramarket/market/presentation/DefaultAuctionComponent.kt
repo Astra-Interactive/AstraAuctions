@@ -1,9 +1,10 @@
 package ru.astrainteractive.astramarket.market.presentation
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
-import ru.astrainteractive.astralibs.async.AsyncComponent
+import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
@@ -23,7 +24,7 @@ internal class DefaultAuctionComponent(
     isExpired: Boolean,
     private val dependencies: AuctionComponentDependencies
 ) : AuctionComponent,
-    AsyncComponent(),
+    CoroutineFeature by CoroutineFeature.Default(Dispatchers.IO),
     AuctionComponentDependencies by dependencies {
     private val mutex = Mutex()
 
@@ -45,7 +46,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun sort() {
-        componentScope.launchWithLock(mutex, dispatchers.IO) {
+        launchWithLock(mutex, dispatchers.IO) {
             model.update { model ->
                 val input = SortAuctionsUseCase.Input(model.sortType, model.items)
                 val sortedItems = sortAuctionsUseCase.invoke(input)
@@ -80,7 +81,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun loadItems() {
-        componentScope.launchWithLock(mutex, dispatchers.IO) {
+        launchWithLock(mutex, dispatchers.IO) {
             val items = when {
                 targetPlayerUUID != null -> {
                     marketApi.getUserSlots(
@@ -98,7 +99,7 @@ internal class DefaultAuctionComponent(
 
     override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
-        componentScope.launchWithLock(mutex, dispatchers.IO) {
+        launchWithLock(mutex, dispatchers.IO) {
             val result = when (model.value.isExpired) {
                 true -> {
                     if (auction.minecraftUuid == playerUUID.toString()) {

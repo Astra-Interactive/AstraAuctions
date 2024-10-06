@@ -4,43 +4,41 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
+import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.players.PlayersGui
 import ru.astrainteractive.astramarket.gui.slots.SlotsGui
-import ru.astrainteractive.astramarket.market.di.MarketModule
-import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
+import ru.astrainteractive.astramarket.market.di.MarketViewModule
+import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 
 internal class GuiRouterImpl(
     private val coreModule: CoreModule,
-    private val marketModule: MarketModule,
+    private val marketViewModule: MarketViewModule,
     private val bukkitCoreModule: BukkitCoreModule,
-    private val playersMarketModule: PlayersMarketModule
+    private val playersMarketViewModule: PlayersMarketViewModule
 ) : GuiRouter {
-    private val scope = coreModule.scope.value
-    private val dispatchers = coreModule.dispatchers
     private val dependencies = AuctionGuiDependencies.Default(
         coreModule = coreModule,
-        marketDomainModule = marketModule.marketDomainModule,
+        marketViewDomainModule = marketViewModule.marketViewDomainModule,
         bukkitCoreModule = bukkitCoreModule,
         router = this@GuiRouterImpl
     )
-    private val menuDrawerContext = MenuDrawerContext.Default(
+    private val buttonContext = ButtonContext.Default(
         coreModule = coreModule,
-        marketDomainModule = marketModule.marketDomainModule,
+        marketViewDomainModule = marketViewModule.marketViewDomainModule,
         bukkitCoreModule = bukkitCoreModule,
-        playersMarketModule = playersMarketModule
+        playersMarketViewModule = playersMarketViewModule
     )
 
     override fun navigate(route: GuiRouter.Route) {
-        scope.launch(dispatchers.IO) {
+        coreModule.scope.launch {
             val gui = when (route) {
                 is GuiRouter.Route.Slots -> {
                     SlotsGui(
                         player = route.player,
                         dependencies = dependencies,
-                        menuDrawerContext = menuDrawerContext,
-                        auctionComponent = marketModule.createAuctionComponent(
+                        buttonContext = buttonContext,
+                        auctionComponent = marketViewModule.createAuctionComponent(
                             playerUUID = route.player.uniqueId,
                             isExpired = route.isExpired,
                             targetPlayerUUID = route.targetPlayerUUID
@@ -52,8 +50,8 @@ internal class GuiRouterImpl(
                     PlayersGui(
                         player = route.player,
                         dependencies = dependencies,
-                        menuDrawerContext = menuDrawerContext,
-                        playersMarketComponent = playersMarketModule.createPlayersMarketComponent(
+                        buttonContext = buttonContext,
+                        playersMarketComponent = playersMarketViewModule.createPlayersMarketComponent(
                             isExpired = route.isExpired
                         )
                     )

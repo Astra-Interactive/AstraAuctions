@@ -25,6 +25,9 @@ internal interface AuctionInventoryMap : InventoryMap<AuctionSlotKey> {
         // Auction item
         AI,
 
+        // Group by player or all slots
+        GR,
+
         // Empty
         EM
     }

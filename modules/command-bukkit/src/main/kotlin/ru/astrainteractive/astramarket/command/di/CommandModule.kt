@@ -8,7 +8,7 @@ import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependenci
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
-import ru.astrainteractive.astramarket.market.di.MarketModule
+import ru.astrainteractive.astramarket.market.di.MarketViewModule
 
 interface CommandModule {
     val lifecycle: Lifecycle
@@ -17,7 +17,7 @@ interface CommandModule {
         coreModule: CoreModule,
         bukkitCoreModule: BukkitCoreModule,
         routerModule: RouterModule,
-        marketModule: MarketModule
+        marketViewModule: MarketViewModule
     ) : CommandModule {
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
@@ -32,7 +32,7 @@ interface CommandModule {
                         dependencies = AuctionCommandDependencies.Default(
                             coreModule = coreModule,
                             bukkitCoreModule = bukkitCoreModule,
-                            marketModule = marketModule,
+                            marketViewModule = marketViewModule,
                             routerModule = routerModule
                         )
                     ).register()

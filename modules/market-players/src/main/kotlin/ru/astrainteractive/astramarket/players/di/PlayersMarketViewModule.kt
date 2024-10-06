@@ -7,7 +7,7 @@ import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapp
 import ru.astrainteractive.astramarket.players.presentation.DefaultPlayersMarketComponent
 import ru.astrainteractive.astramarket.players.presentation.PlayersMarketComponent
 
-interface PlayersMarketModule {
+interface PlayersMarketViewModule {
     val playerSortTranslationMapping: PlayerSortTranslationMapping
 
     fun createPlayersMarketComponent(isExpired: Boolean): PlayersMarketComponent
@@ -15,9 +15,11 @@ interface PlayersMarketModule {
     class Default(
         private val coreModule: CoreModule,
         private val apiMarketModule: ApiMarketModule
-    ) : PlayersMarketModule {
+    ) : PlayersMarketViewModule {
         override val playerSortTranslationMapping: PlayerSortTranslationMapping by lazy {
-            PlayerSortTranslationMappingImpl(coreModule.translation.value)
+            PlayerSortTranslationMappingImpl(
+                translationKrate = coreModule.translationKrate
+            )
         }
 
         override fun createPlayersMarketComponent(isExpired: Boolean): PlayersMarketComponent {

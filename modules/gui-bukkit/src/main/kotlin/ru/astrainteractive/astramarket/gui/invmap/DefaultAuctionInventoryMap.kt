@@ -10,6 +10,6 @@ internal object DefaultAuctionInventoryMap : AuctionInventoryMap {
         arrayOf(AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI),
         arrayOf(AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI),
         arrayOf(AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI, AuctionSlotKey.AI),
-        arrayOf(AuctionSlotKey.PR, AuctionSlotKey.EM, AuctionSlotKey.EM, AuctionSlotKey.AU, AuctionSlotKey.BA, AuctionSlotKey.FI, AuctionSlotKey.EM, AuctionSlotKey.EM, AuctionSlotKey.NE),
+        arrayOf(AuctionSlotKey.PR, AuctionSlotKey.EM, AuctionSlotKey.GR, AuctionSlotKey.AU, AuctionSlotKey.BA, AuctionSlotKey.FI, AuctionSlotKey.EM, AuctionSlotKey.EM, AuctionSlotKey.NE),
     )
 }

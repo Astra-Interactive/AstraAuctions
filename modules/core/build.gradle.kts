@@ -8,6 +8,6 @@ dependencies {
     implementation(libs.bundles.kotlin)
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
-    implementation(libs.klibs.kdi)
     implementation(libs.klibs.mikro.core)
+    api(libs.klibs.kstorage)
 }

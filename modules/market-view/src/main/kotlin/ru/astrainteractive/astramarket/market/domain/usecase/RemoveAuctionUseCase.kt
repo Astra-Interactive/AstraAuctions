@@ -3,8 +3,10 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
+import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -24,9 +26,11 @@ internal class RemoveAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
     private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
-    private val translation: Translation,
-    private val config: PluginConfig,
+    translationKrate: Krate<Translation>,
+    configKrate: Krate<PluginConfig>,
 ) : RemoveAuctionUseCase {
+    private val translation by translationKrate
+    private val config by configKrate
 
     override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
         val receivedAuction = input.auction

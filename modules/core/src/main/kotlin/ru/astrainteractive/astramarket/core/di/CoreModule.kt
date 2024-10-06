@@ -1,73 +1,21 @@
 package ru.astrainteractive.astramarket.core.di
 
-import ru.astrainteractive.astralibs.async.AsyncComponent
-import ru.astrainteractive.astralibs.economy.EconomyProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.StringFormat
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astralibs.serialization.StringFormatExt.parse
-import ru.astrainteractive.astralibs.serialization.StringFormatExt.writeIntoFile
-import ru.astrainteractive.astralibs.serialization.YamlStringFormat
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
-import ru.astrainteractive.klibs.kdi.Dependency
-import ru.astrainteractive.klibs.kdi.Reloadable
-import ru.astrainteractive.klibs.kdi.Single
+import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
+import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
-import java.io.File
 
 interface CoreModule {
     val lifecycle: Lifecycle
-    val config: Dependency<PluginConfig>
-    val translation: Dependency<Translation>
-    val scope: Dependency<AsyncComponent>
+
+    val configKrate: Krate<PluginConfig>
+    val translationKrate: Krate<Translation>
+    val scope: CoroutineScope
     val dispatchers: KotlinDispatchers
-    val economyProvider: EconomyProvider
-
-    class Default(
-        dataFolder: File,
-        override val dispatchers: KotlinDispatchers,
-        private val getEconomyProvider: (id: String?) -> EconomyProvider
-    ) : CoreModule {
-
-        override val translation: Reloadable<Translation> = Reloadable {
-            val file = dataFolder.resolve("translations.yml")
-            if (!file.parentFile.exists()) file.parentFile.mkdirs()
-            if (!file.exists()) file.createNewFile()
-            val serializer = YamlStringFormat()
-            serializer.parse<Translation>(file)
-                .onFailure(Throwable::printStackTrace)
-                .getOrElse { Translation() }
-                .also { serializer.writeIntoFile(it, file) }
-        }
-
-        override val config: Reloadable<PluginConfig> = Reloadable {
-            val file = dataFolder.resolve("config.yml")
-            if (!file.parentFile.exists()) file.parentFile.mkdirs()
-            if (!file.exists()) file.createNewFile()
-            val serializer = YamlStringFormat()
-            serializer.parse<PluginConfig>(file)
-                .onFailure(Throwable::printStackTrace)
-                .getOrElse { PluginConfig() }
-                .also { serializer.writeIntoFile(it, file) }
-        }
-
-        override val economyProvider: EconomyProvider by lazy {
-            getEconomyProvider.invoke(config.value.auction.currencyId)
-        }
-
-        override val scope: Dependency<AsyncComponent> = Single {
-            AsyncComponent.Default()
-        }
-
-        override val lifecycle: Lifecycle by lazy {
-            Lifecycle.Lambda(
-                onReload = {
-                    config.reload()
-                    translation.reload()
-                },
-                onDisable = {
-                    scope.value.close()
-                }
-            )
-        }
-    }
+    val yamlStringFormat: StringFormat
+    val economyProviderFactory: CurrencyEconomyProviderFactory
 }

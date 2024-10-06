@@ -33,6 +33,10 @@ data class Translation(
         val prev: StringDesc.Raw = StringDesc.Raw("&#18dbd1Раньше"),
         @SerializedName("sort")
         val sort: StringDesc.Raw = StringDesc.Raw("&#18dbd1Сортировка"),
+        @SerializedName("player_slots")
+        val playerSlots: StringDesc.Raw = StringDesc.Raw("&#18dbd1Групировка по игрокам"),
+        @SerializedName("all_slots")
+        val allSlots: StringDesc.Raw = StringDesc.Raw("&#18dbd1Все слоты"),
     )
 
     @Serializable
