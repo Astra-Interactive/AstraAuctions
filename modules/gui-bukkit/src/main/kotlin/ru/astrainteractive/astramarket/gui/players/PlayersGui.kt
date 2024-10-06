@@ -24,7 +24,6 @@ import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.expiredSlots
 import ru.astrainteractive.astramarket.gui.button.nextPage
 import ru.astrainteractive.astramarket.gui.button.playerItem
-import ru.astrainteractive.astramarket.gui.button.playersSlots
 import ru.astrainteractive.astramarket.gui.button.playersSort
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
