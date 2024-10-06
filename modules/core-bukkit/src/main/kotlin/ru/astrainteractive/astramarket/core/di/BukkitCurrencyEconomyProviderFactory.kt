@@ -13,7 +13,7 @@ import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFa
 internal class BukkitCurrencyEconomyProviderFactory(
     private val plugin: JavaPlugin,
 ) : CurrencyEconomyProviderFactory,
-    Logger by JUtiltLogger("CurrencyEconomyProviderFactory") {
+    Logger by JUtiltLogger("AstraMarket-CurrencyEconomyProviderFactory") {
     override fun findByCurrencyId(currencyId: String): EconomyFacade? {
         val registrations = Bukkit.getServer().servicesManager.getRegistrations(Economy::class.java)
         info { "#findEconomyProviderByCurrency registrations: ${registrations.size}" }

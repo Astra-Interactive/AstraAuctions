@@ -9,7 +9,7 @@ import ru.astrainteractive.klibs.kstorage.api.impl.DefaultStateFlowMutableKrate
 import ru.astrainteractive.klibs.kstorage.api.value.ValueFactory
 import java.io.File
 
-object ConfigKrateFactory : Logger by JUtiltLogger("AstraRating-ConfigKrateFactory") {
+object ConfigKrateFactory : Logger by JUtiltLogger("AstraMarket-ConfigKrateFactory") {
     inline fun <reified T> create(
         fileNameWithoutExtension: String,
         stringFormat: StringFormat,

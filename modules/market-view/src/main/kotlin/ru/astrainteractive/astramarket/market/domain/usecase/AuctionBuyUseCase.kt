@@ -33,7 +33,7 @@ internal class AuctionBuyUseCaseImpl(
     private val translationKrate: Krate<Translation>,
     private val configKrate: Krate<PluginConfig>,
     private val economyProviderFactory: CurrencyEconomyProviderFactory,
-) : AuctionBuyUseCase, Logger by JUtiltLogger("AuctionBuyUseCase") {
+) : AuctionBuyUseCase, Logger by JUtiltLogger("AstraMarket-AuctionBuyUseCase") {
     private val config by configKrate
     private val translation by translationKrate
 

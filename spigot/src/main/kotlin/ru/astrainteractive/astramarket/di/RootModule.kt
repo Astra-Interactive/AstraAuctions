@@ -27,7 +27,7 @@ internal interface RootModule {
     val playersMarketViewModule: PlayersMarketViewModule
     val workerModule: WorkerModule
 
-    class Default(plugin: LifecyclePlugin) : RootModule, Logger by JUtiltLogger("RootModule") {
+    class Default(plugin: LifecyclePlugin) : RootModule, Logger by JUtiltLogger("AstraMarket-RootModule") {
         override val coreModule: BukkitCoreModule = BukkitCoreModule.Default(plugin)
 
         override val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(

@@ -28,7 +28,7 @@ internal class ExposedMarketApi(
     private val databaseFlow: Flow<Database>,
     private val dispatchers: KotlinDispatchers
 ) : MarketApi,
-    Logger by JUtiltLogger("SqlMarketApi") {
+    Logger by JUtiltLogger("AstraMarket-ExposedMarketApi") {
     private val mutex = Mutex()
 
     private suspend fun <T> runCatchingWithContext(
