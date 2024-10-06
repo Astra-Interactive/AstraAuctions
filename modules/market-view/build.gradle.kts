@@ -9,7 +9,7 @@ dependencies {
     implementation(libs.bundles.kotlin)
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
-    implementation(libs.minecraft.astralibs.orm)
+    implementation(libs.minecraft.astralibs.exposed)
     implementation(libs.klibs.mikro.core)
     implementation(libs.minecraft.bstats)
     // Test

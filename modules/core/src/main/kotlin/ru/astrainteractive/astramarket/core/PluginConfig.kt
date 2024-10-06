@@ -10,23 +10,7 @@ data class PluginConfig(
     val auction: Auction = Auction(),
     val sounds: Sounds = Sounds(),
     val buttons: Buttons = Buttons(),
-    val connection: Connection = Connection()
 ) {
-    @Serializable
-    class Connection(
-        val sqlite: Boolean = true,
-        val mysql: MySqlConnection? = MySqlConnection()
-    ) {
-        @Serializable
-        class MySqlConnection(
-            val database: String = "SAMPLE_DATABASE",
-            val ip: String = "127.0.0.1",
-            val port: Int = 8080,
-            val username: String = "USERNAME",
-            val password: String = "PASSWORD",
-            val sessionVariables: List<String> = listOf("autoReconnect=true", "useSSL=false")
-        )
-    }
 
     @Serializable
     data class Auction(

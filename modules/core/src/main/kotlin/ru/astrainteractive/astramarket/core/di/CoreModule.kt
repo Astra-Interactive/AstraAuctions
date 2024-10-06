@@ -2,7 +2,6 @@ package ru.astrainteractive.astramarket.core.di
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.StringFormat
-import ru.astrainteractive.astralibs.economy.EconomyFacade
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation

@@ -6,11 +6,11 @@ import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
-import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 
 /**
  * @param _auction auction to buy

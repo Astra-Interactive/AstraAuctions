@@ -1,4 +1,4 @@
-package ru.astrainteractive.astrashop.core.di.factory
+package ru.astrainteractive.astramarket.core.di.factory
 
 import kotlinx.serialization.StringFormat
 import ru.astrainteractive.astralibs.logging.JUtiltLogger

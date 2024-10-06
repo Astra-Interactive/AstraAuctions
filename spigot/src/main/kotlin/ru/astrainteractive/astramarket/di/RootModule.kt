@@ -9,8 +9,6 @@ import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.LifecyclePlugin
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.core.util.getValue
-import ru.astrainteractive.astramarket.di.util.ConnectionExt.toDBConnection
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
 import ru.astrainteractive.astramarket.market.di.MarketModule
@@ -30,65 +28,49 @@ internal interface RootModule {
     val workerModule: WorkerModule
 
     class Default(plugin: LifecyclePlugin) : RootModule, Logger by JUtiltLogger("RootModule") {
-        override val coreModule: BukkitCoreModule by lazy {
-            BukkitCoreModule.Default(plugin)
-        }
+        override val coreModule: BukkitCoreModule = BukkitCoreModule.Default(plugin)
 
-        override val apiMarketModule: ApiMarketModule by lazy {
-            val config = coreModule.config.cachedValue
-            val (dbConnection, dbSyntax) = config.connection.toDBConnection()
-            ApiMarketModule.Default(
-                dbConnection = dbConnection,
-                dbSyntax = dbSyntax,
-                dispatchers = coreModule.dispatchers
-            )
-        }
+        override val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(
+            dispatchers = coreModule.dispatchers,
+            yamlStringFormat = coreModule.yamlStringFormat,
+            dataFolder = coreModule.plugin.dataFolder
+        )
 
-        override val marketModule: MarketModule by lazy {
-            MarketModule.Default(
-                coreModule = coreModule,
-                apiMarketModule = apiMarketModule,
-                marketDataModule = BukkitMarketDataModule(
-                    itemStackEncoder = coreModule.itemStackEncoder,
-                    stringSerializer = coreModule.kyoriComponentSerializer.cachedValue
-                ),
-                platformMarketDomainModule = BukkitMarketDomainModule(
-                    itemStackEncoder = coreModule.itemStackEncoder,
-                )
+        override val marketModule: MarketModule = MarketModule.Default(
+            coreModule = coreModule,
+            apiMarketModule = apiMarketModule,
+            marketDataModule = BukkitMarketDataModule(
+                itemStackEncoder = coreModule.itemStackEncoder,
+                stringSerializer = coreModule.kyoriComponentSerializer.cachedValue
+            ),
+            platformMarketDomainModule = BukkitMarketDomainModule(
+                itemStackEncoder = coreModule.itemStackEncoder,
             )
-        }
+        )
 
-        override val routerModule: RouterModule by lazy {
-            RouterModule.Default(
-                coreModule = coreModule,
-                marketModule = marketModule,
-                bukkitCoreModule = coreModule,
-                playersMarketModule = playersMarketModule
-            )
-        }
+        override val playersMarketModule: PlayersMarketModule = PlayersMarketModule.Default(
+            coreModule = coreModule,
+            apiMarketModule = apiMarketModule
+        )
 
-        override val commandModule: CommandModule by lazy {
-            CommandModule.Default(
-                coreModule = coreModule,
-                bukkitCoreModule = coreModule,
-                routerModule = routerModule,
-                marketModule = marketModule
-            )
-        }
+        override val routerModule: RouterModule = RouterModule.Default(
+            coreModule = coreModule,
+            marketModule = marketModule,
+            bukkitCoreModule = coreModule,
+            playersMarketModule = playersMarketModule
+        )
 
-        override val playersMarketModule: PlayersMarketModule by lazy {
-            PlayersMarketModule.Default(
-                coreModule = coreModule,
-                apiMarketModule = apiMarketModule
-            )
-        }
+        override val commandModule: CommandModule = CommandModule.Default(
+            coreModule = coreModule,
+            bukkitCoreModule = coreModule,
+            routerModule = routerModule,
+            marketModule = marketModule
+        )
 
-        override val workerModule: WorkerModule by lazy {
-            WorkerModule.Default(
-                apiMarketModule = apiMarketModule,
-                coreModule = coreModule
-            )
-        }
+        override val workerModule: WorkerModule = WorkerModule.Default(
+            apiMarketModule = apiMarketModule,
+            coreModule = coreModule
+        )
 
         private val lifecycles: List<Lifecycle>
             get() = listOf(

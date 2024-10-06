@@ -11,7 +11,7 @@ dependencies {
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.minecraft.astralibs.core.bukkit)
     implementation(libs.minecraft.astralibs.menu.bukkit)
-    implementation(libs.minecraft.astralibs.orm)
+    implementation(libs.minecraft.astralibs.exposed)
     implementation(libs.klibs.mikro.core)
     implementation(libs.minecraft.bstats)
     // Test

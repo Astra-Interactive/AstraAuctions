@@ -16,10 +16,10 @@ import ru.astrainteractive.astralibs.serialization.YamlStringFormat
 import ru.astrainteractive.astramarket.core.LifecyclePlugin
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.di.factory.ConfigKrateFactory
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
-import ru.astrainteractive.astrashop.core.di.factory.ConfigKrateFactory
 import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 
@@ -32,7 +32,6 @@ interface BukkitCoreModule : CoreModule {
     val kyoriComponentSerializer: Krate<KyoriComponentSerializer>
 
     class Default(override val plugin: LifecyclePlugin) : BukkitCoreModule {
-
 
         private val encoder: ObjectEncoder = BukkitObjectEncoder()
 

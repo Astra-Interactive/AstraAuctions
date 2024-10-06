@@ -2,12 +2,12 @@ package ru.astrainteractive.astramarket.worker
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.astrainteractive.astralibs.async.CoroutineFeature
 import java.util.Timer
 import kotlin.time.Duration
-import kotlinx.coroutines.Dispatchers
-import ru.astrainteractive.astralibs.async.CoroutineFeature
 
 internal abstract class Worker(val key: String) {
     private var scheduler: Timer? = null

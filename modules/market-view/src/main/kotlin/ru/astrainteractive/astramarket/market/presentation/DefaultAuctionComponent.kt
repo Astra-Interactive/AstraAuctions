@@ -1,8 +1,10 @@
 package ru.astrainteractive.astramarket.market.presentation
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
+import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
@@ -14,8 +16,6 @@ import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDe
 import ru.astrainteractive.klibs.mikro.core.util.next
 import ru.astrainteractive.klibs.mikro.core.util.prev
 import java.util.UUID
-import kotlinx.coroutines.Dispatchers
-import ru.astrainteractive.astralibs.async.CoroutineFeature
 
 @Suppress("LongParameterList")
 internal class DefaultAuctionComponent(

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astramarket.api.market.MarketApi
+import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.next

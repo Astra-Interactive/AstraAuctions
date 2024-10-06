@@ -1,10 +1,10 @@
 package ru.astrainteractive.astramarket.market.presentation
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import java.util.UUID
-import kotlinx.coroutines.CoroutineScope
 
 interface AuctionComponent : CoroutineScope {
     val model: StateFlow<Model>

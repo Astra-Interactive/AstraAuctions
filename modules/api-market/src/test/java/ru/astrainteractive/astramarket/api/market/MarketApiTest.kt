@@ -2,9 +2,8 @@ package ru.astrainteractive.astramarket.api.market
 
 import kotlinx.coroutines.runBlocking
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
-import ru.astrainteractive.astralibs.orm.DBConnection
-import ru.astrainteractive.astralibs.orm.DBSyntax
-import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
+import ru.astrainteractive.astralibs.serialization.YamlStringFormat
+import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.di.ApiMarketModule
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
 import java.io.File
@@ -16,19 +15,13 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class MarketApiTest {
-    private val moduleFactory = {
-        ApiMarketModule.Default(
-            dispatchers = DefaultKotlinDispatchers,
-            dbSyntax = DBSyntax.SQLite,
-            dbConnection = DBConnection.SQLite("db.db")
-        )
-    }
+
     private var module: ApiMarketModule? = null
     private val marketApi: MarketApi
         get() = module?.marketApi ?: error("Module is null")
 
-    private val randomAuction: ru.astrainteractive.astramarket.api.market.model.MarketSlot
-        get() = ru.astrainteractive.astramarket.api.market.model.MarketSlot(
+    private val randomAuction: MarketSlot
+        get() = MarketSlot(
             id = -1,
             minecraftUuid = UUID.randomUUID().toString(),
             time = System.currentTimeMillis(),
@@ -39,16 +32,18 @@ class MarketApiTest {
 
     @BeforeTest
     fun setup(): Unit = runBlocking {
-        File("db.db").delete()
-        val module = moduleFactory.invoke()
-        module.database.openConnection()
-        AuctionTable.create(module.database)
+        val module = ApiMarketModule.Default(
+            dispatchers = DefaultKotlinDispatchers,
+            yamlStringFormat = YamlStringFormat(),
+            dataFolder = File("./").also { it.deleteOnExit() },
+        )
+        module.lifecycle.onEnable()
         this@MarketApiTest.module = module
     }
 
     @AfterTest
     fun destroy(): Unit = runBlocking {
-        module?.database?.closeConnection()
+        module?.lifecycle?.onDisable()
         module = null
     }
 
