@@ -6,13 +6,12 @@ import ru.astrainteractive.astralibs.orm.DBSyntax
 import ru.astrainteractive.astralibs.orm.Database
 import ru.astrainteractive.astralibs.orm.DefaultDatabase
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
-import ru.astrainteractive.klibs.kdi.Factory
 
 internal class DatabaseFactory(
     private val dbConnection: DBConnection,
     private val dbSyntax: DBSyntax,
-) : Factory<Database> {
-    override fun create(): Database {
+) {
+    fun create(): Database {
         return runBlocking {
             val database = DefaultDatabase(dbConnection, dbSyntax)
             database.openConnection()

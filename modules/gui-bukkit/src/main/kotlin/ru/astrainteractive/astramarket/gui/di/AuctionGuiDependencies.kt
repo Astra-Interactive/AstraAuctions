@@ -6,11 +6,10 @@ import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
 import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal interface AuctionGuiDependencies {
@@ -31,7 +30,7 @@ internal interface AuctionGuiDependencies {
         override val config: PluginConfig by coreModule.config
         override val translation: Translation by coreModule.translation
         override val dispatchers: KotlinDispatchers = coreModule.dispatchers
-        override val sortTranslationMapping: AuctionSortTranslationMapping by Provider {
+        override val sortTranslationMapping: AuctionSortTranslationMapping by lazy {
             marketDomainModule.auctionSortTranslationMapping
         }
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder

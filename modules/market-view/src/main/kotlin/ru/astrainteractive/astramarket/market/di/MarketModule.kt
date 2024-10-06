@@ -8,7 +8,6 @@ import ru.astrainteractive.astramarket.market.domain.di.PlatformMarketDomainModu
 import ru.astrainteractive.astramarket.market.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.market.presentation.DefaultAuctionComponent
 import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
-import ru.astrainteractive.klibs.kdi.Factory
 import java.util.UUID
 
 interface MarketModule {
@@ -22,15 +21,15 @@ interface MarketModule {
     class Default(
         private val coreModule: CoreModule,
         private val apiMarketModule: ApiMarketModule,
-        marketDataModuleFactory: Factory<MarketDataModule>,
-        platformMarketDomainModuleFactory: Factory<PlatformMarketDomainModule>
+        marketDataModule: MarketDataModule,
+        platformMarketDomainModule: PlatformMarketDomainModule
     ) : MarketModule {
         override val marketDomainModule: MarketDomainModule by lazy {
             MarketDomainModule.Default(
                 coreModule = coreModule,
                 apiMarketModule = apiMarketModule,
-                marketDataModuleFactory = marketDataModuleFactory,
-                platformMarketDomainModuleFactory = platformMarketDomainModuleFactory
+                marketDataModule = marketDataModule,
+                platformMarketDomainModule = platformMarketDomainModule
             )
         }
 

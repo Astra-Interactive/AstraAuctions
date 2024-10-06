@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.gui.slots
 
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -169,7 +170,7 @@ internal class SlotsGui(
     override fun onInventoryClosed(it: InventoryCloseEvent) {
         super.onInventoryClosed(it)
         playerHolder.player.playSound(config.sounds.close)
-        auctionComponent.close()
+        auctionComponent.cancel()
     }
 
     private fun onAuctionItemClicked(i: Int, clickType: ClickType) {

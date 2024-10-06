@@ -10,8 +10,6 @@ import ru.astrainteractive.astramarket.api.market.impl.ExposedMarketApi
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapper
 import ru.astrainteractive.astramarket.api.market.mapping.AuctionMapperImpl
 import ru.astrainteractive.astramarket.di.factory.DatabaseFactory
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 interface ApiMarketModule {
@@ -31,11 +29,11 @@ interface ApiMarketModule {
                 dbSyntax = dbSyntax
             ).create()
         }
-        private val auctionMapper: AuctionMapper by Provider {
+        private val auctionMapper: AuctionMapper by lazy {
             AuctionMapperImpl()
         }
 
-        override val marketApi: MarketApi by Provider {
+        override val marketApi: MarketApi by lazy {
             ExposedMarketApi(
                 database = database,
                 auctionMapper = auctionMapper,

@@ -17,7 +17,7 @@ interface PlayersMarketModule {
         private val apiMarketModule: ApiMarketModule
     ) : PlayersMarketModule {
         override val playerSortTranslationMapping: PlayerSortTranslationMapping by lazy {
-            PlayerSortTranslationMappingImpl(coreModule.translation.value)
+            PlayerSortTranslationMappingImpl(coreModule.translation.cachedValue)
         }
 
         override fun createPlayersMarketComponent(isExpired: Boolean): PlayersMarketComponent {

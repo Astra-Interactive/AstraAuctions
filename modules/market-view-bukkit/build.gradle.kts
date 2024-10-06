@@ -11,7 +11,6 @@ dependencies {
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.minecraft.astralibs.core.bukkit)
     implementation(libs.minecraft.astralibs.menu.bukkit)
-    implementation(libs.klibs.kdi)
     implementation(libs.klibs.mikro.core)
     // Bukkit
     implementation(libs.minecraft.paper.api)

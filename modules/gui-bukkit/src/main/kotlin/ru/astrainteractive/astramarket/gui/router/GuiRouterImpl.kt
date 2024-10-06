@@ -17,7 +17,7 @@ internal class GuiRouterImpl(
     private val bukkitCoreModule: BukkitCoreModule,
     private val playersMarketModule: PlayersMarketModule
 ) : GuiRouter {
-    private val scope = coreModule.scope.value
+    private val scope = coreModule.scope
     private val dispatchers = coreModule.dispatchers
     private val dependencies = AuctionGuiDependencies.Default(
         coreModule = coreModule,

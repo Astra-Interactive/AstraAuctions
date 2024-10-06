@@ -6,12 +6,11 @@ import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.market.domain.di.MarketDomainModule
 import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
 import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 
 internal interface ButtonFactoryDependency {
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
@@ -27,10 +26,10 @@ internal interface ButtonFactoryDependency {
         bukkitCoreModule: BukkitCoreModule,
         playersMarketModule: PlayersMarketModule
     ) : ButtonFactoryDependency {
-        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by Provider {
+        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             marketDomainModule.auctionSortTranslationMapping
         }
-        override val playersSortTranslationMapping: PlayerSortTranslationMapping by Provider {
+        override val playersSortTranslationMapping: PlayerSortTranslationMapping by lazy {
             playersMarketModule.playerSortTranslationMapping
         }
         override val config: PluginConfig by coreModule.config

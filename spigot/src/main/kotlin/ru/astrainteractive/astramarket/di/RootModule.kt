@@ -1,14 +1,15 @@
 package ru.astrainteractive.astramarket.di
 
-import net.milkbowl.vault.economy.Economy
 import org.bukkit.Bukkit
-import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
-import ru.astrainteractive.astralibs.economy.VaultEconomyProvider
+import org.bukkit.entity.Player
+import org.bukkit.event.HandlerList
+import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.command.di.CommandModule
+import ru.astrainteractive.astramarket.core.LifecyclePlugin
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.core.di.CoreModule
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.di.util.ConnectionExt.toDBConnection
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
@@ -16,12 +17,11 @@ import ru.astrainteractive.astramarket.market.di.MarketModule
 import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketModule
 import ru.astrainteractive.astramarket.worker.di.WorkerModule
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 
 internal interface RootModule {
-    val coreModule: CoreModule
-    val bukkitCoreModule: BukkitCoreModule
+    val lifecycle: Lifecycle
+
+    val coreModule: BukkitCoreModule
     val apiMarketModule: ApiMarketModule
     val routerModule: RouterModule
     val marketModule: MarketModule
@@ -29,38 +29,13 @@ internal interface RootModule {
     val playersMarketModule: PlayersMarketModule
     val workerModule: WorkerModule
 
-    class Default : RootModule, Logger by JUtiltLogger("RootModule") {
-        override val bukkitCoreModule: BukkitCoreModule by lazy {
-            BukkitCoreModule.Default()
+    class Default(plugin: LifecyclePlugin) : RootModule, Logger by JUtiltLogger("RootModule") {
+        override val coreModule: BukkitCoreModule by lazy {
+            BukkitCoreModule.Default(plugin)
         }
 
-        override val coreModule: CoreModule by lazy {
-            CoreModule.Default(
-                dataFolder = bukkitCoreModule.plugin.value.dataFolder,
-                dispatchers = DefaultBukkitDispatchers(bukkitCoreModule.plugin.value),
-                getEconomyProvider = getEconomyProviderById@{ currencyId ->
-                    val registrations = Bukkit.getServer().servicesManager.getRegistrations(Economy::class.java)
-                    if (currencyId == null) {
-                        return@getEconomyProviderById VaultEconomyProvider(
-                            bukkitCoreModule.plugin.value
-                        )
-                    }
-                    val specificEconomyProvider = registrations
-                        .firstOrNull { it.provider.currencyNameSingular() == currencyId }
-                        ?.provider
-                        ?.let(::VaultEconomyProvider)
-                    if (specificEconomyProvider == null) {
-                        error { "#economyProvider could not find economy with currency: $currencyId" }
-                    } else {
-                        return@getEconomyProviderById specificEconomyProvider
-                    }
-                    error("EconomyProvider could not find economy with currency: $currencyId")
-                }
-            )
-        }
-
-        override val apiMarketModule: ApiMarketModule by Provider {
-            val config by coreModule.config
+        override val apiMarketModule: ApiMarketModule by lazy {
+            val config = coreModule.config.cachedValue
             val (dbConnection, dbSyntax) = config.connection.toDBConnection()
             ApiMarketModule.Default(
                 dbConnection = dbConnection,
@@ -69,29 +44,25 @@ internal interface RootModule {
             )
         }
 
-        override val marketModule: MarketModule by Provider {
+        override val marketModule: MarketModule by lazy {
             MarketModule.Default(
                 coreModule = coreModule,
                 apiMarketModule = apiMarketModule,
-                marketDataModuleFactory = {
-                    BukkitMarketDataModule(
-                        itemStackEncoder = bukkitCoreModule.itemStackEncoder,
-                        stringSerializer = bukkitCoreModule.kyoriComponentSerializer.value
-                    )
-                },
-                platformMarketDomainModuleFactory = {
-                    BukkitMarketDomainModule(
-                        itemStackEncoder = bukkitCoreModule.itemStackEncoder,
-                    )
-                }
+                marketDataModule = BukkitMarketDataModule(
+                    itemStackEncoder = coreModule.itemStackEncoder,
+                    stringSerializer = coreModule.kyoriComponentSerializer.cachedValue
+                ),
+                platformMarketDomainModule = BukkitMarketDomainModule(
+                    itemStackEncoder = coreModule.itemStackEncoder,
+                )
             )
         }
 
-        override val routerModule: RouterModule by Provider {
+        override val routerModule: RouterModule by lazy {
             RouterModule.Default(
                 coreModule = coreModule,
                 marketModule = marketModule,
-                bukkitCoreModule = bukkitCoreModule,
+                bukkitCoreModule = coreModule,
                 playersMarketModule = playersMarketModule
             )
         }
@@ -99,7 +70,7 @@ internal interface RootModule {
         override val commandModule: CommandModule by lazy {
             CommandModule.Default(
                 coreModule = coreModule,
-                bukkitCoreModule = bukkitCoreModule,
+                bukkitCoreModule = coreModule,
                 routerModule = routerModule,
                 marketModule = marketModule
             )
@@ -118,5 +89,30 @@ internal interface RootModule {
                 coreModule = coreModule
             )
         }
+
+        private val lifecycles: List<Lifecycle>
+            get() = listOf(
+                coreModule.lifecycle,
+                coreModule.lifecycle,
+                apiMarketModule.lifecycle,
+                commandModule.lifecycle,
+                workerModule.lifecycle
+            )
+
+        override val lifecycle: Lifecycle = Lifecycle.Lambda(
+            onEnable = {
+                lifecycles.forEach(Lifecycle::onEnable)
+            },
+            onReload = {
+                Bukkit.getOnlinePlayers().forEach(Player::closeInventory)
+                lifecycles.forEach(Lifecycle::onReload)
+            },
+            onDisable = {
+                Bukkit.getOnlinePlayers().forEach(Player::closeInventory)
+                HandlerList.unregisterAll(coreModule.plugin)
+                lifecycles.forEach(Lifecycle::onDisable)
+            }
+
+        )
     }
 }

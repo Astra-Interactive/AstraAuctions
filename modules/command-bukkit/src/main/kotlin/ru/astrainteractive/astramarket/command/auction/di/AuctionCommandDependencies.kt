@@ -8,12 +8,11 @@ import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.di.MarketModule
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
-import ru.astrainteractive.klibs.kdi.Provider
-import ru.astrainteractive.klibs.kdi.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal interface AuctionCommandDependencies {
@@ -33,16 +32,16 @@ internal interface AuctionCommandDependencies {
         routerModule: RouterModule,
         marketModule: MarketModule
     ) : AuctionCommandDependencies {
-        override val plugin: JavaPlugin by bukkitCoreModule.plugin
+        override val plugin: JavaPlugin = bukkitCoreModule.plugin
         override val kyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
         override val translation: Translation by coreModule.translation
-        override val router: GuiRouter by Provider {
+        override val router: GuiRouter by lazy {
             routerModule.router
         }
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
-        override val scope: CoroutineScope by coreModule.scope
+        override val scope: CoroutineScope = coreModule.scope
         override val dispatchers: KotlinDispatchers = coreModule.dispatchers
-        override val createAuctionUseCase: CreateAuctionUseCase by Provider {
+        override val createAuctionUseCase: CreateAuctionUseCase by lazy {
             marketModule.marketDomainModule.createAuctionUseCase
         }
         override val limitedIoDispatcher: CoroutineDispatcher = dispatchers.IO.limitedParallelism(1)
