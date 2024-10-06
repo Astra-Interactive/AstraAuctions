@@ -4,7 +4,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.gui.button.di.MenuDrawerContext
+import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.players.PlayersGui
 import ru.astrainteractive.astramarket.gui.slots.SlotsGui
@@ -23,7 +23,7 @@ internal class GuiRouterImpl(
         bukkitCoreModule = bukkitCoreModule,
         router = this@GuiRouterImpl
     )
-    private val menuDrawerContext = MenuDrawerContext.Default(
+    private val buttonContext = ButtonContext.Default(
         coreModule = coreModule,
         marketViewDomainModule = marketViewModule.marketViewDomainModule,
         bukkitCoreModule = bukkitCoreModule,
@@ -37,7 +37,7 @@ internal class GuiRouterImpl(
                     SlotsGui(
                         player = route.player,
                         dependencies = dependencies,
-                        menuDrawerContext = menuDrawerContext,
+                        buttonContext = buttonContext,
                         auctionComponent = marketViewModule.createAuctionComponent(
                             playerUUID = route.player.uniqueId,
                             isExpired = route.isExpired,
@@ -50,7 +50,7 @@ internal class GuiRouterImpl(
                     PlayersGui(
                         player = route.player,
                         dependencies = dependencies,
-                        menuDrawerContext = menuDrawerContext,
+                        buttonContext = buttonContext,
                         playersMarketComponent = playersMarketViewModule.createPlayersMarketComponent(
                             isExpired = route.isExpired
                         )

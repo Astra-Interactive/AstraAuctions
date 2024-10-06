@@ -12,12 +12,11 @@ import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslat
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
 
-internal interface ButtonFactoryDependency {
+internal interface ButtonContext : KyoriComponentSerializer {
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
     val playersSortTranslationMapping: PlayerSortTranslationMapping
     val config: PluginConfig
     val translation: Translation
-    val kyoriComponentSerializer: KyoriComponentSerializer
     val itemStackEncoder: ItemStackEncoder
 
     class Default(
@@ -25,7 +24,8 @@ internal interface ButtonFactoryDependency {
         marketViewDomainModule: MarketViewDomainModule,
         bukkitCoreModule: BukkitCoreModule,
         playersMarketViewModule: PlayersMarketViewModule
-    ) : ButtonFactoryDependency {
+    ) : ButtonContext,
+        KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer.cachedValue {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             marketViewDomainModule.auctionSortTranslationMapping
         }
@@ -34,7 +34,6 @@ internal interface ButtonFactoryDependency {
         }
         override val config: PluginConfig by coreModule.configKrate
         override val translation: Translation by coreModule.translationKrate
-        override val kyoriComponentSerializer: KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer
         override val itemStackEncoder = bukkitCoreModule.itemStackEncoder
     }
 }
