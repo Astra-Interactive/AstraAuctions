@@ -8,9 +8,11 @@ author: "${author}"
 website: "${url}"
 api-version: 1.18
 softdepend: [ Vault, EssentialsX, AspeKt ]
-#libraries: [ "${libraries}" ]
 libraries:
-  - org.bstats:bstats-bukkit:3.0.0
+  - "org.bstats:bstats-bukkit:3.0.0"
+  - "org.xerial:sqlite-jdbc:3.46.1.0"
+  - "mysql:mysql-connector-java:8.0.33"
+  - "com.h2database:h2:2.2.224"
 commands:
   amarketreload:
     description: Reload plugin

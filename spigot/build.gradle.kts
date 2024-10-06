@@ -1,3 +1,5 @@
+import ru.astrainteractive.gradleplugin.property.extension.ModelPropertyValueExt.requireProjectInfo
+
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
@@ -42,13 +44,25 @@ minecraftProcessResource {
 }
 
 setupShadow {
-    destination = File("/home/makeevrserg/Desktop/server/data/plugins")
-        .takeIf { it.exists() }
-        ?: File(rootDir, "jars")
-    configureDefaults()
     requireShadowJarTask {
+        destination = File("/home/makeevrserg/Desktop/server/data/plugins")
+            .takeIf { it.exists() }
+            ?: File(rootDir, "jars")
+
+        val projectInfo = requireProjectInfo
+        isReproducibleFileOrder = true
+        mergeServiceFiles()
+        dependsOn(configurations)
+        archiveClassifier.set(null as String?)
+        relocate("org.bstats", projectInfo.group)
+
         minimize {
+            exclude(dependency(libs.exposed.jdbc.get()))
+            exclude(dependency(libs.exposed.dao.get()))
             exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.version.get()}"))
         }
+        archiveVersion.set(projectInfo.versionString)
+        archiveBaseName.set(projectInfo.name)
+        destinationDirectory.set(destination.get())
     }
 }
