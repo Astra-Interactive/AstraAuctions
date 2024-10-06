@@ -32,10 +32,11 @@ class MarketApiTest {
 
     @BeforeTest
     fun setup(): Unit = runBlocking {
+        File("./test").deleteRecursively()
         val module = ApiMarketModule.Default(
             dispatchers = DefaultKotlinDispatchers,
             yamlStringFormat = YamlStringFormat(),
-            dataFolder = File("./").also { it.deleteOnExit() },
+            dataFolder = File("./test").also { it.deleteOnExit() },
         )
         module.lifecycle.onEnable()
         this@MarketApiTest.module = module
@@ -43,6 +44,7 @@ class MarketApiTest {
 
     @AfterTest
     fun destroy(): Unit = runBlocking {
+        File("./test").deleteRecursively()
         module?.lifecycle?.onDisable()
         module = null
     }
