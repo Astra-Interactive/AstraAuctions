@@ -1,5 +1,7 @@
 package ru.astrainteractive.astramarket.core.di
 
+import com.charleskorn.kaml.PolymorphismStyle
+import com.charleskorn.kaml.Yaml
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -46,7 +48,13 @@ interface BukkitCoreModule : CoreModule {
 
         private fun createBStats() = Metrics(plugin, 15771)
 
-        override val yamlStringFormat: StringFormat = YamlStringFormat()
+        override val yamlStringFormat: StringFormat = YamlStringFormat(
+            configuration = Yaml.default.configuration.copy(
+                encodeDefaults = true,
+                strictMode = false,
+                polymorphismStyle = PolymorphismStyle.Property
+            ),
+        )
 
         override val configKrate: Krate<PluginConfig> = ConfigKrateFactory.create(
             fileNameWithoutExtension = "config",

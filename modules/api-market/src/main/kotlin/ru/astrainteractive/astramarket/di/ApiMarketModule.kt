@@ -3,7 +3,9 @@ package ru.astrainteractive.astramarket.di
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.StringFormat
 import org.jetbrains.exposed.sql.Database
@@ -14,13 +16,13 @@ import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astralibs.exposed.factory.DatabaseFactory
-import ru.astrainteractive.astralibs.exposed.model.DatabaseConfiguration
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.util.FlowExt.mapCached
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.impl.ExposedMarketApi
 import ru.astrainteractive.astramarket.core.di.factory.ConfigKrateFactory
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
+import ru.astrainteractive.astramarket.model.DatabaseConfig
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import java.io.File
 
@@ -40,10 +42,12 @@ interface ApiMarketModule {
             fileNameWithoutExtension = "database",
             stringFormat = yamlStringFormat,
             dataFolder = dataFolder,
-            factory = { DatabaseConfiguration.H2("MARKET") }
+            factory = ::DatabaseConfig
         )
 
         private val databaseFlow: Flow<Database> = dbConfig.cachedStateFlow
+            .map { it.configuration }
+            .distinctUntilChanged()
             .mapCached(scope) { dbConfig, previous ->
                 previous?.run(TransactionManager::closeAndUnregister)
                 val database = DatabaseFactory(dataFolder).create(dbConfig)
