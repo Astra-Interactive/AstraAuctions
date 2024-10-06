@@ -18,11 +18,13 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astramarket.gui.button.allSlots
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.button.expired
+import ru.astrainteractive.astramarket.gui.button.expiredSlots
 import ru.astrainteractive.astramarket.gui.button.nextPage
 import ru.astrainteractive.astramarket.gui.button.playerItem
+import ru.astrainteractive.astramarket.gui.button.playersSlots
 import ru.astrainteractive.astramarket.gui.button.playersSort
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
@@ -91,12 +93,25 @@ internal class PlayersGui(
         )
 
     private val expiredButton: InventorySlot
-        get() = buttonContext.expired(
+        get() = buttonContext.expiredSlots(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
                 showPage(0)
                 playersMarketComponent.toggleExpired()
+            }
+        )
+
+    private val allSlots: InventorySlot
+        get() = buttonContext.allSlots(
+            index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            click = {
+                val route = GuiRouter.Route.Slots(
+                    player = playerHolder.player,
+                    isExpired = playersMarketComponent.model.value.isExpired,
+                    targetPlayerUUID = null
+                )
+                router.navigate(route)
             }
         )
 
@@ -154,6 +169,7 @@ internal class PlayersGui(
         sortButton.setInventorySlot()
         expiredButton.setInventorySlot()
         closeButton.setInventorySlot()
+        allSlots.setInventorySlot()
         slots.forEach { it.setInventorySlot() }
     }
 

@@ -1,27 +1,37 @@
 package ru.astrainteractive.astramarket.gui.button
 
+import org.bukkit.Material
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.editMeta
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
+import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.toItemStack
+import ru.astrainteractive.astramarket.players.model.PlayerSort
 
-internal fun ButtonContext.expiredSlots(
+internal fun ButtonContext.playersSlots(
     index: Int,
-    isExpired: Boolean,
     click: Click
 ) = InventorySlot.Builder()
     .setIndex(index)
-    .setItemStack(config.buttons.expired.toItemStack())
+    .setItemStack(config.buttons.playersSlots.toItemStack())
     .editMeta {
-        if (isExpired) {
-            displayName(translation.menu.expired.component)
-        } else {
-            displayName(translation.menu.new.component)
-        }
+        displayName(translation.menu.playerSlots.component)
+    }
+    .setOnClickListener(click)
+    .build()
+
+internal fun ButtonContext.allSlots(
+    index: Int,
+    click: Click
+) = InventorySlot.Builder()
+    .setIndex(index)
+    .setItemStack(config.buttons.aauc.toItemStack())
+    .editMeta {
+        displayName(translation.menu.allSlots.component)
     }
     .setOnClickListener(click)
     .build()

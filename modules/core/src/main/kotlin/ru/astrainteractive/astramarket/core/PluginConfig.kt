@@ -44,7 +44,8 @@ data class PluginConfig(
         val sort: Button = Button("SUNFLOWER"),
         val aauc: Button = Button("DIAMOND"),
         val expired: Button = Button("EMERALD"),
-        val border: Button = Button("BLACK_STAINED_GLASS_PANE")
+        val border: Button = Button("BLACK_STAINED_GLASS_PANE"),
+        val playersSlots: Button = Button("PLAYER_HEAD")
     )
 
     @Serializable

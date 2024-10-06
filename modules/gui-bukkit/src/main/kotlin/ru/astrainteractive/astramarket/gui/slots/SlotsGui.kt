@@ -29,9 +29,10 @@ import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.border
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.button.expired
+import ru.astrainteractive.astramarket.gui.button.expiredSlots
 import ru.astrainteractive.astramarket.gui.button.expiredSlot
 import ru.astrainteractive.astramarket.gui.button.nextPage
+import ru.astrainteractive.astramarket.gui.button.playersSlots
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
@@ -101,8 +102,8 @@ internal class SlotsGui(
             }
         )
 
-    private val expiredButton: InventorySlot
-        get() = buttonContext.expired(
+    private val expiredSlotsButton: InventorySlot
+        get() = buttonContext.expiredSlots(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = true,
             click = {
@@ -120,6 +121,18 @@ internal class SlotsGui(
     private val openPlayersButton: InventorySlot
         get() = buttonContext.back(
             index = inventoryMap.indexOf(AuctionSlotKey.BA),
+            click = {
+                val route = GuiRouter.Route.Players(
+                    player = playerHolder.player,
+                    isExpired = auctionComponent.model.value.isExpired
+                )
+                router.navigate(route)
+            }
+        )
+
+    private val playerSlots: InventorySlot
+        get() = buttonContext.playersSlots(
+            index = inventoryMap.indexOf(AuctionSlotKey.GR),
             click = {
                 val route = GuiRouter.Route.Players(
                     player = playerHolder.player,
@@ -203,7 +216,7 @@ internal class SlotsGui(
         super.render()
         when (auctionComponent.model.value.isExpired) {
             true -> aaucButton.setInventorySlot()
-            false -> expiredButton.setInventorySlot()
+            false -> expiredSlotsButton.setInventorySlot()
         }
         if (!pageContext.isFirstPage) prevPageButton.setInventorySlot()
         if (!pageContext.isLastPage) nextPageButton.setInventorySlot()
@@ -211,6 +224,7 @@ internal class SlotsGui(
             openPlayersButton.setInventorySlot()
         } else {
             closeButton.setInventorySlot()
+            playerSlots.setInventorySlot()
         }
         borderButtons.forEach { it.setInventorySlot() }
         sortButton.setInventorySlot()
