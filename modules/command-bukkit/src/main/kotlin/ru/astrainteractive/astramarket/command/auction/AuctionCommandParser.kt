@@ -12,6 +12,7 @@ internal class AuctionCommandParser : CommandParser<AuctionCommand.Result, Bukki
         commandContext.requirePermission(PluginPermission.Amarket)
         return when (commandContext.args.getOrNull(0)) {
             "sell" -> {
+                commandContext.requirePermission(PluginPermission.Sell)
                 val price = commandContext.args.getOrNull(1)?.toFloatOrNull()
                 price ?: throw AuctionCommand.Error.WrongPrice
                 val amount = commandContext.args.getOrNull(2)?.toIntOrNull() ?: 1
