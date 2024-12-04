@@ -8,12 +8,12 @@ import java.util.UUID
 internal class BukkitPlayerInteractionBridge(
     private val stringSerializer: KyoriComponentSerializer
 ) : PlayerInteractionBridge {
-    override fun sendTranslationMessage(uuid: UUID, message: () -> StringDesc.Raw) {
+    override fun sendTranslationMessage(uuid: UUID, message: () -> StringDesc) {
         val component = stringSerializer.toComponent(message.invoke())
         Bukkit.getPlayer(uuid)?.sendMessage(component)
     }
 
-    override fun broadcast(string: StringDesc.Raw) {
+    override fun broadcast(string: StringDesc) {
         val component = stringSerializer.toComponent(string)
         Bukkit.broadcast(component)
     }
