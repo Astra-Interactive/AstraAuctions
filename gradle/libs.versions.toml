@@ -10,7 +10,7 @@ driver-jdbc = "3.47.1.0" # https://github.com/xerial/sqlite-jdbc
 driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
-klibs-gradleplugin = "1.4.0" # https://github.com/makeevrserg/gradle-plugin
+klibs-gradleplugin = "1.5.0-alpha02" # https://github.com/makeevrserg/gradle-plugin
 klibs-mikro = "1.8.8" # https://github.com/makeevrserg/klibs.mikro
 klibs-kdi = "1.4.8" # https://github.com/makeevrserg/klibs.kdi
 klibs-kstorage = "3.2.0" # https://github.com/makeevrserg/klibs.kstorage
@@ -21,7 +21,7 @@ minecraft-spigot = "1.21-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
 minecraft-papi = "2.11.6" # https://github.com/PlaceholderAPI/PlaceholderAPI
 minecraft-protocollib = "5.3.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
-minecraft-astralibs = "3.16.2" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-astralibs = "3.17.0" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.1.0" # https://github.com/Bastian/bStats
 minecraft-mockbukkit = "4.9.0" #https://github.com/MockBukkit/MockBukkit
 

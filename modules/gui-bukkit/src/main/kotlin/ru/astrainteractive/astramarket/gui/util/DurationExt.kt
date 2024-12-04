@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 
 internal object DurationExt {
-    fun Duration.getTimeFormatted(format: StringDesc.Raw): StringDesc.Raw {
+    fun Duration.getTimeFormatted(format: StringDesc): StringDesc {
         val time = System.currentTimeMillis().minus(inWholeMilliseconds)
         val unit = TimeUnit.MILLISECONDS
         val days = unit.toDays(time)

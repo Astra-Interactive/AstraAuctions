@@ -124,50 +124,50 @@ data class Translation(
         @SerializedName("sort.player_asc")
         val sortPlayerAsc: StringDesc.Raw = StringDesc.Raw("&#FFFFFFпо игроку &#d6a213&l↓"),
     ) {
-        fun auctionPrice(price: Number): StringDesc.Raw {
+        fun auctionPrice(price: Number): StringDesc {
             return auctionPrice
                 .replace("%price%", "$price")
         }
 
-        fun auctionLast(time: String): StringDesc.Raw {
+        fun auctionLast(time: String): StringDesc {
             return auctionLast
                 .replace("%pricetime%", time)
         }
 
-        fun auctionCreatedAgo(time: String): StringDesc.Raw {
+        fun auctionCreatedAgo(time: String): StringDesc {
             return auctionCreatedAgo
                 .replace("%time%", time)
         }
 
-        fun auctionBy(playerOwner: String): StringDesc.Raw {
+        fun auctionBy(playerOwner: String): StringDesc {
             return auctionBy
                 .replace("%player_owner%", playerOwner)
         }
 
-        fun notifyAuctionExpired(item: String, price: Number): StringDesc.Raw {
+        fun notifyAuctionExpired(item: String, price: Number): StringDesc {
             return notifyAuctionExpired
                 .replace("%item%", item)
                 .replace("%price%", "$price")
         }
 
-        fun auctionsAmount(amount: Int): StringDesc.Raw {
+        fun auctionsAmount(amount: Int): StringDesc {
             return auctionsAmount
                 .replace("%amount%", "$amount")
         }
 
-        fun broadcast(playerName: String): StringDesc.Raw {
+        fun broadcast(playerName: String): StringDesc {
             return broadcast
                 .replace("%player%", playerName)
         }
 
-        fun notifyOwnerUserBuy(playerName: String, itemName: String, price: Number): StringDesc.Raw {
+        fun notifyOwnerUserBuy(playerName: String, itemName: String, price: Number): StringDesc {
             return notifyOwnerUserBuy
                 .replace("%player%", playerName)
                 .replace("%item%", itemName)
                 .replace("%price%", "$price")
         }
 
-        fun notifyUserBuy(playerOwner: String, itemName: String, price: Number): StringDesc.Raw {
+        fun notifyUserBuy(playerOwner: String, itemName: String, price: Number): StringDesc {
             return notifyUserBuy
                 .replace("%item%", itemName)
                 .replace("%player_owner%", playerOwner)
@@ -194,7 +194,7 @@ data class Translation(
         @SerializedName("time_format")
         val timeAgoFormat: StringDesc.Raw = StringDesc.Raw("%days%дн. %hours%ч. %minutes%м. назад")
     ) {
-        fun timeAgoFormat(days: Int, hours: Int, minutes: Int): StringDesc.Raw {
+        fun timeAgoFormat(days: Int, hours: Int, minutes: Int): StringDesc {
             return timeAgoFormat
                 .replace("%days%", "$days")
                 .replace("%hours%", "$hours")
