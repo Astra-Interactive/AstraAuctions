@@ -54,7 +54,12 @@ astraShadowJar {
         mergeServiceFiles()
         dependsOn(configurations)
         archiveClassifier.set(null as String?)
-        relocate("org.bstats", projectInfo.group)
+        listOf(
+            "org.bstats",
+            "kotlin",
+            "org.jetbrains",
+            "ru.astrainteractive.astralibs"
+        ).forEach { pattern -> relocate(pattern, "${projectInfo.group}.$pattern") }
 
         minimize {
             exclude(dependency(libs.exposed.jdbc.get()))

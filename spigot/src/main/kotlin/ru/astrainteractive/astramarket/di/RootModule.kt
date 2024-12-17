@@ -75,7 +75,6 @@ internal interface RootModule {
         private val lifecycles: List<Lifecycle>
             get() = listOf(
                 coreModule.lifecycle,
-                coreModule.lifecycle,
                 apiMarketModule.lifecycle,
                 commandModule.lifecycle,
                 workerModule.lifecycle
