@@ -1,12 +1,14 @@
 package ru.astrainteractive.astramarket.di
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import kotlinx.serialization.StringFormat
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -71,7 +73,7 @@ interface ApiMarketModule {
                 onEnable = {
                 },
                 onDisable = {
-                    runBlocking {
+                    GlobalScope.launch(NonCancellable) {
                         databaseFlow.first().run(TransactionManager::closeAndUnregister)
                     }
                     scope.cancel()
