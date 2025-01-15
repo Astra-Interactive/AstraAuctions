@@ -1,6 +1,5 @@
 name: Check Develop
 on:
-  merge_group:
   pull_request:
     branches:
       - 'develop'
