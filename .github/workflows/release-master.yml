@@ -6,14 +6,17 @@ on:
 jobs:
   gradle_validation:
     uses: ./.github/workflows/call-gradle-wrapper-validation.yml
-  detekt_validation:
-    needs: gradle_validation
-    uses: ./.github/workflows/call-detekt-validation.yml
-  tests_validation:
-    needs: gradle_validation
-    uses: ./.github/workflows/call-tests-validation.yml
-  create_artifact:
-    needs: [ gradle_validation, detekt_validation, tests_validation ]
-    uses: ./.github/workflows/call-create-artifacts.yml
+  upload_artifacts:
+    needs: [ gradle_validation ]
+    uses: ./.github/workflows/call-upload-artifacts.yml
+  upload_github_artifacts:
+    needs: [ upload_artifacts ]
+    uses: ./.github/workflows/call-upload-github-release.yml
     secrets:
       ACTIONS_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+
+  upload_modrinth_artifacts:
+    needs: [ upload_artifacts ]
+    uses: ./.github/workflows/call-upload-modrinth-release.yml
+    secrets:
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
