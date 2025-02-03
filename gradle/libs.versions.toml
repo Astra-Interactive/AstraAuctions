@@ -3,7 +3,7 @@
 kotlin-version = "2.0.0" # https://github.com/JetBrains/kotlin
 kotlin-coroutines = "1.10.1" # https://github.com/Kotlin/kotlinx.coroutines
 kotlin-json = "1.8.0" # https://github.com/Kotlin/kotlinx.serialization
-kotlin-kaml = "0.67.0" # https://github.com/charleskorn/kaml
+kotlin-kaml = "0.70.0" # https://github.com/charleskorn/kaml
 
 # Drivers
 driver-jdbc = "3.48.0.0" # https://github.com/xerial/sqlite-jdbc
@@ -23,7 +23,7 @@ minecraft-protocollib = "5.3.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
 minecraft-astralibs = "3.19.3" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.1.0" # https://github.com/Bastian/bStats
-minecraft-mockbukkit = "4.28.3" #https://github.com/MockBukkit/MockBukkit
+minecraft-mockbukkit = "4.30.0" #https://github.com/MockBukkit/MockBukkit
 
 # Exposed
 ktor = "2.3.12"
