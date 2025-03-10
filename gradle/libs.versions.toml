@@ -6,7 +6,7 @@ kotlin-json = "1.8.0" # https://github.com/Kotlin/kotlinx.serialization
 kotlin-kaml = "0.72.0" # https://github.com/charleskorn/kaml
 
 # Drivers
-driver-jdbc = "3.49.0.0" # https://github.com/xerial/sqlite-jdbc
+driver-jdbc = "3.49.1.0" # https://github.com/xerial/sqlite-jdbc
 driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
@@ -32,10 +32,10 @@ ktor = "2.3.12"
 gradle-shadow = "7.1.2" # https://github.com/johnrengelman/shadow
 
 # BuildConfig
-gradle-buildconfig = "5.5.1" # https://github.com/gmazzo/gradle-buildconfig-plugin
+gradle-buildconfig = "5.5.2" # https://github.com/gmazzo/gradle-buildconfig-plugin
 
 # Exposed
-exposed = "0.59.0" # https://github.com/JetBrains/Exposed
+exposed = "0.60.0" # https://github.com/JetBrains/Exposed
 
 [libraries]
 # Kotlin
