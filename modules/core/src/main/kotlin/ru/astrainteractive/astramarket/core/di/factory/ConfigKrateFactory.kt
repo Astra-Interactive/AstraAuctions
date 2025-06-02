@@ -5,8 +5,10 @@ import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.parse
 import ru.astrainteractive.astralibs.serialization.StringFormatExt.writeIntoFile
-import ru.astrainteractive.klibs.kstorage.api.impl.DefaultStateFlowMutableKrate
+import ru.astrainteractive.klibs.kstorage.api.StateFlowMutableKrate
+import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.kstorage.api.value.ValueFactory
+import ru.astrainteractive.klibs.kstorage.util.asStateFlowMutableKrate
 import java.io.File
 
 object ConfigKrateFactory : Logger by JUtiltLogger("AstraMarket-ConfigKrateFactory") {
@@ -15,8 +17,8 @@ object ConfigKrateFactory : Logger by JUtiltLogger("AstraMarket-ConfigKrateFacto
         stringFormat: StringFormat,
         dataFolder: File,
         factory: ValueFactory<T>
-    ): DefaultStateFlowMutableKrate<T> {
-        return DefaultStateFlowMutableKrate(
+    ): StateFlowMutableKrate<T> {
+        return DefaultMutableKrate(
             factory = factory,
             loader = {
                 val file = dataFolder.resolve("$fileNameWithoutExtension.yml")
@@ -34,6 +36,6 @@ object ConfigKrateFactory : Logger by JUtiltLogger("AstraMarket-ConfigKrateFacto
                     .onSuccess { stringFormat.writeIntoFile(it, file) }
                     .getOrElse { factory.create() }
             }
-        )
+        ).asStateFlowMutableKrate()
     }
 }

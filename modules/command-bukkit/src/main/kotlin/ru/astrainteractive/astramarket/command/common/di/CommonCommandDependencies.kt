@@ -5,7 +5,7 @@ import ru.astrainteractive.astramarket.core.LifecyclePlugin
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.core.util.getValue
+import ru.astrainteractive.klibs.kstorage.util.getValue
 
 internal interface CommonCommandDependencies {
     val plugin: LifecyclePlugin
