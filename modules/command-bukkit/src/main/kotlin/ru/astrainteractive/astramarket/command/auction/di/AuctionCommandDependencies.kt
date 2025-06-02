@@ -8,11 +8,11 @@ import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
+import ru.astrainteractive.klibs.kstorage.util.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal interface AuctionCommandDependencies {
