@@ -11,7 +11,6 @@ import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
-import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 /**
@@ -19,11 +18,13 @@ import java.util.UUID
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-interface AuctionBuyUseCase : UseCase.Suspended<AuctionBuyUseCase.Params, Boolean> {
+interface AuctionBuyUseCase {
     class Params(
         val auction: MarketSlot,
         val playerUUID: UUID
     )
+
+    suspend operator fun invoke(input: AuctionBuyUseCase.Params): Boolean
 }
 
 internal class AuctionBuyUseCaseImpl(

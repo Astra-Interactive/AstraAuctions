@@ -45,7 +45,10 @@ minecraftProcessResource {
 
 astraShadowJar {
     requireShadowJarTask {
-        destination = File("/home/makeevrserg/Desktop/server/data/plugins")
+        destination = rootDir
+            .resolve("build")
+            .resolve("bukkit")
+            .resolve("plugins")
             .takeIf { it.exists() }
             ?: File(rootDir, "jars")
 

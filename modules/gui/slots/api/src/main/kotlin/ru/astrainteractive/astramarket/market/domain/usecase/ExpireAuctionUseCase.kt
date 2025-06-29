@@ -7,7 +7,6 @@ import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
-import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 /**
@@ -15,11 +14,12 @@ import java.util.UUID
  * @param _auction auction to expire
  * @return boolean - true if success false if not
  */
-interface ExpireAuctionUseCase : UseCase.Suspended<ExpireAuctionUseCase.Params, Boolean> {
+interface ExpireAuctionUseCase {
     class Params(
         val auction: MarketSlot,
         val playerUUID: UUID
     )
+    suspend operator fun invoke(input: ExpireAuctionUseCase.Params): Boolean
 }
 
 internal class ExpireAuctionUseCaseImpl(

@@ -7,7 +7,6 @@ import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
-import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 /**
@@ -15,11 +14,12 @@ import java.util.UUID
  * @param player owner of auction
  * @return boolean - true if succesfully removed
  */
-interface RemoveAuctionUseCase : UseCase.Suspended<RemoveAuctionUseCase.Params, Boolean> {
+interface RemoveAuctionUseCase {
     data class Params(
         val auction: ru.astrainteractive.astramarket.api.market.model.MarketSlot,
         val playerUUID: UUID
     )
+    suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean
 }
 
 internal class RemoveAuctionUseCaseImpl(

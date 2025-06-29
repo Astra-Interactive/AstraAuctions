@@ -11,8 +11,7 @@ driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
 klibs-gradleplugin = "1.5.0-alpha02" # https://github.com/makeevrserg/gradle-plugin
-klibs-mikro = "1.8.18" # https://github.com/makeevrserg/klibs.mikro
-klibs-kdi = "1.4.8" # https://github.com/makeevrserg/klibs.kdi
+klibs-mikro = "1.11.0" # https://github.com/makeevrserg/klibs.mikro
 klibs-kstorage = "4.2.0" # https://github.com/makeevrserg/klibs.kstorage
 
 # Minecraft
@@ -75,7 +74,6 @@ minecraft-mockbukkit = { module = "com.github.MockBukkit:MockBukkit", version.re
 
 # klibs
 klibs-mikro-core = { module = "ru.astrainteractive.klibs:mikro-core", version.ref = "klibs-mikro" }
-klibs-kdi = { module = "ru.astrainteractive.klibs:kdi", version.ref = "klibs-kdi" }
 klibs-kstorage = { module = "ru.astrainteractive.klibs:kstorage", version.ref = "klibs-kstorage" }
 
 

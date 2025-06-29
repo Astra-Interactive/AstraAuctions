@@ -8,14 +8,14 @@ import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
-import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
-interface CreateAuctionUseCase : UseCase.Suspended<CreateAuctionUseCase.Params, Boolean> {
+interface CreateAuctionUseCase {
     class Params(
         val playerUUID: UUID,
         val marketSlot: MarketSlot
     )
+    suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean
 }
 
 internal class CreateAuctionUseCaseImpl(
