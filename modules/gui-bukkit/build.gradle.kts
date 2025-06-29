@@ -17,6 +17,6 @@ dependencies {
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
-    implementation(projects.modules.marketPlayers)
-    implementation(projects.modules.marketView)
+    implementation(projects.modules.gui.players.api)
+    implementation(projects.modules.gui.slots.api)
 }

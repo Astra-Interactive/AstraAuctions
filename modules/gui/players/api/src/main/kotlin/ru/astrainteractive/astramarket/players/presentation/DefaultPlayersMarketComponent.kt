@@ -16,7 +16,8 @@ internal class DefaultPlayersMarketComponent(
     private val marketApi: MarketApi,
     private val dispatchers: KotlinDispatchers,
     isExpired: Boolean
-) : PlayersMarketComponent, CoroutineFeature by CoroutineFeature.Default(Dispatchers.IO) {
+) : PlayersMarketComponent,
+    CoroutineFeature by CoroutineFeature.Default(Dispatchers.IO) {
     override val model = MutableStateFlow(PlayersMarketComponent.Model(isExpired = isExpired))
 
     private fun sortPlayersAndSlots() {
