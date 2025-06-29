@@ -18,7 +18,7 @@ internal class PlayerSortTranslationMappingImpl(
     override fun translate(
         playerSort: PlayerSort
     ): StringDesc.Raw = when (playerSort) {
-        is PlayerSort.Name -> translation.auction.sortNameAsc
-        is PlayerSort.Auctions -> translation.auction.sortAmountDesc
+        is PlayerSort.Name -> translation.auction.sortName
+        is PlayerSort.Auctions -> translation.auction.sortAmount
     }
 }

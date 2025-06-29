@@ -10,8 +10,6 @@ import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
 import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
-import ru.astrainteractive.klibs.mikro.core.util.next
-import ru.astrainteractive.klibs.mikro.core.util.prev
 
 internal class DefaultPlayersMarketComponent(
     private val marketApi: MarketApi,
