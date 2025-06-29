@@ -19,5 +19,5 @@ dependencies {
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
     implementation(projects.modules.gui.slots.api)
-    implementation(projects.modules.guiBukkit)
+    implementation(projects.modules.gui.commonBukkit)
 }

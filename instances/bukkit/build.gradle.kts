@@ -34,8 +34,8 @@ dependencies {
     implementation(projects.modules.periodic)
     implementation(projects.modules.gui.players.api)
     implementation(projects.modules.gui.slots.api)
-    implementation(projects.modules.marketViewBukkit)
-    implementation(projects.modules.guiBukkit)
+    implementation(projects.modules.gui.slots.bukkit)
+    implementation(projects.modules.gui.commonBukkit)
     implementation(projects.modules.commandBukkit)
 }
 
