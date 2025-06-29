@@ -83,6 +83,7 @@ internal class PlayersGui(
             index = inventoryMap.indexOf(AuctionSlotKey.FI),
             sortType = playersMarketComponent.model.value.sort,
             click = {
+                playerHolder.player.playSound(config.sounds.open)
                 playersMarketComponent.onSortButtonClicked(it.isRightClick)
             }
         )

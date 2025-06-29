@@ -96,6 +96,7 @@ internal class SlotsGui(
             index = inventoryMap.indexOf(AuctionSlotKey.FI),
             sortType = auctionComponent.model.value.sortType,
             click = {
+                playerHolder.player.playSound(config.sounds.open)
                 showPage(0)
                 onSortButtonClicked(it.isRightClick)
             }
