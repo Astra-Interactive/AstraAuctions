@@ -20,7 +20,7 @@ internal fun ButtonContext.playersSort(
     .setItemStack(config.buttons.sort.toItemStack())
     .editMeta {
         val sortDesc = playersSortTranslationMapping.translate(sortType).raw
-        val desc = StringDesc.Raw("${translation.menu.sort.raw} $sortDesc")
+        val desc = StringDesc.Raw("${pluginTranslation.menu.sort.raw} $sortDesc")
         displayName(desc.component)
     }
     .setOnClickListener(click)

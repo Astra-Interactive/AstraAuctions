@@ -50,7 +50,7 @@ internal class PlayersGui(
     private val inventoryMap: AuctionInventoryMap
         get() = DefaultAuctionInventoryMap
 
-    override val title: Component = translation.menu.market.component
+    override val title: Component = pluginTranslation.menu.market.component
 
     override val playerHolder = DefaultPlayerHolder(player)
 

@@ -2,11 +2,11 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
-import ru.astrainteractive.astramarket.core.Translation
-import ru.astrainteractive.astramarket.core.util.getValue
+import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
-import ru.astrainteractive.klibs.kstorage.api.Krate
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.util.getValue
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -26,9 +26,9 @@ internal class ExpireAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
     private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
-    translationKrate: Krate<Translation>,
+    pluginTranslationKrate: CachedKrate<PluginTranslation>,
 ) : ExpireAuctionUseCase {
-    private val translation by translationKrate
+    private val translation by pluginTranslationKrate
 
     override suspend operator fun invoke(input: ExpireAuctionUseCase.Params): Boolean {
         val playerUUID = input.playerUUID

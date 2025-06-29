@@ -18,9 +18,9 @@ internal fun ButtonContext.expiredSlots(
     .setItemStack(config.buttons.expired.toItemStack())
     .editMeta {
         if (isExpired) {
-            displayName(translation.menu.expired.component)
+            displayName(pluginTranslation.menu.expired.component)
         } else {
-            displayName(translation.menu.new.component)
+            displayName(pluginTranslation.menu.new.component)
         }
     }
     .setOnClickListener(click)

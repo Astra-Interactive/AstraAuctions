@@ -15,6 +15,6 @@ internal fun ButtonContext.back(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.back.toItemStack())
-    .editMeta { displayName(translation.menu.back.component) }
+    .editMeta { displayName(pluginTranslation.menu.back.component) }
     .setOnClickListener(click)
     .build()

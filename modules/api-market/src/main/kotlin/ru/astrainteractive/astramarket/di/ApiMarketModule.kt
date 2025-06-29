@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.di
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.cancel
@@ -16,15 +16,16 @@ import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
-import ru.astrainteractive.astralibs.async.CoroutineFeature
-import ru.astrainteractive.astralibs.exposed.factory.DatabaseFactory
+import ru.astrainteractive.astralibs.exposed.model.connect
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astralibs.util.FlowExt.mapCached
+import ru.astrainteractive.astralibs.serialization.StringFormatExt.parseOrWriteIntoDefault
+import ru.astrainteractive.astralibs.util.mapCached
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.impl.ExposedMarketApi
-import ru.astrainteractive.astramarket.core.di.factory.ConfigKrateFactory
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.astramarket.model.DatabaseConfig
+import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
+import ru.astrainteractive.klibs.kstorage.util.asStateFlowMutableKrate
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import java.io.File
 
@@ -37,31 +38,37 @@ interface ApiMarketModule {
         dispatchers: KotlinDispatchers,
         yamlStringFormat: StringFormat,
         dataFolder: File,
+        scope: CoroutineScope
     ) : ApiMarketModule {
-        private val scope = CoroutineFeature.Default(Dispatchers.IO)
-
-        private val dbConfig = ConfigKrateFactory.create(
-            fileNameWithoutExtension = "database",
-            stringFormat = yamlStringFormat,
-            dataFolder = dataFolder,
-            factory = ::DatabaseConfig
-        )
+        private val dbConfig = DefaultMutableKrate(
+            factory = ::DatabaseConfig,
+            loader = {
+                yamlStringFormat.parseOrWriteIntoDefault(
+                    file = dataFolder.resolve("database.yaml"),
+                    default = ::DatabaseConfig
+                )
+            }
+        ).asStateFlowMutableKrate()
 
         private val databaseFlow: Flow<Database> = dbConfig.cachedStateFlow
             .map { it.configuration }
             .distinctUntilChanged()
-            .mapCached(scope) { dbConfig, previous ->
-                previous?.run(TransactionManager::closeAndUnregister)
-                val database = DatabaseFactory(dataFolder).create(dbConfig)
-                TransactionManager.manager.defaultIsolationLevel = java.sql.Connection.TRANSACTION_SERIALIZABLE
-                transaction(database) {
-                    addLogger(Slf4jSqlDebugLogger)
-                    SchemaUtils.create(
-                        AuctionTable,
-                    )
+            .mapCached(
+                scope = scope,
+                dispatcher = dispatchers.IO,
+                transform = { dbConfig, previous ->
+                    previous?.run(TransactionManager::closeAndUnregister)
+                    val database = dbConfig.connect(dataFolder)
+                    TransactionManager.manager.defaultIsolationLevel = java.sql.Connection.TRANSACTION_SERIALIZABLE
+                    transaction(database) {
+                        addLogger(Slf4jSqlDebugLogger)
+                        SchemaUtils.create(
+                            AuctionTable,
+                        )
+                    }
+                    database
                 }
-                database
-            }
+            )
 
         override val marketApi: MarketApi = ExposedMarketApi(
             databaseFlow = databaseFlow,
@@ -79,7 +86,7 @@ interface ApiMarketModule {
                     scope.cancel()
                 },
                 onReload = {
-                    dbConfig.loadAndGet()
+                    dbConfig.getValue()
                 }
             )
         }

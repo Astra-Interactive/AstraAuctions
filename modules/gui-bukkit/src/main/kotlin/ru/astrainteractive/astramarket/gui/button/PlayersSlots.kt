@@ -16,7 +16,7 @@ internal fun ButtonContext.playersSlots(
     .setIndex(index)
     .setItemStack(config.buttons.playersSlots.toItemStack())
     .editMeta {
-        displayName(translation.menu.playerSlots.component)
+        displayName(pluginTranslation.menu.playerSlots.component)
     }
     .setOnClickListener(click)
     .build()
@@ -28,7 +28,7 @@ internal fun ButtonContext.allSlots(
     .setIndex(index)
     .setItemStack(config.buttons.aauc.toItemStack())
     .editMeta {
-        displayName(translation.menu.allSlots.component)
+        displayName(pluginTranslation.menu.allSlots.component)
     }
     .setOnClickListener(click)
     .build()

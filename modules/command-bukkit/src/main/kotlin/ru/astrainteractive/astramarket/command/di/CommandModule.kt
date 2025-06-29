@@ -2,9 +2,7 @@ package ru.astrainteractive.astramarket.command.di
 
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandRegistry
-import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.command.common.CommonCommandRegistry
-import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
@@ -23,18 +21,19 @@ interface CommandModule {
             Lifecycle.Lambda(
                 onEnable = {
                     CommonCommandRegistry(
-                        dependencies = CommonCommandDependencies.Default(
-                            coreModule = coreModule,
-                            bukkitCoreModule = bukkitCoreModule
-                        )
+                        plugin = bukkitCoreModule.plugin,
+                        kyoriKrate = bukkitCoreModule.kyoriComponentSerializer,
+                        pluginTranslationKrate = coreModule.pluginTranslationKrate
                     ).register()
                     AuctionCommandRegistry(
-                        dependencies = AuctionCommandDependencies.Default(
-                            coreModule = coreModule,
-                            bukkitCoreModule = bukkitCoreModule,
-                            marketViewModule = marketViewModule,
-                            routerModule = routerModule
-                        )
+                        plugin = bukkitCoreModule.plugin,
+                        kyoriKrate = bukkitCoreModule.kyoriComponentSerializer,
+                        pluginTranslationKrate = coreModule.pluginTranslationKrate,
+                        router = routerModule.router,
+                        dispatchers = coreModule.dispatchers,
+                        scope = coreModule.scope,
+                        createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
+                        itemStackEncoder = bukkitCoreModule.itemStackEncoder
                     ).register()
                 }
             )

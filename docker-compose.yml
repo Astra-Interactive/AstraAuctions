@@ -1,0 +1,27 @@
+services:
+  # For command call use `docker exec mc_docker_astramarket rcon-cli <your_command>`
+  mc_docker_astramarket:
+    restart: no
+    container_name: mc_docker_astramarket
+    image: itzg/minecraft-server # https://github.com/itzg/docker-minecraft-server
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: true
+      ONLINE_MODE: false
+      # Forge --------------------
+      #      TYPE: FORGE
+      #      VERSION: "1.20.1"
+      #      FORGE_VERSION: "47.2.20"
+      # Paper --------------------
+      TYPE: PAPER
+      VERSION: 1.21.4
+      # Custom -------------------
+    #      CUSTOM_SERVER: https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/121/downloads/paper-1.21.1-121.jar
+    volumes:
+      #      - ./build/forge:/data # Forge
+      - ./build/bukkit:/data # Bukkit/Paper/Spigot
+#      - ./build/velocity:/data # Velocity
+#      - ./build/fabric:/data # Fabric

@@ -18,7 +18,7 @@ interface PlayersMarketViewModule {
     ) : PlayersMarketViewModule {
         override val playerSortTranslationMapping: PlayerSortTranslationMapping by lazy {
             PlayerSortTranslationMappingImpl(
-                translationKrate = coreModule.translationKrate
+                pluginTranslationKrate = coreModule.pluginTranslationKrate
             )
         }
 

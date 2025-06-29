@@ -1,24 +1,30 @@
 package ru.astrainteractive.astramarket.command.auction
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
 import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
-import ru.astrainteractive.astramarket.command.auction.di.AuctionCommandDependencies
 import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
+import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import kotlin.math.max
 import kotlin.math.min
 
 internal class AuctionCommandExecutor(
-    private val dependencies: AuctionCommandDependencies
+    private val router: GuiRouter,
+    private val dispatchers: KotlinDispatchers,
+    private val scope: CoroutineScope,
+    private val itemStackEncoder: ItemStackEncoder,
+    private val createAuctionUseCase: CreateAuctionUseCase
 ) : CommandExecutor<AuctionCommand.Result>,
-    AuctionCommandDependencies by dependencies,
     Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor") {
     private val mutex = Mutex()
+    private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
 
     override fun execute(input: AuctionCommand.Result) {
         when (input) {

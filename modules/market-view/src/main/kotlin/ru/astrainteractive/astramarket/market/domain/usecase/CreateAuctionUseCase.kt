@@ -3,11 +3,11 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
-import ru.astrainteractive.astramarket.core.Translation
-import ru.astrainteractive.astramarket.core.util.getValue
+import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
-import ru.astrainteractive.klibs.kstorage.api.Krate
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.util.getValue
 import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
@@ -22,10 +22,10 @@ internal class CreateAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
     private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
-    translationKrate: Krate<Translation>,
-    configKrate: Krate<PluginConfig>,
+    pluginTranslationKrate: CachedKrate<PluginTranslation>,
+    configKrate: CachedKrate<PluginConfig>,
 ) : CreateAuctionUseCase {
-    private val translation by translationKrate
+    private val translation by pluginTranslationKrate
     private val config by configKrate
 
     override suspend operator fun invoke(input: CreateAuctionUseCase.Params): Boolean {

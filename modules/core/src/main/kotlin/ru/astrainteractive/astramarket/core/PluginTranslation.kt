@@ -5,10 +5,10 @@ package ru.astrainteractive.astramarket.core
 import kotlinx.serialization.Serializable
 import org.jetbrains.kotlin.com.google.gson.annotations.SerializedName
 import ru.astrainteractive.astralibs.string.StringDesc
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
+import ru.astrainteractive.astralibs.string.replace
 
 @Serializable
-data class Translation(
+data class PluginTranslation(
     @SerializedName("menu")
     val menu: Menu = Menu(),
     @SerializedName("auction")

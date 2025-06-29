@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.gui.util
 
 import ru.astrainteractive.astralibs.string.StringDesc
-import ru.astrainteractive.astralibs.string.StringDescExt.replace
+import ru.astrainteractive.astralibs.string.replace
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 

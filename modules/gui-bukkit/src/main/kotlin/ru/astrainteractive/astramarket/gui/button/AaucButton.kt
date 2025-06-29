@@ -15,6 +15,6 @@ internal fun ButtonContext.aauc(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.aauc.toItemStack())
-    .editMeta { displayName(translation.menu.market.component) }
+    .editMeta { displayName(pluginTranslation.menu.market.component) }
     .setOnClickListener(click)
     .build()

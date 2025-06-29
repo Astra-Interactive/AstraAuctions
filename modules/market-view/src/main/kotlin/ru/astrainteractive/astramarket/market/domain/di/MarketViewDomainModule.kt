@@ -36,12 +36,12 @@ interface MarketViewDomainModule {
 
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             AuctionSortTranslationMappingImpl(
-                translationKrate = coreModule.translationKrate
+                pluginTranslationKrate = coreModule.pluginTranslationKrate
             )
         }
         override val auctionBuyUseCase: AuctionBuyUseCase by lazy {
             AuctionBuyUseCaseImpl(
-                translationKrate = coreModule.translationKrate,
+                pluginTranslationKrate = coreModule.pluginTranslationKrate,
                 configKrate = coreModule.configKrate,
                 economyProviderFactory = coreModule.economyProviderFactory,
                 auctionsBridge = marketDataModule.auctionBridge,
@@ -51,7 +51,7 @@ interface MarketViewDomainModule {
         }
         override val createAuctionUseCase: CreateAuctionUseCase by lazy {
             CreateAuctionUseCaseImpl(
-                translationKrate = coreModule.translationKrate,
+                pluginTranslationKrate = coreModule.pluginTranslationKrate,
                 configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
@@ -60,7 +60,7 @@ interface MarketViewDomainModule {
         }
         override val expireAuctionUseCase: ExpireAuctionUseCase by lazy {
             ExpireAuctionUseCaseImpl(
-                translationKrate = coreModule.translationKrate,
+                pluginTranslationKrate = coreModule.pluginTranslationKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
                 marketApi = apiMarketModule.marketApi
@@ -68,7 +68,7 @@ interface MarketViewDomainModule {
         }
         override val removeAuctionUseCase: RemoveAuctionUseCase by lazy {
             RemoveAuctionUseCaseImpl(
-                translationKrate = coreModule.translationKrate,
+                pluginTranslationKrate = coreModule.pluginTranslationKrate,
                 configKrate = coreModule.configKrate,
                 auctionsBridge = marketDataModule.auctionBridge,
                 playerInteractionBridge = marketDataModule.playerInteractionBridge,
