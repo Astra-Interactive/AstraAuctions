@@ -92,6 +92,7 @@ internal class PlayersGui(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
+                playerHolder.player.playSound(config.sounds.open)
                 showPage(0)
                 playersMarketComponent.toggleExpired()
             }

@@ -106,6 +106,7 @@ internal class SlotsGui(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = auctionComponent.model.value.isExpired,
             click = {
+                playerHolder.player.playSound(config.sounds.open)
                 showPage(0)
                 auctionComponent.toggleExpired()
             }
