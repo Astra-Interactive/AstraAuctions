@@ -2,21 +2,11 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import java.util.UUID
 
 internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStackEncoder) : SortAuctionsUseCase {
-
-    private inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(
-        isAsc: Boolean,
-        crossinline selector: (T) -> R?
-    ): List<T> {
-        return if (isAsc) {
-            sortedBy(selector)
-        } else {
-            sortedByDescending(selector)
-        }
-    }
 
     override fun invoke(input: SortAuctionsUseCase.Input): SortAuctionsUseCase.Output {
         val sortType = input.sortType

@@ -24,8 +24,8 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.core.PluginPermission
-import ru.astrainteractive.astramarket.gui.button.aauc
-import ru.astrainteractive.astramarket.gui.button.allSlots
+import ru.astrainteractive.astramarket.gui.button.filterExpired
+import ru.astrainteractive.astramarket.gui.button.slotsType
 import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.border
@@ -102,7 +102,7 @@ internal class SlotsGui(
         )
 
     private val expiredSlotsButton: InventorySlot
-        get() = buttonContext.aauc(
+        get() = buttonContext.filterExpired(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = auctionComponent.model.value.isExpired,
             click = {
@@ -124,7 +124,7 @@ internal class SlotsGui(
         )
 
     private val playerSlots: InventorySlot
-        get() = buttonContext.allSlots(
+        get() = buttonContext.slotsType(
             index = inventoryMap.indexOf(AuctionSlotKey.GR),
             isGroupedByPlayers = false,
             click = {

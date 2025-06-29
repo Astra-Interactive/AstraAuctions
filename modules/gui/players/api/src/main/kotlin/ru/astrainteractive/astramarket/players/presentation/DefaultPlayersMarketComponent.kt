@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
+import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.next
@@ -22,11 +23,9 @@ internal class DefaultPlayersMarketComponent(
 
     private fun sortPlayersAndSlots() {
         val items = model.value.playersAndSlots
-        val sortedItems = when (model.value.sort) {
-            PlayerSort.NAME_ASC -> items.sortedBy { it.minecraftUUID }
-            PlayerSort.NAME_DESC -> items.sortedByDescending { it.minecraftUUID }
-            PlayerSort.AUCTIONS_ASC -> items.sortedBy { it.slots.size }
-            PlayerSort.AUCTIONS_DESC -> items.sortedByDescending { it.slots.size }
+        val sortedItems = when (val sort = model.value.sort) {
+            is PlayerSort.Auctions -> items.sortedBy(sort.isAsc) { it.slots.size }
+            is PlayerSort.Name -> items.sortedBy(sort.isAsc) { it.minecraftUsername }
         }
         model.update { it.copy(playersAndSlots = sortedItems) }
     }
@@ -44,18 +43,24 @@ internal class DefaultPlayersMarketComponent(
         loadPlayersAndSlots()
     }
 
-    override fun nextSort() {
-        model.update {
-            val sort = it.sort.next(PlayerSort.entries.toTypedArray())
-            it.copy(sort = sort)
-        }
-        sortPlayersAndSlots()
-    }
+    override fun onSortButtonClicked(isRightClick: Boolean) {
+        val sorts = listOf(
+            PlayerSort.Name(false),
+            PlayerSort.Name(true),
+            PlayerSort.Auctions(false),
+            PlayerSort.Auctions(true),
+        )
+        val i = sorts.indexOfFirst { sortType -> sortType == model.value.sort }
+        val offset = if (isRightClick) -1 else 1
 
-    override fun prevSort() {
+        val newSortType = if (i == -1) {
+            sorts.first()
+        } else {
+            sorts[(i + offset) % sorts.size]
+        }
+
         model.update {
-            val sort = it.sort.prev(PlayerSort.entries.toTypedArray())
-            it.copy(sort = sort)
+            it.copy(sort = newSortType)
         }
         sortPlayersAndSlots()
     }

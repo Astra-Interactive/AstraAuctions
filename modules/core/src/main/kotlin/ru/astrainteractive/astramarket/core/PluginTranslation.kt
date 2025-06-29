@@ -26,13 +26,13 @@ data class PluginTranslation(
         @SerializedName("market")
         val market: StringDesc.Raw = StringDesc.Raw("&aРынок"),
         @SerializedName("filter")
-        val filter: StringDesc.Raw = StringDesc.Raw("&aФильтр"),
+        val filterExpired: StringDesc.Raw = StringDesc.Raw("&aФильтр новизны"),
         @SerializedName("expired")
         val expired: StringDesc.Raw = StringDesc.Raw("• Истекшие"),
         @SerializedName("new")
         val new: StringDesc.Raw = StringDesc.Raw("• Новые"),
         @SerializedName("next")
-        val next: StringDesc.Raw = StringDesc.Raw("&#&aДальше"),
+        val next: StringDesc.Raw = StringDesc.Raw("&aДальше"),
         @SerializedName("back")
         val back: StringDesc.Raw = StringDesc.Raw("&aНазад"),
         @SerializedName("prev")
@@ -40,7 +40,7 @@ data class PluginTranslation(
         @SerializedName("sort")
         val sort: StringDesc.Raw = StringDesc.Raw("&aСортировка"),
         @SerializedName("slots_filter")
-        val slotsFilter: StringDesc.Raw = StringDesc.Raw("&aФильтр слотов"),
+        val displayType: StringDesc.Raw = StringDesc.Raw("&aТип отображения"),
         @SerializedName("player_slots")
         val playerSlots: StringDesc.Raw = StringDesc.Raw("• По игрокам"),
         @SerializedName("all_slots")
@@ -143,7 +143,7 @@ data class PluginTranslation(
 
         fun auctionLast(time: String): StringDesc {
             return auctionLast
-                .replace("%pricetime%", time)
+                .replace("%time%", time)
         }
 
         fun auctionCreatedAgo(time: String): StringDesc {

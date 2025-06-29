@@ -18,8 +18,8 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astramarket.gui.button.aauc
-import ru.astrainteractive.astramarket.gui.button.allSlots
+import ru.astrainteractive.astramarket.gui.button.filterExpired
+import ru.astrainteractive.astramarket.gui.button.slotsType
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.nextPage
@@ -83,16 +83,12 @@ internal class PlayersGui(
             index = inventoryMap.indexOf(AuctionSlotKey.FI),
             sortType = playersMarketComponent.model.value.sort,
             click = {
-                if (it.isRightClick) {
-                    playersMarketComponent.nextSort()
-                } else {
-                    playersMarketComponent.prevSort()
-                }
+                playersMarketComponent.onSortButtonClicked(it.isRightClick)
             }
         )
 
     private val expiredButton: InventorySlot
-        get() = buttonContext.aauc(
+        get() = buttonContext.filterExpired(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
@@ -102,7 +98,7 @@ internal class PlayersGui(
         )
 
     private val allSlots: InventorySlot
-        get() = buttonContext.allSlots(
+        get() = buttonContext.slotsType(
             index = inventoryMap.indexOf(AuctionSlotKey.GR),
             isGroupedByPlayers = true,
             click = {

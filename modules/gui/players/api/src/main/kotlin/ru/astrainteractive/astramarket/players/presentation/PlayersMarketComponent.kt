@@ -9,13 +9,11 @@ interface PlayersMarketComponent {
 
     fun toggleExpired()
 
-    fun nextSort()
-
-    fun prevSort()
+    fun onSortButtonClicked(isRightClick: Boolean)
 
     data class Model(
         val isExpired: Boolean = false,
         val playersAndSlots: List<PlayerAndSlots> = emptyList(),
-        val sort: PlayerSort = PlayerSort.AUCTIONS_DESC
+        val sort: PlayerSort = PlayerSort.Name(false)
     )
 }

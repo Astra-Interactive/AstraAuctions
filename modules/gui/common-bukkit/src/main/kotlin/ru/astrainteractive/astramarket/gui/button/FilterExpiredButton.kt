@@ -6,32 +6,36 @@ import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setD
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
+import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astralibs.string.plus
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.toItemStack
 
-internal fun ButtonContext.allSlots(
+internal fun ButtonContext.filterExpired(
     index: Int,
     click: Click,
-    isGroupedByPlayers: Boolean
+    isExpired: Boolean
 ) = InventorySlot.Builder()
     .setIndex(index)
-    .setItemStack(config.buttons.aauc.toItemStack())
-    .setDisplayName(pluginTranslation.menu.slotsFilter.component)
+    .setItemStack(config.buttons.filterExpired.toItemStack())
+    .setDisplayName(pluginTranslation.menu.filterExpired.component)
     .addLore {
         pluginTranslation.menu.enabledColor
-            .takeIf { isGroupedByPlayers }
+            .takeIf { isExpired }
             .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.playerSlots)
+            .plus(pluginTranslation.menu.expired)
             .component
     }
     .addLore {
         pluginTranslation.menu.enabledColor
-            .takeIf { !isGroupedByPlayers }
+            .takeIf { !isExpired }
             .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.allSlots)
+            .plus(pluginTranslation.menu.new)
             .component
     }
     .setOnClickListener(click)
     .build()
+
+fun StringDesc?.orEmpty() = this ?: StringDesc.Raw("")
+fun StringDesc?.or(block: () -> StringDesc) = this ?: block.invoke()

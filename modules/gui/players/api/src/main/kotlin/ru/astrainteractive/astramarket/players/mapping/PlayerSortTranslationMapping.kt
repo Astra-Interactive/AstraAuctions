@@ -15,10 +15,10 @@ internal class PlayerSortTranslationMappingImpl(
 ) : PlayerSortTranslationMapping {
     private val translation by pluginTranslationKrate
 
-    override fun translate(playerSort: PlayerSort): StringDesc.Raw = when (playerSort) {
-        PlayerSort.NAME_ASC -> translation.auction.sortNameAsc
-        PlayerSort.NAME_DESC -> translation.auction.sortName
-        PlayerSort.AUCTIONS_ASC -> translation.auction.sortAmountDesc
-        PlayerSort.AUCTIONS_DESC -> translation.auction.sortAmountAsc
+    override fun translate(
+        playerSort: PlayerSort
+    ): StringDesc.Raw = when (playerSort) {
+        is PlayerSort.Name -> translation.auction.sortNameAsc
+        is PlayerSort.Auctions -> translation.auction.sortAmountDesc
     }
 }
