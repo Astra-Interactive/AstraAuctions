@@ -2,16 +2,16 @@ package ru.astrainteractive.astramarket.players.mapping
 
 import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.players.model.PlayerSort
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.Krate
 
 interface PlayerSortTranslationMapping {
     fun translate(playerSort: PlayerSort): StringDesc.Raw
 }
 
 internal class PlayerSortTranslationMappingImpl(
-    translationKrate: CachedKrate<Translation>
+    translationKrate: Krate<Translation>
 ) : PlayerSortTranslationMapping {
     private val translation by translationKrate
 

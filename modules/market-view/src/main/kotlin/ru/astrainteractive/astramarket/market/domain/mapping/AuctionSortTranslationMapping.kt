@@ -2,16 +2,16 @@ package ru.astrainteractive.astramarket.market.domain.mapping
 
 import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.core.Translation
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.Krate
 
 interface AuctionSortTranslationMapping {
     fun translate(auctionSort: AuctionSort): StringDesc.Raw
 }
 
 internal class AuctionSortTranslationMappingImpl(
-    translationKrate: CachedKrate<Translation>
+    translationKrate: Krate<Translation>
 ) : AuctionSortTranslationMapping {
     private val translation by translationKrate
     override fun translate(auctionSort: AuctionSort): StringDesc.Raw = when (auctionSort) {

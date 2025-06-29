@@ -23,16 +23,15 @@ import ru.astrainteractive.astramarket.core.di.factory.ConfigKrateFactory
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
-import ru.astrainteractive.klibs.kstorage.util.asCachedKrate
 
 interface BukkitCoreModule : CoreModule {
 
     val plugin: LifecyclePlugin
     val itemStackEncoder: ItemStackEncoder
     val inventoryClickEventListener: EventListener
-    val kyoriComponentSerializer: CachedKrate<KyoriComponentSerializer>
+    val kyoriComponentSerializer: Krate<KyoriComponentSerializer>
 
     class Default(override val plugin: LifecyclePlugin) : BukkitCoreModule {
 
@@ -45,7 +44,7 @@ interface BukkitCoreModule : CoreModule {
         override val kyoriComponentSerializer = DefaultMutableKrate<KyoriComponentSerializer>(
             factory = { KyoriComponentSerializer.Legacy },
             loader = { null }
-        ).asCachedKrate()
+        )
 
         private fun createBStats() = Metrics(plugin, 15771)
 
@@ -57,14 +56,14 @@ interface BukkitCoreModule : CoreModule {
             ),
         )
 
-        override val configKrate: CachedKrate<PluginConfig> = ConfigKrateFactory.create(
+        override val configKrate: Krate<PluginConfig> = ConfigKrateFactory.create(
             fileNameWithoutExtension = "config",
             stringFormat = yamlStringFormat,
             dataFolder = plugin.dataFolder,
             factory = ::PluginConfig
         )
 
-        override val translationKrate: CachedKrate<Translation> = ConfigKrateFactory.create(
+        override val translationKrate: Krate<Translation> = ConfigKrateFactory.create(
             fileNameWithoutExtension = "translations",
             stringFormat = yamlStringFormat,
             dataFolder = plugin.dataFolder,
@@ -89,9 +88,9 @@ interface BukkitCoreModule : CoreModule {
                     scope.cancel()
                 },
                 onReload = {
-                    kyoriComponentSerializer.getValue()
-                    configKrate.getValue()
-                    translationKrate.getValue()
+                    kyoriComponentSerializer.loadAndGet()
+                    configKrate.loadAndGet()
+                    translationKrate.loadAndGet()
                 }
             )
         }

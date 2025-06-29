@@ -7,10 +7,11 @@ import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.util.getValue
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.Krate
+import ru.astrainteractive.klibs.mikro.core.domain.UseCase
 import java.util.UUID
 
 /**
@@ -18,8 +19,7 @@ import java.util.UUID
  * @param player the player which will buy auction
  * @return boolean, which is true if succesfully bought
  */
-interface AuctionBuyUseCase {
-    suspend operator fun invoke(input: AuctionBuyUseCase.Params): Boolean
+interface AuctionBuyUseCase : UseCase.Suspended<AuctionBuyUseCase.Params, Boolean> {
     class Params(
         val auction: MarketSlot,
         val playerUUID: UUID
@@ -30,8 +30,8 @@ internal class AuctionBuyUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
     private val marketApi: MarketApi,
     private val playerInteractionBridge: PlayerInteractionBridge,
-    private val translationKrate: CachedKrate<Translation>,
-    private val configKrate: CachedKrate<PluginConfig>,
+    private val translationKrate: Krate<Translation>,
+    private val configKrate: Krate<PluginConfig>,
     private val economyProviderFactory: CurrencyEconomyProviderFactory,
 ) : AuctionBuyUseCase, Logger by JUtiltLogger("AstraMarket-AuctionBuyUseCase") {
     private val config by configKrate

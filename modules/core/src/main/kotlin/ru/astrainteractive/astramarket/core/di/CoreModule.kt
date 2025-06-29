@@ -6,14 +6,14 @@ import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.Translation
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.Krate
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 interface CoreModule {
     val lifecycle: Lifecycle
 
-    val configKrate: CachedKrate<PluginConfig>
-    val translationKrate: CachedKrate<Translation>
+    val configKrate: Krate<PluginConfig>
+    val translationKrate: Krate<Translation>
     val scope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val yamlStringFormat: StringFormat

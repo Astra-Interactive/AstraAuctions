@@ -79,7 +79,7 @@ interface ApiMarketModule {
                     scope.cancel()
                 },
                 onReload = {
-                    dbConfig.getValue()
+                    dbConfig.loadAndGet()
                 }
             )
         }
