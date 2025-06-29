@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.api.market
 
 import kotlinx.coroutines.runBlocking
+import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 import ru.astrainteractive.astralibs.serialization.YamlStringFormat
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
@@ -27,7 +28,8 @@ class MarketApiTest {
             time = System.currentTimeMillis(),
             item = EncodedObject.ByteArray(ByteArray(0)),
             price = Random.nextInt().toFloat(),
-            expired = false
+            expired = false,
+            minecraftUsername = "romaroman"
         )
 
     @BeforeTest
@@ -37,6 +39,7 @@ class MarketApiTest {
             dispatchers = DefaultKotlinDispatchers,
             yamlStringFormat = YamlStringFormat(),
             dataFolder = File("./test").also { it.deleteOnExit() },
+            scope = CoroutineFeature.Unconfined(),
         )
         module.lifecycle.onEnable()
         this@MarketApiTest.module = module
