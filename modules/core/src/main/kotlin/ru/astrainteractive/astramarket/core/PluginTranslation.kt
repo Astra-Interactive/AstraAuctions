@@ -93,9 +93,7 @@ data class PluginTranslation(
             .plus("&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /aauc новый предмет")
             .toRaw(),
         @SerializedName("player.auctions_amount")
-        private val auctionsAmount: StringDesc.Raw = PREFIX
-            .plus("&7Количество: %amount%")
-            .toRaw(),
+        private val auctionsAmount: StringDesc.Raw = StringDesc.Raw("&7Количество: %amount%"),
         @SerializedName("tab_completer.price")
         val tabCompleterPrice: StringDesc.Raw = StringDesc.Raw("ЦЕНА"),
         @SerializedName("tab_completer.amount")
@@ -239,7 +237,7 @@ data class PluginTranslation(
     )
 
     companion object {
-        private val PREFIX = StringDesc.Raw("&7[&#DBB72MARKET&7] ")
+        private val PREFIX = StringDesc.Raw("&7[&6MARKET&7] ")
     }
 }
 
