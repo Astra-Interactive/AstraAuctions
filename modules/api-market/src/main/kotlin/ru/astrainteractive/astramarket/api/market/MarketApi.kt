@@ -66,7 +66,10 @@ suspend fun MarketApi.findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSl
         .map { (uuid, slots) ->
             PlayerAndSlots(
                 minecraftUUID = UUID.fromString(uuid),
-                slots = slots
+                slots = slots,
+                minecraftUsername = slots.firstOrNull()
+                    ?.minecraftUsername
+                    .orEmpty()
             )
         }
 }

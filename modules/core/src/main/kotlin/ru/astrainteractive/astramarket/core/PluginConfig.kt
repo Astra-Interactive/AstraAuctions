@@ -55,21 +55,19 @@ data class PluginConfig(
     @Serializable
     data class Buttons(
         @SerialName("back")
-        val back: Button = Button("IRON_DOOR"),
+        val back: Button = Button("REDSTONE_BLOCK"),
         @SerialName("previous")
-        val previous: Button = Button("PAPER"),
+        val previous: Button = Button("ARROW"),
         @SerialName("next")
-        val next: Button = Button("PAPER"),
+        val next: Button = Button("ARROW"),
         @SerialName("sort")
-        val sort: Button = Button("SUNFLOWER"),
+        val sort: Button = Button("OBSERVER"),
         @SerialName("aauc")
-        val aauc: Button = Button("DIAMOND"),
-        @SerialName("expred")
-        val expired: Button = Button("EMERALD"),
+        val filterExpired: Button = Button("COMPOSTER"),
         @SerialName("border")
         val border: Button = Button("BLACK_STAINED_GLASS_PANE"),
         @SerialName("players_slots")
-        val playersSlots: Button = Button("PLAYER_HEAD")
+        val slotsType: Button = Button("SLIME_BLOCK")
     )
 
     @Serializable

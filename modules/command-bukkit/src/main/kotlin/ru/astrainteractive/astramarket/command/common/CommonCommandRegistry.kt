@@ -2,21 +2,28 @@ package ru.astrainteractive.astramarket.command.common
 
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.unwrap
+import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
-import ru.astrainteractive.astralibs.util.StringListExt.withEntry
-import ru.astrainteractive.astramarket.command.common.di.CommonCommandDependencies
+import ru.astrainteractive.astralibs.util.withEntry
 import ru.astrainteractive.astramarket.core.PluginPermission
+import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.util.getValue
 
-internal class CommonCommandRegistry(dependencies: CommonCommandDependencies) :
-    CommonCommandDependencies by dependencies {
+internal class CommonCommandRegistry(
+    private val plugin: LifecyclePlugin,
+    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
+    pluginTranslationKrate: CachedKrate<PluginTranslation>
+) : KyoriComponentSerializer by kyoriKrate.unwrap() {
+    private val translation by pluginTranslationKrate
     private fun createReloadCommand() {
         plugin.getCommand("amarketreload")?.setExecutor { sender, command, label, args ->
             if (!sender.toPermissible().hasPermission(PluginPermission.Reload)) return@setExecutor true
-            with(kyoriComponentSerializer) {
-                sender.sendMessage(translation.general.reloadStarted.let(::toComponent))
-                plugin.onReload()
-                sender.sendMessage(translation.general.reloadSuccess.let(::toComponent))
-            }
+            sender.sendMessage(translation.general.reloadStarted.let(::toComponent))
+            plugin.onReload()
+            sender.sendMessage(translation.general.reloadSuccess.let(::toComponent))
             true
         }
     }

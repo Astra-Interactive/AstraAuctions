@@ -32,10 +32,10 @@ dependencies {
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
     implementation(projects.modules.periodic)
-    implementation(projects.modules.marketPlayers)
-    implementation(projects.modules.marketView)
-    implementation(projects.modules.marketViewBukkit)
-    implementation(projects.modules.guiBukkit)
+    implementation(projects.modules.gui.players.api)
+    implementation(projects.modules.gui.slots.api)
+    implementation(projects.modules.gui.slots.bukkit)
+    implementation(projects.modules.gui.commonBukkit)
     implementation(projects.modules.commandBukkit)
 }
 
@@ -45,7 +45,10 @@ minecraftProcessResource {
 
 astraShadowJar {
     requireShadowJarTask {
-        destination = File("/home/makeevrserg/Desktop/server/data/plugins")
+        destination = rootDir
+            .resolve("build")
+            .resolve("bukkit")
+            .resolve("plugins")
             .takeIf { it.exists() }
             ?: File(rootDir, "jars")
 

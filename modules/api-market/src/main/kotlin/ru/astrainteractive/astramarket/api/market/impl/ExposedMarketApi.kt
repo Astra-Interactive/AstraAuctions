@@ -43,6 +43,7 @@ internal class ExposedMarketApi(
             id = resultRow[AuctionTable.id].value,
             time = resultRow[AuctionTable.time],
             minecraftUuid = resultRow[AuctionTable.minecraftUuid],
+            minecraftUsername = resultRow[AuctionTable.minecraftUsername],
             item = EncodedObject.ByteArray(resultRow[AuctionTable.item]),
             price = resultRow[AuctionTable.price],
             expired = resultRow[AuctionTable.expired]
@@ -55,6 +56,7 @@ internal class ExposedMarketApi(
         transaction(databaseFlow.first()) {
             AuctionTable.insertAndGetId {
                 it[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
+                it[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername
                 it[AuctionTable.time] = marketSlot.time
                 it[AuctionTable.item] = marketSlot.item.value
                 it[AuctionTable.price] = marketSlot.price
