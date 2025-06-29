@@ -31,8 +31,11 @@ internal fun ButtonContext.playerItem(
         owningPlayer = offlinePlayer
     }
     .editMeta {
-        val ownerUuid = playerAndSlots.minecraftUUID
-        val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"
+        val ownerName = playerAndSlots.minecraftUsername
+            .takeIf(String::isNotEmpty)
+            ?: playerAndSlots.minecraftUUID
+                .let(Bukkit::getOfflinePlayer)
+                .name ?: "§kUNKNOWN"
         displayName(Component.text(ownerName))
     }
     .addLore {

@@ -14,16 +14,12 @@ internal class AuctionSortTranslationMappingImpl(
     pluginTranslationKrate: CachedKrate<PluginTranslation>
 ) : AuctionSortTranslationMapping {
     private val translation by pluginTranslationKrate
+
     override fun translate(auctionSort: AuctionSort): StringDesc.Raw = when (auctionSort) {
-        AuctionSort.MATERIAL_DESC -> translation.auction.sortMaterialDesc
-        AuctionSort.MATERIAL_ASC -> translation.auction.sortMaterialAsc
-        AuctionSort.DATE_DESC -> translation.auction.sortDateDesc
-        AuctionSort.DATE_ASC -> translation.auction.sortDateAsc
-        AuctionSort.NAME_DESC -> translation.auction.sortNameDesc
-        AuctionSort.NAME_ASC -> translation.auction.sortNameAsc
-        AuctionSort.PRICE_DESC -> translation.auction.sortPriceDesc
-        AuctionSort.PRICE_ASC -> translation.auction.sortPriceAsc
-        AuctionSort.PLAYER_ASC -> translation.auction.sortPlayerAsc
-        AuctionSort.PLAYER_DESC -> translation.auction.sortPlayerDesc
+        is AuctionSort.Material -> translation.auction.sortMaterial
+        is AuctionSort.Date -> translation.auction.sortDate
+        is AuctionSort.Name -> translation.auction.sortName
+        is AuctionSort.Price -> translation.auction.sortPrice
+        is AuctionSort.Player -> translation.auction.sortPlayer
     }
 }

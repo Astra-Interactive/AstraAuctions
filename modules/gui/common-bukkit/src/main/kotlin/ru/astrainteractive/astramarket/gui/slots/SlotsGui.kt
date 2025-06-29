@@ -25,14 +25,13 @@ import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.gui.button.aauc
+import ru.astrainteractive.astramarket.gui.button.allSlots
 import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.border
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.expiredSlot
-import ru.astrainteractive.astramarket.gui.button.expiredSlots
 import ru.astrainteractive.astramarket.gui.button.nextPage
-import ru.astrainteractive.astramarket.gui.button.playersSlots
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
@@ -103,19 +102,13 @@ internal class SlotsGui(
         )
 
     private val expiredSlotsButton: InventorySlot
-        get() = buttonContext.expiredSlots(
+        get() = buttonContext.aauc(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
-            isExpired = true,
+            isExpired = auctionComponent.model.value.isExpired,
             click = {
                 showPage(0)
                 auctionComponent.toggleExpired()
             }
-        )
-
-    private val aaucButton: InventorySlot
-        get() = buttonContext.aauc(
-            index = inventoryMap.indexOf(AuctionSlotKey.AU),
-            click = { auctionComponent.toggleExpired() }
         )
 
     private val openPlayersButton: InventorySlot
@@ -131,8 +124,9 @@ internal class SlotsGui(
         )
 
     private val playerSlots: InventorySlot
-        get() = buttonContext.playersSlots(
+        get() = buttonContext.allSlots(
             index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            isGroupedByPlayers = false,
             click = {
                 val route = GuiRouter.Route.Players(
                     player = playerHolder.player,
@@ -214,10 +208,7 @@ internal class SlotsGui(
 
     override fun render() {
         super.render()
-        when (auctionComponent.model.value.isExpired) {
-            true -> aaucButton.setInventorySlot()
-            false -> expiredSlotsButton.setInventorySlot()
-        }
+        expiredSlotsButton.setInventorySlot()
         if (!pageContext.isFirstPage) prevPageButton.setInventorySlot()
         if (!pageContext.isLastPage) nextPageButton.setInventorySlot()
         if (auctionComponent.model.value.targetPlayerUUID != null) {

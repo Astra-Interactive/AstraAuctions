@@ -13,8 +13,6 @@ import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCas
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
 import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
-import ru.astrainteractive.klibs.mikro.core.util.next
-import ru.astrainteractive.klibs.mikro.core.util.prev
 import java.util.UUID
 
 @Suppress("LongParameterList")
@@ -36,10 +34,25 @@ internal class DefaultAuctionComponent(
     )
 
     override fun onSortButtonClicked(isRightClick: Boolean) {
-        val newSortType = if (isRightClick) {
-            model.value.sortType.next(AuctionSort.entries.toTypedArray())
+        val sorts = listOf(
+            AuctionSort.Date(false),
+            AuctionSort.Date(true),
+            AuctionSort.Material(false),
+            AuctionSort.Material(true),
+            AuctionSort.Name(false),
+            AuctionSort.Name(true),
+            AuctionSort.Price(false),
+            AuctionSort.Price(true),
+            AuctionSort.Player(false),
+            AuctionSort.Player(true),
+        )
+        val i = sorts.indexOfFirst { sortType -> sortType == model.value.sortType }
+        val offset = if (isRightClick) -1 else 1
+
+        val newSortType = if (i == -1) {
+            sorts.first()
         } else {
-            model.value.sortType.prev(AuctionSort.entries.toTypedArray())
+            sorts[(i + offset) % sorts.size]
         }
         model.update { it.copy(sortType = newSortType) }
         sort()

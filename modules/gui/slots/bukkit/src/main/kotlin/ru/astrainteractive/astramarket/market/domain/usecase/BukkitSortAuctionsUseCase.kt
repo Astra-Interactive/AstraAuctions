@@ -7,35 +7,51 @@ import java.util.UUID
 
 internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStackEncoder) : SortAuctionsUseCase {
 
+    private inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(
+        isAsc: Boolean,
+        crossinline selector: (T) -> R?
+    ): List<T> {
+        return if (isAsc) {
+            sortedBy(selector)
+        } else {
+            sortedByDescending(selector)
+        }
+    }
+
     override fun invoke(input: SortAuctionsUseCase.Input): SortAuctionsUseCase.Output {
         val sortType = input.sortType
         val list = input.list
         return when (sortType) {
-            AuctionSort.MATERIAL_DESC -> list.sortedByDescending { itemStackEncoder.toItemStack(it.item).type }
-            AuctionSort.MATERIAL_ASC -> list.sortedBy { itemStackEncoder.toItemStack(it.item).type }
+            is AuctionSort.Material -> list.sortedBy(
+                isAsc = sortType.isAsc,
+                selector = { itemStackEncoder.toItemStack(it.item).type }
+            )
 
-            AuctionSort.DATE_ASC -> list.sortedBy { it.time }
-            AuctionSort.DATE_DESC -> list.sortedByDescending { it.time }
+            is AuctionSort.Date -> list.sortedBy(
+                isAsc = sortType.isAsc,
+                selector = { it.time }
+            )
 
-            AuctionSort.NAME_ASC -> list.sortedBy { itemStackEncoder.toItemStack(it.item).itemMeta?.displayName }
-            AuctionSort.NAME_DESC -> list.sortedByDescending {
-                itemStackEncoder.toItemStack(
-                    it.item
-                ).itemMeta?.displayName
-            }
+            is AuctionSort.Name -> list.sortedBy(
+                isAsc = sortType.isAsc,
+                selector = {
+                    itemStackEncoder.toItemStack(
+                        it.item
+                    ).itemMeta?.displayName
+                }
+            )
 
-            AuctionSort.PRICE_ASC -> list.sortedBy { it.price }
-            AuctionSort.PRICE_DESC -> list.sortedByDescending { it.price }
+            is AuctionSort.Price -> list.sortedBy(
+                isAsc = sortType.isAsc,
+                selector = { it.price }
+            )
 
-            AuctionSort.PLAYER_ASC -> list.sortedBy {
-                Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
-            }
-
-            AuctionSort.PLAYER_DESC -> list.sortedByDescending {
-                Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
-            }
-
-            else -> list
+            is AuctionSort.Player -> list.sortedBy(
+                isAsc = sortType.isAsc,
+                selector = {
+                    Bukkit.getOfflinePlayer(UUID.fromString(it.minecraftUuid)).name ?: ""
+                }
+            )
         }.let(SortAuctionsUseCase::Output)
     }
 }

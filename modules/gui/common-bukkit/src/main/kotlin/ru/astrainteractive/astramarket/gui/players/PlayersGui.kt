@@ -18,10 +18,10 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astramarket.gui.button.aauc
 import ru.astrainteractive.astramarket.gui.button.allSlots
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.button.expiredSlots
 import ru.astrainteractive.astramarket.gui.button.nextPage
 import ru.astrainteractive.astramarket.gui.button.playerItem
 import ru.astrainteractive.astramarket.gui.button.playersSort
@@ -92,7 +92,7 @@ internal class PlayersGui(
         )
 
     private val expiredButton: InventorySlot
-        get() = buttonContext.expiredSlots(
+        get() = buttonContext.aauc(
             index = inventoryMap.indexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
@@ -104,6 +104,7 @@ internal class PlayersGui(
     private val allSlots: InventorySlot
         get() = buttonContext.allSlots(
             index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            isGroupedByPlayers = true,
             click = {
                 val route = GuiRouter.Route.Slots(
                     player = playerHolder.player,

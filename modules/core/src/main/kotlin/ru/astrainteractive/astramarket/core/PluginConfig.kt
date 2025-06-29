@@ -63,13 +63,13 @@ data class PluginConfig(
         @SerialName("sort")
         val sort: Button = Button("SUNFLOWER"),
         @SerialName("aauc")
-        val aauc: Button = Button("DIAMOND"),
+        val aauc: Button = Button("BARREL"),
         @SerialName("expred")
         val expired: Button = Button("EMERALD"),
         @SerialName("border")
         val border: Button = Button("BLACK_STAINED_GLASS_PANE"),
         @SerialName("players_slots")
-        val playersSlots: Button = Button("PLAYER_HEAD")
+        val playersSlots: Button = Button("SLIME_BLOCK")
     )
 
     @Serializable

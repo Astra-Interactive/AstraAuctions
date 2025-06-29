@@ -15,7 +15,7 @@ interface AuctionComponent : CoroutineScope {
 
     data class Model(
         val items: List<MarketSlot> = emptyList(),
-        val sortType: AuctionSort = AuctionSort.DATE_DESC,
+        val sortType: AuctionSort = AuctionSort.Date(false),
         val isExpired: Boolean,
         val targetPlayerUUID: UUID?
     )

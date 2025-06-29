@@ -68,7 +68,8 @@ internal class AuctionCommandExecutor(
                     time = System.currentTimeMillis(),
                     item = encodedItem,
                     price = input.price,
-                    expired = false
+                    expired = false,
+                    minecraftUsername = input.player.name
                 )
                 val param = CreateAuctionUseCase.Params(
                     marketSlot = marketSlot,

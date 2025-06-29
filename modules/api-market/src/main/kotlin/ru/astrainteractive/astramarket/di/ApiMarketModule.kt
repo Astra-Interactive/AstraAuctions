@@ -62,9 +62,8 @@ interface ApiMarketModule {
                     TransactionManager.manager.defaultIsolationLevel = java.sql.Connection.TRANSACTION_SERIALIZABLE
                     transaction(database) {
                         addLogger(Slf4jSqlDebugLogger)
-                        SchemaUtils.create(
-                            AuctionTable,
-                        )
+                        SchemaUtils.create(AuctionTable)
+                        SchemaUtils.createMissingTablesAndColumns(AuctionTable)
                     }
                     database
                 }

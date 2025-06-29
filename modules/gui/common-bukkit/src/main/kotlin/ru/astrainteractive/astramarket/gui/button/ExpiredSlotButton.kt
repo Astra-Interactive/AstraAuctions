@@ -26,19 +26,21 @@ internal fun ButtonContext.expiredSlot(
     .setIndex(index)
     .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
     .apply {
-        if (hasExpirePermission) addLore(pluginTranslation.auction.expireSlot.component)
-        if (hasRemovePermission || (auctionItem.expired && isOwner)) {
-            addLore(pluginTranslation.auction.removeSlot.component)
+        if (hasExpirePermission) {
+            addLore(pluginTranslation.auction.expireSlot.component)
         }
         addLore(pluginTranslation.auction.buySlot.component)
     }
     .apply {
-        if (!isOwner) return@apply
+        if (!isOwner && !hasRemovePermission) return@apply
         addLore(pluginTranslation.auction.removeSlot.component)
     }
     .addLore {
-        val ownerUuid = UUID.fromString(auctionItem.minecraftUuid)
-        val ownerName = Bukkit.getOfflinePlayer(ownerUuid).name ?: "[ДАННЫЕ УДАЛЕНЫ]"
+        val ownerName = auctionItem.minecraftUsername
+            .takeIf(String::isNotEmpty)
+            ?: UUID.fromString(auctionItem.minecraftUuid)
+                .let(Bukkit::getOfflinePlayer)
+                .name ?: "§kUNKNOWN"
         pluginTranslation.auction.auctionBy(ownerName).component
     }
     .addLore {
