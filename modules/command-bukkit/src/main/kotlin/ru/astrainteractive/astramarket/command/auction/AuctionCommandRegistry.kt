@@ -24,20 +24,28 @@ internal class AuctionCommandRegistry(
 
 ) {
     fun register() {
-        plugin.setCommandExecutor(
-            alias = "amarket",
-            commandParser = AuctionCommandParser(),
-            commandExecutor = AuctionCommandExecutor(
-                router = router,
-                dispatchers = dispatchers,
-                scope = scope,
-                itemStackEncoder = itemStackEncoder,
-                createAuctionUseCase = createAuctionUseCase
-            ),
-            errorHandler = DefaultErrorHandler(
-                kyoriKrate = kyoriKrate,
-                pluginTranslationKrate = pluginTranslationKrate
+        listOf(
+            "amarket",
+            "market",
+            "ah",
+            "auctionhouse",
+            "aauc"
+        ).forEach { command ->
+            plugin.setCommandExecutor(
+                alias = command,
+                commandParser = AuctionCommandParser(),
+                commandExecutor = AuctionCommandExecutor(
+                    router = router,
+                    dispatchers = dispatchers,
+                    scope = scope,
+                    itemStackEncoder = itemStackEncoder,
+                    createAuctionUseCase = createAuctionUseCase
+                ),
+                errorHandler = DefaultErrorHandler(
+                    kyoriKrate = kyoriKrate,
+                    pluginTranslationKrate = pluginTranslationKrate
+                )
             )
-        )
+        }
     }
 }
