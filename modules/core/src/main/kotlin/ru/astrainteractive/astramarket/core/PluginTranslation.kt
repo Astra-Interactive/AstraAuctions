@@ -90,7 +90,7 @@ data class PluginTranslation(
             .toRaw(),
         @SerializedName("broadcast")
         private val broadcast: StringDesc.Raw = PREFIX
-            .plus("&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /aauc новый предмет")
+            .plus("&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /market новый предмет")
             .toRaw(),
         @SerializedName("player.auctions_amount")
         private val auctionsAmount: StringDesc.Raw = StringDesc.Raw("&7Количество: %amount%"),
