@@ -9,11 +9,14 @@ website: "${url}"
 api-version: 1.18
 softdepend: [ Vault, EssentialsX, AspeKt ]
 libraries:
-  - "org.bstats:bstats-bukkit:3.0.0"
   - "org.xerial:sqlite-jdbc:3.46.1.0"
   - "mysql:mysql-connector-java:8.0.33"
   - "com.h2database:h2:2.2.224"
 commands:
+  market:
+  ah:
+  auctionhouse:
+  aauc:
   amarketreload:
     description: Reload plugin
     permission: astra_market.reload

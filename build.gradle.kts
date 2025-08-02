@@ -3,6 +3,7 @@ plugins {
     `java-library`
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.gradle.shadow) apply false
 
     // klibs - core
     alias(libs.plugins.klibs.gradle.detekt) apply false
@@ -13,7 +14,6 @@ plugins {
     alias(libs.plugins.klibs.gradle.publication) apply false
     alias(libs.plugins.klibs.gradle.rootinfo) apply false
     // klibs - minecraft
-    alias(libs.plugins.klibs.minecraft.shadow) apply false
     alias(libs.plugins.klibs.minecraft.resource.processor) apply false
 }
 
