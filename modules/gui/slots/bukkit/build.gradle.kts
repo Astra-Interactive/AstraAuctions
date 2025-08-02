@@ -13,7 +13,7 @@ dependencies {
     implementation(libs.minecraft.astralibs.menu.bukkit)
     implementation(libs.klibs.mikro.core)
     // Bukkit
-    implementation(libs.minecraft.paper.api)
+    compileOnly(libs.minecraft.paper.api)
     // Local
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)

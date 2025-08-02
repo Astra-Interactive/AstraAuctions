@@ -14,7 +14,7 @@ dependencies {
     // Spigot dependencies
     compileOnly(libs.minecraft.paper.api)
     implementation(libs.minecraft.bstats)
-    implementation(libs.minecraft.vaultapi)
+    compileOnly(libs.minecraft.vaultapi)
     // Local
     implementation(projects.modules.core)
 }

@@ -1,9 +1,11 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.kotlin.dsl.named
 import ru.astrainteractive.gradleplugin.property.extension.ModelPropertyValueExt.requireProjectInfo
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    alias(libs.plugins.klibs.minecraft.shadow)
+    alias(libs.plugins.gradle.shadow)
     alias(libs.plugins.klibs.minecraft.resource.processor)
 }
 
@@ -43,34 +45,27 @@ minecraftProcessResource {
     bukkit()
 }
 
-astraShadowJar {
-    requireShadowJarTask {
-        destination = rootDir
-            .resolve("build")
-            .resolve("bukkit")
-            .resolve("plugins")
-            .takeIf { it.exists() }
-            ?: File(rootDir, "jars")
-
-        val projectInfo = requireProjectInfo
-        isReproducibleFileOrder = true
-        mergeServiceFiles()
-        dependsOn(configurations)
-        archiveClassifier.set(null as String?)
-        listOf(
-            "org.bstats",
-            "kotlin",
-            "org.jetbrains",
-            "ru.astrainteractive.astralibs"
-        ).forEach { pattern -> relocate(pattern, "${projectInfo.group}.$pattern") }
-
-        minimize {
-            exclude(dependency(libs.exposed.jdbc.get()))
-            exclude(dependency(libs.exposed.dao.get()))
-            exclude(dependency("org.jetbrains.kotlin:kotlin-stdlib:${libs.versions.kotlin.version.get()}"))
-        }
-        archiveVersion.set(projectInfo.versionString)
-        archiveBaseName.set("${projectInfo.name}-bukkit")
-        destinationDirectory.set(destination.get())
+val shadowJar = tasks.named<ShadowJar>("shadowJar")
+shadowJar.configure {
+    mergeServiceFiles()
+    dependsOn(tasks.named<ProcessResources>("processResources"))
+    isReproducibleFileOrder = true
+    archiveClassifier = null as String?
+    archiveVersion.set(requireProjectInfo.versionString)
+    archiveBaseName.set("${requireProjectInfo.name}-bukkit")
+    destinationDirectory = rootProject
+        .layout.buildDirectory.asFile.get()
+        .resolve("bukkit")
+        .resolve("plugins")
+        .takeIf(File::exists)
+        ?: rootDir.resolve("jars").also(File::mkdirs)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    configurations = listOf(project.configurations.runtimeClasspath.get())
+    relocationPrefix = requireProjectInfo.group
+    enableRelocation = true
+    minimize {
+        exclude(dependency(libs.exposed.jdbc.get()))
+        exclude(dependency(libs.exposed.dao.get()))
+        exclude(dependency(libs.exposed.core.get()))
     }
 }
