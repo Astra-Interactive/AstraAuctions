@@ -14,7 +14,12 @@ internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStack
         return when (sortType) {
             is AuctionSort.Material -> list.sortedBy(
                 isAsc = sortType.isAsc,
-                selector = { itemStackEncoder.toItemStack(it.item).type }
+                selector = {
+                    itemStackEncoder
+                        .toItemStack(it.item)
+                        .getOrNull()
+                        ?.type
+                }
             )
 
             is AuctionSort.Date -> list.sortedBy(
@@ -25,9 +30,10 @@ internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStack
             is AuctionSort.Name -> list.sortedBy(
                 isAsc = sortType.isAsc,
                 selector = {
-                    itemStackEncoder.toItemStack(
-                        it.item
-                    ).itemMeta?.displayName
+                    itemStackEncoder.toItemStack(it.item)
+                        .getOrNull()
+                        ?.itemMeta
+                        ?.displayName
                 }
             )
 
