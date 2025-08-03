@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.exists
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.astrainteractive.astralibs.exposed.model.connect
@@ -22,7 +23,8 @@ import ru.astrainteractive.astralibs.serialization.StringFormatExt.parseOrWriteI
 import ru.astrainteractive.astralibs.util.mapCached
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.impl.ExposedMarketApi
-import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
+import ru.astrainteractive.astramarket.db.market.entity.AuctionTableV1
+import ru.astrainteractive.astramarket.db.market.entity.AuctionTableV2
 import ru.astrainteractive.astramarket.model.DatabaseConfig
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.kstorage.util.asStateFlowMutableKrate
@@ -38,7 +40,8 @@ interface ApiMarketModule {
         dispatchers: KotlinDispatchers,
         yamlStringFormat: StringFormat,
         dataFolder: File,
-        scope: CoroutineScope
+        scope: CoroutineScope,
+        onMigration: suspend (Database) -> Unit
     ) : ApiMarketModule {
         private val dbConfig = DefaultMutableKrate(
             factory = ::DatabaseConfig,
@@ -62,9 +65,13 @@ interface ApiMarketModule {
                     TransactionManager.manager.defaultIsolationLevel = java.sql.Connection.TRANSACTION_SERIALIZABLE
                     transaction(database) {
                         addLogger(Slf4jSqlDebugLogger)
-                        SchemaUtils.create(AuctionTable)
-                        SchemaUtils.createMissingTablesAndColumns(AuctionTable)
+                        if (!AuctionTableV1.exists()) {
+                            SchemaUtils.create(AuctionTableV2)
+                        } else {
+                            SchemaUtils.createMissingTablesAndColumns(AuctionTableV1)
+                        }
                     }
+                    onMigration.invoke(database)
                     database
                 }
             )

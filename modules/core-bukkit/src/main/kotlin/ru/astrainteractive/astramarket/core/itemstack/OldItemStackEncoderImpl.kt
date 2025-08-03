@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 
-internal class ItemStackEncoderImpl(private val encoder: ObjectEncoder) : ItemStackEncoder {
+internal class OldItemStackEncoderImpl(private val encoder: ObjectEncoder) : ItemStackEncoder {
     override fun toItemStack(encodedObject: EncodedObject): ItemStack {
         return when (encodedObject) {
             is EncodedObject.Base64 -> encoder.fromBase64(encodedObject)

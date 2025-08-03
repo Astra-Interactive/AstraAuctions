@@ -22,7 +22,7 @@ import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
+import ru.astrainteractive.astramarket.core.itemstack.OldItemStackEncoderImpl
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.kstorage.util.asCachedKrate
@@ -38,7 +38,7 @@ interface BukkitCoreModule : CoreModule {
 
         private val encoder: ObjectEncoder = BukkitObjectEncoder()
 
-        override val itemStackEncoder: ItemStackEncoder = ItemStackEncoderImpl(encoder)
+        override val itemStackEncoder: ItemStackEncoder = OldItemStackEncoderImpl(encoder)
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 

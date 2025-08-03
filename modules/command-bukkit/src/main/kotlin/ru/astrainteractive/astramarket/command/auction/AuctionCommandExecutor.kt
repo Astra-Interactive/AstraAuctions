@@ -14,6 +14,7 @@ import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCas
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import kotlin.math.max
 import kotlin.math.min
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackSerializer
 
 internal class AuctionCommandExecutor(
     private val router: GuiRouter,
@@ -51,7 +52,6 @@ internal class AuctionCommandExecutor(
                 val clonedItem = itemInstance.clone().apply {
                     amount = calculatedAmount
                 }
-                val encodedItem = itemStackEncoder.toByteArray(clonedItem)
 
                 info {
                     buildString {
@@ -66,7 +66,7 @@ internal class AuctionCommandExecutor(
                     id = -1,
                     minecraftUuid = input.player.uniqueId.toString(),
                     time = System.currentTimeMillis(),
-                    item = encodedItem,
+                    item =  ItemStackSerializer.encodeToString(clonedItem),
                     price = input.price,
                     expired = false,
                     minecraftUsername = input.player.name

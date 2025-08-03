@@ -40,6 +40,7 @@ class MarketApiTest {
             yamlStringFormat = YamlStringFormat(),
             dataFolder = File("./test").also { it.deleteOnExit() },
             scope = CoroutineFeature.Unconfined(),
+            onMigration = {}
         )
         module.lifecycle.onEnable()
         this@MarketApiTest.module = module

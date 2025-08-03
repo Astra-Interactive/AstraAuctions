@@ -13,6 +13,7 @@ import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.a
 import ru.astrainteractive.astramarket.gui.util.DurationExt.getTimeFormatted
 import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackSerializer
 
 @Suppress("LongParameterList")
 internal fun ButtonContext.expiredSlot(
@@ -24,7 +25,7 @@ internal fun ButtonContext.expiredSlot(
     hasRemovePermission: Boolean
 ) = InventorySlot.Builder()
     .setIndex(index)
-    .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
+    .setItemStack(ItemStackSerializer.decodeFromString(auctionItem.item).getOrThrow())
     .apply {
         if (hasExpirePermission) {
             addLore(pluginTranslation.auction.expireSlot.component)

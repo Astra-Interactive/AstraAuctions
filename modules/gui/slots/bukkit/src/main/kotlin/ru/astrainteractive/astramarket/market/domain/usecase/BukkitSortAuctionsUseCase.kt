@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackSerializer
 import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import java.util.UUID
@@ -14,7 +15,11 @@ internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStack
         return when (sortType) {
             is AuctionSort.Material -> list.sortedBy(
                 isAsc = sortType.isAsc,
-                selector = { itemStackEncoder.toItemStack(it.item).type }
+                selector = {
+                    ItemStackSerializer.decodeFromString(it.item)
+                        .getOrNull()
+                        ?.type
+                }
             )
 
             is AuctionSort.Date -> list.sortedBy(
@@ -25,9 +30,10 @@ internal class BukkitSortAuctionsUseCase(private val itemStackEncoder: ItemStack
             is AuctionSort.Name -> list.sortedBy(
                 isAsc = sortType.isAsc,
                 selector = {
-                    itemStackEncoder.toItemStack(
-                        it.item
-                    ).itemMeta?.displayName
+                    ItemStackSerializer.decodeFromString(it.item)
+                        .getOrNull()
+                        ?.itemMeta
+                        ?.displayName
                 }
             )
 

@@ -7,7 +7,7 @@ data class MarketSlot(
     val minecraftUuid: String,
     val minecraftUsername: String,
     val time: Long,
-    val item: EncodedObject.ByteArray,
+    val item: String,
     val price: Float,
     var expired: Boolean,
 )

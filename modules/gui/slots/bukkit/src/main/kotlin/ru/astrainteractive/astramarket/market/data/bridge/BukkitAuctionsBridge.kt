@@ -7,6 +7,7 @@ import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissib
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.core.itemstack.ItemStackSerializer
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
@@ -28,12 +29,13 @@ internal class BukkitAuctionsBridge(
     }
 
     override suspend fun addItemToInventory(marketSlot: MarketSlot, uuid: UUID) {
-        val item = itemStackEncoder.toItemStack(marketSlot.item)
-        Bukkit.getPlayer(uuid)?.inventory?.addItem(item)
+        val itemStack = ItemStackSerializer.decodeFromString(marketSlot.item).getOrThrow() // todo
+        Bukkit.getPlayer(uuid)?.inventory?.addItem(itemStack)
     }
 
     override suspend fun itemDesc(marketSlot: MarketSlot): String {
-        return itemStackEncoder.toItemStack(marketSlot.item).displayNameOrMaterialName()
+        val itemStack = ItemStackSerializer.decodeFromString(marketSlot.item).getOrThrow()
+        return itemStack.displayNameOrMaterialName()
     }
 
     override fun playerName(uuid: UUID): String? {
@@ -45,7 +47,7 @@ internal class BukkitAuctionsBridge(
     }
 
     override fun isItemValid(marketSlot: MarketSlot): Boolean {
-        val itemStack = itemStackEncoder.toItemStack(marketSlot.item)
+        val itemStack = ItemStackSerializer.decodeFromString(marketSlot.item).getOrThrow()
         return itemStack != null && itemStack.type != Material.AIR
     }
 

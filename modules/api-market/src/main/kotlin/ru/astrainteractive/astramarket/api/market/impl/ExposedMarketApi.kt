@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.api.market.impl
 
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -15,14 +16,12 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
-import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 import ru.astrainteractive.astralibs.logging.JUtiltLogger
 import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
-import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
+import ru.astrainteractive.astramarket.db.market.entity.AuctionTableV2
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
-import kotlin.coroutines.CoroutineContext
 
 internal class ExposedMarketApi(
     private val databaseFlow: Flow<Database>,
@@ -40,13 +39,13 @@ internal class ExposedMarketApi(
 
     private fun toMarketSlot(resultRow: ResultRow): MarketSlot {
         return MarketSlot(
-            id = resultRow[AuctionTable.id].value,
-            time = resultRow[AuctionTable.time],
-            minecraftUuid = resultRow[AuctionTable.minecraftUuid],
-            minecraftUsername = resultRow[AuctionTable.minecraftUsername],
-            item = EncodedObject.ByteArray(resultRow[AuctionTable.item]),
-            price = resultRow[AuctionTable.price],
-            expired = resultRow[AuctionTable.expired]
+            id = resultRow[AuctionTableV2.id].value,
+            time = resultRow[AuctionTableV2.time],
+            minecraftUuid = resultRow[AuctionTableV2.minecraftUuid],
+            minecraftUsername = resultRow[AuctionTableV2.minecraftUsername],
+            item = resultRow[AuctionTableV2.item],
+            price = resultRow[AuctionTableV2.price],
+            expired = resultRow[AuctionTableV2.expired]
         )
     }
 
@@ -54,13 +53,13 @@ internal class ExposedMarketApi(
         marketSlot: MarketSlot
     ) = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.insertAndGetId {
-                it[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
-                it[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername
-                it[AuctionTable.time] = marketSlot.time
-                it[AuctionTable.item] = marketSlot.item.value
-                it[AuctionTable.price] = marketSlot.price
-                it[AuctionTable.expired] = marketSlot.expired
+            AuctionTableV2.insertAndGetId {
+                it[AuctionTableV2.minecraftUuid] = marketSlot.minecraftUuid
+                it[AuctionTableV2.minecraftUsername] = marketSlot.minecraftUsername
+                it[AuctionTableV2.time] = marketSlot.time
+                it[AuctionTableV2.item] = marketSlot.item
+                it[AuctionTableV2.price] = marketSlot.price
+                it[AuctionTableV2.expired] = marketSlot.expired
             }.value
         }
     }.getOrNull()
@@ -69,10 +68,10 @@ internal class ExposedMarketApi(
         marketSlot: MarketSlot
     ): Unit? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.update(
-                where = { AuctionTable.id.eq(marketSlot.id) },
+            AuctionTableV2.update(
+                where = { AuctionTableV2.id.eq(marketSlot.id) },
                 body = {
-                    it[AuctionTable.expired] = true
+                    it[AuctionTableV2.expired] = true
                 }
             )
         }
@@ -84,12 +83,12 @@ internal class ExposedMarketApi(
         isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable
+            AuctionTableV2
                 .selectAll()
                 .where {
-                    AuctionTable.minecraftUuid
+                    AuctionTableV2.minecraftUuid
                         .eq(uuid)
-                        .and(AuctionTable.expired.eq(isExpired))
+                        .and(AuctionTableV2.expired.eq(isExpired))
                 }.map(::toMarketSlot)
         }
     }.getOrNull()
@@ -98,8 +97,8 @@ internal class ExposedMarketApi(
         isExpired: Boolean
     ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.selectAll()
-                .where { AuctionTable.expired.eq(isExpired) }
+            AuctionTableV2.selectAll()
+                .where { AuctionTableV2.expired.eq(isExpired) }
                 .map(::toMarketSlot)
         }
     }.getOrNull()
@@ -110,8 +109,8 @@ internal class ExposedMarketApi(
         transaction(databaseFlow.first()) {
             val currentTime = System.currentTimeMillis()
             val time = currentTime - millis
-            AuctionTable.selectAll()
-                .where { AuctionTable.time.less(time) }
+            AuctionTableV2.selectAll()
+                .where { AuctionTableV2.time.less(time) }
                 .map(::toMarketSlot)
         }
     }.getOrNull()
@@ -120,8 +119,8 @@ internal class ExposedMarketApi(
         id: Int
     ): MarketSlot? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.selectAll()
-                .where { AuctionTable.id.eq(id) }
+            AuctionTableV2.selectAll()
+                .where { AuctionTableV2.id.eq(id) }
                 .map(::toMarketSlot)
                 .firstOrNull()
         }
@@ -131,7 +130,7 @@ internal class ExposedMarketApi(
         marketSlot: MarketSlot
     ): Unit? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) }
+            AuctionTableV2.deleteWhere { AuctionTableV2.id.eq(marketSlot.id) }
         }
         Unit
     }.getOrNull()
@@ -140,8 +139,8 @@ internal class ExposedMarketApi(
         uuid: String
     ): Int? = runCatchingWithContext(dispatchers.IO) {
         transaction(databaseFlow.first()) {
-            AuctionTable.selectAll()
-                .where { AuctionTable.minecraftUuid.eq(uuid) }
+            AuctionTableV2.selectAll()
+                .where { AuctionTableV2.minecraftUuid.eq(uuid) }
                 .count()
                 .toInt()
         }
