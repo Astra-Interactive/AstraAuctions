@@ -52,6 +52,9 @@ internal class AuctionCommandExecutor(
                     amount = calculatedAmount
                 }
                 val encodedItem = itemStackEncoder.toByteArray(clonedItem)
+                    .onFailure { error { "#execute could not deserialize item" } }
+                    .getOrNull()
+                    ?: return@launchWithLock
 
                 info {
                     buildString {

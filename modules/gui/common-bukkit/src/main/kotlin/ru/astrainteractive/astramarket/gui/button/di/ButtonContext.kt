@@ -1,6 +1,8 @@
 package ru.astrainteractive.astramarket.gui.button.di
 
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.logging.JUtiltLogger
+import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
@@ -12,7 +14,7 @@ import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
 import ru.astrainteractive.klibs.kstorage.util.getValue
 
-internal interface ButtonContext : KyoriComponentSerializer {
+internal interface ButtonContext : KyoriComponentSerializer, Logger {
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
     val playersSortTranslationMapping: PlayerSortTranslationMapping
     val config: PluginConfig
@@ -25,6 +27,7 @@ internal interface ButtonContext : KyoriComponentSerializer {
         bukkitCoreModule: BukkitCoreModule,
         playersMarketViewModule: PlayersMarketViewModule
     ) : ButtonContext,
+        Logger by JUtiltLogger("AstraMarket-ButtonContext"),
         KyoriComponentSerializer by bukkitCoreModule.kyoriComponentSerializer.cachedValue {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             marketViewDomainModule.auctionSortTranslationMapping

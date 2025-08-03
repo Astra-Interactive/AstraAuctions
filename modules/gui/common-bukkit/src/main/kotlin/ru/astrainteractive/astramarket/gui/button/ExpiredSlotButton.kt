@@ -22,33 +22,39 @@ internal fun ButtonContext.expiredSlot(
     isOwner: Boolean,
     hasExpirePermission: Boolean,
     hasRemovePermission: Boolean
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(itemStackEncoder.toItemStack(auctionItem.item))
-    .apply {
-        if (hasExpirePermission) {
-            addLore(pluginTranslation.auction.expireSlot.component)
+): InventorySlot? {
+    val itemStack = itemStackEncoder.toItemStack(auctionItem.item)
+        .onFailure { error { "#expiredSlot could not deserialize item" } }
+        .getOrNull()
+        ?: return null
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(itemStack)
+        .apply {
+            if (hasExpirePermission) {
+                addLore(pluginTranslation.auction.expireSlot.component)
+            }
+            addLore(pluginTranslation.auction.buySlot.component)
         }
-        addLore(pluginTranslation.auction.buySlot.component)
-    }
-    .apply {
-        if (!isOwner && !hasRemovePermission) return@apply
-        addLore(pluginTranslation.auction.removeSlot.component)
-    }
-    .addLore {
-        val ownerName = auctionItem.minecraftUsername
-            .takeIf(String::isNotEmpty)
-            ?: UUID.fromString(auctionItem.minecraftUuid)
-                .let(Bukkit::getOfflinePlayer)
-                .name ?: "§kUNKNOWN"
-        pluginTranslation.auction.auctionBy(ownerName).component
-    }
-    .addLore {
-        val time = auctionItem.time.milliseconds.getTimeFormatted(pluginTranslation.general.timeAgoFormat).raw
-        pluginTranslation.auction.auctionCreatedAgo(time).component
-    }
-    .addLore {
-        pluginTranslation.auction.auctionPrice(auctionItem.price).component
-    }
-    .setOnClickListener(click)
-    .build()
+        .apply {
+            if (!isOwner && !hasRemovePermission) return@apply
+            addLore(pluginTranslation.auction.removeSlot.component)
+        }
+        .addLore {
+            val ownerName = auctionItem.minecraftUsername
+                .takeIf(String::isNotEmpty)
+                ?: UUID.fromString(auctionItem.minecraftUuid)
+                    .let(Bukkit::getOfflinePlayer)
+                    .name ?: "§kUNKNOWN"
+            pluginTranslation.auction.auctionBy(ownerName).component
+        }
+        .addLore {
+            val time = auctionItem.time.milliseconds.getTimeFormatted(pluginTranslation.general.timeAgoFormat).raw
+            pluginTranslation.auction.auctionCreatedAgo(time).component
+        }
+        .addLore {
+            pluginTranslation.auction.auctionPrice(auctionItem.price).component
+        }
+        .setOnClickListener(click)
+        .build()
+}
