@@ -22,7 +22,7 @@ minecraft-protocollib = "5.3.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
 minecraft-astralibs = "3.25.1" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.1.0" # https://github.com/Bastian/bStats
-minecraft-mockbukkit = "4.33.2" #https://github.com/MockBukkit/MockBukkit
+minecraft-mockbukkit = "v4.72.6" #https://github.com/MockBukkit/MockBukkit
 
 # Exposed
 ktor = "2.3.12"
