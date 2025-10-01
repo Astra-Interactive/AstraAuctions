@@ -3,7 +3,7 @@
 kotlin-version = "2.2.0" # https://github.com/JetBrains/kotlin
 kotlin-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlin-json = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
-kotlin-kaml = "0.85.0" # https://github.com/charleskorn/kaml
+kotlin-kaml = "0.97.0" # https://github.com/charleskorn/kaml
 
 # Drivers
 driver-jdbc = "3.50.3.0" # https://github.com/xerial/sqlite-jdbc
@@ -11,7 +11,7 @@ driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
 klibs-gradleplugin = "1.10.0" # https://github.com/makeevrserg/gradle-plugin
-klibs-mikro = "1.11.1" # https://github.com/makeevrserg/klibs.mikro
+klibs-mikro = "1.14.1" # https://github.com/makeevrserg/klibs.mikro
 klibs-kstorage = "4.2.2" # https://github.com/makeevrserg/klibs.kstorage
 
 # Minecraft
@@ -31,7 +31,7 @@ ktor = "2.3.12"
 gradle-shadow = "9.0.0-beta12" # https://github.com/johnrengelman/shadow
 
 # BuildConfig
-gradle-buildconfig = "5.6.7" # https://github.com/gmazzo/gradle-buildconfig-plugin
+gradle-buildconfig = "5.6.8" # https://github.com/gmazzo/gradle-buildconfig-plugin
 
 # Exposed
 exposed = "0.61.0" # https://github.com/JetBrains/Exposed
