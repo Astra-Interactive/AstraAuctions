@@ -15,6 +15,7 @@ import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.worker.di.WorkerModule
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
+import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
 
 internal class RootModule(
     plugin: LifecyclePlugin
@@ -25,7 +26,8 @@ internal class RootModule(
         dispatchers = coreModule.dispatchers,
         yamlStringFormat = coreModule.yamlStringFormat,
         dataFolder = coreModule.plugin.dataFolder,
-        scope = coreModule.scope
+        scope = coreModule.scope,
+        default = { DatabaseConfiguration.H2(plugin.dataFolder.resolve("database").absolutePath) }
     )
 
     val marketViewModule: MarketViewModule = MarketViewModule.Default(

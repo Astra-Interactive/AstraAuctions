@@ -5,5 +5,5 @@ import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
 
 @Serializable
 internal class DatabaseConfig(
-    val configuration: DatabaseConfiguration = DatabaseConfiguration.H2("MARKET")
+    val configuration: DatabaseConfiguration
 )

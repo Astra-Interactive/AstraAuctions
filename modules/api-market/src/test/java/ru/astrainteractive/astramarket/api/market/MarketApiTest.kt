@@ -1,13 +1,15 @@
 package ru.astrainteractive.astramarket.api.market
 
 import kotlinx.coroutines.runBlocking
-import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
-import ru.astrainteractive.astralibs.serialization.YamlStringFormat
+import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.di.ApiMarketModule
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
+import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
 import java.io.File
+import java.nio.file.Files
 import java.util.UUID
 import kotlin.random.Random
 import kotlin.test.AfterTest
@@ -20,6 +22,8 @@ class MarketApiTest {
     private var module: ApiMarketModule? = null
     private val marketApi: MarketApi
         get() = module?.marketApi ?: error("Module is null")
+    private val tempDir: File
+        get() = Files.createTempDirectory("TMP_DIR").toFile()
 
     private val randomAuction: MarketSlot
         get() = MarketSlot(
@@ -34,12 +38,13 @@ class MarketApiTest {
 
     @BeforeTest
     fun setup(): Unit = runBlocking {
-        File("./test").deleteRecursively()
+        tempDir.deleteRecursively()
         val module = ApiMarketModule.Default(
             dispatchers = DefaultKotlinDispatchers,
             yamlStringFormat = YamlStringFormat(),
-            dataFolder = File("./test").also { it.deleteOnExit() },
-            scope = CoroutineFeature.Unconfined(),
+            dataFolder = tempDir.also { it.deleteOnExit() },
+            scope = CoroutineFeature.Unconfined,
+            default = { DatabaseConfiguration.H2(tempDir.resolve("db").absolutePath) }
         )
         module.lifecycle.onEnable()
         this@MarketApiTest.module = module
@@ -47,7 +52,7 @@ class MarketApiTest {
 
     @AfterTest
     fun destroy(): Unit = runBlocking {
-        File("./test").deleteRecursively()
+        tempDir.deleteRecursively()
         module?.lifecycle?.onDisable()
         module = null
     }

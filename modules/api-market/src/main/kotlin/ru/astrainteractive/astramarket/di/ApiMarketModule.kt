@@ -26,6 +26,7 @@ import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.kstorage.util.asStateFlowMutableKrate
 import ru.astrainteractive.klibs.mikro.core.coroutines.mapCached
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
 import ru.astrainteractive.klibs.mikro.exposed.util.connect
 import java.io.File
 
@@ -38,14 +39,15 @@ interface ApiMarketModule {
         dispatchers: KotlinDispatchers,
         yamlStringFormat: StringFormat,
         dataFolder: File,
-        scope: CoroutineScope
+        scope: CoroutineScope,
+        default: () -> DatabaseConfiguration,
     ) : ApiMarketModule {
         private val dbConfig = DefaultMutableKrate(
-            factory = ::DatabaseConfig,
+            factory = { DatabaseConfig(default.invoke()) },
             loader = {
                 yamlStringFormat.parseOrWriteIntoDefault(
                     file = dataFolder.resolve("database.yaml"),
-                    default = ::DatabaseConfig
+                    default = { DatabaseConfig(default.invoke()) }
                 )
             }
         ).asStateFlowMutableKrate()
