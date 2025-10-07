@@ -4,14 +4,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import kotlin.math.max
 import kotlin.math.min
 
@@ -22,7 +22,7 @@ internal class AuctionCommandExecutor(
     private val itemStackEncoder: ItemStackEncoder,
     private val createAuctionUseCase: CreateAuctionUseCase
 ) : CommandExecutor<AuctionCommand.Result>,
-    Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor") {
+    Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor").withoutParentHandlers() {
     private val mutex = Mutex()
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
 

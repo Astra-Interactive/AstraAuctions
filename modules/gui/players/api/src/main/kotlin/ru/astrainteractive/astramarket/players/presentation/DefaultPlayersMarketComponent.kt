@@ -1,14 +1,14 @@
 package ru.astrainteractive.astramarket.players.presentation
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.astrainteractive.astralibs.async.CoroutineFeature
+import ru.astrainteractive.astralibs.async.withTimings
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
 import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.players.model.PlayerSort
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal class DefaultPlayersMarketComponent(
@@ -16,7 +16,7 @@ internal class DefaultPlayersMarketComponent(
     private val dispatchers: KotlinDispatchers,
     isExpired: Boolean
 ) : PlayersMarketComponent,
-    CoroutineFeature by CoroutineFeature.Default(Dispatchers.IO) {
+    CoroutineFeature by CoroutineFeature.IO.withTimings() {
     override val model = MutableStateFlow(PlayersMarketComponent.Model(isExpired = isExpired))
 
     private fun sortPlayersAndSlots() {

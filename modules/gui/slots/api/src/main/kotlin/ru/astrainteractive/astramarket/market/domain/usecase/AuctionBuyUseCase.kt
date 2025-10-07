@@ -1,7 +1,5 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
@@ -11,6 +9,8 @@ import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import java.util.UUID
 
 /**
@@ -34,7 +34,7 @@ internal class AuctionBuyUseCaseImpl(
     private val pluginTranslationKrate: CachedKrate<PluginTranslation>,
     private val configKrate: CachedKrate<PluginConfig>,
     private val economyProviderFactory: CurrencyEconomyProviderFactory,
-) : AuctionBuyUseCase, Logger by JUtiltLogger("AstraMarket-AuctionBuyUseCase") {
+) : AuctionBuyUseCase, Logger by JUtiltLogger("AstraMarket-AuctionBuyUseCase").withoutParentHandlers() {
     private val config by configKrate
     private val translation by pluginTranslationKrate
 

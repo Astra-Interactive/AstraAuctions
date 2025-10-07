@@ -3,7 +3,7 @@
 kotlin-version = "2.2.0" # https://github.com/JetBrains/kotlin
 kotlin-coroutines = "1.10.2" # https://github.com/Kotlin/kotlinx.coroutines
 kotlin-json = "1.9.0" # https://github.com/Kotlin/kotlinx.serialization
-kotlin-kaml = "0.85.0" # https://github.com/charleskorn/kaml
+kotlin-kaml = "0.97.0" # https://github.com/charleskorn/kaml
 
 # Drivers
 driver-jdbc = "3.50.3.0" # https://github.com/xerial/sqlite-jdbc
@@ -11,8 +11,8 @@ driver-mysql = "8.0.33" # https://github.com/mysql/mysql-connector-j
 
 # klibs
 klibs-gradleplugin = "1.10.0" # https://github.com/makeevrserg/gradle-plugin
-klibs-mikro = "1.11.1" # https://github.com/makeevrserg/klibs.mikro
-klibs-kstorage = "4.2.2" # https://github.com/makeevrserg/klibs.kstorage
+klibs-mikro = "1.14.2" # https://github.com/makeevrserg/klibs.mikro
+klibs-kstorage = "4.2.3" # https://github.com/makeevrserg/klibs.kstorage
 
 # Minecraft
 minecraft-velocity = "4.0.0-SNAPSHOT" # https://github.com/PaperMC/Velocity
@@ -20,7 +20,7 @@ minecraft-spigot = "1.21.3-R0.1-SNAPSHOT" # https://github.com/PaperMC/Paper
 minecraft-papi = "2.11.6" # https://github.com/PlaceholderAPI/PlaceholderAPI
 minecraft-protocollib = "5.3.0" # https://github.com/dmulloy2/ProtocolLib
 minecraft-vault = "1.7.1" # https://github.com/MilkBowl/VaultAPI
-minecraft-astralibs = "3.25.1" # https://github.com/Astra-Interactive/AstraLibs
+minecraft-astralibs = "3.26.0" # https://github.com/Astra-Interactive/AstraLibs
 minecraft-bstats = "3.1.0" # https://github.com/Bastian/bStats
 minecraft-mockbukkit = "4.33.2" #https://github.com/MockBukkit/MockBukkit
 
@@ -31,7 +31,7 @@ ktor = "2.3.12"
 gradle-shadow = "9.0.0-beta12" # https://github.com/johnrengelman/shadow
 
 # BuildConfig
-gradle-buildconfig = "5.6.7" # https://github.com/gmazzo/gradle-buildconfig-plugin
+gradle-buildconfig = "5.6.8" # https://github.com/gmazzo/gradle-buildconfig-plugin
 
 # Exposed
 exposed = "0.61.0" # https://github.com/JetBrains/Exposed
@@ -74,11 +74,11 @@ minecraft-mockbukkit = { module = "com.github.MockBukkit:MockBukkit", version.re
 
 # klibs
 klibs-mikro-core = { module = "ru.astrainteractive.klibs:mikro-core", version.ref = "klibs-mikro" }
+klibs-mikro-extensions = { module = "ru.astrainteractive.klibs:mikro-extensions", version.ref = "klibs-mikro" }
 klibs-kstorage = { module = "ru.astrainteractive.klibs:kstorage", version.ref = "klibs-kstorage" }
 
 
 # AstraLibs
-minecraft-astralibs-exposed = { module = "ru.astrainteractive.astralibs:exposed", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core = { module = "ru.astrainteractive.astralibs:core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-menu-bukkit = { module = "ru.astrainteractive.astralibs:menu-bukkit", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-bukkit = { module = "ru.astrainteractive.astralibs:core-bukkit", version.ref = "minecraft-astralibs" }
