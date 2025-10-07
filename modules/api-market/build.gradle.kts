@@ -13,7 +13,7 @@ dependencies {
     // Test
     testImplementation(libs.bundles.testing.kotlin)
     testImplementation(libs.tests.kotlin.test)
-    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("com.h2database:h2:2.4.240")
     // Local
     implementation(projects.modules.core)
 }
