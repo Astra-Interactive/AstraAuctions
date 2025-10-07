@@ -3,18 +3,18 @@ package ru.astrainteractive.astramarket.market.data.bridge
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import java.util.UUID
 
 @Suppress("TooManyFunctions")
 internal class BukkitAuctionsBridge(
     private val itemStackEncoder: ItemStackEncoder,
-) : AuctionsBridge, Logger by JUtiltLogger("AstraMarket-BukkitAuctionsBridge") {
+) : AuctionsBridge, Logger by JUtiltLogger("AstraMarket-BukkitAuctionsBridge").withoutParentHandlers() {
 
     private fun ItemStack.displayNameOrMaterialName(): String {
         val name = itemMeta?.displayName

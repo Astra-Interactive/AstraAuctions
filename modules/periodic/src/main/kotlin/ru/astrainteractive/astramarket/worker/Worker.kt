@@ -2,10 +2,10 @@ package ru.astrainteractive.astramarket.worker
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import ru.astrainteractive.astralibs.async.CoroutineFeature
+import ru.astrainteractive.astralibs.async.withTimings
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import java.util.Timer
 import kotlin.time.Duration
 
@@ -22,7 +22,7 @@ internal abstract class Worker(val key: String) {
     fun start() {
         if (scope != null) error("Scope already exists!")
         if (scheduler != null) error("Scheduler already exists!")
-        val currentScope = CoroutineFeature.Default(Dispatchers.IO)
+        val currentScope = CoroutineFeature.IO.withTimings()
         scope = currentScope
         scheduler = kotlin.concurrent.timer(
             name = key,

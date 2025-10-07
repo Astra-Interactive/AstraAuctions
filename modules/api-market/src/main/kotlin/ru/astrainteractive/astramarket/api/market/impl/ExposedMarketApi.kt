@@ -16,19 +16,19 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import kotlin.coroutines.CoroutineContext
 
 internal class ExposedMarketApi(
     private val databaseFlow: Flow<Database>,
     private val dispatchers: KotlinDispatchers
 ) : MarketApi,
-    Logger by JUtiltLogger("AstraMarket-ExposedMarketApi") {
+    Logger by JUtiltLogger("AstraMarket-ExposedMarketApi").withoutParentHandlers() {
     private val mutex = Mutex()
 
     private suspend fun <T> runCatchingWithContext(

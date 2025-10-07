@@ -5,8 +5,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
@@ -15,8 +13,12 @@ import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.astramarket.worker.di.WorkerModule
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 
-internal class RootModule(plugin: LifecyclePlugin) : Logger by JUtiltLogger("AstraMarket-RootModule") {
+internal class RootModule(
+    plugin: LifecyclePlugin
+) : Logger by JUtiltLogger("AstraMarket-RootModule").withoutParentHandlers() {
     val coreModule: BukkitCoreModule = BukkitCoreModule.Default(plugin)
 
     val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(

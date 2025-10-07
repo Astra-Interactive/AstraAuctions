@@ -1,10 +1,9 @@
 package ru.astrainteractive.astramarket.market.presentation
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
-import ru.astrainteractive.astralibs.async.CoroutineFeature
+import ru.astrainteractive.astralibs.async.withTimings
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
@@ -13,6 +12,7 @@ import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCas
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
 import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import java.util.UUID
 
 @Suppress("LongParameterList")
@@ -22,7 +22,7 @@ internal class DefaultAuctionComponent(
     isExpired: Boolean,
     private val dependencies: AuctionComponentDependencies
 ) : AuctionComponent,
-    CoroutineFeature by CoroutineFeature.Default(Dispatchers.IO),
+    CoroutineFeature by CoroutineFeature.IO.withTimings(),
     AuctionComponentDependencies by dependencies {
     private val mutex = Mutex()
 

@@ -10,18 +10,18 @@ import ru.astrainteractive.astralibs.command.api.exception.NoPotionEffectTypeExc
 import ru.astrainteractive.astralibs.command.api.exception.StringDescCommandException
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.kyori.unwrap
-import ru.astrainteractive.astralibs.logging.JUtiltLogger
-import ru.astrainteractive.astralibs.logging.Logger
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
 
 internal class DefaultErrorHandler(
     kyoriKrate: CachedKrate<KyoriComponentSerializer>,
     pluginTranslationKrate: CachedKrate<PluginTranslation>
 ) : ErrorHandler<BukkitCommandContext>,
     KyoriComponentSerializer by kyoriKrate.unwrap(),
-    Logger by JUtiltLogger("AstraMarket-DefaultErrorHandler") {
+    Logger by JUtiltLogger("AstraMarket-DefaultErrorHandler").withoutParentHandlers() {
     private val translation by pluginTranslationKrate
 
     override fun handle(ctx: BukkitCommandContext, throwable: Throwable) {

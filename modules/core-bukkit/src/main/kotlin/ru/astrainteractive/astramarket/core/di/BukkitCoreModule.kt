@@ -3,12 +3,11 @@ package ru.astrainteractive.astramarket.core.di
 import com.charleskorn.kaml.PolymorphismStyle
 import com.charleskorn.kaml.Yaml
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.serialization.StringFormat
 import org.bstats.bukkit.Metrics
-import ru.astrainteractive.astralibs.async.CoroutineFeature
 import ru.astrainteractive.astralibs.async.DefaultBukkitDispatchers
+import ru.astrainteractive.astralibs.async.withTimings
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.event.EventListener
@@ -16,8 +15,8 @@ import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
-import ru.astrainteractive.astralibs.serialization.StringFormatExt.parseOrWriteIntoDefault
-import ru.astrainteractive.astralibs.serialization.YamlStringFormat
+import ru.astrainteractive.astralibs.util.YamlStringFormat
+import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
@@ -26,6 +25,7 @@ import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.kstorage.util.asCachedKrate
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 
 interface BukkitCoreModule : CoreModule {
 
@@ -77,7 +77,7 @@ interface BukkitCoreModule : CoreModule {
             }
         ).asCachedKrate()
 
-        override val scope: CoroutineScope = CoroutineFeature.Default(Dispatchers.IO)
+        override val scope: CoroutineScope = CoroutineFeature.IO.withTimings()
 
         override val dispatchers = DefaultBukkitDispatchers(plugin)
 
