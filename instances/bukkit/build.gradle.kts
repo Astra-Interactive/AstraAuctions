@@ -11,7 +11,9 @@ plugins {
 
 dependencies {
     // Kotlin
-    implementation(libs.bundles.kotlin)
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.kotlin.serialization.json)
+
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.klibs.mikro.extensions)
@@ -21,7 +23,6 @@ dependencies {
     implementation(libs.minecraft.astralibs.command)
     implementation(libs.minecraft.astralibs.command.bukkit)
     // Test
-    testImplementation(libs.bundles.testing.kotlin)
     testImplementation(libs.tests.kotlin.test)
     // Spigot dependencies
     compileOnly(libs.minecraft.paper.api)
@@ -62,7 +63,7 @@ shadowJar.configure {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     configurations = listOf(project.configurations.runtimeClasspath.get())
     relocationPrefix = requireProjectInfo.group
-    enableRelocation = true
+//    enableRelocation = true
     minimize {
         exclude(dependency(libs.exposed.jdbc.get()))
         exclude(dependency(libs.exposed.dao.get()))
