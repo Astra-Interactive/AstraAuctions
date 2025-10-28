@@ -5,10 +5,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
-import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
+import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
@@ -18,7 +18,7 @@ import kotlin.math.min
 internal class AuctionCommandExecutor(
     private val router: GuiRouter,
     private val dispatchers: KotlinDispatchers,
-    private val scope: CoroutineScope,
+    private val ioScope: CoroutineScope,
     private val itemStackEncoder: ItemStackEncoder,
     private val createAuctionUseCase: CreateAuctionUseCase
 ) : CommandExecutor<AuctionCommand.Result>,
@@ -45,7 +45,7 @@ internal class AuctionCommandExecutor(
                 router.navigate(route)
             }
 
-            is AuctionCommand.Result.Sell -> scope.launchWithLock(mutex, limitedIoDispatcher) {
+            is AuctionCommand.Result.Sell -> ioScope.launch(mutex, limitedIoDispatcher) {
                 val itemInstance = input.itemInstance
                 val calculatedAmount = max(min(itemInstance.amount, input.amount), 1)
                 val clonedItem = itemInstance.clone().apply {
@@ -54,7 +54,7 @@ internal class AuctionCommandExecutor(
                 val encodedItem = itemStackEncoder.toByteArray(clonedItem)
                     .onFailure { error { "#execute could not deserialize item" } }
                     .getOrNull()
-                    ?: return@launchWithLock
+                    ?: return@launch
 
                 info {
                     buildString {
@@ -63,7 +63,7 @@ internal class AuctionCommandExecutor(
                     }
                 }
 
-                if (itemInstance.amount <= 0) return@launchWithLock
+                if (itemInstance.amount <= 0) return@launch
                 withContext(dispatchers.Main) { itemInstance.amount -= calculatedAmount }
                 val marketSlot = MarketSlot(
                     id = -1,

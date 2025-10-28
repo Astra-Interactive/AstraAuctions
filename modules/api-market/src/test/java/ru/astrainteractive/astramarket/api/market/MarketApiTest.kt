@@ -43,7 +43,7 @@ class MarketApiTest {
             dispatchers = DefaultKotlinDispatchers,
             yamlStringFormat = YamlStringFormat(),
             dataFolder = tempDir.also { it.deleteOnExit() },
-            scope = CoroutineFeature.Unconfined,
+            ioScope = CoroutineFeature.Unconfined,
             default = { DatabaseConfiguration.H2(tempDir.resolve("db").absolutePath) }
         )
         module.lifecycle.onEnable()

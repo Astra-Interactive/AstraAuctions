@@ -76,10 +76,11 @@ interface BukkitCoreModule : CoreModule {
                 )
             }
         ).asCachedKrate()
-
-        override val scope: CoroutineScope = CoroutineFeature.IO.withTimings()
-
         override val dispatchers = DefaultBukkitDispatchers(plugin)
+        override val ioScope: CoroutineScope = CoroutineFeature.IO.withTimings()
+        override val mainScope = CoroutineFeature
+            .Default(dispatchers.BukkitMain)
+            .withTimings()
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
             BukkitCurrencyEconomyProviderFactory(plugin)
@@ -92,7 +93,7 @@ interface BukkitCoreModule : CoreModule {
                 },
                 onDisable = {
                     inventoryClickEventListener.onDisable()
-                    scope.cancel()
+                    ioScope.cancel()
                 },
                 onReload = {
                     kyoriComponentSerializer.getValue()

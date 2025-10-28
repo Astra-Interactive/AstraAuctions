@@ -12,7 +12,7 @@ import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
-import ru.astrainteractive.astramarket.worker.di.WorkerModule
+import ru.astrainteractive.astramarket.service.di.WorkerModule
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
@@ -26,7 +26,7 @@ internal class RootModule(
         dispatchers = coreModule.dispatchers,
         yamlStringFormat = coreModule.yamlStringFormat,
         dataFolder = coreModule.plugin.dataFolder,
-        scope = coreModule.scope,
+        ioScope = coreModule.ioScope,
         default = { DatabaseConfiguration.H2(plugin.dataFolder.resolve("database").absolutePath) }
     )
 

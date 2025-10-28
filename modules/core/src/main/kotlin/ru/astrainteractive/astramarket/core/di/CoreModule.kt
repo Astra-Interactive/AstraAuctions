@@ -14,7 +14,8 @@ interface CoreModule {
 
     val configKrate: CachedKrate<PluginConfig>
     val pluginTranslationKrate: CachedKrate<PluginTranslation>
-    val scope: CoroutineScope
+    val ioScope: CoroutineScope
+    val mainScope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val yamlStringFormat: StringFormat
     val economyProviderFactory: CurrencyEconomyProviderFactory

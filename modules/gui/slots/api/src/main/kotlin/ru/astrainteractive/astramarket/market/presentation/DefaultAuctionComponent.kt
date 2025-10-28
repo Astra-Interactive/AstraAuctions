@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import ru.astrainteractive.astralibs.async.withTimings
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
-import ru.astrainteractive.astramarket.core.CoroutineExt.launchWithLock
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
@@ -13,6 +12,7 @@ import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCas
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
 import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
+import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import java.util.UUID
 
 @Suppress("LongParameterList")
@@ -59,7 +59,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun sort() {
-        launchWithLock(mutex, dispatchers.IO) {
+        launch(mutex) {
             model.update { model ->
                 val input = SortAuctionsUseCase.Input(model.sortType, model.items)
                 val sortedItems = sortAuctionsUseCase.invoke(input)
@@ -94,7 +94,7 @@ internal class DefaultAuctionComponent(
     }
 
     private fun loadItems() {
-        launchWithLock(mutex, dispatchers.IO) {
+        launch(mutex) {
             val items = when {
                 targetPlayerUUID != null -> {
                     marketApi.getUserSlots(
@@ -112,7 +112,7 @@ internal class DefaultAuctionComponent(
 
     override fun onAuctionItemClicked(i: Int, clickType: AuctionComponent.ClickType) {
         val auction = model.value.items.getOrNull(i) ?: return
-        launchWithLock(mutex, dispatchers.IO) {
+        launch(mutex) {
             val result = when (model.value.isExpired) {
                 true -> {
                     if (auction.minecraftUuid == playerUUID.toString()) {

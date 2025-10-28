@@ -6,10 +6,10 @@ import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.async.withTimings
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
-import ru.astrainteractive.astramarket.core.util.sortedBy
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import ru.astrainteractive.klibs.mikro.core.util.sortedBy
 
 internal class DefaultPlayersMarketComponent(
     private val marketApi: MarketApi,

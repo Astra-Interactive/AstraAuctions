@@ -2,7 +2,6 @@ package ru.astrainteractive.astramarket.command.auction
 
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.command.api.exception.CommandException
 import java.util.UUID
 
 internal interface AuctionCommand {
@@ -20,11 +19,5 @@ internal interface AuctionCommand {
             val amount: Int,
             val price: Float
         ) : Result
-    }
-
-    sealed class Error(message: String) : CommandException(message) {
-        data object WrongUsage : Error("Wrong usage")
-        data object NotPlayer : Error("Not player")
-        data object WrongPrice : Error("Wrong price")
     }
 }
