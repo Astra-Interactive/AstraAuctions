@@ -4,6 +4,7 @@ import ru.astrainteractive.astralibs.command.api.registrar.PaperCommandRegistrar
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
+import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
 import ru.astrainteractive.astramarket.command.reload.ReloadCommandFactory
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
@@ -19,6 +20,7 @@ interface CommandModule {
         routerModule: RouterModule,
         marketViewModule: MarketViewModule
     ) : CommandModule {
+        private val errorHandler = BrigadierErrorHandler()
         private val commandRegistrar = PaperCommandRegistrarContext(
             mainScope = coreModule.mainScope,
             plugin = bukkitCoreModule.plugin
@@ -30,6 +32,7 @@ interface CommandModule {
         )
         private val auctionCommandFactory = AuctionCommandFactory(
             kyori = bukkitCoreModule.kyoriComponentSerializer,
+            errorHandler = errorHandler,
             executor = AuctionCommandExecutor(
                 router = routerModule.router,
                 dispatchers = coreModule.dispatchers,

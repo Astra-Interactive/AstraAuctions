@@ -10,12 +10,14 @@ import ru.astrainteractive.astralibs.command.api.util.literal
 import ru.astrainteractive.astralibs.command.api.util.runs
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.kyori.unwrap
+import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionCommandFactory(
     kyori: CachedKrate<KyoriComponentSerializer>,
-    private val executor: AuctionCommandExecutor
+    private val executor: AuctionCommandExecutor,
+    private val errorHandler: BrigadierErrorHandler
 ) : KyoriComponentSerializer by kyori.unwrap() {
 
     @Suppress("LongMethod")
@@ -24,10 +26,10 @@ internal class AuctionCommandFactory(
             literal("sell") {
                 argument("price", IntegerArgumentType.integer(0, Int.MAX_VALUE)) {
                     argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) {
-                        runs { ctx ->
+                        runs(errorHandler::handle) { ctx ->
                             val player = ctx.source.sender
                                 .tryCast<Player>()
-                                ?: return@runs
+                                ?: error("Not a player")
                             AuctionCommand.Result.Sell(
                                 player = player,
                                 itemInstance = player
@@ -41,10 +43,10 @@ internal class AuctionCommandFactory(
                             ).run(executor::execute)
                         }
                     }
-                    runs { ctx ->
+                    runs(errorHandler::handle) { ctx ->
                         val player = ctx.source.sender
                             .tryCast<Player>()
-                            ?: return@runs
+                            ?: error("Not a player")
                         AuctionCommand.Result.Sell(
                             player = player,
                             itemInstance = player
@@ -59,20 +61,20 @@ internal class AuctionCommandFactory(
                 }
             }
             literal("players") {
-                runs { ctx ->
+                runs(errorHandler::handle) { ctx ->
                     val player = ctx.source.sender
                         .tryCast<Player>()
-                        ?: return@runs
+                        ?: error("Not a player")
                     AuctionCommand.Result.OpenPlayers(
                         player = player,
                         isExpired = false
                     ).run(executor::execute)
                 }
             }
-            runs { ctx ->
+            runs(errorHandler::handle) { ctx ->
                 val player = ctx.source.sender
                     .tryCast<Player>()
-                    ?: return@runs
+                    ?: error("Not a player")
                 AuctionCommand.Result.OpenSlots(
                     player = player,
                     isExpired = false,
