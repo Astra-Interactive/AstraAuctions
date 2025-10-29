@@ -73,6 +73,7 @@ internal class AuctionCommandFactory(
     }
 
     fun create(): List<LiteralCommandNode<CommandSourceStack>> {
-        return listOf("amarket", "ah").map(::create)
+        return listOf("market", "ah", "auctionhouse", "aauc", "amarket")
+            .map(::create)
     }
 }

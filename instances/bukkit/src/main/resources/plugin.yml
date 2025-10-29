@@ -18,11 +18,4 @@ commands:
   auctionhouse:
   aauc:
   amarketreload:
-    description: Reload plugin
-    permission: astra_market.reload
-    usage: /<command>
   amarket:
-    description: Open or create auction
-    permission-message: You do not have permission!
-    usage: |
-      /amarket [sell] <price> [amount]
