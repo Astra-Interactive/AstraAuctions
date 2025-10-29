@@ -20,7 +20,10 @@ interface CommandModule {
         routerModule: RouterModule,
         marketViewModule: MarketViewModule
     ) : CommandModule {
-        private val errorHandler = BrigadierErrorHandler()
+        private val errorHandler = BrigadierErrorHandler(
+            kyoriComponentSerializer = bukkitCoreModule.kyoriComponentSerializer,
+            translationKrate = coreModule.pluginTranslationKrate
+        )
         private val commandRegistrar = PaperCommandRegistrarContext(
             mainScope = coreModule.mainScope,
             plugin = bukkitCoreModule.plugin
@@ -28,7 +31,8 @@ interface CommandModule {
         private val reloadCommandFactory = ReloadCommandFactory(
             plugin = bukkitCoreModule.plugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            kyori = bukkitCoreModule.kyoriComponentSerializer
+            kyori = bukkitCoreModule.kyoriComponentSerializer,
+            errorHandler = errorHandler
         )
         private val auctionCommandFactory = AuctionCommandFactory(
             kyori = bukkitCoreModule.kyoriComponentSerializer,
@@ -45,8 +49,10 @@ interface CommandModule {
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
                 onEnable = {
-                    commandRegistrar.registerWhenReady(reloadCommandFactory.create())
-                    commandRegistrar.registerWhenReady(auctionCommandFactory.create())
+                    buildList {
+                        addAll(auctionCommandFactory.create())
+                        add(reloadCommandFactory.create())
+                    }.onEach(commandRegistrar::registerWhenReady)
                 }
             )
         }

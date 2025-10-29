@@ -23,7 +23,7 @@ class ReloadCommandFactory(
     private val translation by translationKrate
 
     fun create(): LiteralCommandNode<CommandSourceStack> {
-        return command("reload") {
+        return command("amarketreload") {
             runs(errorHandler::handle) { ctx ->
                 ctx.requirePermission(PluginPermission.Reload)
                 translation.general.reloadStarted

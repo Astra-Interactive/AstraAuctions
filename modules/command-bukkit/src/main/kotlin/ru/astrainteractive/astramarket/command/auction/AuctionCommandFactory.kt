@@ -1,11 +1,13 @@
 package ru.astrainteractive.astramarket.command.auction
 
+import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.tree.LiteralCommandNode
 import io.papermc.paper.command.brigadier.CommandSourceStack
 import ru.astrainteractive.astralibs.command.api.util.argument
 import ru.astrainteractive.astralibs.command.api.util.command
 import ru.astrainteractive.astralibs.command.api.util.literal
+import ru.astrainteractive.astralibs.command.api.util.requireArgument
 import ru.astrainteractive.astralibs.command.api.util.requirePlayer
 import ru.astrainteractive.astralibs.command.api.util.runs
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
@@ -20,11 +22,11 @@ internal class AuctionCommandFactory(
 ) : KyoriComponentSerializer by kyori.unwrap() {
 
     @Suppress("LongMethod")
-    fun create(): LiteralCommandNode<CommandSourceStack> {
-        return command("amarket") {
+    private fun create(alias: String): LiteralCommandNode<CommandSourceStack> {
+        return command(alias) {
             literal("sell") {
-                argument("price", IntegerArgumentType.integer(0, Int.MAX_VALUE)) {
-                    argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) {
+                argument("price", FloatArgumentType.floatArg(0f, Float.MAX_VALUE)) { priceArg ->
+                    argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) { amountArg ->
                         runs(errorHandler::handle) { ctx ->
                             val player = ctx.requirePlayer()
                             AuctionCommand.Result.Sell(
@@ -32,11 +34,8 @@ internal class AuctionCommandFactory(
                                 itemInstance = player
                                     .inventory
                                     .itemInMainHand,
-                                amount = ctx
-                                    .getArgument("amount", Int::class.java),
-                                price = ctx
-                                    .getArgument("price", Int::class.java)
-                                    .toFloat()
+                                amount = ctx.requireArgument(amountArg),
+                                price = ctx.requireArgument(priceArg)
                             ).run(executor::execute)
                         }
                     }
@@ -48,9 +47,7 @@ internal class AuctionCommandFactory(
                                 .inventory
                                 .itemInMainHand,
                             amount = 1,
-                            price = ctx
-                                .getArgument("price", Int::class.java)
-                                .toFloat()
+                            price = ctx.requireArgument(priceArg)
                         ).run(executor::execute)
                     }
                 }
@@ -73,5 +70,9 @@ internal class AuctionCommandFactory(
                 ).run(executor::execute)
             }
         }.build()
+    }
+
+    fun create(): List<LiteralCommandNode<CommandSourceStack>> {
+        return listOf("amarket", "ah").map(::create)
     }
 }
