@@ -31,7 +31,7 @@ internal class GuiRouterImpl(
     )
 
     override fun navigate(route: GuiRouter.Route) {
-        coreModule.scope.launch {
+        coreModule.ioScope.launch {
             val gui = when (route) {
                 is GuiRouter.Route.Slots -> {
                     SlotsGui(

@@ -1,10 +1,12 @@
-package ru.astrainteractive.astramarket.worker.di
+package ru.astrainteractive.astramarket.service.di
 
+import kotlinx.coroutines.flow.flowOf
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
+import ru.astrainteractive.astralibs.service.TickFlowService
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.di.ApiMarketModule
-import ru.astrainteractive.astramarket.worker.Worker
-import ru.astrainteractive.astramarket.worker.expireworker.ExpireWorker
+import ru.astrainteractive.astramarket.service.executor.ExpireServiceExecutor
+import kotlin.time.Duration.Companion.minutes
 
 interface WorkerModule {
     val lifecycle: Lifecycle
@@ -13,19 +15,20 @@ interface WorkerModule {
         apiMarketModule: ApiMarketModule,
         coreModule: CoreModule
     ) : WorkerModule {
-        private val expireWorker: Worker by lazy {
-            ExpireWorker(
+        private val expireService = TickFlowService(
+            coroutineContext = coreModule.dispatchers.IO,
+            delay = flowOf(1.minutes),
+            executor = ExpireServiceExecutor(
                 marketApi = apiMarketModule.marketApi,
-                dispatchers = coreModule.dispatchers,
                 configKrate = coreModule.configKrate
             )
-        }
+        )
         override val lifecycle: Lifecycle = Lifecycle.Lambda(
             onEnable = {
-                expireWorker.start()
+                expireService.onCreate()
             },
             onDisable = {
-                expireWorker.stop()
+                expireService.onDestroy()
             }
         )
     }

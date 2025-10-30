@@ -10,6 +10,7 @@ dependencies {
     // AstraLibs
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.klibs.mikro.core)
+
     // Local
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)

@@ -39,7 +39,7 @@ interface ApiMarketModule {
         dispatchers: KotlinDispatchers,
         yamlStringFormat: StringFormat,
         dataFolder: File,
-        scope: CoroutineScope,
+        ioScope: CoroutineScope,
         default: () -> DatabaseConfiguration,
     ) : ApiMarketModule {
         private val dbConfig = DefaultMutableKrate(
@@ -56,7 +56,7 @@ interface ApiMarketModule {
             .map { it.configuration }
             .distinctUntilChanged()
             .mapCached(
-                scope = scope,
+                scope = ioScope,
                 dispatcher = dispatchers.IO,
                 transform = { dbConfig, previous ->
                     previous?.run(TransactionManager::closeAndUnregister)
@@ -84,7 +84,7 @@ interface ApiMarketModule {
                     GlobalScope.launch(NonCancellable) {
                         databaseFlow.first().run(TransactionManager::closeAndUnregister)
                     }
-                    scope.cancel()
+                    ioScope.cancel()
                 },
                 onReload = {
                     dbConfig.getValue()
