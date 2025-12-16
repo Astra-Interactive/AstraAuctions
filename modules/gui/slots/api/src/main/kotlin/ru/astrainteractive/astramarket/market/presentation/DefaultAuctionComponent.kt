@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.market.presentation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
-import ru.astrainteractive.astralibs.async.withTimings
+import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase

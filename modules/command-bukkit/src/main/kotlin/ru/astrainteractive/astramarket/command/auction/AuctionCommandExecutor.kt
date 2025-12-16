@@ -3,7 +3,6 @@ package ru.astrainteractive.astramarket.command.auction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
-import ru.astrainteractive.astralibs.command.api.executor.CommandExecutor
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
@@ -21,12 +20,11 @@ internal class AuctionCommandExecutor(
     private val ioScope: CoroutineScope,
     private val itemStackEncoder: ItemStackEncoder,
     private val createAuctionUseCase: CreateAuctionUseCase
-) : CommandExecutor<AuctionCommand.Result>,
-    Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor").withoutParentHandlers() {
+) : Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor").withoutParentHandlers() {
     private val mutex = Mutex()
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
 
-    override fun execute(input: AuctionCommand.Result) {
+    fun execute(input: AuctionCommand.Result) {
         when (input) {
             is AuctionCommand.Result.OpenSlots -> {
                 val route = GuiRouter.Route.Slots(

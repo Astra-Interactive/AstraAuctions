@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.players.presentation
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.astrainteractive.astralibs.async.withTimings
+import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.findPlayersWithSlots
 import ru.astrainteractive.astramarket.players.model.PlayerSort
