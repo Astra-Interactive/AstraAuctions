@@ -22,7 +22,6 @@ import ru.astrainteractive.astramarket.db.market.entity.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
-import kotlin.coroutines.CoroutineContext
 
 internal class ExposedMarketApi(
     private val databaseFlow: Flow<Database>,
@@ -31,12 +30,14 @@ internal class ExposedMarketApi(
     Logger by JUtiltLogger("AstraMarket-ExposedMarketApi").withoutParentHandlers() {
     private val mutex = Mutex()
 
-    private suspend fun <T> runCatchingWithContext(
-        context: CoroutineContext,
+    private suspend fun <T> runSafely(
+        tag: String,
         block: suspend CoroutineScope.() -> T
     ): Result<T> = runCatching {
-        mutex.withLock { withContext(context, block) }
-    }.onFailure { throwable -> error(throwable) { "Error during execution" } }
+        mutex.withLock {
+            withContext(dispatchers.IO, block)
+        }
+    }.onFailure { throwable -> error(throwable) { "$tag: Error during execution" } }
 
     private fun toMarketSlot(resultRow: ResultRow): MarketSlot {
         return MarketSlot(
@@ -52,7 +53,7 @@ internal class ExposedMarketApi(
 
     override suspend fun insertSlot(
         marketSlot: MarketSlot
-    ) = runCatchingWithContext(dispatchers.IO) {
+    ) = runSafely("insertSlot") {
         transaction(databaseFlow.first()) {
             AuctionTable.insertAndGetId {
                 it[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
@@ -67,7 +68,7 @@ internal class ExposedMarketApi(
 
     override suspend fun expireSlot(
         marketSlot: MarketSlot
-    ): Unit? = runCatchingWithContext(dispatchers.IO) {
+    ): Unit? = runSafely("expireSlot") {
         transaction(databaseFlow.first()) {
             AuctionTable.update(
                 where = { AuctionTable.id.eq(marketSlot.id) },
@@ -82,7 +83,7 @@ internal class ExposedMarketApi(
     override suspend fun getUserSlots(
         uuid: String,
         isExpired: Boolean
-    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
+    ): List<MarketSlot>? = runSafely("getUserSlots") {
         transaction(databaseFlow.first()) {
             AuctionTable
                 .selectAll()
@@ -96,7 +97,7 @@ internal class ExposedMarketApi(
 
     override suspend fun getSlots(
         isExpired: Boolean
-    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
+    ): List<MarketSlot>? = runSafely("getSlots") {
         transaction(databaseFlow.first()) {
             AuctionTable.selectAll()
                 .where { AuctionTable.expired.eq(isExpired) }
@@ -106,7 +107,7 @@ internal class ExposedMarketApi(
 
     override suspend fun getSlotsOlderThan(
         millis: Long
-    ): List<MarketSlot>? = runCatchingWithContext(dispatchers.IO) {
+    ): List<MarketSlot>? = runSafely("getSlotsOlderThan") {
         transaction(databaseFlow.first()) {
             val currentTime = System.currentTimeMillis()
             val time = currentTime - millis
@@ -118,7 +119,7 @@ internal class ExposedMarketApi(
 
     override suspend fun getSlot(
         id: Int
-    ): MarketSlot? = runCatchingWithContext(dispatchers.IO) {
+    ): MarketSlot? = runSafely("getSlot") {
         transaction(databaseFlow.first()) {
             AuctionTable.selectAll()
                 .where { AuctionTable.id.eq(id) }
@@ -129,7 +130,7 @@ internal class ExposedMarketApi(
 
     override suspend fun deleteSlot(
         marketSlot: MarketSlot
-    ): Unit? = runCatchingWithContext(dispatchers.IO) {
+    ): Unit? = runSafely("deleteSlot") {
         transaction(databaseFlow.first()) {
             AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) }
         }
@@ -138,7 +139,7 @@ internal class ExposedMarketApi(
 
     override suspend fun countPlayerSlots(
         uuid: String
-    ): Int? = runCatchingWithContext(dispatchers.IO) {
+    ): Int? = runSafely("countPlayerSlots") {
         transaction(databaseFlow.first()) {
             AuctionTable.selectAll()
                 .where { AuctionTable.minecraftUuid.eq(uuid) }

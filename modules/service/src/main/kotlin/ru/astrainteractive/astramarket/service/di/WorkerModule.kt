@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.service.di
 
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.flowOf
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.service.TickFlowService
@@ -16,7 +17,7 @@ interface WorkerModule {
         coreModule: CoreModule
     ) : WorkerModule {
         private val expireService = TickFlowService(
-            coroutineContext = coreModule.dispatchers.IO,
+            coroutineContext = SupervisorJob() + coreModule.dispatchers.IO,
             delay = flowOf(1.minutes),
             executor = ExpireServiceExecutor(
                 marketApi = apiMarketModule.marketApi,
