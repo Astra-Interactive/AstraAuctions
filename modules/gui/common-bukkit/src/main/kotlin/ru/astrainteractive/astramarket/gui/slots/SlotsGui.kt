@@ -15,7 +15,7 @@ import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
 import ru.astrainteractive.astralibs.menu.inventory.model.PageContext
-import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.getIndex
+import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.indexOfSlot
 import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isFirstPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isLastPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showNextPage
@@ -163,7 +163,7 @@ internal class SlotsGui(
         get() {
             var itemIndex = 0
             return inventoryMap.withKeySlot(AuctionSlotKey.AI) { slotIndex ->
-                val index = pageContext.getIndex(itemIndex)
+                val index = pageContext.indexOfSlot(itemIndex)
                 itemIndex++
                 val auctionItem = auctionComponent.model
                     .value
