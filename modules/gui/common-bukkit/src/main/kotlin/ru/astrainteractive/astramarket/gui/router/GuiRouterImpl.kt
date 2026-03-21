@@ -39,7 +39,7 @@ internal class GuiRouterImpl(
                         dependencies = dependencies,
                         buttonContext = buttonContext,
                         auctionComponent = marketViewModule.createAuctionComponent(
-                            playerUUID = route.player.uniqueId,
+                            playerUUID = route.player.uuid,
                             isExpired = route.isExpired,
                             targetPlayerUUID = route.targetPlayerUUID
                         )

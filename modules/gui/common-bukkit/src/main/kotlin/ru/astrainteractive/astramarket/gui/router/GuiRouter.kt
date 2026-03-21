@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.gui.router
 
-import org.bukkit.entity.Player
+import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import java.util.UUID
 
 interface GuiRouter {
@@ -11,13 +11,13 @@ interface GuiRouter {
          * @param targetPlayerUUID only this player auctions will be shown
          */
         class Slots(
-            val player: Player,
+            val player: OnlineKPlayer,
             val isExpired: Boolean,
             val targetPlayerUUID: UUID?
         ) : Route
 
         class Players(
-            val player: Player,
+            val player: OnlineKPlayer,
             val isExpired: Boolean
         ) : Route
     }

@@ -65,7 +65,7 @@ internal class AuctionCommandExecutor(
                 withContext(dispatchers.Main) { itemInstance.amount -= calculatedAmount }
                 val marketSlot = MarketSlot(
                     id = -1,
-                    minecraftUuid = input.player.uniqueId.toString(),
+                    minecraftUuid = input.player.uuid.toString(),
                     time = System.currentTimeMillis(),
                     item = encodedItem,
                     price = input.price,
@@ -74,7 +74,7 @@ internal class AuctionCommandExecutor(
                 )
                 val param = CreateAuctionUseCase.Params(
                     marketSlot = marketSlot,
-                    playerUUID = input.player.uniqueId,
+                    playerUUID = input.player.uuid,
                 )
                 val useCaseResult = createAuctionUseCase.invoke(param)
                 withContext(dispatchers.Main) {
