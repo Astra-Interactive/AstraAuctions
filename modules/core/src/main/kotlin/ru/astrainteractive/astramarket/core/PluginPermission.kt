@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.core
 
-import ru.astrainteractive.astralibs.permission.Permission
+import ru.astrainteractive.astralibs.server.permission.Permission
 
 sealed class PluginPermission(override val value: String) : Permission {
     data object Reload : PluginPermission("astra_market.reload")

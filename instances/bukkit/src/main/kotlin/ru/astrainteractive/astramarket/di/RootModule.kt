@@ -3,6 +3,9 @@ package ru.astrainteractive.astramarket.di
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
+import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
+import ru.astrainteractive.astralibs.command.api.brigadier.command.PaperMultiplatformCommands
+import ru.astrainteractive.astralibs.command.api.registrar.PaperCommandRegistrarContext
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astramarket.command.di.CommandModule
@@ -58,7 +61,12 @@ internal class RootModule(
         coreModule = coreModule,
         bukkitCoreModule = coreModule,
         routerModule = routerModule,
-        marketViewModule = marketViewModule
+        marketViewModule = marketViewModule,
+        multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands()),
+        commandRegistrarContext = PaperCommandRegistrarContext(
+            mainScope = coreModule.mainScope,
+            plugin = plugin
+        ),
     )
 
     val workerModule: WorkerModule = WorkerModule.Default(

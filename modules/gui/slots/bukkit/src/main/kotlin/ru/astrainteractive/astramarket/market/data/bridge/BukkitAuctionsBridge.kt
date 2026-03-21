@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.market.data.bridge
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import ru.astrainteractive.astralibs.permission.BukkitPermissibleExt.toPermissible
+import ru.astrainteractive.astralibs.server.permission.asKPermissible
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
@@ -48,7 +48,7 @@ internal class BukkitAuctionsBridge(
     }
 
     override fun hasExpirePermission(uuid: UUID): Boolean {
-        return Bukkit.getPlayer(uuid)?.toPermissible()?.hasPermission(PluginPermission.Expire) ?: false
+        return Bukkit.getPlayer(uuid)?.asKPermissible()?.hasPermission(PluginPermission.Expire) ?: false
     }
 
     override fun isItemValid(marketSlot: MarketSlot): Boolean {
@@ -57,6 +57,6 @@ internal class BukkitAuctionsBridge(
     }
 
     override suspend fun maxAllowedAuctionsForPlayer(uuid: UUID): Int? {
-        return Bukkit.getPlayer(uuid)?.toPermissible()?.maxPermissionSize(PluginPermission.SellMax)
+        return Bukkit.getPlayer(uuid)?.asKPermissible()?.maxPermissionSize(PluginPermission.SellMax)
     }
 }

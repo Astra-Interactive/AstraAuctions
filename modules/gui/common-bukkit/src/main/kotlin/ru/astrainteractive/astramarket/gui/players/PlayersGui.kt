@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import net.kyori.adventure.text.Component
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
@@ -18,6 +17,9 @@ import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuE
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
 import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
+import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
+import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.filterExpired
@@ -36,10 +38,11 @@ import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.withKeySlot
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.players.presentation.PlayersMarketComponent
+import ru.astrainteractive.klibs.mikro.core.util.cast
 
 internal class PlayersGui(
     private val playersMarketComponent: PlayersMarketComponent,
-    player: Player,
+    player: OnlineKPlayer,
     dependencies: AuctionGuiDependencies,
     private val buttonContext: ButtonContext
 ) : PaginatedInventoryMenu(),
@@ -52,7 +55,7 @@ internal class PlayersGui(
 
     override val title: Component = pluginTranslation.menu.market.component
 
-    override val playerHolder = DefaultPlayerHolder(player)
+    override val playerHolder = DefaultPlayerHolder(player.cast<BukkitOnlineKPlayer>().instance)
 
     override var pageContext: PageContext = PageContext(
         page = 0,
@@ -105,7 +108,7 @@ internal class PlayersGui(
             isGroupedByPlayers = true,
             click = {
                 val route = GuiRouter.Route.Slots(
-                    player = playerHolder.player,
+                    player = playerHolder.player.asOnlineMinecraftPlayer(),
                     isExpired = playersMarketComponent.model.value.isExpired,
                     targetPlayerUUID = null
                 )
@@ -137,7 +140,7 @@ internal class PlayersGui(
                     isExpired = playersMarketComponent.model.value.isExpired,
                     click = {
                         val route = GuiRouter.Route.Slots(
-                            player = playerHolder.player,
+                            player = playerHolder.player.asOnlineMinecraftPlayer(),
                             isExpired = playersMarketComponent.model.value.isExpired,
                             targetPlayerUUID = items.minecraftUUID
                         )
