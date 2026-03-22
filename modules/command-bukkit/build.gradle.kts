@@ -4,21 +4,18 @@ plugins {
 }
 
 dependencies {
-    // Kotlin
-    implementation(libs.kotlin.coroutines.core)
+    compileOnly(libs.minecraft.paper.api)
+    compileOnly(libs.minecraft.brigadier)
+    compileOnly(libs.minecraft.kyori.api)
 
-    // AstraLibs
+    implementation(libs.klibs.mikro.core)
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.minecraft.astralibs.command)
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.minecraft.astralibs.core.bukkit)
-    implementation(libs.klibs.mikro.core)
-    implementation(libs.minecraft.astralibs.command)
-    implementation(libs.minecraft.astralibs.command.bukkit)
-    // Spigot dependencies
-    compileOnly(libs.minecraft.paper.api)
-    // Local
+
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
-    implementation(projects.modules.gui.slots.api)
-    implementation(projects.modules.gui.commonBukkit)
+    implementation(projects.modules.gui.api)
 }

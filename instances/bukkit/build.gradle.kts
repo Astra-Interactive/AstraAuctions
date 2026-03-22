@@ -10,42 +10,36 @@ plugins {
 }
 
 dependencies {
-    // Kotlin
-    implementation(libs.kotlin.coroutines.core)
-    implementation(libs.kotlin.serialization.json)
-
-    // AstraLibs
-    implementation(libs.minecraft.astralibs.core)
-    implementation(libs.klibs.mikro.extensions)
-    implementation(libs.klibs.mikro.core)
-    implementation(libs.minecraft.astralibs.menu.bukkit)
-    implementation(libs.minecraft.astralibs.core.bukkit)
-    implementation(libs.minecraft.astralibs.command)
-    implementation(libs.minecraft.astralibs.command.bukkit)
-    // Test
-    testImplementation(libs.tests.kotlin.test)
-    // Spigot dependencies
     compileOnly(libs.minecraft.paper.api)
-    implementation(libs.minecraft.bstats)
     compileOnly(libs.minecraft.papi)
     compileOnly(libs.minecraft.vaultapi)
+
+    implementation(libs.klibs.mikro.core)
+    implementation(libs.klibs.mikro.extensions)
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.minecraft.astralibs.command)
+    implementation(libs.minecraft.astralibs.command.bukkit)
+    implementation(libs.minecraft.astralibs.core)
+    implementation(libs.minecraft.astralibs.core.bukkit)
+    implementation(libs.minecraft.astralibs.menu.bukkit)
     implementation(libs.minecraft.bstats)
-    // Local
+    implementation(libs.minecraft.bstats)
+
     implementation(projects.modules.apiMarket)
+    implementation(projects.modules.commandBukkit)
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
+    implementation(projects.modules.gui.api)
+    implementation(projects.modules.gui.bukkit)
     implementation(projects.modules.service)
-    implementation(projects.modules.gui.players.api)
-    implementation(projects.modules.gui.slots.api)
-    implementation(projects.modules.gui.slots.bukkit)
-    implementation(projects.modules.gui.commonBukkit)
-    implementation(projects.modules.commandBukkit)
+
+    testImplementation(libs.tests.kotlin.test)
 }
 
 minecraftProcessResource {
     bukkit()
 }
-
 val shadowJar = tasks.named<ShadowJar>("shadowJar")
 shadowJar.configure {
 
@@ -105,6 +99,11 @@ shadowJar.configure {
         exclude("META-INF/rewrite/**")
         exclude("META-INF/services/kotlin.reflect.**")
         exclude("META-INF/versions/**")
+        exclude(dependency("mysql:mysql-connector-java"))
+        exclude(dependency("com.mysql:mysql-connector-j"))
+        exclude(dependency("org.xerial:sqlite-jdbc"))
+        exclude(dependency("com.mojang:brigadier"))
+        exclude(dependency("net.kyori:.*"))
     }
     relocate("org.bstats", projectInfo.group)
     listOf(
@@ -118,7 +117,10 @@ shadowJar.configure {
         "org.intellij",
         "org.jetbrains.annotations",
         "ru.astrainteractive.klibs",
-        "ru.astrainteractive.astralibs"
+        "ru.astrainteractive.astralibs",
+        "io.github.reactivecircus",
+        "co.touchlab.stately",
+        "google.protobuf",
     ).forEach { pattern -> relocate(pattern, "${projectInfo.group}.$pattern") }
     listOf(
         "kotlinx",

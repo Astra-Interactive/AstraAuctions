@@ -29,12 +29,11 @@ import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 
 interface BukkitCoreModule : CoreModule {
 
-    val plugin: LifecyclePlugin
+    override val lifecyclePlugin: LifecyclePlugin
     val itemStackEncoder: ItemStackEncoder
     val inventoryClickEventListener: EventListener
-    val kyoriComponentSerializer: CachedKrate<KyoriComponentSerializer>
 
-    class Default(override val plugin: LifecyclePlugin) : BukkitCoreModule {
+    class Default(override val lifecyclePlugin: LifecyclePlugin) : BukkitCoreModule {
 
         private val encoder: ObjectEncoder = BukkitObjectEncoder()
 
@@ -42,12 +41,13 @@ interface BukkitCoreModule : CoreModule {
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 
-        override val kyoriComponentSerializer = DefaultMutableKrate<KyoriComponentSerializer>(
+        override val kyoriKrate = DefaultMutableKrate<KyoriComponentSerializer>(
             factory = { KyoriComponentSerializer.Legacy },
             loader = { null }
         ).asCachedKrate()
 
-        private fun createBStats() = Metrics(plugin, 15771)
+        @Suppress("MagicNumber")
+        private fun createBStats() = Metrics(lifecyclePlugin, 15771)
 
         override val yamlStringFormat: StringFormat = YamlStringFormat(
             configuration = Yaml.default.configuration.copy(
@@ -61,7 +61,7 @@ interface BukkitCoreModule : CoreModule {
             factory = ::PluginConfig,
             loader = {
                 yamlStringFormat.parseOrWriteIntoDefault(
-                    file = plugin.dataFolder.resolve("config.yml"),
+                    file = lifecyclePlugin.dataFolder.resolve("config.yml"),
                     default = ::PluginConfig
                 )
             }
@@ -71,32 +71,32 @@ interface BukkitCoreModule : CoreModule {
             factory = ::PluginTranslation,
             loader = {
                 yamlStringFormat.parseOrWriteIntoDefault(
-                    file = plugin.dataFolder.resolve("translations.yml"),
+                    file = lifecyclePlugin.dataFolder.resolve("translations.yml"),
                     default = ::PluginTranslation
                 )
             }
         ).asCachedKrate()
-        override val dispatchers = DefaultBukkitDispatchers(plugin)
+        override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
         override val ioScope: CoroutineScope = CoroutineFeature.IO.withTimings()
         override val mainScope = CoroutineFeature
             .Default(dispatchers.BukkitMain)
             .withTimings()
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
-            BukkitCurrencyEconomyProviderFactory(plugin)
+            BukkitCurrencyEconomyProviderFactory(lifecyclePlugin)
 
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
                 onEnable = {
                     createBStats()
-                    inventoryClickEventListener.onEnable(plugin)
+                    inventoryClickEventListener.onEnable(lifecyclePlugin)
                 },
                 onDisable = {
                     inventoryClickEventListener.onDisable()
                     ioScope.cancel()
                 },
                 onReload = {
-                    kyoriComponentSerializer.getValue()
+                    kyoriKrate.getValue()
                     configKrate.getValue()
                     pluginTranslationKrate.getValue()
                 }
