@@ -102,6 +102,8 @@ shadowJar.configure {
         exclude(dependency("mysql:mysql-connector-java"))
         exclude(dependency("com.mysql:mysql-connector-j"))
         exclude(dependency("org.xerial:sqlite-jdbc"))
+        exclude(dependency("com.mojang:brigadier"))
+        exclude(dependency("net.kyori:.*"))
     }
     relocate("org.bstats", projectInfo.group)
     listOf(
@@ -118,7 +120,7 @@ shadowJar.configure {
         "ru.astrainteractive.astralibs",
         "io.github.reactivecircus",
         "co.touchlab.stately",
-        "google.protobuf"
+        "google.protobuf",
     ).forEach { pattern -> relocate(pattern, "${projectInfo.group}.$pattern") }
     listOf(
         "kotlinx",
