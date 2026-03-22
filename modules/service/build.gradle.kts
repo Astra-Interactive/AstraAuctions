@@ -4,14 +4,10 @@ plugins {
 }
 
 dependencies {
-    // Kotlin
-    implementation(libs.kotlin.coroutines.core)
-
-    // AstraLibs
-    implementation(libs.minecraft.astralibs.core)
     implementation(libs.klibs.mikro.core)
+    implementation(libs.kotlin.coroutines.core)
+    implementation(libs.minecraft.astralibs.core)
 
-    // Local
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)
 }

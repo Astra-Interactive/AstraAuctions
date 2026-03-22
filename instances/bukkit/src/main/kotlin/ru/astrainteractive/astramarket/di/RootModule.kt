@@ -10,7 +10,7 @@ import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.gui.router.di.RouterModule
+import ru.astrainteractive.astramarket.gui.router.di.BukkitRouterModule
 import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
@@ -28,7 +28,7 @@ internal class RootModule(
     val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(
         dispatchers = coreModule.dispatchers,
         yamlStringFormat = coreModule.yamlStringFormat,
-        dataFolder = coreModule.plugin.dataFolder,
+        dataFolder = coreModule.lifecyclePlugin.dataFolder,
         ioScope = coreModule.ioScope,
         default = { DatabaseConfiguration.H2(plugin.dataFolder.resolve("database").absolutePath) }
     )
@@ -38,7 +38,7 @@ internal class RootModule(
         apiMarketModule = apiMarketModule,
         marketDataModule = BukkitMarketDataModule(
             itemStackEncoder = coreModule.itemStackEncoder,
-            stringSerializer = coreModule.kyoriComponentSerializer.cachedValue
+            stringSerializer = coreModule.kyoriKrate.cachedValue
         ),
         platformMarketDomainModule = BukkitMarketDomainModule(
             itemStackEncoder = coreModule.itemStackEncoder,
@@ -50,7 +50,7 @@ internal class RootModule(
         apiMarketModule = apiMarketModule
     )
 
-    val routerModule: RouterModule = RouterModule.Default(
+    val bukkitRouterModule: BukkitRouterModule = BukkitRouterModule(
         coreModule = coreModule,
         marketViewModule = marketViewModule,
         bukkitCoreModule = coreModule,
@@ -60,7 +60,7 @@ internal class RootModule(
     val commandModule: CommandModule = CommandModule.Default(
         coreModule = coreModule,
         bukkitCoreModule = coreModule,
-        routerModule = routerModule,
+        bukkitRouterModule = bukkitRouterModule,
         marketViewModule = marketViewModule,
         multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands()),
         commandRegistrarContext = PaperCommandRegistrarContext(
@@ -92,7 +92,7 @@ internal class RootModule(
         },
         onDisable = {
             Bukkit.getOnlinePlayers().forEach(Player::closeInventory)
-            HandlerList.unregisterAll(coreModule.plugin)
+            HandlerList.unregisterAll(coreModule.lifecyclePlugin)
             lifecycles.forEach(Lifecycle::onDisable)
         }
 

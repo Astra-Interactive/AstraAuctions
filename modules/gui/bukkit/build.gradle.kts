@@ -8,11 +8,9 @@ dependencies {
 
     implementation(libs.klibs.mikro.core)
     implementation(libs.kotlin.coroutines.core)
-    implementation(libs.minecraft.astralibs.command)
     implementation(libs.minecraft.astralibs.core)
     implementation(libs.minecraft.astralibs.core.bukkit)
-    implementation(libs.minecraft.brigadier)
-    implementation(libs.minecraft.kyori.api)
+    implementation(libs.minecraft.astralibs.menu.bukkit)
 
     implementation(projects.modules.apiMarket)
     implementation(projects.modules.core)

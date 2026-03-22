@@ -7,7 +7,6 @@ plugins {
 
     // klibs - core
     alias(libs.plugins.klibs.gradle.detekt) apply false
-    alias(libs.plugins.klibs.gradle.detekt.compose) apply false
     alias(libs.plugins.klibs.gradle.dokka.root) apply false
     alias(libs.plugins.klibs.gradle.dokka.module) apply false
     alias(libs.plugins.klibs.gradle.java.version) apply false

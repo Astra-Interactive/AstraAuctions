@@ -14,7 +14,7 @@ import ru.astrainteractive.klibs.mikro.core.util.cast
 internal class AuctionCommandFactory(
     private val executor: AuctionCommandExecutor,
     private val errorHandler: BrigadierErrorHandler,
-    private val multiplatformCommand: MultiplatformCommand<*>,
+    private val multiplatformCommand: MultiplatformCommand,
     kyoriKrate: CachedKrate<KyoriComponentSerializer>
 ) : KyoriComponentSerializer by kyoriKrate.unwrap() {
 

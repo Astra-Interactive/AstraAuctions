@@ -6,7 +6,7 @@ import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
 import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
-import ru.astrainteractive.astramarket.command.reload.ReloadCommandFactory
+import ru.astrainteractive.astramarket.command.reload.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.gui.router.di.RouterModule
@@ -18,28 +18,28 @@ interface CommandModule {
     class Default(
         coreModule: CoreModule,
         bukkitCoreModule: BukkitCoreModule,
-        routerModule: RouterModule,
+        bukkitRouterModule: RouterModule,
         marketViewModule: MarketViewModule,
         private val commandRegistrarContext: CommandRegistrarContext,
-        private val multiplatformCommand: MultiplatformCommand<*>,
+        private val multiplatformCommand: MultiplatformCommand,
     ) : CommandModule {
         private val errorHandler = BrigadierErrorHandler(
-            kyoriComponentSerializer = bukkitCoreModule.kyoriComponentSerializer,
+            kyoriComponentSerializer = coreModule.kyoriKrate,
             translationKrate = coreModule.pluginTranslationKrate,
             multiplatformCommand = multiplatformCommand
         )
-        private val reloadCommandFactory = ReloadCommandFactory(
-            plugin = bukkitCoreModule.plugin,
+        private val reloadLiteralArgumentBuilder = ReloadLiteralArgumentBuilder(
+            lifecyclePlugin = coreModule.lifecyclePlugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            kyori = bukkitCoreModule.kyoriComponentSerializer,
+            kyori = coreModule.kyoriKrate,
             errorHandler = errorHandler,
             multiplatformCommand = multiplatformCommand
         )
         private val auctionCommandFactory = AuctionCommandFactory(
-            kyoriKrate = bukkitCoreModule.kyoriComponentSerializer,
+            kyoriKrate = coreModule.kyoriKrate,
             errorHandler = errorHandler,
             executor = AuctionCommandExecutor(
-                router = routerModule.router,
+                router = bukkitRouterModule.router,
                 dispatchers = coreModule.dispatchers,
                 createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
                 ioScope = coreModule.ioScope,
@@ -53,7 +53,7 @@ interface CommandModule {
                 onEnable = {
                     buildList {
                         addAll(auctionCommandFactory.create())
-                        add(reloadCommandFactory.create())
+                        add(reloadLiteralArgumentBuilder.create())
                     }.onEach(commandRegistrarContext::registerWhenReady)
                 }
             )

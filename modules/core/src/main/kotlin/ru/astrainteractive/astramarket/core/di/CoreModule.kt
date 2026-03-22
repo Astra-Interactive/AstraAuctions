@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.core.di
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.StringFormat
+import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
@@ -11,9 +12,11 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 interface CoreModule {
     val lifecycle: Lifecycle
+    val lifecyclePlugin: Lifecycle
 
     val configKrate: CachedKrate<PluginConfig>
     val pluginTranslationKrate: CachedKrate<PluginTranslation>
+    val kyoriKrate: CachedKrate<KyoriComponentSerializer>
     val ioScope: CoroutineScope
     val mainScope: CoroutineScope
     val dispatchers: KotlinDispatchers
