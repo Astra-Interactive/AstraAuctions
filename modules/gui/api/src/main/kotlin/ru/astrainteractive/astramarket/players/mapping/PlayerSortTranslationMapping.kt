@@ -4,7 +4,7 @@ import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.getValue
 
 interface PlayerSortTranslationMapping {
     fun translate(playerSort: PlayerSort): StringDesc.Raw

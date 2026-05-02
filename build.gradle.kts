@@ -18,7 +18,7 @@ plugins {
 
 apply(plugin = "ru.astrainteractive.gradleplugin.dokka.root")
 apply(plugin = "ru.astrainteractive.gradleplugin.detekt")
-apply(plugin = "ru.astrainteractive.gradleplugin.root.info")
+apply(plugin = "ru.astrainteractive.gradleplugin.rootinfo")
 
 subprojects.forEach {
     it.apply(plugin = "ru.astrainteractive.gradleplugin.dokka.module")

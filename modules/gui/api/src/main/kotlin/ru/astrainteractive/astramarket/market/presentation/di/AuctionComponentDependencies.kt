@@ -10,7 +10,7 @@ import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.getValue
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal interface AuctionComponentDependencies {

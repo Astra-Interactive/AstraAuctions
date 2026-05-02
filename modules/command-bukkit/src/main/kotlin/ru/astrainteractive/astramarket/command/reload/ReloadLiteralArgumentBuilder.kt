@@ -9,7 +9,7 @@ import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandle
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.getValue
 
 class ReloadLiteralArgumentBuilder(
     private val lifecyclePlugin: Lifecycle,
