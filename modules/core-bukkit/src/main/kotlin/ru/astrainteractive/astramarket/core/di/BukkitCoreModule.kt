@@ -23,8 +23,8 @@ import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFa
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.asCachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
-import ru.astrainteractive.klibs.kstorage.util.asCachedKrate
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 
 interface BukkitCoreModule : CoreModule {

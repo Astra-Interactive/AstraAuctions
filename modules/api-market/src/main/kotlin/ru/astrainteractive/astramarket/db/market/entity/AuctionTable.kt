@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.db.market.entity
 
-import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.v1.core.dao.id.IntIdTable
 
 internal object AuctionTable : IntIdTable("auctions") {
     val minecraftUuid = text("minecraft_uuid")

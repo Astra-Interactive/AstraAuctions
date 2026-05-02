@@ -4,7 +4,7 @@ import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.getValue
 
 interface AuctionSortTranslationMapping {
     fun translate(auctionSort: AuctionSort): StringDesc.Raw

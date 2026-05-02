@@ -1,6 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.kotlin.dsl.named
-import ru.astrainteractive.gradleplugin.property.extension.ModelPropertyValueExt.requireProjectInfo
+import ru.astrainteractive.gradleplugin.property.util.requireProjectInfo
 
 plugins {
     kotlin("jvm")
@@ -38,7 +38,16 @@ dependencies {
 }
 
 minecraftProcessResource {
-    bukkit()
+    bukkit(
+        customProperties = mapOf(
+            "libraries" to listOf(
+                libs.driver.h2.get(),
+                libs.driver.jdbc.get(),
+                libs.driver.mysql.get(),
+                libs.driver.mariadb.get()
+            ).joinToString("\",\"", "[\"", "\"]")
+        )
+    )
 }
 val shadowJar = tasks.named<ShadowJar>("shadowJar")
 shadowJar.configure {
@@ -49,10 +58,10 @@ shadowJar.configure {
     dependsOn(configurations)
     archiveClassifier.set(null as String?)
 
-    minimize {
-        exclude(dependency(libs.exposed.jdbc.get()))
-        exclude(dependency(libs.exposed.dao.get()))
-    }
+//    minimize {
+//        exclude(dependency(libs.exposed.jdbc.get()))
+//        exclude(dependency(libs.exposed.dao.get()))
+//    }
     archiveVersion.set(projectInfo.versionString)
     archiveBaseName = "${requireProjectInfo.name}-${project.name}"
     destinationDirectory = rootDir.resolve("build")

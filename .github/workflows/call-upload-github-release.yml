@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Git repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - uses: christian-draeger/read-properties@1.1.1
         id: properties
         with:
           path: './gradle.properties'
-          properties: 'makeevrserg.project.name makeevrserg.project.version.string'
+          properties: 'klibs.project.name klibs.project.version.string'
 
       - uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         name: "Download bukkit"
@@ -32,7 +32,7 @@ jobs:
         with:
           files: |
             ./jars/*.jar
-          tag_name: ${{ steps.properties.outputs.makeevrserg-project-version-string }}
-          name: ${{ steps.properties.outputs.makeevrserg-project-name }} - ${{ steps.properties.outputs.makeevrserg-project-version-string }}
+          tag_name: ${{ steps.properties.outputs.klibs-project-version-string }}
+          name: ${{ steps.properties.outputs.klibs-project-name }} - ${{ steps.properties.outputs.klibs-project-version-string }}
           draft: false
           prerelease: false

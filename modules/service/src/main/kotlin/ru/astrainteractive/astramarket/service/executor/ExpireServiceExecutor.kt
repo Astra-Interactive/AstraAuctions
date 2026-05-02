@@ -7,7 +7,7 @@ import ru.astrainteractive.astralibs.service.ServiceExecutor
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.kstorage.util.getValue
+import ru.astrainteractive.klibs.kstorage.api.getValue
 import kotlin.collections.filter
 import kotlin.collections.map
 import kotlin.collections.orEmpty
