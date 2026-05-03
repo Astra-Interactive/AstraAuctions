@@ -25,7 +25,6 @@ import ru.astrainteractive.astralibs.server.permission.asKPermissible
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
-import ru.astrainteractive.astramarket.api.SlotInventoryLayout
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
@@ -64,7 +63,7 @@ internal class SlotsGui(
     }
     override val inventorySize: InventorySize = InventorySize.XL
 
-    private val inventoryMap: SlotInventoryLayout<AuctionSlotKey> by lazy {
+    private val inventoryMap by lazy {
         DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
     }
 

@@ -1,7 +1,6 @@
 package ru.astrainteractive.astramarket.gui.layout
 
-import ru.astrainteractive.astramarket.api.SlotInventoryLayout
-import ru.astrainteractive.astramarket.api.slotInventoryLayout
+import ru.astrainteractive.astramarket.api.layout.slotInventoryLayout
 
 @Suppress("MagicNumber")
 internal object DefaultAuctionInventoryLayoutFactory {
@@ -51,7 +50,8 @@ internal object DefaultAuctionInventoryLayoutFactory {
         )
     }
 
-    fun create(isCompact: Boolean): SlotInventoryLayout<AuctionSlotKey> {
-        return if (isCompact) createCompactLayout() else createBorderedLayout()
+    fun create(isCompact: Boolean) = when {
+        isCompact -> createCompactLayout()
+        else -> createBorderedLayout()
     }
 }
