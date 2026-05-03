@@ -20,6 +20,7 @@ import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
+import ru.astrainteractive.astramarket.api.SlotInventoryLayout
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.filterExpired
@@ -29,12 +30,8 @@ import ru.astrainteractive.astramarket.gui.button.playersSort
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.button.slotsType
 import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
-import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
-import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap.AuctionSlotKey
-import ru.astrainteractive.astramarket.gui.invmap.DefaultAuctionInventoryMap
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.countKeys
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.indexOf
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.withKeySlot
+import ru.astrainteractive.astramarket.gui.layout.AuctionSlotKey
+import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.players.presentation.PlayersMarketComponent
@@ -50,8 +47,9 @@ internal class PlayersGui(
     KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
     override val inventorySize: InventorySize = InventorySize.XL
 
-    private val inventoryMap: AuctionInventoryMap
-        get() = DefaultAuctionInventoryMap
+    private val inventoryMap: SlotInventoryLayout<AuctionSlotKey> by lazy {
+        DefaultAuctionInventoryLayoutFactory.create()
+    }
 
     override val title: Component = pluginTranslation.menu.market.component
 
@@ -59,13 +57,13 @@ internal class PlayersGui(
 
     override var pageContext: PageContext = PageContext(
         page = 0,
-        maxItemsPerPage = inventoryMap.countKeys(AuctionSlotKey.AI),
+        maxItemsPerPage = inventoryMap.count(AuctionSlotKey.AI),
         maxItems = 0
     )
 
     override val prevPageButton: InventorySlot
         get() = buttonContext.prevPage(
-            index = inventoryMap.indexOf(AuctionSlotKey.PR),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.PR),
             click = {
                 playerHolder.player.playSound(config.sounds.open)
                 showPrevPage()
@@ -74,7 +72,7 @@ internal class PlayersGui(
 
     override val nextPageButton: InventorySlot
         get() = buttonContext.nextPage(
-            index = inventoryMap.indexOf(AuctionSlotKey.NE),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.NE),
             click = {
                 playerHolder.player.playSound(config.sounds.open)
                 showNextPage()
@@ -83,7 +81,7 @@ internal class PlayersGui(
 
     private val sortButton: InventorySlot
         get() = buttonContext.playersSort(
-            index = inventoryMap.indexOf(AuctionSlotKey.FI),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.FI),
             sortType = playersMarketComponent.model.value.sort,
             click = {
                 playerHolder.player.playSound(config.sounds.open)
@@ -93,7 +91,7 @@ internal class PlayersGui(
 
     private val expiredButton: InventorySlot
         get() = buttonContext.filterExpired(
-            index = inventoryMap.indexOf(AuctionSlotKey.AU),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.AU),
             isExpired = playersMarketComponent.model.value.isExpired,
             click = {
                 playerHolder.player.playSound(config.sounds.open)
@@ -104,7 +102,7 @@ internal class PlayersGui(
 
     private val allSlots: InventorySlot
         get() = buttonContext.slotsType(
-            index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.GR),
             isGroupedByPlayers = true,
             click = {
                 val route = GuiRouter.Route.Slots(
@@ -118,7 +116,7 @@ internal class PlayersGui(
 
     private val closeButton: InventorySlot
         get() = buttonContext.back(
-            index = inventoryMap.indexOf(AuctionSlotKey.BA),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.BA),
             click = { playerHolder.player.closeInventory() }
         )
 
@@ -126,14 +124,14 @@ internal class PlayersGui(
         get() {
             var itemIndex = 0
             val isExpired = playersMarketComponent.model.value.isExpired
-            return inventoryMap.withKeySlot(AuctionSlotKey.AI) { slotIndex ->
+            return inventoryMap.mapSlotsNotNull(AuctionSlotKey.AI) { slotIndex ->
                 val index = pageContext.indexOfSlot(itemIndex)
                 itemIndex++
                 val items = playersMarketComponent.model
                     .value
                     .playersAndSlots
                     .filter { it.slots.any { slot -> slot.expired == isExpired } }
-                    .getOrNull(index) ?: return@withKeySlot null
+                    .getOrNull(index) ?: return@mapSlotsNotNull null
                 buttonContext.playerItem(
                     playerAndSlots = items,
                     index = slotIndex,
@@ -171,7 +169,7 @@ internal class PlayersGui(
         expiredButton.setInventorySlot()
         closeButton.setInventorySlot()
         allSlots.setInventorySlot()
-        slots.forEach { it.setInventorySlot() }
+        slots.forEach { slot -> slot.setInventorySlot() }
     }
 
     override fun onInventoryCreated() {
