@@ -4,13 +4,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import ru.astrainteractive.astralibs.coroutines.withTimings
+import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
-import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.getValue
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import java.util.UUID
@@ -20,10 +24,17 @@ internal class DefaultAuctionComponent(
     private val playerUUID: UUID,
     private val targetPlayerUUID: UUID?,
     isExpired: Boolean,
-    private val dependencies: AuctionComponentDependencies
+    private val configKrate: CachedKrate<PluginConfig>,
+    private val marketApi: MarketApi,
+    private val sortAuctionsUseCase: SortAuctionsUseCase,
+    private val removeAuctionUseCase: RemoveAuctionUseCase,
+    private val auctionBuyUseCase: AuctionBuyUseCase,
+    private val expireAuctionUseCase: ExpireAuctionUseCase,
+    private val playerInteractionBridge: PlayerInteractionBridge
 ) : AuctionComponent,
-    CoroutineFeature by CoroutineFeature.IO.withTimings(),
-    AuctionComponentDependencies by dependencies {
+    CoroutineFeature by CoroutineFeature.IO.withTimings() {
+    private val config by configKrate
+
     private val mutex = Mutex()
 
     override val model = MutableStateFlow(

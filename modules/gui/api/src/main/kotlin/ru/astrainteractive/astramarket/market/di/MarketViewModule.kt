@@ -7,7 +7,7 @@ import ru.astrainteractive.astramarket.market.domain.di.MarketViewDomainModule
 import ru.astrainteractive.astramarket.market.domain.di.PlatformMarketDomainModule
 import ru.astrainteractive.astramarket.market.presentation.AuctionComponent
 import ru.astrainteractive.astramarket.market.presentation.DefaultAuctionComponent
-import ru.astrainteractive.astramarket.market.presentation.di.AuctionComponentDependencies
+import ru.astrainteractive.klibs.kstorage.api.getValue
 import java.util.UUID
 
 interface MarketViewModule {
@@ -43,11 +43,13 @@ interface MarketViewModule {
                 playerUUID = playerUUID,
                 targetPlayerUUID = targetPlayerUUID,
                 isExpired = isExpired,
-                dependencies = AuctionComponentDependencies.Default(
-                    coreModule = coreModule,
-                    apiMarketModule = apiMarketModule,
-                    marketViewDomainModule = marketViewDomainModule,
-                )
+                configKrate = coreModule.configKrate,
+                marketApi = apiMarketModule.marketApi,
+                sortAuctionsUseCase = marketViewDomainModule.platformMarketDomainModule.sortAuctionsUseCase,
+                removeAuctionUseCase = marketViewDomainModule.removeAuctionUseCase,
+                auctionBuyUseCase = marketViewDomainModule.auctionBuyUseCase,
+                expireAuctionUseCase = marketViewDomainModule.expireAuctionUseCase,
+                playerInteractionBridge = marketViewDomainModule.marketDataModule.playerInteractionBridge
             )
         }
     }

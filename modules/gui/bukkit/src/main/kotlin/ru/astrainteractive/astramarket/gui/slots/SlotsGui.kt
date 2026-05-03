@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
@@ -25,7 +26,9 @@ import ru.astrainteractive.astralibs.server.permission.asKPermissible
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
+import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginPermission
+import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.border
@@ -35,22 +38,30 @@ import ru.astrainteractive.astramarket.gui.button.filterExpired
 import ru.astrainteractive.astramarket.gui.button.nextPage
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.button.slotsType
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.layout.AuctionSlotKey
 import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.market.presentation.AuctionComponent
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.getValue
+import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.cast
 
 internal class SlotsGui(
     player: OnlineKPlayer,
-    dependencies: AuctionGuiDependencies,
+    private val configKrate: CachedKrate<PluginConfig>,
+    private val translationKrate: CachedKrate<PluginTranslation>,
+    private val dispatchers: KotlinDispatchers,
+    private val router: GuiRouter,
+    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
     private val buttonContext: ButtonContext,
     private val auctionComponent: AuctionComponent
 ) : PaginatedInventoryMenu(),
-    AuctionGuiDependencies by dependencies,
-    KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
+    KyoriComponentSerializer by kyoriKrate.unwrap() {
+    private val config by configKrate
+    private val translation by translationKrate
+
     override val playerHolder = DefaultPlayerHolder(player.cast<BukkitOnlineKPlayer>().instance)
     override val title: Component = let {
         val playerNameComponent = auctionComponent.model.value
@@ -59,7 +70,7 @@ internal class SlotsGui(
             ?.name
             ?.let { name -> Component.text(": $name") }
             ?: Component.empty()
-        pluginTranslation.menu.market.component.append(playerNameComponent)
+        translation.menu.market.component.append(playerNameComponent)
     }
     override val inventorySize: InventorySize = InventorySize.XL
 

@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.onEach
 import net.kyori.adventure.text.Component
 import org.bukkit.event.inventory.InventoryClickEvent
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
+import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
 import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
@@ -20,6 +21,8 @@ import ru.astrainteractive.astralibs.menu.slot.InventorySlot
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
+import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.button.filterExpired
@@ -28,29 +31,37 @@ import ru.astrainteractive.astramarket.gui.button.playerItem
 import ru.astrainteractive.astramarket.gui.button.playersSort
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.button.slotsType
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.layout.AuctionSlotKey
 import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.gui.util.ItemStackExt.playSound
 import ru.astrainteractive.astramarket.players.presentation.PlayersMarketComponent
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.getValue
+import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.cast
 
 internal class PlayersGui(
     private val playersMarketComponent: PlayersMarketComponent,
     player: OnlineKPlayer,
-    dependencies: AuctionGuiDependencies,
+    private val configKrate: CachedKrate<PluginConfig>,
+    private val translationKrate: CachedKrate<PluginTranslation>,
+    private val dispatchers: KotlinDispatchers,
+    private val router: GuiRouter,
+    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
     private val buttonContext: ButtonContext
 ) : PaginatedInventoryMenu(),
-    AuctionGuiDependencies by dependencies,
-    KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
+    KyoriComponentSerializer by kyoriKrate.unwrap() {
+    private val config by configKrate
+    private val translation by translationKrate
+
     override val inventorySize: InventorySize = InventorySize.XL
 
     private val inventoryMap by lazy {
         DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
     }
 
-    override val title: Component = pluginTranslation.menu.market.component
+    override val title: Component = translation.menu.market.component
 
     override val playerHolder = DefaultPlayerHolder(player.cast<BukkitOnlineKPlayer>().instance)
 
