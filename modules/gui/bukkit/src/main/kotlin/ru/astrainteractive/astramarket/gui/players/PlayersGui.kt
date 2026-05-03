@@ -42,14 +42,14 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.cast
 
 internal class PlayersGui(
-    private val playersMarketComponent: PlayersMarketComponent,
     player: OnlineKPlayer,
-    private val configKrate: CachedKrate<PluginConfig>,
-    private val translationKrate: CachedKrate<PluginTranslation>,
-    private val dispatchers: KotlinDispatchers,
-    private val router: GuiRouter,
+    configKrate: CachedKrate<PluginConfig>,
     kyoriKrate: CachedKrate<KyoriComponentSerializer>,
-    private val buttonContext: ButtonContext
+    translationKrate: CachedKrate<PluginTranslation>,
+    private val buttonContext: ButtonContext,
+    private val dispatchers: KotlinDispatchers,
+    private val playersMarketComponent: PlayersMarketComponent,
+    private val router: GuiRouter,
 ) : PaginatedInventoryMenu(),
     KyoriComponentSerializer by kyoriKrate.unwrap() {
     private val config by configKrate

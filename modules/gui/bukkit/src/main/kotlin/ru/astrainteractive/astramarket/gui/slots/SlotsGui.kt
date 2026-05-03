@@ -50,11 +50,11 @@ import ru.astrainteractive.klibs.mikro.core.util.cast
 
 internal class SlotsGui(
     player: OnlineKPlayer,
-    private val configKrate: CachedKrate<PluginConfig>,
-    private val translationKrate: CachedKrate<PluginTranslation>,
-    private val dispatchers: KotlinDispatchers,
-    private val router: GuiRouter,
+    configKrate: CachedKrate<PluginConfig>,
+    translationKrate: CachedKrate<PluginTranslation>,
+    dispatchers: KotlinDispatchers,
     kyoriKrate: CachedKrate<KyoriComponentSerializer>,
+    private val router: GuiRouter,
     private val buttonContext: ButtonContext,
     private val auctionComponent: AuctionComponent
 ) : PaginatedInventoryMenu(),
