@@ -8,6 +8,10 @@ class SlotInventoryLayoutBuilder<K> {
         rows += keys.toList()
     }
 
+    fun row(size: Int, key: K) {
+        rows += List(size) { key }
+    }
+
     fun build(): SlotInventoryLayout<K> = SlotInventoryLayout(rows)
 }
 
