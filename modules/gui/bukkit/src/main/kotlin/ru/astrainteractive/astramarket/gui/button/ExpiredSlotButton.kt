@@ -48,7 +48,11 @@ internal fun ButtonContext.expiredSlot(
             pluginTranslation.auction.auctionBy(ownerName).component
         }
         .addLore {
-            val time = auctionItem.time.milliseconds.getTimeFormatted(pluginTranslation.general.timeAgoFormat).raw
+            val time = auctionItem.time.milliseconds.getTimeFormatted(
+                pluginTranslation.general.timeAgoFormatDHM,
+                pluginTranslation.general.timeAgoFormatHM,
+                pluginTranslation.general.timeAgoFormatM
+            ).raw
             pluginTranslation.auction.auctionCreatedAgo(time).component
         }
         .addLore {

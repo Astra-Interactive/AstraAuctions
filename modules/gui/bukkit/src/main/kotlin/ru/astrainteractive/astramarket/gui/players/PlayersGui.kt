@@ -100,7 +100,7 @@ internal class PlayersGui(
             }
         )
 
-    private val expiredButton: InventorySlot
+    private val filterExpiredButton: InventorySlot
         get() = buttonContext.filterExpired(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.FILTER_EXPIRED),
             isExpired = playersMarketComponent.model.value.isExpired,
@@ -111,7 +111,7 @@ internal class PlayersGui(
             }
         )
 
-    private val allSlots: InventorySlot
+    private val displayTypeButton: InventorySlot
         get() = buttonContext.slotsType(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.DISPLAY_TYPE),
             isGroupedByPlayers = true,
@@ -125,7 +125,7 @@ internal class PlayersGui(
             }
         )
 
-    private val closeButton: InventorySlot
+    private val backButton: InventorySlot
         get() = buttonContext.back(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
             click = { inventoryOwner.closeInventory() }
@@ -186,9 +186,9 @@ internal class PlayersGui(
         if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
         if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
         setInventorySlot(sortButton)
-        setInventorySlot(expiredButton)
-        setInventorySlot(closeButton)
-        setInventorySlot(allSlots)
+        setInventorySlot(filterExpiredButton)
+        setInventorySlot(backButton)
+        setInventorySlot(displayTypeButton)
         setInventorySlot(slots)
     }
 }

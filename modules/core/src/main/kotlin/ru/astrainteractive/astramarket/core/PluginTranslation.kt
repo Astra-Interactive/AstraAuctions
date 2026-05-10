@@ -125,9 +125,7 @@ data class PluginTranslation(
             .plus("&#f55442У вас уже макстимальное число лотов")
             .toRaw(),
         @SerialName("auction_by")
-        private val auctionBy: StringDesc.Raw = PREFIX
-            .plus("&7Выставил: &#d6a213%player_owner%")
-            .toRaw(),
+        private val auctionBy: StringDesc.Raw = StringDesc.Raw("&7Выставил: &#d6a213%player_owner%"),
         @SerialName("auction_created_ago")
         private val auctionCreatedAgo: StringDesc.Raw = StringDesc.Raw("&7Время: &#d6a213%time%"),
         @SerialName("auction_last")
@@ -232,8 +230,12 @@ data class PluginTranslation(
         val unexpectedError: StringDesc.Raw = PREFIX
             .plus("&#f55442Произошла непредвиденная ошибка")
             .toRaw(),
-        @SerialName("time_format")
-        val timeAgoFormat: StringDesc.Raw = StringDesc.Raw("%days%дн. %hours%ч. %minutes%м. назад")
+        @SerialName("time_format_dhm")
+        val timeAgoFormatDHM: StringDesc.Raw = StringDesc.Raw("%days%дн. %hours%ч. %minutes%м. назад"),
+        @SerialName("time_format_hm")
+        val timeAgoFormatHM: StringDesc.Raw = StringDesc.Raw("%hours%ч. %minutes%м. назад"),
+        @SerialName("time_format_m")
+        val timeAgoFormatM: StringDesc.Raw = StringDesc.Raw("%minutes%м. назад")
     )
 
     companion object {

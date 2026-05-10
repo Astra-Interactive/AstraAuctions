@@ -116,9 +116,9 @@ internal class SlotsGui(
             }
         )
 
-    private val expiredSlotsButton: InventorySlot
+    private val filterExpiredButton: InventorySlot
         get() = buttonContext.filterExpired(
-            index = inventoryMap.firstIndexOf(AuctionSlotKey.AUCTION_ITEM),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.FILTER_EXPIRED),
             isExpired = auctionComponent.model.value.isExpired,
             click = {
                 this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
@@ -127,19 +127,7 @@ internal class SlotsGui(
             }
         )
 
-    private val openPlayersButton: InventorySlot
-        get() = buttonContext.back(
-            index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
-            click = {
-                val route = GuiRouter.Route.Players(
-                    inventoryOwner = this@SlotsGui.inventoryOwner,
-                    isExpired = auctionComponent.model.value.isExpired
-                )
-                router.navigate(route)
-            }
-        )
-
-    private val playerSlots: InventorySlot
+    private val displayTypeButton: InventorySlot
         get() = buttonContext.slotsType(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.DISPLAY_TYPE),
             isGroupedByPlayers = false,
@@ -152,27 +140,11 @@ internal class SlotsGui(
             }
         )
 
-    private val closeButton: InventorySlot
+    private val backButton: InventorySlot
         get() = buttonContext.back(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
             click = { this@SlotsGui.inventoryOwner.closeInventory() }
         )
-
-    private fun onNextPageClicked() {
-        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
-        paginator.openNextPage()
-    }
-
-    private fun onPrevPageClicked() {
-        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
-        paginator.openPrevPage()
-    }
-
-    private fun onSortButtonClicked(isRightClick: Boolean) {
-        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
-        auctionComponent.onSortButtonClicked(isRightClick)
-        setInventorySlot(sortButton)
-    }
 
     private val itemSlots: List<InventorySlot>
         get() {
@@ -196,6 +168,22 @@ internal class SlotsGui(
                 )
             }
         }
+
+    private fun onNextPageClicked() {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        paginator.openNextPage()
+    }
+
+    private fun onPrevPageClicked() {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        paginator.openPrevPage()
+    }
+
+    private fun onSortButtonClicked(isRightClick: Boolean) {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        auctionComponent.onSortButtonClicked(isRightClick)
+        setInventorySlot(sortButton)
+    }
 
     override fun onInventoryCloseEvent(e: InventoryCloseEvent) {
         super.onInventoryCloseEvent(e)
@@ -232,15 +220,11 @@ internal class SlotsGui(
 
     override fun render() {
         super.render()
-        setInventorySlot(expiredSlotsButton)
         if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
         if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
-        if (auctionComponent.model.value.targetPlayerUUID != null) {
-            setInventorySlot(openPlayersButton)
-        } else {
-            setInventorySlot(closeButton)
-            setInventorySlot(playerSlots)
-        }
+        setInventorySlot(filterExpiredButton)
+        setInventorySlot(displayTypeButton)
+        setInventorySlot(backButton)
         setInventorySlot(borderButtons)
         setInventorySlot(sortButton)
         setInventorySlot(itemSlots)

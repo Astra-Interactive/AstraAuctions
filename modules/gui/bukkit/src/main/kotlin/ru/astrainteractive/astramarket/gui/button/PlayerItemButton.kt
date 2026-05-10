@@ -48,7 +48,11 @@ internal fun ButtonContext.playerItem(
         val time = playerAndSlots.slots
             .maxBy { it.time }
             .time.milliseconds
-            .getTimeFormatted(pluginTranslation.general.timeAgoFormat).raw
+            .getTimeFormatted(
+                pluginTranslation.general.timeAgoFormatDHM,
+                pluginTranslation.general.timeAgoFormatHM,
+                pluginTranslation.general.timeAgoFormatM
+            ).raw
         pluginTranslation.auction.auctionLast(time).component
     }
     .setOnClickListener(click)
