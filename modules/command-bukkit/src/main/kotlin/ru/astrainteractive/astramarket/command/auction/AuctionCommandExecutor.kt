@@ -28,7 +28,7 @@ internal class AuctionCommandExecutor(
         when (input) {
             is AuctionCommand.Result.OpenSlots -> {
                 val route = GuiRouter.Route.Slots(
-                    player = input.player,
+                    inventoryOwner = input.player,
                     isExpired = input.isExpired,
                     targetPlayerUUID = input.targetPlayerUUID
                 )
@@ -37,7 +37,7 @@ internal class AuctionCommandExecutor(
 
             is AuctionCommand.Result.OpenPlayers -> {
                 val route = GuiRouter.Route.Players(
-                    player = input.player,
+                    inventoryOwner = input.player,
                     isExpired = input.isExpired
                 )
                 router.navigate(route)

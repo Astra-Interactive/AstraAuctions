@@ -1,10 +1,11 @@
 package ru.astrainteractive.astramarket.players.presentation
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.StateFlow
 import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 
-interface PlayersMarketComponent {
+interface PlayersMarketComponent : CoroutineScope {
     val model: StateFlow<Model>
 
     fun toggleExpired()

@@ -6,14 +6,14 @@ import org.bukkit.Material
 import org.bukkit.inventory.meta.SkullMeta
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.editMeta
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setMaterial
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
+import ru.astrainteractive.astralibs.menu.slot.addLore
+import ru.astrainteractive.astralibs.menu.slot.editMeta
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setMaterial
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
-import ru.astrainteractive.astramarket.gui.util.DurationExt.getTimeFormatted
+import ru.astrainteractive.astramarket.gui.util.getTimeFormatted
 import kotlin.time.Duration.Companion.milliseconds
 
 internal fun ButtonContext.playerItem(

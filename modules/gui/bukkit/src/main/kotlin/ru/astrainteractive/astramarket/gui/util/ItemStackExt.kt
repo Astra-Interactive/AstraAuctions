@@ -3,19 +3,14 @@
 package ru.astrainteractive.astramarket.gui.util
 
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astramarket.core.PluginConfig
 
-internal object ItemStackExt {
-    fun Player.playSound(sound: String) {
-        playSound(location, sound, 1f, 1f)
+fun PluginConfig.Button.toItemStack(): ItemStack {
+    val type = Material.getMaterial(material.uppercase()) ?: Material.PAPER
+    return ItemStack(type).apply {
+        val meta = itemMeta ?: error("ItemStack with material $type didn't have itemMeta")
+        meta.setCustomModelData(customModelData)
+        itemMeta = meta
     }
-
-    fun PluginConfig.Button.toItemStack() =
-        ItemStack(Material.getMaterial(material.uppercase()) ?: Material.PAPER).apply {
-            val meta = itemMeta!!
-            meta.setCustomModelData(customModelData)
-            itemMeta = meta
-        }
 }
