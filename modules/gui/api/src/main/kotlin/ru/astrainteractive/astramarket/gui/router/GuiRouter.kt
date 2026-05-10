@@ -5,19 +5,21 @@ import java.util.UUID
 
 interface GuiRouter {
     sealed interface Route {
+        val inventoryOwner: OnlineKPlayer
+
         /**
-         * @param player player who opened route
+         * @param inventoryOwner player who opened route
          * @param isExpired expired auctions
          * @param targetPlayerUUID only this player auctions will be shown
          */
         class Slots(
-            val player: OnlineKPlayer,
+            override val inventoryOwner: OnlineKPlayer,
             val isExpired: Boolean,
             val targetPlayerUUID: UUID?
         ) : Route
 
         class Players(
-            val player: OnlineKPlayer,
+            override val inventoryOwner: OnlineKPlayer,
             val isExpired: Boolean
         ) : Route
     }

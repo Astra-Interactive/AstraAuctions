@@ -2,12 +2,12 @@ package ru.astrainteractive.astramarket.gui.button
 
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.editMeta
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
+import ru.astrainteractive.astralibs.menu.slot.editMeta
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.util.ItemStackExt.toItemStack
+import ru.astrainteractive.astramarket.gui.util.toItemStack
 
 internal fun ButtonContext.prevPage(
     index: Int,

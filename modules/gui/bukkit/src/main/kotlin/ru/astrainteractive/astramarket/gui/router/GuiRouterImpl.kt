@@ -1,15 +1,15 @@
 package ru.astrainteractive.astramarket.gui.router
 
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
 import ru.astrainteractive.astramarket.gui.players.PlayersGui
 import ru.astrainteractive.astramarket.gui.slots.SlotsGui
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
+import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class GuiRouterImpl(
     private val coreModule: CoreModule,
@@ -17,12 +17,7 @@ internal class GuiRouterImpl(
     private val bukkitCoreModule: BukkitCoreModule,
     private val playersMarketViewModule: PlayersMarketViewModule
 ) : GuiRouter {
-    private val dependencies = AuctionGuiDependencies.Default(
-        coreModule = coreModule,
-        marketViewDomainModule = marketViewModule.marketViewDomainModule,
-        bukkitCoreModule = bukkitCoreModule,
-        router = this@GuiRouterImpl
-    )
+
     private val buttonContext = ButtonContext.Default(
         coreModule = coreModule,
         marketViewDomainModule = marketViewModule.marketViewDomainModule,
@@ -31,15 +26,19 @@ internal class GuiRouterImpl(
     )
 
     override fun navigate(route: GuiRouter.Route) {
-        coreModule.ioScope.launch {
-            val gui = when (route) {
+        coreModule.ioScope.launch(coreModule.dispatchers.Main) {
+            val menu = when (route) {
                 is GuiRouter.Route.Slots -> {
                     SlotsGui(
-                        player = route.player,
-                        dependencies = dependencies,
+                        inventoryOwner = route.inventoryOwner,
+                        configKrate = coreModule.configKrate,
+                        translationKrate = coreModule.pluginTranslationKrate,
+                        dispatchers = coreModule.dispatchers,
+                        router = this@GuiRouterImpl,
+                        kyoriKrate = coreModule.kyoriKrate,
                         buttonContext = buttonContext,
                         auctionComponent = marketViewModule.createAuctionComponent(
-                            playerUUID = route.player.uuid,
+                            playerUUID = route.inventoryOwner.uuid,
                             isExpired = route.isExpired,
                             targetPlayerUUID = route.targetPlayerUUID
                         )
@@ -48,8 +47,12 @@ internal class GuiRouterImpl(
 
                 is GuiRouter.Route.Players -> {
                     PlayersGui(
-                        player = route.player,
-                        dependencies = dependencies,
+                        inventoryOwner = route.inventoryOwner,
+                        configKrate = coreModule.configKrate,
+                        translationKrate = coreModule.pluginTranslationKrate,
+                        dispatchers = coreModule.dispatchers,
+                        router = this@GuiRouterImpl,
+                        kyoriKrate = coreModule.kyoriKrate,
                         buttonContext = buttonContext,
                         playersMarketComponent = playersMarketViewModule.createPlayersMarketComponent(
                             isExpired = route.isExpired
@@ -57,9 +60,9 @@ internal class GuiRouterImpl(
                     )
                 }
             }
-            withContext(coreModule.dispatchers.Main) {
-                gui.open()
-            }
+            route.inventoryOwner.tryCast<BukkitOnlineKPlayer>()
+                ?.instance
+                ?.openInventory(menu.inventory)
         }
     }
 }

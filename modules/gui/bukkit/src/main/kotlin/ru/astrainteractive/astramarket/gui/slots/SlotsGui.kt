@@ -1,31 +1,34 @@
 package ru.astrainteractive.astramarket.gui.slots
 
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.ClickType
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
+import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.menu.holder.DefaultPlayerHolder
-import ru.astrainteractive.astralibs.menu.inventory.PaginatedInventoryMenu
+import ru.astrainteractive.astralibs.kyori.unwrap
+import ru.astrainteractive.astralibs.menu.core.setInventorySlot
+import ru.astrainteractive.astralibs.menu.inventory.api.InventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
-import ru.astrainteractive.astralibs.menu.inventory.model.PageContext
-import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.indexOfSlot
-import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isFirstPage
-import ru.astrainteractive.astralibs.menu.inventory.util.PageContextExt.isLastPage
-import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showNextPage
-import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPage
-import ru.astrainteractive.astralibs.menu.inventory.util.PaginatedInventoryMenuExt.showPrevPage
+import ru.astrainteractive.astralibs.menu.paginator.api.DefaultPaginator
+import ru.astrainteractive.astralibs.menu.paginator.api.context
+import ru.astrainteractive.astralibs.menu.paginator.api.openNextPage
+import ru.astrainteractive.astralibs.menu.paginator.api.openPrevPage
+import ru.astrainteractive.astralibs.menu.paginator.api.setMaxItems
+import ru.astrainteractive.astralibs.menu.paginator.model.indexOfSlot
+import ru.astrainteractive.astralibs.menu.paginator.model.isFirstPage
+import ru.astrainteractive.astralibs.menu.paginator.model.isLastPage
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astralibs.server.permission.asKPermissible
-import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
-import ru.astrainteractive.astralibs.server.util.asOnlineMinecraftPlayer
+import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginPermission
+import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.gui.button.auctionSort
 import ru.astrainteractive.astramarket.gui.button.back
 import ru.astrainteractive.astramarket.gui.button.border
@@ -35,27 +38,31 @@ import ru.astrainteractive.astramarket.gui.button.filterExpired
 import ru.astrainteractive.astramarket.gui.button.nextPage
 import ru.astrainteractive.astramarket.gui.button.prevPage
 import ru.astrainteractive.astramarket.gui.button.slotsType
-import ru.astrainteractive.astramarket.gui.di.AuctionGuiDependencies
-import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap
-import ru.astrainteractive.astramarket.gui.invmap.AuctionInventoryMap.AuctionSlotKey
-import ru.astrainteractive.astramarket.gui.invmap.DefaultAuctionInventoryMap
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.countKeys
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.indexOf
-import ru.astrainteractive.astramarket.gui.invmap.InventoryMapExt.withKeySlot
+import ru.astrainteractive.astramarket.gui.layout.AuctionSlotKey
+import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
-import ru.astrainteractive.astramarket.gui.util.ItemStackExt.playSound
+import ru.astrainteractive.astramarket.gui.util.closeInventory
+import ru.astrainteractive.astramarket.gui.util.playSound
 import ru.astrainteractive.astramarket.market.presentation.AuctionComponent
-import ru.astrainteractive.klibs.mikro.core.util.cast
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.getValue
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
+import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal class SlotsGui(
-    player: OnlineKPlayer,
-    dependencies: AuctionGuiDependencies,
+    configKrate: CachedKrate<PluginConfig>,
+    translationKrate: CachedKrate<PluginTranslation>,
+    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
+    private val inventoryOwner: OnlineKPlayer,
+    private val router: GuiRouter,
     private val buttonContext: ButtonContext,
-    private val auctionComponent: AuctionComponent
-) : PaginatedInventoryMenu(),
-    AuctionGuiDependencies by dependencies,
-    KyoriComponentSerializer by dependencies.kyoriComponentSerializer {
-    override val playerHolder = DefaultPlayerHolder(player.cast<BukkitOnlineKPlayer>().instance)
+    private val auctionComponent: AuctionComponent,
+    private val dispatchers: KotlinDispatchers,
+) : InventoryMenu(),
+    KyoriComponentSerializer by kyoriKrate.unwrap() {
+    private val config by configKrate
+    private val translation by translationKrate
+
     override val title: Component = let {
         val playerNameComponent = auctionComponent.model.value
             .targetPlayerUUID
@@ -63,132 +70,133 @@ internal class SlotsGui(
             ?.name
             ?.let { name -> Component.text(": $name") }
             ?: Component.empty()
-        pluginTranslation.menu.market.component.append(playerNameComponent)
+        translation.menu.market.component.append(playerNameComponent)
     }
+    override val childComponents = listOf(auctionComponent)
+
+    override val menuScope = CoroutineFeature
+        .Default(dispatchers.Main)
+        .withTimings()
+
     override val inventorySize: InventorySize = InventorySize.XL
 
-    private val inventoryMap: AuctionInventoryMap
-        get() = if (config.auction.useCompactDesign) DefaultAuctionInventoryMap else DefaultAuctionInventoryMap
+    private val inventoryMap by lazy {
+        DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
+    }
 
-    override var pageContext: PageContext = PageContext(
-        page = 0,
-        maxItemsPerPage = inventoryMap.countKeys(AuctionSlotKey.AI),
-        maxItems = 0
+    private val paginator = DefaultPaginator(
+        maxItemsPerPage = inventoryMap.count(AuctionSlotKey.AUCTION_ITEM)
     )
 
     private val borderButtons: List<InventorySlot>
-        get() = inventoryMap.withKeySlot(
-            key = AuctionSlotKey.BO,
+        get() = inventoryMap.mapSlotsNotNull(
+            key = AuctionSlotKey.BORDER,
             transform = buttonContext::border
         )
 
-    override val nextPageButton: InventorySlot
+    private val nextPageButton: InventorySlot
         get() = buttonContext.nextPage(
-            index = inventoryMap.indexOf(AuctionSlotKey.NE),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.NEXT_PAGE),
             click = { onNextPageClicked() }
         )
 
-    override val prevPageButton: InventorySlot
+    private val prevPageButton: InventorySlot
         get() = buttonContext.prevPage(
-            index = inventoryMap.indexOf(AuctionSlotKey.PR),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.PREV_PAGE),
             click = { onPrevPageClicked() }
         )
 
     private val sortButton: InventorySlot
         get() = buttonContext.auctionSort(
-            index = inventoryMap.indexOf(AuctionSlotKey.FI),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.SORT),
             sortType = auctionComponent.model.value.sortType,
             click = {
-                showPage(0)
+                paginator.openPage(0)
                 onSortButtonClicked(it.isRightClick)
             }
         )
 
-    private val expiredSlotsButton: InventorySlot
+    private val filterExpiredButton: InventorySlot
         get() = buttonContext.filterExpired(
-            index = inventoryMap.indexOf(AuctionSlotKey.AU),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.FILTER_EXPIRED),
             isExpired = auctionComponent.model.value.isExpired,
             click = {
-                playerHolder.player.playSound(config.sounds.open)
-                showPage(0)
+                this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+                paginator.openPage(0)
                 auctionComponent.toggleExpired()
             }
         )
 
-    private val openPlayersButton: InventorySlot
-        get() = buttonContext.back(
-            index = inventoryMap.indexOf(AuctionSlotKey.BA),
-            click = {
-                val route = GuiRouter.Route.Players(
-                    player = playerHolder.player.asOnlineMinecraftPlayer(),
-                    isExpired = auctionComponent.model.value.isExpired
-                )
-                router.navigate(route)
-            }
-        )
-
-    private val playerSlots: InventorySlot
+    private val displayTypeButton: InventorySlot
         get() = buttonContext.slotsType(
-            index = inventoryMap.indexOf(AuctionSlotKey.GR),
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.DISPLAY_TYPE),
             isGroupedByPlayers = false,
             click = {
                 val route = GuiRouter.Route.Players(
-                    player = playerHolder.player.asOnlineMinecraftPlayer(),
+                    inventoryOwner = this@SlotsGui.inventoryOwner,
                     isExpired = auctionComponent.model.value.isExpired
                 )
                 router.navigate(route)
             }
         )
 
-    private val closeButton: InventorySlot
+    private val backButton: InventorySlot
         get() = buttonContext.back(
-            index = inventoryMap.indexOf(AuctionSlotKey.BA),
-            click = { playerHolder.player.closeInventory() }
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
+            click = { this@SlotsGui.inventoryOwner.closeInventory() }
         )
-
-    private fun onNextPageClicked() {
-        playerHolder.player.playSound(config.sounds.open)
-        showNextPage()
-    }
-
-    private fun onPrevPageClicked() {
-        playerHolder.player.playSound(config.sounds.open)
-        showPrevPage()
-    }
-
-    private fun onSortButtonClicked(isRightClick: Boolean) {
-        playerHolder.player.playSound(config.sounds.open)
-        auctionComponent.onSortButtonClicked(isRightClick)
-        sortButton.setInventorySlot()
-    }
 
     private val itemSlots: List<InventorySlot>
         get() {
             var itemIndex = 0
-            return inventoryMap.withKeySlot(AuctionSlotKey.AI) { slotIndex ->
-                val index = pageContext.indexOfSlot(itemIndex)
+            return inventoryMap.mapSlotsNotNull(AuctionSlotKey.AUCTION_ITEM) { slotIndex ->
+                val index = paginator.context.indexOfSlot(itemIndex)
                 itemIndex++
                 val auctionItem = auctionComponent.model
                     .value
                     .items
                     .getOrNull(index)
-                    ?: return@withKeySlot null
-                val permissible = playerHolder.player.asKPermissible()
+                    ?: return@mapSlotsNotNull null
+                val permissible = this@SlotsGui.inventoryOwner
                 buttonContext.expiredSlot(
                     auctionItem = auctionItem,
                     index = slotIndex,
                     click = { onAuctionItemClicked(index, it.click) },
-                    isOwner = auctionItem.minecraftUuid == playerHolder.player.uniqueId.toString(),
+                    isOwner = auctionItem.minecraftUuid == this@SlotsGui.inventoryOwner.uuid.toString(),
                     hasExpirePermission = permissible.hasPermission(PluginPermission.Expire),
                     hasRemovePermission = permissible.hasPermission(PluginPermission.RemoveSlot)
                 )
             }
         }
 
-    override fun onInventoryClosed(it: InventoryCloseEvent) {
-        super.onInventoryClosed(it)
-        playerHolder.player.playSound(config.sounds.close)
+    private fun onNextPageClicked() {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        paginator.openNextPage()
+    }
+
+    private fun onPrevPageClicked() {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        paginator.openPrevPage()
+    }
+
+    private fun onSortButtonClicked(isRightClick: Boolean) {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        auctionComponent.onSortButtonClicked(isRightClick)
+        setInventorySlot(sortButton)
+    }
+
+    override fun onInventoryCloseEvent(e: InventoryCloseEvent) {
+        super.onInventoryCloseEvent(e)
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.close)
         auctionComponent.cancel()
+    }
+
+    override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
+        this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
+        auctionComponent.model
+            .onEach { paginator.setMaxItems(auctionComponent.model.value.items.size) }
+            .onEach { withContext(dispatchers.Main) { render() } }
+            .launchIn(menuScope)
     }
 
     private fun onAuctionItemClicked(i: Int, clickType: ClickType) {
@@ -205,38 +213,20 @@ internal class SlotsGui(
         auctionComponent.onAuctionItemClicked(i, sharedClickType)
     }
 
-    override fun onInventoryClicked(e: InventoryClickEvent) {
-        super.onInventoryClicked(e)
+    override fun onInventoryClickEvent(e: InventoryClickEvent) {
+        super.onInventoryClickEvent(e)
         e.isCancelled = true
     }
 
     override fun render() {
         super.render()
-        expiredSlotsButton.setInventorySlot()
-        if (!pageContext.isFirstPage) prevPageButton.setInventorySlot()
-        if (!pageContext.isLastPage) nextPageButton.setInventorySlot()
-        if (auctionComponent.model.value.targetPlayerUUID != null) {
-            openPlayersButton.setInventorySlot()
-        } else {
-            closeButton.setInventorySlot()
-            playerSlots.setInventorySlot()
-        }
-        borderButtons.forEach { it.setInventorySlot() }
-        sortButton.setInventorySlot()
-        itemSlots.forEach { it.setInventorySlot() }
-    }
-
-    private val drawDispatcher = dispatchers.IO.limitedParallelism(1)
-    override fun onInventoryCreated() {
-        playerHolder.player.playSound(config.sounds.open)
-        auctionComponent.model
-            .onEach {
-                pageContext = pageContext.copy(
-                    maxItems = auctionComponent.model.value.items.size
-                )
-                render()
-            }
-            .flowOn(drawDispatcher)
-            .launchIn(menuScope)
+        if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
+        if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
+        setInventorySlot(filterExpiredButton)
+        setInventorySlot(displayTypeButton)
+        setInventorySlot(backButton)
+        setInventorySlot(borderButtons)
+        setInventorySlot(sortButton)
+        setInventorySlot(itemSlots)
     }
 }

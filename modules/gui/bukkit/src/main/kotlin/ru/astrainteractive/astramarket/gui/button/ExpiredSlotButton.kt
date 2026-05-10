@@ -3,15 +3,14 @@ package ru.astrainteractive.astramarket.gui.button
 import org.bukkit.Bukkit
 import ru.astrainteractive.astralibs.menu.clicker.Click
 import ru.astrainteractive.astralibs.menu.slot.InventorySlot
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.addLore
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setIndex
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setItemStack
-import ru.astrainteractive.astralibs.menu.slot.util.InventorySlotBuilderExt.setOnClickListener
+import ru.astrainteractive.astralibs.menu.slot.addLore
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
-import ru.astrainteractive.astramarket.gui.button.util.InventorySlotBuilderExt.addLore
-import ru.astrainteractive.astramarket.gui.util.DurationExt.getTimeFormatted
-import java.util.UUID
+import ru.astrainteractive.astramarket.gui.util.getTimeFormatted
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 @Suppress("LongParameterList")
@@ -49,7 +48,11 @@ internal fun ButtonContext.expiredSlot(
             pluginTranslation.auction.auctionBy(ownerName).component
         }
         .addLore {
-            val time = auctionItem.time.milliseconds.getTimeFormatted(pluginTranslation.general.timeAgoFormat).raw
+            val time = auctionItem.time.milliseconds.getTimeFormatted(
+                pluginTranslation.general.timeAgoFormatDHM,
+                pluginTranslation.general.timeAgoFormatHM,
+                pluginTranslation.general.timeAgoFormatM
+            ).raw
             pluginTranslation.auction.auctionCreatedAgo(time).component
         }
         .addLore {

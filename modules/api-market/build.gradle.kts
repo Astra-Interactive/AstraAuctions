@@ -17,4 +17,5 @@ dependencies {
 
     testImplementation(libs.driver.h2)
     testImplementation(libs.tests.kotlin.test)
+    testImplementation(libs.kotlin.coroutines.test)
 }
