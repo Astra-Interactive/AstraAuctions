@@ -28,4 +28,4 @@ services:
       #      - ./build/forge:/data # Forge
       - ./build/bukkit:/data # Bukkit/Paper/Spigot
 #      - ./build/velocity:/data # Velocity
-#      - ./build/fabric:/data # Fabric
+#      - ./build/fabric:/data # Fabricå
