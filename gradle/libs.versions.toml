@@ -6,7 +6,6 @@ driver-jdbc = "3.53.0.0"
 driver-mariadb = "3.5.8"
 driver-mysql = "8.0.33"
 exposed = "1.2.0"
-forgegradle = "[6.0,6.2)"
 gradle-buildconfig = "6.0.9"
 gradle-ftp = "0.1.3"
 gradle-shadow = "9.4.1"
@@ -16,7 +15,7 @@ jda = "6.4.1"
 jda-webhook = "0.8.4"
 jmh-core = "1.37"
 joml = "1.10.8"
-klibs-gradleplugin = "2.0.2"
+klibs-gradleplugin = "2.1.1"
 klibs-kdi = "1.4.8"
 klibs-kstorage = "5.0.4"
 klibs-mikro = "1.23.0"
@@ -28,22 +27,28 @@ kotlin-serialization = "1.11.0"
 kotlin-serialization-kaml = "0.104.0"
 kotlin-version = "2.2.0"
 ktor = "3.4.3"
-minecraft-astralibs = "3.38.0"
+minecraft-astralibs = "3.40.5"
 minecraft-brigadier = "1.3.10"
+minecraft-authlib = "6.0.54"
 minecraft-bstats = "3.2.1"
 minecraft-bungee = "26.1-R0.1-SNAPSHOT"
 minecraft-datafixerupper = "8.0.16"
 minecraft-essentialsx = "2.21.2"
 minecraft-fabric-api = "0.139.5+"
-minecraft-fabric-yarn = "1.20.1+build.10"
 minecraft-fabric-kotlin = "1.13.7+"
 minecraft-fabric-loader = "0.19.2"
 minecraft-fabric-loom = "1.16.1"
+minecraft-fabric-yarn = "1.20.1+build.10"
+minecraft-forge-bus="6.0.5"
+minecraft-forgegradle = "7.0.25"
+minecraft-forge-jarjar = "0.2.3"
+minecraft-forgerenamer = "1.0.14"
+minecraft-forgeversion = "1.20.1-47.4.12"
 minecraft-kyori = "5.0.1"
 minecraft-luckperms = "5.5"
 minecraft-mcprotocollib = "1.21.7-SNAPSHOT"
 minecraft-mockbukkit = "4.108.0"
-minecraft-mojang-version = "1.21.11"
+minecraft-mojang-version = "1.20.1"
 minecraft-neoforged-bus = "8.0.2"
 minecraft-neoforgegradle = "7.1.20"
 minecraft-neoforgeversion = "21.1.129"
@@ -103,11 +108,13 @@ minecraft-astralibs-command-bukkit = { module = "ru.astrainteractive.astralibs:c
 minecraft-astralibs-core = { module = "ru.astrainteractive.astralibs:core", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-bukkit = { module = "ru.astrainteractive.astralibs:core-bukkit", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-forge = { module = "ru.astrainteractive.astralibs:core-forge", version.ref = "minecraft-astralibs" }
+minecraft-astralibs-core-minecraft = { module = "ru.astrainteractive.astralibs:core-minecraft", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-core-neoforge = { module = "ru.astrainteractive.astralibs:core-neoforge", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-exposed = { module = "ru.astrainteractive.astralibs:exposed", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-menu-bukkit = { module = "ru.astrainteractive.astralibs:menu-bukkit", version.ref = "minecraft-astralibs" }
 minecraft-astralibs-orm = { module = "ru.astrainteractive.astralibs:orm", version.ref = "minecraft-astralibs" }
 minecraft-brigadier = { module = "com.mojang:brigadier", version.ref = "minecraft-brigadier" }
+minecraft-authlib = { module = "com.mojang:authlib", version.ref = "minecraft-authlib" }
 minecraft-bstats = { module = "org.bstats:bstats-bukkit", version.ref = "minecraft-bstats" }
 minecraft-bungee = { module = "net.md-5:bungeecord-api", version.ref = "minecraft-bungee" }
 minecraft-datafixerupper = { module = "com.mojang:datafixerupper", version.ref = "minecraft-datafixerupper" }
@@ -117,6 +124,8 @@ minecraft-fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.
 minecraft-fabric-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "minecraft-fabric-kotlin" }
 minecraft-fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "minecraft-fabric-loader" }
 minecraft-fabric-mojang = { module = "com.mojang:minecraft", version.ref = "minecraft-mojang-version" }
+minecraft-forge-bus = { module = "net.minecraftforge:eventbus", version.ref = "minecraft-forge-bus" }
+minecraft-forgeversion = { module = "net.minecraftforge:forge", version.ref = "minecraft-forgeversion" }
 minecraft-kyori-api = { module = "net.kyori:adventure-api", version.ref = "minecraft-kyori" }
 minecraft-kyori-gson = { module = "net.kyori:adventure-text-serializer-gson", version.ref = "minecraft-kyori" }
 minecraft-kyori-legacy = { module = "net.kyori:adventure-text-serializer-legacy", version.ref = "minecraft-kyori" }
@@ -151,13 +160,15 @@ tests-turbine = { module = "app.cash.turbine:turbine", version.ref = "tests-turb
 [plugins]
 gradle-buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "gradle-buildconfig" }
 gradle-fabric-loom = { id = "fabric-loom", version.ref = "minecraft-fabric-loom" }
-gradle-forgegradle = { id = "net.minecraftforge.gradle", version.ref = "forgegradle" }
+gradle-forgegradle = { id = "net.minecraftforge.gradle", version.ref = "minecraft-forgegradle" }
+gradle-forge-jarjar = { id = "net.minecraftforge.jarjar", version.ref = "minecraft-forge-jarjar" }
+gradle-forgerenamer = { id = "net.minecraftforge.renamer", version.ref = "minecraft-forgerenamer" }
 gradle-ftp = { id = "ru.astrainteractive.ftpplugin.gradleftp", version.ref = "gradle-ftp" }
 gradle-neoforgegradle = { id = "net.neoforged.gradle.userdev", version.ref = "minecraft-neoforgegradle" }
 gradle-shadow = { id = "com.gradleup.shadow", version.ref = "gradle-shadow" }
+klibs-gradle-minecraft-platform = { id = "ru.astrainteractive.gradleplugin.minecraft.platform", version.ref = "klibs-gradleplugin" }
 klibs-gradle-detekt = { id = "ru.astrainteractive.gradleplugin.detekt", version.ref = "klibs-gradleplugin" }
 klibs-gradle-detekt-compose = { id = "ru.astrainteractive.gradleplugin.detekt.compose", version.ref = "klibs-gradleplugin" }
-klibs-gradle-dokka-module = { id = "ru.astrainteractive.gradleplugin.dokka.module", version.ref = "klibs-gradleplugin" }
 klibs-gradle-dokka-root = { id = "ru.astrainteractive.gradleplugin.dokka.root", version.ref = "klibs-gradleplugin" }
 klibs-gradle-java-core = { id = "ru.astrainteractive.gradleplugin.java.core", version.ref = "klibs-gradleplugin" }
 klibs-gradle-java-version = { id = "ru.astrainteractive.gradleplugin.java.version", version.ref = "klibs-gradleplugin" }

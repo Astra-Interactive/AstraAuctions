@@ -1,6 +1,8 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("ru.astrainteractive.gradleplugin.detekt")
+    id("ru.astrainteractive.gradleplugin.java.version")
 }
 dependencies {
     implementation(libs.exposed.core)
@@ -12,10 +14,8 @@ dependencies {
     implementation(libs.kotlin.serialization.json)
     implementation(libs.kotlin.serialization.kaml)
     implementation(libs.minecraft.astralibs.core)
-
     implementation(projects.modules.core)
-
     testImplementation(libs.driver.h2)
-    testImplementation(libs.tests.kotlin.test)
     testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.tests.kotlin.test)
 }

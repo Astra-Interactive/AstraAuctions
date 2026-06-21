@@ -9,7 +9,7 @@ import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
-import ru.astrainteractive.klibs.mikro.core.util.cast
+import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionCommandFactory(
     private val executor: AuctionCommandExecutor,
@@ -27,10 +27,11 @@ internal class AuctionCommandFactory(
                         argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) { amountArg ->
                             runs(errorHandler::handle) { ctx ->
                                 val player = ctx.requirePlayer()
+                                    .tryCast<BukkitOnlineKPlayer>()
+                                    ?: error("Could not get bukkit player ")
                                 AuctionCommand.Result.Sell(
                                     player = player,
                                     itemInstance = player
-                                        .cast<BukkitOnlineKPlayer>()
                                         .instance
                                         .inventory
                                         .itemInMainHand,
@@ -41,10 +42,11 @@ internal class AuctionCommandFactory(
                         }
                         runs(errorHandler::handle) { ctx ->
                             val player = ctx.requirePlayer()
+                                .tryCast<BukkitOnlineKPlayer>()
+                                ?: error("Could not get bukkit player ")
                             AuctionCommand.Result.Sell(
                                 player = player,
                                 itemInstance = player
-                                    .cast<BukkitOnlineKPlayer>()
                                     .instance
                                     .inventory
                                     .itemInMainHand,

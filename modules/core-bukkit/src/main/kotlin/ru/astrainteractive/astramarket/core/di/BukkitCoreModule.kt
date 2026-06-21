@@ -2,7 +2,9 @@ package ru.astrainteractive.astramarket.core.di
 
 import com.charleskorn.kaml.PolymorphismStyle
 import com.charleskorn.kaml.Yaml
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.serialization.StringFormat
 import org.bstats.bukkit.Metrics
@@ -26,6 +28,7 @@ import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.asCachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 
 interface BukkitCoreModule : CoreModule {
 
@@ -77,10 +80,20 @@ interface BukkitCoreModule : CoreModule {
             }
         ).asCachedKrate()
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
-        override val ioScope: CoroutineScope = CoroutineFeature.IO.withTimings()
-        override val mainScope = CoroutineFeature
-            .Default(dispatchers.BukkitMain)
+        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
+            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
+            logger.error(throwable) { "Error happened inside global coroutine scope!" }
+        }
+
+        override val ioScope = CoroutineFeature
+            .Default(dispatchers.IO + SupervisorJob() + createCoroutineExceptionHandler())
             .withTimings()
+
+        override val mainScope: CoroutineScope by lazy {
+            CoroutineFeature
+                .Default(dispatchers.Main + SupervisorJob() + createCoroutineExceptionHandler())
+                .withTimings()
+        }
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
             BukkitCurrencyEconomyProviderFactory(lifecyclePlugin)
