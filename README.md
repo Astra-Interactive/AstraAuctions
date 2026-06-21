@@ -35,19 +35,19 @@ with config and database reload at runtime.
 All of the following aliases open the **same** market and share the same subcommands:
 `/market`, `/ah`, `/auctionhouse`, `/aauc`, `/amarket`.
 
-| Command | Description | Permission |
-|:--------|:------------|:-----------|
-| `/amarket` | Open the market GUI | — |
-| `/amarket players` | Open the market grouped per player | — |
-| `/amarket sell <price> [amount]` | List the item in your hand (amount defaults to 1) | — |
-| `/amarketreload` | Reload config, translations and database | `astra_market.reload` |
+| Command                          | Description                                       | Permission            |
+|:---------------------------------|:--------------------------------------------------|:----------------------|
+| `/amarket`                       | Open the market GUI                               | —                     |
+| `/amarket players`               | Open the market grouped per player                | —                     |
+| `/amarket sell <price> [amount]` | List the item in your hand (amount defaults to 1) | —                     |
+| `/amarketreload`                 | Reload config, translations and database          | `astra_market.reload` |
 
 Additional permissions that gate in-GUI actions and limits:
 
-| Permission | Effect |
-|:-----------|:-------|
-| `astra_market.remove_slot` | Right-click your own listing to take it back |
-| `astra_market.expire` | Middle-click any listing to move it to the owner's expired list |
+| Permission                  | Effect                                                                                  |
+|:----------------------------|:----------------------------------------------------------------------------------------|
+| `astra_market.remove_slot`  | Right-click your own listing to take it back                                            |
+| `astra_market.expire`       | Middle-click any listing to move it to the owner's expired list                         |
 | `astra_market.sell_max.<N>` | Raise this player's maximum active listings to `N`, overriding `max_auction_per_player` |
 
 ### Using the GUI
@@ -117,14 +117,14 @@ buttons:
 
 Key options:
 
-| Key | Meaning |
-|:----|:--------|
-| `use_compact_design` | Use the compact inventory layout for the market GUI |
-| `max_auction_per_player` | Default cap on simultaneous listings per player (overridable via `astra_market.sell_max.<N>`) |
-| `min_price` / `max_price` | Allowed price range for a new listing |
-| `announce` | Broadcast a message when a player lists a new item |
-| `max_time_seconds` | Listing lifetime in **milliseconds**; older listings are auto-expired |
-| `currency_id` | Vault currency to use (when `null`, the default economy provider is used) |
+| Key                       | Meaning                                                                                       |
+|:--------------------------|:----------------------------------------------------------------------------------------------|
+| `use_compact_design`      | Use the compact inventory layout for the market GUI                                           |
+| `max_auction_per_player`  | Default cap on simultaneous listings per player (overridable via `astra_market.sell_max.<N>`) |
+| `min_price` / `max_price` | Allowed price range for a new listing                                                         |
+| `announce`                | Broadcast a message when a player lists a new item                                            |
+| `max_time_seconds`        | Listing lifetime in **milliseconds**; older listings are auto-expired                         |
+| `currency_id`             | Vault currency to use (when `null`, the default economy provider is used)                     |
 
 ### `database.yaml`
 
@@ -137,7 +137,7 @@ configuration:
   type: "H2"
   path: "plugins/AstraMarket/database"
   driver: "org.h2.Driver"
-  arguments: []
+  arguments: [ ]
 ```
 
 ```yaml
@@ -146,7 +146,7 @@ configuration:
   type: "SQLite"
   path: "plugins/AstraMarket/database"
   driver: "org.sqlite.JDBC"
-  arguments: []
+  arguments: [ ]
 ```
 
 ```yaml
@@ -159,7 +159,7 @@ configuration:
   password: "password"
   name: "astramarket"
   driver: "com.mysql.cj.jdbc.Driver"
-  arguments: []
+  arguments: [ ]
 ```
 
 ```yaml
@@ -172,20 +172,68 @@ configuration:
   password: "password"
   name: "astramarket"
   driver: "org.mariadb.jdbc.Driver"
-  arguments: []
+  arguments: [ ]
 ```
 
 The JDBC drivers are downloaded automatically at startup, so no extra installation is required.
 
 ## Integrations
 
-| Plugin | Required | Used for |
-|:-------|:---------|:---------|
-| [Vault](https://www.spigotmc.org/resources/vault.34315/) | Soft (needed for buying) | Taking money from the buyer and paying the seller |
-| [EssentialsX](https://essentialsx.net/) | Soft | Economy fallback when no Vault provider is registered |
+| Plugin                                                   | Required                 | Used for                                              |
+|:---------------------------------------------------------|:-------------------------|:------------------------------------------------------|
+| [Vault](https://www.spigotmc.org/resources/vault.34315/) | Soft (needed for buying) | Taking money from the buyer and paying the seller     |
+| [EssentialsX](https://essentialsx.net/)                  | Soft                     | Economy fallback when no Vault provider is registered |
 
 Buying requires a working economy provider. If neither Vault nor EssentialsX economy is available,
 purchases are rejected.
+
+---
+
+## 💜 Support Us
+
+If our projects help you, consider supporting their development.
+
+<table>
+<tr>
+<td align="center" width="130">
+<img src="https://cdn.simpleicons.org/bitcoin/F7931A" width="25" alt="BTC"/><br/>
+<sub><b>Bitcoin</b></sub>
+</td>
+<td>
+
+```text
+bc1q9a8dr55jgfae0mhevw3vvczegjv0khfp0ngrnv
+```
+
+</td>
+</tr>
+<tr>
+<td align="center" width="130">
+<img src="https://cdn.simpleicons.org/ethereum/627EEA" width="25" alt="ETH"/><br/>
+<sub><b>Ethereum</b></sub>
+</td>
+<td>
+
+```text
+0x0BaAeEA44Ce08c8DC139224ff57563695B30d423
+```
+
+</td>
+</tr>
+<tr>
+<td align="center" width="130">
+<img src="https://cdn.simpleicons.org/boosty/F15F2C" width="25" alt="Boosty"/><br/>
+<sub><b>Boosty</b></sub>
+</td>
+<td align="center">
+<a href="https://boosty.to/empireprojekt/donate">
+<img width="70%" src="https://img.shields.io/badge/Donate-Boosty-F15F2C?style=for-the-badge&logo=boosty&logoColor=white" alt="Donate on Boosty"/>
+</a>
+</td>
+</tr>
+</table>
+
+---
 
 ## Links
 
