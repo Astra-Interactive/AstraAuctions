@@ -15,17 +15,22 @@ services:
         RomaRoman
       EULA: true
       ONLINE_MODE: false
-      # Forge --------------------
-      #      TYPE: FORGE
+      # NeoForge --------------------
+      #      TYPE: NEOFORGE
       #      VERSION: "1.20.1"
-      #      FORGE_VERSION: "47.2.20"
+      #      NEOFORGE_VERSION: "21.1.129"
+      # Forge --------------------
+#      TYPE: FORGE
+#      VERSION: "1.20.1"
+#      FORGE_VERSION: "47.4.12"
       # Paper --------------------
       TYPE: PAPER
-      VERSION: 1.21.8
+      VERSION: 26.1.2
       # Custom -------------------
     #      CUSTOM_SERVER: https://api.papermc.io/v2/projects/paper/versions/1.21.1/builds/121/downloads/paper-1.21.1-121.jar
     volumes:
-      #      - ./build/forge:/data # Forge
+#      - ./build/forge:/data # Forge
+#      - ./build/neoforge:/data # NeoForge
       - ./build/bukkit:/data # Bukkit/Paper/Spigot
 #      - ./build/velocity:/data # Velocity
-#      - ./build/fabric:/data # Fabricå
+#      - ./build/fabric:/data # Fabric
