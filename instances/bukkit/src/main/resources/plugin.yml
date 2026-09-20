@@ -9,10 +9,3 @@ website: "${url}"
 api-version: 1.18
 softdepend: [ Vault, EssentialsX, AspeKt ]
 libraries: ${libraries}
-commands:
-  market:
-  ah:
-  auctionhouse:
-  aauc:
-  amarketreload:
-  amarket:
