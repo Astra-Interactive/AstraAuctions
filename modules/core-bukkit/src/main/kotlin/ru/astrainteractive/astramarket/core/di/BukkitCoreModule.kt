@@ -95,6 +95,10 @@ interface BukkitCoreModule : CoreModule {
                 .withTimings()
         }
 
+        override val unconfinedScope: CoroutineScope = CoroutineFeature
+            .Default(dispatchers.Unconfined + SupervisorJob() + createCoroutineExceptionHandler())
+            .withTimings()
+
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
             BukkitCurrencyEconomyProviderFactory(lifecyclePlugin)
 
@@ -106,6 +110,7 @@ interface BukkitCoreModule : CoreModule {
                 },
                 onDisable = {
                     inventoryClickEventListener.onDisable()
+                    unconfinedScope.cancel()
                     ioScope.cancel()
                 },
                 onReload = {
