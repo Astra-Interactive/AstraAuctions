@@ -1,12 +1,11 @@
 package ru.astrainteractive.astramarket.service.di
 
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.flow.flowOf
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astralibs.service.TickFlowService
+import ru.astrainteractive.astralibs.service.IntervalService
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.di.ApiMarketModule
-import ru.astrainteractive.astramarket.service.executor.ExpireServiceExecutor
+import ru.astrainteractive.astramarket.service.ExpireServiceTask
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import kotlin.time.Duration.Companion.minutes
 
 interface WorkerModule {
@@ -16,21 +15,27 @@ interface WorkerModule {
         apiMarketModule: ApiMarketModule,
         coreModule: CoreModule
     ) : WorkerModule {
-        private val expireService = TickFlowService(
-            coroutineContext = SupervisorJob() + coreModule.dispatchers.IO,
-            delay = flowOf(1.minutes),
-            executor = ExpireServiceExecutor(
+        private val expireService = IntervalService(
+            interval = EXPIRE_CHECK_INTERVAL,
+            scope = coreModule.ioScope,
+            logger = JUtiltLogger("ExpireService"),
+            task = ExpireServiceTask(
                 marketApi = apiMarketModule.marketApi,
                 configKrate = coreModule.configKrate
             )
         )
+
         override val lifecycle: Lifecycle = Lifecycle.Lambda(
             onEnable = {
-                expireService.onCreate()
+                expireService.onEnable()
             },
             onDisable = {
-                expireService.onDestroy()
+                expireService.onDisable()
             }
         )
+
+        companion object {
+            private val EXPIRE_CHECK_INTERVAL = 1.minutes
+        }
     }
 }

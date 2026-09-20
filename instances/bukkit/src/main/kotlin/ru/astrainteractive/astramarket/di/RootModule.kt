@@ -64,7 +64,7 @@ internal class RootModule(
         marketViewModule = marketViewModule,
         multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands()),
         commandRegistrarContext = PaperCommandRegistrarContext(
-            mainScope = coreModule.mainScope,
+            mainScope = coreModule.unconfinedScope,
             plugin = plugin
         ),
     )

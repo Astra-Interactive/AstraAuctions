@@ -2,6 +2,7 @@ package ru.astrainteractive.astramarket.command.di
 
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.command.api.registrar.CommandRegistrarContext
+import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
@@ -16,7 +17,7 @@ interface CommandModule {
     val lifecycle: Lifecycle
 
     class Default(
-        coreModule: CoreModule,
+        private val coreModule: CoreModule,
         bukkitCoreModule: BukkitCoreModule,
         bukkitRouterModule: RouterModule,
         marketViewModule: MarketViewModule,
@@ -48,13 +49,15 @@ interface CommandModule {
             multiplatformCommand = multiplatformCommand,
         )
 
+        private val nodes = buildList {
+            addAll(auctionCommandFactory.create())
+            add(reloadLiteralArgumentBuilder.create())
+        }
+
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
                 onEnable = {
-                    buildList {
-                        addAll(auctionCommandFactory.create())
-                        add(reloadLiteralArgumentBuilder.create())
-                    }.onEach(commandRegistrarContext::registerWhenReady)
+                    commandRegistrarContext.registerWhenReady(nodes, coreModule.unconfinedScope)
                 }
             )
         }

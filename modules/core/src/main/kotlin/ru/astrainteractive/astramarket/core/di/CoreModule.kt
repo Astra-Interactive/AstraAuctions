@@ -19,6 +19,7 @@ interface CoreModule {
     val kyoriKrate: CachedKrate<KyoriComponentSerializer>
     val ioScope: CoroutineScope
     val mainScope: CoroutineScope
+    val unconfinedScope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val yamlStringFormat: StringFormat
     val economyProviderFactory: CurrencyEconomyProviderFactory
