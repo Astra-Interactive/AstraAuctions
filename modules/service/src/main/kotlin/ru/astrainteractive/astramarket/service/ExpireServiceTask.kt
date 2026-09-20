@@ -1,32 +1,29 @@
-package ru.astrainteractive.astramarket.service.executor
+package ru.astrainteractive.astramarket.service
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import ru.astrainteractive.astralibs.service.ServiceExecutor
+import ru.astrainteractive.astralibs.service.ServiceTask
 import ru.astrainteractive.astramarket.api.market.MarketApi
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
-import kotlin.collections.filter
-import kotlin.collections.map
-import kotlin.collections.orEmpty
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-internal class ExpireServiceExecutor(
+internal class ExpireServiceTask(
     private val marketApi: MarketApi,
     private val configKrate: CachedKrate<PluginConfig>
-) : ServiceExecutor {
-    override suspend fun doWork() {
+) : ServiceTask {
+    override suspend fun execute() {
         val config by configKrate
         coroutineScope {
             val maxAuctionLifeTime = config.auction.maxTimeSeconds.seconds
             val currentTime = System.currentTimeMillis().milliseconds
             marketApi.getSlots(isExpired = false)
                 .orEmpty()
-                .filter { currentTime - it.time.milliseconds > maxAuctionLifeTime }
-                .map { async { marketApi.expireSlot(it) } }
+                .filter { slot -> currentTime - slot.time.milliseconds > maxAuctionLifeTime }
+                .map { slot -> async { marketApi.expireSlot(slot) } }
                 .awaitAll()
         }
     }
