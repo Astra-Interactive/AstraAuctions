@@ -10,6 +10,7 @@ import ru.astrainteractive.astramarket.gui.slots.SlotsGui
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
+import java.util.Locale
 
 internal class GuiRouterImpl(
     private val coreModule: CoreModule,
@@ -18,15 +19,17 @@ internal class GuiRouterImpl(
     private val playersMarketViewModule: PlayersMarketViewModule
 ) : GuiRouter {
 
-    private val buttonContext = ButtonContext.Default(
+    private fun createButtonContext(locale: Locale): ButtonContext = ButtonContext.Default(
         coreModule = coreModule,
         marketViewDomainModule = marketViewModule.marketViewDomainModule,
         bukkitCoreModule = bukkitCoreModule,
-        playersMarketViewModule = playersMarketViewModule
+        playersMarketViewModule = playersMarketViewModule,
+        locale = locale
     )
 
     override fun navigate(route: GuiRouter.Route) {
         coreModule.ioScope.launch(coreModule.dispatchers.Main) {
+            val buttonContext = createButtonContext(route.inventoryOwner.locale)
             val menu = when (route) {
                 is GuiRouter.Route.Slots -> {
                     SlotsGui(
@@ -35,7 +38,6 @@ internal class GuiRouterImpl(
                         translationKrate = coreModule.pluginTranslationKrate,
                         dispatchers = coreModule.dispatchers,
                         router = this@GuiRouterImpl,
-                        kyoriKrate = coreModule.kyoriKrate,
                         buttonContext = buttonContext,
                         auctionComponent = marketViewModule.createAuctionComponent(
                             playerUUID = route.inventoryOwner.uuid,
@@ -52,7 +54,6 @@ internal class GuiRouterImpl(
                         translationKrate = coreModule.pluginTranslationKrate,
                         dispatchers = coreModule.dispatchers,
                         router = this@GuiRouterImpl,
-                        kyoriKrate = coreModule.kyoriKrate,
                         buttonContext = buttonContext,
                         playersMarketComponent = playersMarketViewModule.createPlayersMarketComponent(
                             isExpired = route.isExpired

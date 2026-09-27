@@ -7,7 +7,6 @@ import ru.astrainteractive.astralibs.menu.slot.setDisplayName
 import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
-import ru.astrainteractive.astralibs.string.plus
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.toItemStack
 
@@ -18,20 +17,16 @@ internal fun ButtonContext.slotsType(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.slotsType.toItemStack())
-    .setDisplayName(pluginTranslation.menu.displayType.component)
+    .setDisplayName(pluginTranslation.menu.displayType.toComponent(locale))
     .addLore {
-        pluginTranslation.menu.enabledColor
-            .takeIf { isGroupedByPlayers }
-            .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.playerSlots)
-            .component
+        optionColor(isSelected = isGroupedByPlayers)
+            .concat(pluginTranslation.menu.playerSlots)
+            .toComponent(locale)
     }
     .addLore {
-        pluginTranslation.menu.enabledColor
-            .takeIf { !isGroupedByPlayers }
-            .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.allSlots)
-            .component
+        optionColor(isSelected = !isGroupedByPlayers)
+            .concat(pluginTranslation.menu.allSlots)
+            .toComponent(locale)
     }
     .setOnClickListener(click)
     .build()

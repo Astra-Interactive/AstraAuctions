@@ -1,16 +1,18 @@
 package ru.astrainteractive.astramarket.gui.util
 
-import ru.astrainteractive.astralibs.string.StringDesc
-import ru.astrainteractive.astralibs.string.replace
+import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
+import ru.astrainteractive.astralibs.localization.component.PlaceholderReplacement
+import ru.astrainteractive.astralibs.localization.component.replaceAll
+import ru.astrainteractive.astralibs.localization.text.LocalizedText
 import java.util.concurrent.TimeUnit
 import kotlin.time.Duration
 
 @Suppress("MagicNumber")
 fun Duration.getTimeFormatted(
-    formatDHM: StringDesc,
-    formatHM: StringDesc,
-    formatM: StringDesc
-): StringDesc {
+    formatDHM: LocalizedText,
+    formatHM: LocalizedText,
+    formatM: LocalizedText
+): LocalizableComponent {
     val time = System.currentTimeMillis().minus(inWholeMilliseconds)
     val unit = TimeUnit.MILLISECONDS
     val days = unit.toDays(time)
@@ -21,8 +23,9 @@ fun Duration.getTimeFormatted(
         days == 0L -> formatHM
         else -> formatDHM
     }
-    return format
-        .replace("%days%", days.toString())
-        .replace("%hours%", hours.toString())
-        .replace("%minutes%", minutes.toString())
+    return format.replaceAll(
+        PlaceholderReplacement.plain("%days%", days.toString()),
+        PlaceholderReplacement.plain("%hours%", hours.toString()),
+        PlaceholderReplacement.plain("%minutes%", minutes.toString())
+    )
 }

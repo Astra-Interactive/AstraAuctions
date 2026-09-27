@@ -6,8 +6,6 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.minecraft.kyori.minimessage)
-
     api(libs.klibs.kstorage)
     implementation(libs.klibs.mikro.core)
     implementation(libs.kotlin.coroutines.core)

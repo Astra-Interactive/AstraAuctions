@@ -5,8 +5,8 @@ package ru.astrainteractive.astramarket.core
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
-import ru.astrainteractive.astralibs.kyori.AutoComponentSerializer
-import ru.astrainteractive.astralibs.string.StringDesc
+import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
+import ru.astrainteractive.astralibs.localization.locale.MinecraftLocales
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -22,14 +22,14 @@ class PluginTranslationTest {
         return listOf(this) + children().flatMap { child -> child.selfAndDescendants() }
     }
 
-    private fun clickEventsOf(stringDesc: StringDesc): List<ClickEvent<*>> {
-        return AutoComponentSerializer.toComponent(stringDesc)
+    private fun clickEventsOf(message: LocalizableComponent): List<ClickEvent<*>> {
+        return message.toComponent(MinecraftLocales.RU_RU)
             .selfAndDescendants()
             .mapNotNull { node -> node.clickEvent() }
     }
 
-    private fun plainText(stringDesc: StringDesc): String {
-        return PlainTextComponentSerializer.plainText().serialize(AutoComponentSerializer.toComponent(stringDesc))
+    private fun plainText(message: LocalizableComponent): String {
+        return PlainTextComponentSerializer.plainText().serialize(message.toComponent(MinecraftLocales.RU_RU))
     }
 
     @Test

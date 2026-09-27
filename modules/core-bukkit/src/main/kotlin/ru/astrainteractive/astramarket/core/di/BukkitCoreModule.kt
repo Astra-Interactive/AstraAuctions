@@ -13,8 +13,6 @@ import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.event.EventListener
-import ru.astrainteractive.astralibs.kyori.AutoComponentSerializer
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
@@ -44,11 +42,6 @@ interface BukkitCoreModule : CoreModule {
         override val itemStackEncoder: ItemStackEncoder = ItemStackEncoderImpl(encoder)
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
-
-        override val kyoriKrate = DefaultMutableKrate<KyoriComponentSerializer>(
-            factory = { AutoComponentSerializer },
-            loader = { null }
-        ).asCachedKrate()
 
         @Suppress("MagicNumber")
         private fun createBStats() = Metrics(lifecyclePlugin, 15771)
@@ -115,7 +108,6 @@ interface BukkitCoreModule : CoreModule {
                     ioScope.cancel()
                 },
                 onReload = {
-                    kyoriKrate.getValue()
                     configKrate.getValue()
                     pluginTranslationKrate.getValue()
                 }
