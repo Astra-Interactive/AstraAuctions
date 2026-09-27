@@ -15,6 +15,6 @@ internal fun ButtonContext.prevPage(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.previous.toItemStack())
-    .editMeta { displayName(pluginTranslation.menu.prev.toComponent(locale)) }
+    .editMeta { displayName(pluginTranslation.menu.previousPage.toComponent(locale)) }
     .setOnClickListener(click)
     .build()

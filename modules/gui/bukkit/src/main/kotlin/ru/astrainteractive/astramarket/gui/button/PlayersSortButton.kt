@@ -18,7 +18,7 @@ internal fun ButtonContext.playersSort(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.sort.toItemStack())
-    .setDisplayName(pluginTranslation.menu.sort.toComponent(locale))
+    .setDisplayName(pluginTranslation.menu.sort.title.toComponent(locale))
     .apply {
         listOf(
             PlayerSort.Name(false),

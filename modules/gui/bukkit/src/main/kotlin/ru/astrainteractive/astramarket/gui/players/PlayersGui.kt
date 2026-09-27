@@ -62,7 +62,7 @@ internal class PlayersGui(
         DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
     }
 
-    override val title: Component = translation.menu.market.toComponent(inventoryOwner.locale)
+    override val title: Component = translation.menu.title.toComponent(inventoryOwner.locale)
 
     private val paginator = DefaultPaginator(
         maxItemsPerPage = inventoryMap.count(AuctionSlotKey.AUCTION_ITEM)

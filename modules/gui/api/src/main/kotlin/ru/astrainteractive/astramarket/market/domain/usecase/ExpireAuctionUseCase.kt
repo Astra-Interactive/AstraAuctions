@@ -36,14 +36,14 @@ internal class ExpireAuctionUseCaseImpl(
         val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
 
         if (!auctionsBridge.hasExpirePermission(playerUUID)) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.noPermissions }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.noPermission }
             return false
         }
         val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         val itemName = auctionsBridge.itemDesc(auction)
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
-            translation.auction.notifyAuctionExpired(
-                item = itemName,
+            translation.expire.ownerNotice(
+                itemName = itemName,
                 price = auction.price
             )
         }
@@ -51,11 +51,11 @@ internal class ExpireAuctionUseCaseImpl(
         val result = marketApi.expireSlot(auction)
         if (result == null) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.general.unexpectedError
+                translation.error.unexpected
             }
         } else {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.auctionHasBeenExpired
+                translation.expire.success
             }
         }
         return (result != null)

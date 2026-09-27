@@ -17,15 +17,15 @@ internal fun ButtonContext.slotsType(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.slotsType.toItemStack())
-    .setDisplayName(pluginTranslation.menu.displayType.toComponent(locale))
+    .setDisplayName(pluginTranslation.menu.display.title.toComponent(locale))
     .addLore {
         optionColor(isSelected = isGroupedByPlayers)
-            .concat(pluginTranslation.menu.playerSlots)
+            .concat(pluginTranslation.menu.display.byPlayer)
             .toComponent(locale)
     }
     .addLore {
         optionColor(isSelected = !isGroupedByPlayers)
-            .concat(pluginTranslation.menu.allSlots)
+            .concat(pluginTranslation.menu.display.byItem)
             .toComponent(locale)
     }
     .setOnClickListener(click)

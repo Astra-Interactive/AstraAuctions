@@ -22,9 +22,9 @@ class ReloadLiteralArgumentBuilder(
             command("amarketreload") {
                 runs(errorHandler::handle) { ctx ->
                     ctx.requirePermission(PluginPermission.Reload)
-                    ctx.getSender().sendMessage(translation.general.reloadStarted)
+                    ctx.getSender().sendMessage(translation.reload.started)
                     lifecyclePlugin.onReload()
-                    ctx.getSender().sendMessage(translation.general.reloadSuccess)
+                    ctx.getSender().sendMessage(translation.reload.completed)
                 }
             }
         }

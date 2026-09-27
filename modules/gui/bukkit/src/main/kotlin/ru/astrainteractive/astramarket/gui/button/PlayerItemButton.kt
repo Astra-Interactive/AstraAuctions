@@ -42,18 +42,14 @@ internal fun ButtonContext.playerItem(
         val auctionsAmount = playerAndSlots.slots
             .filter { it.expired == isExpired }
             .size
-        pluginTranslation.auction.auctionsAmount(auctionsAmount).toComponent(locale)
+        pluginTranslation.menu.player.lots(auctionsAmount).toComponent(locale)
     }
     .addLore {
         val time = playerAndSlots.slots
             .maxBy { it.time }
             .time.milliseconds
-            .getTimeFormatted(
-                pluginTranslation.general.timeAgoFormatDHM,
-                pluginTranslation.general.timeAgoFormatHM,
-                pluginTranslation.general.timeAgoFormatM
-            )
-        pluginTranslation.auction.auctionLast(time).toComponent(locale)
+            .getTimeFormatted(pluginTranslation.menu.timeAgo)
+        pluginTranslation.menu.player.latestLot(time).toComponent(locale)
     }
     .setOnClickListener(click)
     .build()

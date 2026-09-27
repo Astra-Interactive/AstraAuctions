@@ -66,7 +66,7 @@ internal class SlotsGui(
             ?.name
             ?.let { name -> Component.text(": $name") }
             ?: Component.empty()
-        translation.menu.market.toComponent(inventoryOwner.locale).append(playerNameComponent)
+        translation.menu.title.toComponent(inventoryOwner.locale).append(playerNameComponent)
     }
     override val childComponents = listOf(auctionComponent)
 

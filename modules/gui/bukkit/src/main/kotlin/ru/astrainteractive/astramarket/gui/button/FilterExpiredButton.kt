@@ -17,15 +17,15 @@ internal fun ButtonContext.filterExpired(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.filterExpired.toItemStack())
-    .setDisplayName(pluginTranslation.menu.filterExpired.toComponent(locale))
+    .setDisplayName(pluginTranslation.menu.filter.title.toComponent(locale))
     .addLore {
         optionColor(isSelected = isExpired)
-            .concat(pluginTranslation.menu.expired)
+            .concat(pluginTranslation.menu.filter.expired)
             .toComponent(locale)
     }
     .addLore {
         optionColor(isSelected = !isExpired)
-            .concat(pluginTranslation.menu.new)
+            .concat(pluginTranslation.menu.filter.active)
             .toComponent(locale)
     }
     .setOnClickListener(click)

@@ -16,10 +16,10 @@ internal class AuctionSortTranslationMappingImpl(
     private val translation by pluginTranslationKrate
 
     override fun translate(auctionSort: AuctionSort): LocalizedText = when (auctionSort) {
-        is AuctionSort.Material -> translation.auction.sortMaterial
-        is AuctionSort.Date -> translation.auction.sortDate
-        is AuctionSort.Name -> translation.auction.sortName
-        is AuctionSort.Price -> translation.auction.sortPrice
-        is AuctionSort.Player -> translation.auction.sortPlayer
+        is AuctionSort.Material -> translation.menu.sort.byMaterial
+        is AuctionSort.Date -> translation.menu.sort.byDate
+        is AuctionSort.Name -> translation.menu.sort.byName
+        is AuctionSort.Price -> translation.menu.sort.byPrice
+        is AuctionSort.Player -> translation.menu.sort.byPlayer
     }
 }

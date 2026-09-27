@@ -33,7 +33,7 @@ internal class CreateAuctionUseCaseImpl(
         val auction = input.marketSlot
 
         if (!auctionsBridge.isItemValid(input.marketSlot)) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongItemInHand }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.wrongItem }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
@@ -42,27 +42,27 @@ internal class CreateAuctionUseCaseImpl(
             ?: config.auction.maxAuctionPerPlayer
         val auctionsAmount = marketApi.countPlayerSlots(playerUUID.toString()) ?: 0
         if (auctionsAmount >= maxAuctionsAllowed) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.maxAuctions }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.tooManyLots }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
         if (auction.price > config.auction.maxPrice || auction.price < config.auction.minPrice) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.wrongPrice }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.wrongPrice }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             return false
         }
 
         val result = marketApi.insertSlot(auction)
         return if (result != null) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.auctionAdded }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.listed }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
             if (config.auction.announce) {
                 val playerName = auctionsBridge.playerName(playerUUID) ?: "-"
-                playerInteractionBridge.broadcast(translation.auction.broadcast(playerName))
+                playerInteractionBridge.broadcast(translation.sell.announcement(playerName))
             }
             true
         } else {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.dbError }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.database }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             false
         }

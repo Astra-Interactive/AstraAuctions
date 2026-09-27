@@ -18,7 +18,7 @@ internal class PlayerSortTranslationMappingImpl(
     override fun translate(
         playerSort: PlayerSort
     ): LocalizedText = when (playerSort) {
-        is PlayerSort.Name -> translation.auction.sortName
-        is PlayerSort.Auctions -> translation.auction.sortAmount
+        is PlayerSort.Name -> translation.menu.sort.byName
+        is PlayerSort.Auctions -> translation.menu.sort.byAmount
     }
 }

@@ -19,7 +19,7 @@ class BrigadierErrorHandler(
         with(multiplatformCommand) {
             when (throwable) {
                 is NoPermissionException -> {
-                    ctx.getSender().sendMessage(translation.general.noPermissions)
+                    ctx.getSender().sendMessage(translation.error.noPermission)
                 }
 
                 else -> {
