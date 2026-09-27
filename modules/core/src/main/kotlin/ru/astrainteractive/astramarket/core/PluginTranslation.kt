@@ -4,9 +4,13 @@ package ru.astrainteractive.astramarket.core
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import net.kyori.adventure.text.minimessage.MiniMessage
 import ru.astrainteractive.astralibs.string.StringDesc
 import ru.astrainteractive.astralibs.string.plus
 import ru.astrainteractive.astralibs.string.replace
+
+/** Item names are set by players on an anvil, so their tags must stay text instead of becoming a click. */
+private fun String.escapeTags(): String = MiniMessage.miniMessage().escapeTags(this)
 
 @Serializable
 data class PluginTranslation(
@@ -171,7 +175,7 @@ data class PluginTranslation(
 
         fun notifyAuctionExpired(item: String, price: Number): StringDesc {
             return notifyAuctionExpired
-                .replace("%item%", item)
+                .replace("%item%", item.escapeTags())
                 .replace("%price%", "$price")
         }
 
@@ -188,13 +192,13 @@ data class PluginTranslation(
         fun notifyOwnerUserBuy(playerName: String, itemName: String, price: Number): StringDesc {
             return notifyOwnerUserBuy
                 .replace("%player%", playerName)
-                .replace("%item%", itemName)
+                .replace("%item%", itemName.escapeTags())
                 .replace("%price%", "$price")
         }
 
         fun notifyUserBuy(playerOwner: String, itemName: String, price: Number): StringDesc {
             return notifyUserBuy
-                .replace("%item%", itemName)
+                .replace("%item%", itemName.escapeTags())
                 .replace("%player_owner%", playerOwner)
                 .replace("%price%", "$price")
         }

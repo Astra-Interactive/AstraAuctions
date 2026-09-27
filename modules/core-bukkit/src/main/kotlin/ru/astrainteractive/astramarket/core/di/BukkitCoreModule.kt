@@ -13,6 +13,7 @@ import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.event.EventListener
+import ru.astrainteractive.astralibs.kyori.AutoComponentSerializer
 import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
@@ -45,7 +46,7 @@ interface BukkitCoreModule : CoreModule {
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 
         override val kyoriKrate = DefaultMutableKrate<KyoriComponentSerializer>(
-            factory = { KyoriComponentSerializer.Legacy },
+            factory = { AutoComponentSerializer },
             loader = { null }
         ).asCachedKrate()
 
