@@ -2,9 +2,13 @@ package ru.astrainteractive.astramarket.core.command
 
 import com.mojang.brigadier.context.CommandContext
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
+import ru.astrainteractive.astralibs.command.api.exception.ArgumentConverterException
+import ru.astrainteractive.astralibs.command.api.exception.BadArgumentException
 import ru.astrainteractive.astralibs.command.api.exception.CommandException
 import ru.astrainteractive.astralibs.command.api.exception.LocalizableComponentCommandException
 import ru.astrainteractive.astralibs.command.api.exception.NoPermissionException
+import ru.astrainteractive.astralibs.command.api.exception.NoPlayerException
+import ru.astrainteractive.astralibs.command.api.exception.NoPotionEffectTypeException
 import ru.astrainteractive.astralibs.command.api.exception.NotPlayerExecutorException
 import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
 import ru.astrainteractive.astramarket.core.PluginTranslation
@@ -16,6 +20,9 @@ import ru.astrainteractive.klibs.mikro.core.logging.Logger
 /**
  * Tells the sender why their command failed. [MultiplatformCommand.runs] swallows every exception of a command,
  * so a command without this handler fails silently.
+ *
+ * Never throws: a sender the platform cannot wrap (a command block, `/execute as <entity>`) gets no reply, and
+ * the failure is only logged.
  */
 class CommandExceptionHandler(
     private val multiplatformCommand: MultiplatformCommand,
@@ -23,19 +30,33 @@ class CommandExceptionHandler(
 ) : Logger by JUtiltLogger("AstraMarket-CommandExceptionHandler").withoutParentHandlers() {
     private val translation by translationKrate
 
-    fun handle(ctx: CommandContext<Any>, throwable: Throwable) {
-        val message: LocalizableComponent = when (throwable) {
+    private fun messageOf(throwable: Throwable, commandName: String): LocalizableComponent {
+        return when (throwable) {
             is LocalizableComponentCommandException -> throwable.localizableComponent
             is NoPermissionException -> translation.error.noPermission
             is NotPlayerExecutorException -> translation.error.onlyPlayerCommand
+            is NoPlayerException -> translation.error.playerNotFound
+            is ArgumentConverterException,
+            is BadArgumentException,
+            is NoPotionEffectTypeException -> translation.error.invalidArgument
+
             is CommandException -> translation.error.wrongUsage
             else -> {
-                error(throwable) { "#handle command failed with an unexpected exception" }
+                error(throwable) { "#messageOf /$commandName failed with an unexpected exception" }
                 translation.error.unexpected
             }
         }
-        with(multiplatformCommand) {
-            ctx.getSender().sendMessage(message)
-        }
+    }
+
+    fun handle(ctx: CommandContext<Any>, throwable: Throwable) {
+        val commandName = ctx.input.substringBefore(' ')
+        val sender = runCatching { with(multiplatformCommand) { ctx.getSender() } }
+            .getOrElse { senderError ->
+                error(throwable) {
+                    "#handle /$commandName failed and its sender could not be resolved: ${senderError.message}"
+                }
+                return
+            }
+        sender.sendMessage(messageOf(throwable, commandName))
     }
 }

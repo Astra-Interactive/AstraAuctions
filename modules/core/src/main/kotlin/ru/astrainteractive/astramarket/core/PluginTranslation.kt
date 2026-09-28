@@ -436,6 +436,20 @@ data class PluginTranslation(
                 translation(MinecraftLocales.RU_RU, "&#f55442Неверное использование")
             }
         ),
+        @SerialName("invalid_argument")
+        val invalidArgument: LocalizedText = PREFIX.concat(
+            LocalizedText.build {
+                translation(MinecraftLocales.EN_US, "&#f55442Invalid argument value")
+                translation(MinecraftLocales.RU_RU, "&#f55442Неверное значение аргумента")
+            }
+        ),
+        @SerialName("player_not_found")
+        val playerNotFound: LocalizedText = PREFIX.concat(
+            LocalizedText.build {
+                translation(MinecraftLocales.EN_US, "&#f55442Player not found")
+                translation(MinecraftLocales.RU_RU, "&#f55442Игрок не найден")
+            }
+        ),
         @SerialName("inventory_full")
         val inventoryFull: LocalizedText = PREFIX.concat(
             LocalizedText.build {
