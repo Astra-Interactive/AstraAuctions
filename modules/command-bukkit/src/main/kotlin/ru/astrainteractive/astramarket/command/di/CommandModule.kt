@@ -1,12 +1,10 @@
 package ru.astrainteractive.astramarket.command.di
 
-import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.command.api.registrar.CommandRegistrarContext
 import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
-import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
 import ru.astrainteractive.astramarket.command.reload.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
@@ -22,20 +20,15 @@ interface CommandModule {
         bukkitRouterModule: RouterModule,
         marketViewModule: MarketViewModule,
         private val commandRegistrarContext: CommandRegistrarContext,
-        private val multiplatformCommand: MultiplatformCommand,
     ) : CommandModule {
-        private val errorHandler = BrigadierErrorHandler(
-            translationKrate = coreModule.pluginTranslationKrate,
-            multiplatformCommand = multiplatformCommand
-        )
         private val reloadLiteralArgumentBuilder = ReloadLiteralArgumentBuilder(
             lifecyclePlugin = coreModule.lifecyclePlugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            errorHandler = errorHandler,
-            multiplatformCommand = multiplatformCommand
+            commandExceptionHandler = coreModule.commandExceptionHandler,
+            multiplatformCommand = coreModule.multiplatformCommand
         )
         private val auctionCommandFactory = AuctionCommandFactory(
-            errorHandler = errorHandler,
+            commandExceptionHandler = coreModule.commandExceptionHandler,
             executor = AuctionCommandExecutor(
                 router = bukkitRouterModule.router,
                 dispatchers = coreModule.dispatchers,
@@ -43,7 +36,7 @@ interface CommandModule {
                 ioScope = coreModule.ioScope,
                 itemStackEncoder = bukkitCoreModule.itemStackEncoder,
             ),
-            multiplatformCommand = multiplatformCommand,
+            multiplatformCommand = coreModule.multiplatformCommand,
         )
 
         private val nodes = buildList {

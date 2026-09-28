@@ -8,6 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.serialization.StringFormat
 import org.bstats.bukkit.Metrics
+import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.coroutines.DefaultBukkitDispatchers
 import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
@@ -20,6 +21,7 @@ import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
@@ -35,7 +37,10 @@ interface BukkitCoreModule : CoreModule {
     val itemStackEncoder: ItemStackEncoder
     val inventoryClickEventListener: EventListener
 
-    class Default(override val lifecyclePlugin: LifecyclePlugin) : BukkitCoreModule {
+    class Default(
+        override val lifecyclePlugin: LifecyclePlugin,
+        override val multiplatformCommand: MultiplatformCommand
+    ) : BukkitCoreModule {
 
         private val encoder: ObjectEncoder = BukkitObjectEncoder()
 
@@ -73,6 +78,12 @@ interface BukkitCoreModule : CoreModule {
                 )
             }
         ).asCachedKrate()
+
+        override val commandExceptionHandler = CommandExceptionHandler(
+            multiplatformCommand = multiplatformCommand,
+            translationKrate = pluginTranslationKrate
+        )
+
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
         private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
             val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")

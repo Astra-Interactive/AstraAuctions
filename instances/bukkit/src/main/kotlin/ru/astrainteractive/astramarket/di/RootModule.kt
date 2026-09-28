@@ -23,7 +23,10 @@ import ru.astrainteractive.klibs.mikro.exposed.model.DatabaseConfiguration
 internal class RootModule(
     plugin: LifecyclePlugin
 ) : Logger by JUtiltLogger("AstraMarket-RootModule").withoutParentHandlers() {
-    val coreModule: BukkitCoreModule = BukkitCoreModule.Default(plugin)
+    val coreModule: BukkitCoreModule = BukkitCoreModule.Default(
+        lifecyclePlugin = plugin,
+        multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands())
+    )
 
     val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(
         dispatchers = coreModule.dispatchers,
@@ -61,7 +64,6 @@ internal class RootModule(
         bukkitCoreModule = coreModule,
         bukkitRouterModule = bukkitRouterModule,
         marketViewModule = marketViewModule,
-        multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands()),
         commandRegistrarContext = PaperCommandRegistrarContext(
             mainScope = coreModule.unconfinedScope,
             plugin = plugin
