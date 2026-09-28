@@ -27,7 +27,7 @@ import ru.astrainteractive.klibs.mikro.core.logging.Logger
 class CommandExceptionHandler(
     private val multiplatformCommand: MultiplatformCommand,
     translationKrate: CachedKrate<PluginTranslation>
-) : Logger by JUtiltLogger("AstraMarket-CommandExceptionHandler").withoutParentHandlers() {
+) : Logger by JUtiltLogger("AstraMarket-CommandExceptionHandler") {
     private val translation by translationKrate
 
     private fun messageOf(throwable: Throwable, commandName: String): LocalizableComponent {
