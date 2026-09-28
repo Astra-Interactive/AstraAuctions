@@ -39,24 +39,24 @@ internal class RemoveAuctionUseCaseImpl(
         val ownerUUID = auction.minecraftUuid.let(UUID::fromString)
         if (ownerUUID != playerUUID) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.notAuctionOwner
+                translation.remove.notOwner
             }
             return false
         }
 
         if (auctionsBridge.isInventoryFull(playerUUID)) {
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.inventoryFull }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.inventoryFull }
             return false
         }
 
         val result = marketApi.deleteSlot(auction)
         return if (result != null) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.auctionDeleted }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.removed }
             auctionsBridge.addItemToInventory(auction, playerUUID)
             true
         } else {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.unexpectedError }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.unexpected }
             false
         }
     }

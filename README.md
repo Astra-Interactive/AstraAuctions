@@ -27,7 +27,7 @@ with config and database reload at runtime.
 - [x] Optional broadcast when a new item is listed
 - [x] Configurable sounds for open, close, click, success, fail and sold
 - [x] Configurable GUI buttons (material + custom model data)
-- [x] Fully translatable messages (defaults ship in Russian)
+- [x] Fully translatable messages in each player's client language (defaults ship in English and Russian)
 - [x] H2, SQLite, MySQL and MariaDB storage, switchable and reloadable at runtime
 
 ## Commands & permissions

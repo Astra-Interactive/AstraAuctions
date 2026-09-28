@@ -7,8 +7,6 @@ import ru.astrainteractive.astralibs.menu.slot.setDisplayName
 import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
-import ru.astrainteractive.astralibs.string.StringDesc
-import ru.astrainteractive.astralibs.string.plus
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.toItemStack
 
@@ -19,23 +17,16 @@ internal fun ButtonContext.filterExpired(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.filterExpired.toItemStack())
-    .setDisplayName(pluginTranslation.menu.filterExpired.component)
+    .setDisplayName(pluginTranslation.menu.filter.title.toComponent(locale))
     .addLore {
-        pluginTranslation.menu.enabledColor
-            .takeIf { isExpired }
-            .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.expired)
-            .component
+        optionColor(isSelected = isExpired)
+            .concat(pluginTranslation.menu.filter.expired)
+            .toComponent(locale)
     }
     .addLore {
-        pluginTranslation.menu.enabledColor
-            .takeIf { !isExpired }
-            .or { pluginTranslation.menu.disabledColor }
-            .plus(pluginTranslation.menu.new)
-            .component
+        optionColor(isSelected = !isExpired)
+            .concat(pluginTranslation.menu.filter.active)
+            .toComponent(locale)
     }
     .setOnClickListener(click)
     .build()
-
-fun StringDesc?.orEmpty() = this ?: StringDesc.Raw("")
-fun StringDesc?.or(block: () -> StringDesc) = this ?: block.invoke()

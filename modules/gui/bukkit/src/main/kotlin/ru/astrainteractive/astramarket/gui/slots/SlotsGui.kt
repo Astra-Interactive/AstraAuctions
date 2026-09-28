@@ -11,8 +11,6 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import ru.astrainteractive.astralibs.coroutines.withTimings
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.menu.core.setInventorySlot
 import ru.astrainteractive.astralibs.menu.inventory.api.InventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
@@ -52,14 +50,12 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 internal class SlotsGui(
     configKrate: CachedKrate<PluginConfig>,
     translationKrate: CachedKrate<PluginTranslation>,
-    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
     private val inventoryOwner: OnlineKPlayer,
     private val router: GuiRouter,
     private val buttonContext: ButtonContext,
     private val auctionComponent: AuctionComponent,
     private val dispatchers: KotlinDispatchers,
-) : InventoryMenu(),
-    KyoriComponentSerializer by kyoriKrate.unwrap() {
+) : InventoryMenu() {
     private val config by configKrate
     private val translation by translationKrate
 
@@ -70,7 +66,7 @@ internal class SlotsGui(
             ?.name
             ?.let { name -> Component.text(": $name") }
             ?: Component.empty()
-        translation.menu.market.component.append(playerNameComponent)
+        translation.menu.title.toComponent(inventoryOwner.locale).append(playerNameComponent)
     }
     override val childComponents = listOf(auctionComponent)
 

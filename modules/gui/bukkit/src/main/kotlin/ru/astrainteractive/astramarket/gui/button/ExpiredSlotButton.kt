@@ -31,13 +31,13 @@ internal fun ButtonContext.expiredSlot(
         .setItemStack(itemStack)
         .apply {
             if (hasExpirePermission) {
-                addLore(pluginTranslation.auction.expireSlot.component)
+                addLore(pluginTranslation.menu.lot.expireHint.toComponent(locale))
             }
-            addLore(pluginTranslation.auction.buySlot.component)
+            addLore(pluginTranslation.menu.lot.buyHint.toComponent(locale))
         }
         .apply {
             if (!isOwner && !hasRemovePermission) return@apply
-            addLore(pluginTranslation.auction.removeSlot.component)
+            addLore(pluginTranslation.menu.lot.removeHint.toComponent(locale))
         }
         .addLore {
             val ownerName = auctionItem.minecraftUsername
@@ -45,18 +45,14 @@ internal fun ButtonContext.expiredSlot(
                 ?: UUID.fromString(auctionItem.minecraftUuid)
                     .let(Bukkit::getOfflinePlayer)
                     .name ?: "§kUNKNOWN"
-            pluginTranslation.auction.auctionBy(ownerName).component
+            pluginTranslation.menu.lot.seller(ownerName).toComponent(locale)
         }
         .addLore {
-            val time = auctionItem.time.milliseconds.getTimeFormatted(
-                pluginTranslation.general.timeAgoFormatDHM,
-                pluginTranslation.general.timeAgoFormatHM,
-                pluginTranslation.general.timeAgoFormatM
-            ).raw
-            pluginTranslation.auction.auctionCreatedAgo(time).component
+            val time = auctionItem.time.milliseconds.getTimeFormatted(pluginTranslation.menu.timeAgo)
+            pluginTranslation.menu.lot.listed(time).toComponent(locale)
         }
         .addLore {
-            pluginTranslation.auction.auctionPrice(auctionItem.price).component
+            pluginTranslation.menu.lot.price(auctionItem.price).toComponent(locale)
         }
         .setOnClickListener(click)
         .build()

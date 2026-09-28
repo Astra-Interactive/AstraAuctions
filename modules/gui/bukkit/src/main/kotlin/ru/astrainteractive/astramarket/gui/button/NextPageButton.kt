@@ -15,6 +15,6 @@ internal fun ButtonContext.nextPage(
 ) = InventorySlot.Builder()
     .setIndex(index)
     .setItemStack(config.buttons.next.toItemStack())
-    .editMeta { displayName(pluginTranslation.menu.next.component) }
+    .editMeta { displayName(pluginTranslation.menu.nextPage.toComponent(locale)) }
     .setOnClickListener(click)
     .build()

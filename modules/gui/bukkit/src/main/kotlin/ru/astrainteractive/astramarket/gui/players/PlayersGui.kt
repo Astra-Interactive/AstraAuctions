@@ -7,8 +7,6 @@ import net.kyori.adventure.text.Component
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import ru.astrainteractive.astralibs.coroutines.withTimings
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.menu.core.setInventorySlot
 import ru.astrainteractive.astralibs.menu.inventory.api.InventoryMenu
 import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
@@ -44,15 +42,13 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 
 internal class PlayersGui(
     configKrate: CachedKrate<PluginConfig>,
-    kyoriKrate: CachedKrate<KyoriComponentSerializer>,
     translationKrate: CachedKrate<PluginTranslation>,
     private val inventoryOwner: OnlineKPlayer,
     private val buttonContext: ButtonContext,
     private val dispatchers: KotlinDispatchers,
     private val playersMarketComponent: PlayersMarketComponent,
     private val router: GuiRouter,
-) : InventoryMenu(),
-    KyoriComponentSerializer by kyoriKrate.unwrap() {
+) : InventoryMenu() {
     private val config by configKrate
     private val translation by translationKrate
 
@@ -66,7 +62,7 @@ internal class PlayersGui(
         DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
     }
 
-    override val title: Component = translation.menu.market.component
+    override val title: Component = translation.menu.title.toComponent(inventoryOwner.locale)
 
     private val paginator = DefaultPaginator(
         maxItemsPerPage = inventoryMap.count(AuctionSlotKey.AUCTION_ITEM)

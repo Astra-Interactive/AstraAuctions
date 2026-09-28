@@ -49,7 +49,7 @@ internal class AuctionBuyUseCaseImpl(
         val auction = marketApi.getSlot(receivedAuction.id) ?: return false
         if (auction.minecraftUuid == playerUUID.toString()) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.ownerCantBeBuyer
+                translation.buy.ownLot
             }
             return false
         }
@@ -58,7 +58,7 @@ internal class AuctionBuyUseCaseImpl(
                 config.sounds.fail
             }
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.inventoryFull
+                translation.error.inventoryFull
             }
             return false
         }
@@ -66,14 +66,14 @@ internal class AuctionBuyUseCaseImpl(
         if (!vaultResponse) {
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.notEnoughMoney
+                translation.buy.notEnoughMoney
             }
             return false
         }
         vaultResponse = economyProvider.addMoney(ownerUUID, auction.price.toDouble())
         if (!vaultResponse) {
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.auction.failedToPay }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.buy.paymentFailed }
             economyProvider.addMoney(playerUUID, auction.price.toDouble())
             return false
         }
@@ -84,15 +84,15 @@ internal class AuctionBuyUseCaseImpl(
             playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
             val itemName = auctionsBridge.itemDesc(auction)
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.auction.notifyUserBuy(
-                    playerOwner = ownerName ?: "-",
+                translation.buy.bought(
+                    sellerName = ownerName ?: "-",
                     itemName = itemName,
                     price = auction.price
                 )
             }
             playerInteractionBridge.sendTranslationMessage(ownerUUID) {
-                translation.auction.notifyOwnerUserBuy(
-                    playerName = playerName ?: "-",
+                translation.buy.sold(
+                    buyerName = playerName ?: "-",
                     itemName = itemName,
                     price = auction.price
                 )
@@ -101,7 +101,7 @@ internal class AuctionBuyUseCaseImpl(
             economyProvider.addMoney(playerUUID, auction.price.toDouble())
             economyProvider.takeMoney(ownerUUID, auction.price.toDouble())
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.general.dbError }
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.database }
         }
         return result != null
     }

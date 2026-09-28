@@ -37,8 +37,7 @@ internal class RootModule(
         coreModule = coreModule,
         apiMarketModule = apiMarketModule,
         marketDataModule = BukkitMarketDataModule(
-            itemStackEncoder = coreModule.itemStackEncoder,
-            stringSerializer = coreModule.kyoriKrate.cachedValue
+            itemStackEncoder = coreModule.itemStackEncoder
         ),
         platformMarketDomainModule = BukkitMarketDomainModule(
             itemStackEncoder = coreModule.itemStackEncoder,

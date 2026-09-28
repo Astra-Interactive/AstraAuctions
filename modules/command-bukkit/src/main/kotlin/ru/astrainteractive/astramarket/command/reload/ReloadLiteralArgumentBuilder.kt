@@ -2,8 +2,6 @@ package ru.astrainteractive.astramarket.command.reload
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
 import ru.astrainteractive.astramarket.core.PluginPermission
@@ -15,9 +13,8 @@ class ReloadLiteralArgumentBuilder(
     private val lifecyclePlugin: Lifecycle,
     private val errorHandler: BrigadierErrorHandler,
     translationKrate: CachedKrate<PluginTranslation>,
-    kyori: CachedKrate<KyoriComponentSerializer>,
     private val multiplatformCommand: MultiplatformCommand,
-) : KyoriComponentSerializer by kyori.unwrap() {
+) {
     private val translation by translationKrate
 
     fun create(): LiteralArgumentBuilder<Any> {
@@ -25,9 +22,9 @@ class ReloadLiteralArgumentBuilder(
             command("amarketreload") {
                 runs(errorHandler::handle) { ctx ->
                     ctx.requirePermission(PluginPermission.Reload)
-                    ctx.getSender().sendMessage(translation.general.reloadStarted.component)
+                    ctx.getSender().sendMessage(translation.reload.started)
                     lifecyclePlugin.onReload()
-                    ctx.getSender().sendMessage(translation.general.reloadSuccess.component)
+                    ctx.getSender().sendMessage(translation.reload.completed)
                 }
             }
         }

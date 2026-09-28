@@ -4,19 +4,15 @@ import com.mojang.brigadier.arguments.FloatArgumentType
 import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
-import ru.astrainteractive.astralibs.kyori.unwrap
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
 import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
-import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionCommandFactory(
     private val executor: AuctionCommandExecutor,
     private val errorHandler: BrigadierErrorHandler,
-    private val multiplatformCommand: MultiplatformCommand,
-    kyoriKrate: CachedKrate<KyoriComponentSerializer>
-) : KyoriComponentSerializer by kyoriKrate.unwrap() {
+    private val multiplatformCommand: MultiplatformCommand
+) {
 
     @Suppress("LongMethod")
     private fun create(alias: String): LiteralArgumentBuilder<*> {

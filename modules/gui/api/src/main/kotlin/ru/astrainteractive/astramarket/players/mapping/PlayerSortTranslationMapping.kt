@@ -1,13 +1,13 @@
 package ru.astrainteractive.astramarket.players.mapping
 
-import ru.astrainteractive.astralibs.string.StringDesc
+import ru.astrainteractive.astralibs.localization.text.LocalizedText
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 
 interface PlayerSortTranslationMapping {
-    fun translate(playerSort: PlayerSort): StringDesc.Raw
+    fun translate(playerSort: PlayerSort): LocalizedText
 }
 
 internal class PlayerSortTranslationMappingImpl(
@@ -17,8 +17,8 @@ internal class PlayerSortTranslationMappingImpl(
 
     override fun translate(
         playerSort: PlayerSort
-    ): StringDesc.Raw = when (playerSort) {
-        is PlayerSort.Name -> translation.auction.sortName
-        is PlayerSort.Auctions -> translation.auction.sortAmount
+    ): LocalizedText = when (playerSort) {
+        is PlayerSort.Name -> translation.menu.sort.byName
+        is PlayerSort.Auctions -> translation.menu.sort.byAmount
     }
 }

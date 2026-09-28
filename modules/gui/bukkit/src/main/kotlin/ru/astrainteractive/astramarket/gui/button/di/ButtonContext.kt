@@ -1,6 +1,5 @@
 package ru.astrainteractive.astramarket.gui.button.di
 
-import ru.astrainteractive.astralibs.kyori.KyoriComponentSerializer
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
@@ -13,22 +12,25 @@ import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapp
 import ru.astrainteractive.klibs.kstorage.api.getValue
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
+import java.util.Locale
 
-internal interface ButtonContext : KyoriComponentSerializer, Logger {
+/** What the buttons of one menu need, including the language of the player who opened the menu. */
+internal interface ButtonContext : Logger {
     val auctionSortTranslationMapping: AuctionSortTranslationMapping
     val playersSortTranslationMapping: PlayerSortTranslationMapping
     val config: PluginConfig
     val pluginTranslation: PluginTranslation
     val itemStackEncoder: ItemStackEncoder
+    val locale: Locale
 
     class Default(
         coreModule: CoreModule,
         marketViewDomainModule: MarketViewDomainModule,
         bukkitCoreModule: BukkitCoreModule,
-        playersMarketViewModule: PlayersMarketViewModule
+        playersMarketViewModule: PlayersMarketViewModule,
+        override val locale: Locale
     ) : ButtonContext,
-        Logger by JUtiltLogger("AstraMarket-ButtonContext").withoutParentHandlers(),
-        KyoriComponentSerializer by bukkitCoreModule.kyoriKrate.cachedValue {
+        Logger by JUtiltLogger("AstraMarket-ButtonContext").withoutParentHandlers() {
         override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
             marketViewDomainModule.auctionSortTranslationMapping
         }

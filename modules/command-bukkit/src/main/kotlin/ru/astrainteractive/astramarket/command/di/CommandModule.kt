@@ -25,19 +25,16 @@ interface CommandModule {
         private val multiplatformCommand: MultiplatformCommand,
     ) : CommandModule {
         private val errorHandler = BrigadierErrorHandler(
-            kyoriComponentSerializer = coreModule.kyoriKrate,
             translationKrate = coreModule.pluginTranslationKrate,
             multiplatformCommand = multiplatformCommand
         )
         private val reloadLiteralArgumentBuilder = ReloadLiteralArgumentBuilder(
             lifecyclePlugin = coreModule.lifecyclePlugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            kyori = coreModule.kyoriKrate,
             errorHandler = errorHandler,
             multiplatformCommand = multiplatformCommand
         )
         private val auctionCommandFactory = AuctionCommandFactory(
-            kyoriKrate = coreModule.kyoriKrate,
             errorHandler = errorHandler,
             executor = AuctionCommandExecutor(
                 router = bukkitRouterModule.router,
