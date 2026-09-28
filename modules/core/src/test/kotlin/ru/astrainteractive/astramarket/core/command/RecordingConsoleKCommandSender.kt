@@ -6,7 +6,6 @@ import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
 import ru.astrainteractive.astralibs.server.permission.Permission
 import java.util.Locale
 
-/** A console without any permission that keeps every message sent to it. */
 internal class RecordingConsoleKCommandSender : ConsoleKCommandSender {
     val messages = mutableListOf<LocalizableComponent>()
 

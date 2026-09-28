@@ -7,10 +7,6 @@ import com.mojang.brigadier.context.CommandContext
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommands
 import ru.astrainteractive.astralibs.command.api.brigadier.sender.KCommandSender
 
-/**
- * Builds plain Brigadier nodes and attributes every command to [sender]. A `null` [sender] stands for one the
- * platform cannot wrap, such as a command block: resolving it throws, like the real implementations do.
- */
 internal class FakeMultiplatformCommands(
     private val sender: KCommandSender?
 ) : MultiplatformCommands {
