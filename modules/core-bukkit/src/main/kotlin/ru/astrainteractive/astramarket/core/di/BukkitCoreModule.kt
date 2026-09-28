@@ -8,6 +8,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.serialization.StringFormat
 import org.bstats.bukkit.Metrics
+import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.coroutines.DefaultBukkitDispatchers
 import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astralibs.encoding.encoder.BukkitObjectEncoder
@@ -35,7 +36,10 @@ interface BukkitCoreModule : CoreModule {
     val itemStackEncoder: ItemStackEncoder
     val inventoryClickEventListener: EventListener
 
-    class Default(override val lifecyclePlugin: LifecyclePlugin) : BukkitCoreModule {
+    class Default(
+        override val lifecyclePlugin: LifecyclePlugin,
+        override val multiplatformCommand: MultiplatformCommand
+    ) : BukkitCoreModule {
 
         private val encoder: ObjectEncoder = BukkitObjectEncoder()
 
