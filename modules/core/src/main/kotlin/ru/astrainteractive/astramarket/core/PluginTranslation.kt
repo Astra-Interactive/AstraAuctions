@@ -36,23 +36,23 @@ data class PluginTranslation(
     data class Menu(
         @SerialName("title")
         val title: LocalizedText = LocalizedText.build {
-            translation(MinecraftLocales.RU_RU, "&6Рынок")
             translation(MinecraftLocales.EN_US, "&6Market")
+            translation(MinecraftLocales.RU_RU, "&6Рынок")
         },
         @SerialName("previous_page")
         val previousPage: LocalizedText = LocalizedText.build {
-            translation(MinecraftLocales.RU_RU, "&6Раньше")
             translation(MinecraftLocales.EN_US, "&6Previous")
+            translation(MinecraftLocales.RU_RU, "&6Раньше")
         },
         @SerialName("next_page")
         val nextPage: LocalizedText = LocalizedText.build {
-            translation(MinecraftLocales.RU_RU, "&6Дальше")
             translation(MinecraftLocales.EN_US, "&6Next")
+            translation(MinecraftLocales.RU_RU, "&6Дальше")
         },
         @SerialName("back")
         val back: LocalizedText = LocalizedText.build {
-            translation(MinecraftLocales.RU_RU, "&6Назад")
             translation(MinecraftLocales.EN_US, "&6Back")
+            translation(MinecraftLocales.RU_RU, "&6Назад")
         },
         /** Joined in front of the option a button currently shows. */
         @SerialName("selected_color")
@@ -78,18 +78,18 @@ data class PluginTranslation(
         data class Filter(
             @SerialName("title")
             val title: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&6Фильтр новизны")
                 translation(MinecraftLocales.EN_US, "&6Freshness filter")
+                translation(MinecraftLocales.RU_RU, "&6Фильтр новизны")
             },
             @SerialName("expired")
             val expired: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• Истекшие")
                 translation(MinecraftLocales.EN_US, "• Expired")
+                translation(MinecraftLocales.RU_RU, "• Истекшие")
             },
             @SerialName("active")
             val active: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• Новые")
                 translation(MinecraftLocales.EN_US, "• New")
+                translation(MinecraftLocales.RU_RU, "• Новые")
             }
         )
 
@@ -98,18 +98,18 @@ data class PluginTranslation(
         data class Display(
             @SerialName("title")
             val title: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&6Тип отображения")
                 translation(MinecraftLocales.EN_US, "&6Display type")
+                translation(MinecraftLocales.RU_RU, "&6Тип отображения")
             },
             @SerialName("by_player")
             val byPlayer: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По игрокам")
                 translation(MinecraftLocales.EN_US, "• By player")
+                translation(MinecraftLocales.RU_RU, "• По игрокам")
             },
             @SerialName("by_item")
             val byItem: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По предметам")
                 translation(MinecraftLocales.EN_US, "• By item")
+                translation(MinecraftLocales.RU_RU, "• По предметам")
             }
         )
 
@@ -117,8 +117,8 @@ data class PluginTranslation(
         data class Sort(
             @SerialName("title")
             val title: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&6Сортировка")
                 translation(MinecraftLocales.EN_US, "&6Sorting")
+                translation(MinecraftLocales.RU_RU, "&6Сортировка")
             },
             @SerialName("ascending_arrow")
             val ascendingArrow: LocalizedText = LocalizedText.shared(" &6&l↓"),
@@ -126,33 +126,33 @@ data class PluginTranslation(
             val descendingArrow: LocalizedText = LocalizedText.shared(" &6&l↑"),
             @SerialName("by_material")
             val byMaterial: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По материалу")
                 translation(MinecraftLocales.EN_US, "• By material")
+                translation(MinecraftLocales.RU_RU, "• По материалу")
             },
             @SerialName("by_date")
             val byDate: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По дате")
                 translation(MinecraftLocales.EN_US, "• By date")
+                translation(MinecraftLocales.RU_RU, "• По дате")
             },
             @SerialName("by_name")
             val byName: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По имени")
                 translation(MinecraftLocales.EN_US, "• By name")
+                translation(MinecraftLocales.RU_RU, "• По имени")
             },
             @SerialName("by_amount")
             val byAmount: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По количеству")
                 translation(MinecraftLocales.EN_US, "• By amount")
+                translation(MinecraftLocales.RU_RU, "• По количеству")
             },
             @SerialName("by_price")
             val byPrice: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По цене")
                 translation(MinecraftLocales.EN_US, "• By price")
+                translation(MinecraftLocales.RU_RU, "• По цене")
             },
             @SerialName("by_player")
             val byPlayer: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "• По игроку")
                 translation(MinecraftLocales.EN_US, "• By player")
+                translation(MinecraftLocales.RU_RU, "• По игроку")
             }
         )
 
@@ -161,33 +161,33 @@ data class PluginTranslation(
         data class Lot(
             @SerialName("buy_hint")
             val buyHint: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#d6a213ЛКМ &#18dbd1- купить")
                 translation(MinecraftLocales.EN_US, "&#d6a213LMB &#18dbd1- buy")
+                translation(MinecraftLocales.RU_RU, "&#d6a213ЛКМ &#18dbd1- купить")
             },
             @SerialName("remove_hint")
             val removeHint: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#d6a213ПКМ &#18dbd1- убрать")
                 translation(MinecraftLocales.EN_US, "&#d6a213RMB &#18dbd1- remove")
+                translation(MinecraftLocales.RU_RU, "&#d6a213ПКМ &#18dbd1- убрать")
             },
             @SerialName("expire_hint")
             val expireHint: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#d6a213СКМ &#18dbd1- убрать в истёкшие")
                 translation(MinecraftLocales.EN_US, "&#d6a213MMB &#18dbd1- move to expired")
+                translation(MinecraftLocales.RU_RU, "&#d6a213СКМ &#18dbd1- убрать в истёкшие")
             },
             @SerialName("seller")
             private val seller: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&7Выставил: &#d6a213%player_owner%")
                 translation(MinecraftLocales.EN_US, "&7Seller: &#d6a213%player_owner%")
+                translation(MinecraftLocales.RU_RU, "&7Выставил: &#d6a213%player_owner%")
             },
             @SerialName("listed")
             private val listed: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&7Время: &#d6a213%time%")
                 translation(MinecraftLocales.EN_US, "&7Listed: &#d6a213%time%")
+                translation(MinecraftLocales.RU_RU, "&7Время: &#d6a213%time%")
             },
             @SerialName("price")
             private val price: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&7Стоимость: &#d6a213%price%")
                 translation(MinecraftLocales.EN_US, "&7Price: &#d6a213%price%")
+                translation(MinecraftLocales.RU_RU, "&7Стоимость: &#d6a213%price%")
             }
         ) {
             fun seller(playerName: String): LocalizableComponent = seller.replace("%player_owner%", playerName)
@@ -202,13 +202,13 @@ data class PluginTranslation(
         data class Player(
             @SerialName("lots")
             private val lots: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&7Количество: %amount%")
                 translation(MinecraftLocales.EN_US, "&7Lots: %amount%")
+                translation(MinecraftLocales.RU_RU, "&7Количество: %amount%")
             },
             @SerialName("latest_lot")
             private val latestLot: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&7Последний слот: &#d6a213%time%")
                 translation(MinecraftLocales.EN_US, "&7Latest lot: &#d6a213%time%")
+                translation(MinecraftLocales.RU_RU, "&7Последний слот: &#d6a213%time%")
             }
         ) {
             fun lots(amount: Int): LocalizableComponent = lots.replace("%amount%", "$amount")
@@ -221,18 +221,18 @@ data class PluginTranslation(
         data class TimeAgo(
             @SerialName("days_hours_minutes")
             val daysHoursMinutes: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "%days%дн. %hours%ч. %minutes%м. назад")
                 translation(MinecraftLocales.EN_US, "%days%d %hours%h %minutes%m ago")
+                translation(MinecraftLocales.RU_RU, "%days%дн. %hours%ч. %minutes%м. назад")
             },
             @SerialName("hours_minutes")
             val hoursMinutes: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "%hours%ч. %minutes%м. назад")
                 translation(MinecraftLocales.EN_US, "%hours%h %minutes%m ago")
+                translation(MinecraftLocales.RU_RU, "%hours%ч. %minutes%м. назад")
             },
             @SerialName("minutes")
             val minutes: LocalizedText = LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "%minutes%м. назад")
                 translation(MinecraftLocales.EN_US, "%minutes%m ago")
+                translation(MinecraftLocales.RU_RU, "%minutes%м. назад")
             }
         )
     }
@@ -242,39 +242,39 @@ data class PluginTranslation(
         @SerialName("wrong_item")
         val wrongItem: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Предмет в вашей руке не подходит для продажи")
                 translation(MinecraftLocales.EN_US, "&#f55442The item in your hand can't be sold")
+                translation(MinecraftLocales.RU_RU, "&#f55442Предмет в вашей руке не подходит для продажи")
             }
         ),
         @SerialName("too_many_lots")
         val tooManyLots: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442У вас уже максимальное число лотов")
                 translation(MinecraftLocales.EN_US, "&#f55442You already have the maximum number of lots")
+                translation(MinecraftLocales.RU_RU, "&#f55442У вас уже максимальное число лотов")
             }
         ),
         @SerialName("wrong_price")
         val wrongPrice: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Неверный ценовой диапазон")
                 translation(MinecraftLocales.EN_US, "&#f55442The price is out of the allowed range")
+                translation(MinecraftLocales.RU_RU, "&#f55442Неверный ценовой диапазон")
             }
         ),
         @SerialName("listed")
         val listed: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#18dbd1Предмет добавлен на аукцион")
                 translation(MinecraftLocales.EN_US, "&#18dbd1The item is now on the auction")
+                translation(MinecraftLocales.RU_RU, "&#18dbd1Предмет добавлен на аукцион")
             }
         ),
         @SerialName("announcement")
         private val announcement: LocalizedText = PREFIX.concat(
             LocalizedText.build {
+                translation(MinecraftLocales.EN_US, "&#d6a213%player% &#18dbd1put a new item on /market")
                 translation(
                     MinecraftLocales.RU_RU,
                     "&#18dbd1Игрок &#d6a213%player% &#18dbd1выставил на /market новый предмет"
                 )
-                translation(MinecraftLocales.EN_US, "&#d6a213%player% &#18dbd1put a new item on /market")
             }
         )
     ) {
@@ -287,34 +287,34 @@ data class PluginTranslation(
         @SerialName("own_lot")
         val ownLot: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Вы не можете купить собственный лот")
                 translation(MinecraftLocales.EN_US, "&#f55442You can't buy your own lot")
+                translation(MinecraftLocales.RU_RU, "&#f55442Вы не можете купить собственный лот")
             }
         ),
         @SerialName("not_enough_money")
         val notEnoughMoney: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442У вас недостаточно денег")
                 translation(MinecraftLocales.EN_US, "&#f55442You don't have enough money")
+                translation(MinecraftLocales.RU_RU, "&#f55442У вас недостаточно денег")
             }
         ),
         @SerialName("payment_failed")
         val paymentFailed: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Не удалось выплатить деньги")
                 translation(MinecraftLocales.EN_US, "&#f55442Could not pay out the money")
+                translation(MinecraftLocales.RU_RU, "&#f55442Не удалось выплатить деньги")
             }
         ),
         @SerialName("bought")
         private val bought: LocalizedText = PREFIX.concat(
             LocalizedText.build {
                 translation(
-                    MinecraftLocales.RU_RU,
-                    "&#18dbd1Вы купили предмет &#dbaa18%item%&#18dbd1 у игрока &#dbaa18%player_owner%&#18dbd1 за &#dbaa18%price%"
-                )
-                translation(
                     MinecraftLocales.EN_US,
                     "&#18dbd1You bought &#dbaa18%item%&#18dbd1 from &#dbaa18%player_owner%&#18dbd1 for &#dbaa18%price%"
+                )
+                translation(
+                    MinecraftLocales.RU_RU,
+                    "&#18dbd1Вы купили предмет &#dbaa18%item%&#18dbd1 у игрока &#dbaa18%player_owner%&#18dbd1 за &#dbaa18%price%"
                 )
             }
         ),
@@ -322,12 +322,12 @@ data class PluginTranslation(
         private val sold: LocalizedText = PREFIX.concat(
             LocalizedText.build {
                 translation(
-                    MinecraftLocales.RU_RU,
-                    "&#18dbd1Игрок &#dbaa18%player%&#18dbd1 купил у вас &#dbaa18%item%&#18dbd1 за &#dbaa18%price%"
-                )
-                translation(
                     MinecraftLocales.EN_US,
                     "&#dbaa18%player%&#18dbd1 bought your &#dbaa18%item%&#18dbd1 for &#dbaa18%price%"
+                )
+                translation(
+                    MinecraftLocales.RU_RU,
+                    "&#18dbd1Игрок &#dbaa18%player%&#18dbd1 купил у вас &#dbaa18%item%&#18dbd1 за &#dbaa18%price%"
                 )
             }
         )
@@ -356,15 +356,15 @@ data class PluginTranslation(
         @SerialName("not_owner")
         val notOwner: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Вы не владелец этого слота")
                 translation(MinecraftLocales.EN_US, "&#f55442You don't own this lot")
+                translation(MinecraftLocales.RU_RU, "&#f55442Вы не владелец этого слота")
             }
         ),
         @SerialName("removed")
         val removed: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Слот удалён")
                 translation(MinecraftLocales.EN_US, "&#f55442The lot is removed")
+                translation(MinecraftLocales.RU_RU, "&#f55442Слот удалён")
             }
         )
     )
@@ -375,15 +375,15 @@ data class PluginTranslation(
         @SerialName("success")
         val success: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#d6a213Вы просрочили слот!")
                 translation(MinecraftLocales.EN_US, "&#d6a213You expired the lot!")
+                translation(MinecraftLocales.RU_RU, "&#d6a213Вы просрочили слот!")
             }
         ),
         @SerialName("owner_notice")
         private val ownerNotice: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Ваш слот %item% за %price% только что был просрочен")
                 translation(MinecraftLocales.EN_US, "&#f55442Your lot %item% for %price% has just expired")
+                translation(MinecraftLocales.RU_RU, "&#f55442Ваш слот %item% за %price% только что был просрочен")
             }
         )
     ) {
@@ -399,15 +399,15 @@ data class PluginTranslation(
         @SerialName("started")
         val started: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#dbbb18Перезагрузка плагина")
                 translation(MinecraftLocales.EN_US, "&#dbbb18Reloading the plugin")
+                translation(MinecraftLocales.RU_RU, "&#dbbb18Перезагрузка плагина")
             }
         ),
         @SerialName("completed")
         val completed: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#42f596Перезагрузка успешно завершена")
                 translation(MinecraftLocales.EN_US, "&#42f596Reload complete")
+                translation(MinecraftLocales.RU_RU, "&#42f596Перезагрузка успешно завершена")
             }
         )
     )
@@ -418,29 +418,29 @@ data class PluginTranslation(
         @SerialName("no_permission")
         val noPermission: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442У вас нет прав")
                 translation(MinecraftLocales.EN_US, "&#f55442You don't have permission")
+                translation(MinecraftLocales.RU_RU, "&#f55442У вас нет прав")
             }
         ),
         @SerialName("inventory_full")
         val inventoryFull: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Инвентарь полон")
                 translation(MinecraftLocales.EN_US, "&#f55442Your inventory is full")
+                translation(MinecraftLocales.RU_RU, "&#f55442Инвентарь полон")
             }
         ),
         @SerialName("database")
         val database: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Произошла ошибка")
                 translation(MinecraftLocales.EN_US, "&#f55442An error occurred")
+                translation(MinecraftLocales.RU_RU, "&#f55442Произошла ошибка")
             }
         ),
         @SerialName("unexpected")
         val unexpected: LocalizedText = PREFIX.concat(
             LocalizedText.build {
-                translation(MinecraftLocales.RU_RU, "&#f55442Произошла непредвиденная ошибка")
                 translation(MinecraftLocales.EN_US, "&#f55442An unexpected error occurred")
+                translation(MinecraftLocales.RU_RU, "&#f55442Произошла непредвиденная ошибка")
             }
         )
     )
