@@ -21,6 +21,7 @@ import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
@@ -77,6 +78,12 @@ interface BukkitCoreModule : CoreModule {
                 )
             }
         ).asCachedKrate()
+
+        override val commandExceptionHandler = CommandExceptionHandler(
+            multiplatformCommand = multiplatformCommand,
+            translationKrate = pluginTranslationKrate
+        )
+
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
         private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
             val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")

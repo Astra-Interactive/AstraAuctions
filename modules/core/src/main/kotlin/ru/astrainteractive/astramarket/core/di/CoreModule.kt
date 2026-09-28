@@ -6,6 +6,7 @@ import ru.astrainteractive.astralibs.command.api.brigadier.command.Multiplatform
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
@@ -23,4 +24,5 @@ interface CoreModule {
     val yamlStringFormat: StringFormat
     val economyProviderFactory: CurrencyEconomyProviderFactory
     val multiplatformCommand: MultiplatformCommand
+    val commandExceptionHandler: CommandExceptionHandler
 }

@@ -5,12 +5,12 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
-import ru.astrainteractive.astramarket.command.errorhandler.BrigadierErrorHandler
+import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionCommandFactory(
     private val executor: AuctionCommandExecutor,
-    private val errorHandler: BrigadierErrorHandler,
+    private val commandExceptionHandler: CommandExceptionHandler,
     private val multiplatformCommand: MultiplatformCommand
 ) {
 
@@ -21,7 +21,7 @@ internal class AuctionCommandFactory(
                 literal("sell") {
                     argument("price", FloatArgumentType.floatArg(0f, Float.MAX_VALUE)) { priceArg ->
                         argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) { amountArg ->
-                            runs(errorHandler::handle) { ctx ->
+                            runs(commandExceptionHandler::handle) { ctx ->
                                 val player = ctx.requirePlayer()
                                     .tryCast<BukkitOnlineKPlayer>()
                                     ?: error("Could not get bukkit player ")
@@ -36,7 +36,7 @@ internal class AuctionCommandFactory(
                                 ).run(executor::execute)
                             }
                         }
-                        runs(errorHandler::handle) { ctx ->
+                        runs(commandExceptionHandler::handle) { ctx ->
                             val player = ctx.requirePlayer()
                                 .tryCast<BukkitOnlineKPlayer>()
                                 ?: error("Could not get bukkit player ")
@@ -53,7 +53,7 @@ internal class AuctionCommandFactory(
                     }
                 }
                 literal("players") {
-                    runs(errorHandler::handle) { ctx ->
+                    runs(commandExceptionHandler::handle) { ctx ->
                         val player = ctx.requirePlayer()
                         AuctionCommand.Result.OpenPlayers(
                             player = player,
@@ -61,7 +61,7 @@ internal class AuctionCommandFactory(
                         ).run(executor::execute)
                     }
                 }
-                runs(errorHandler::handle) { ctx ->
+                runs(commandExceptionHandler::handle) { ctx ->
                     val player = ctx.requirePlayer()
                     AuctionCommand.Result.OpenSlots(
                         player = player,
