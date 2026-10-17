@@ -9,6 +9,7 @@ import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.market.model.AuctionSort
+import ru.astrainteractive.astramarket.market.util.toTranslation
 import ru.astrainteractive.astramarket.util.toItemStack
 
 internal fun ButtonContext.auctionSort(
@@ -30,7 +31,7 @@ internal fun ButtonContext.auctionSort(
             addLore {
                 val isSelected = sortType::class == entry::class
                 sortOption(
-                    label = auctionSortTranslationMapping.translate(entry),
+                    label = entry.toTranslation(pluginTranslation),
                     isSelected = isSelected,
                     isAsc = sortType.isAsc
                 ).toComponent(locale)

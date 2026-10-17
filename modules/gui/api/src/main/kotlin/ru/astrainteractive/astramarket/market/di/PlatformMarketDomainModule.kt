@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.market.di
 
-import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
+import ru.astrainteractive.astramarket.market.api.AuctionsSorter
 
 interface PlatformMarketDomainModule {
-    val sortAuctionsUseCase: SortAuctionsUseCase
+    val auctionsSorter: AuctionsSorter
 }

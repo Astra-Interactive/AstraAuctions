@@ -7,6 +7,7 @@ import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.util.findPlayersWithSlots
 import ru.astrainteractive.astramarket.players.model.PlayerSort
+import ru.astrainteractive.astramarket.util.nextAfter
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.util.sortedBy
@@ -49,14 +50,7 @@ internal class DefaultPlayersMarketComponent(
             PlayerSort.Auctions(false),
             PlayerSort.Auctions(true),
         )
-        val i = sorts.indexOfFirst { sortType -> sortType == model.value.sort }
-        val offset = if (isRightClick) -1 else 1
-
-        val newSortType = if (i == -1) {
-            sorts.first()
-        } else {
-            sorts[(i + offset) % sorts.size]
-        }
+        val newSortType = sorts.nextAfter(model.value.sort, backwards = isRightClick)
 
         model.update {
             it.copy(sort = newSortType)

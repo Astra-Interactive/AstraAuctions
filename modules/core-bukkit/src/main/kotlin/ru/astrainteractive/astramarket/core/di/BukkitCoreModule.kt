@@ -22,8 +22,6 @@ import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
 import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderFactory
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -35,7 +33,7 @@ import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 interface BukkitCoreModule : CoreModule {
 
     override val lifecyclePlugin: LifecyclePlugin
-    val itemStackEncoder: ItemStackEncoder
+    val objectEncoder: ObjectEncoder
     val inventoryClickEventListener: EventListener
 
     class Default(
@@ -43,9 +41,7 @@ interface BukkitCoreModule : CoreModule {
         override val multiplatformCommand: MultiplatformCommand
     ) : BukkitCoreModule {
 
-        private val encoder: ObjectEncoder = BukkitObjectEncoder()
-
-        override val itemStackEncoder: ItemStackEncoder = ItemStackEncoderImpl(encoder)
+        override val objectEncoder: ObjectEncoder = BukkitObjectEncoder()
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 

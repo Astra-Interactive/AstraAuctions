@@ -22,9 +22,7 @@ internal class BukkitGuiRouter(
 
     private fun createButtonContext(locale: Locale): ButtonContext = ButtonContext.Default(
         coreModule = coreModule,
-        marketViewDomainModule = marketViewModule.marketViewDomainModule,
         bukkitCoreModule = bukkitCoreModule,
-        playersMarketViewModule = playersMarketViewModule,
         locale = locale
     )
 

@@ -7,12 +7,13 @@ import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
+import ru.astrainteractive.astramarket.market.api.AuctionsSorter
 import ru.astrainteractive.astramarket.market.api.PlayerInteractionBridge
-import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
 import ru.astrainteractive.astramarket.market.model.AuctionSort
 import ru.astrainteractive.astramarket.market.usecase.BuyAuctionUseCase
 import ru.astrainteractive.astramarket.market.usecase.ExpireAuctionUseCase
 import ru.astrainteractive.astramarket.market.usecase.RemoveAuctionUseCase
+import ru.astrainteractive.astramarket.util.nextAfter
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
@@ -26,7 +27,7 @@ internal class DefaultAuctionComponent(
     isExpired: Boolean,
     private val configKrate: CachedKrate<PluginConfig>,
     private val marketRepository: MarketRepository,
-    private val sortAuctionsUseCase: SortAuctionsUseCase,
+    private val auctionsSorter: AuctionsSorter,
     private val removeAuctionUseCase: RemoveAuctionUseCase,
     private val buyAuctionUseCase: BuyAuctionUseCase,
     private val expireAuctionUseCase: ExpireAuctionUseCase,
@@ -57,14 +58,7 @@ internal class DefaultAuctionComponent(
             AuctionSort.Player(false),
             AuctionSort.Player(true),
         )
-        val i = sorts.indexOfFirst { sortType -> sortType == model.value.sortType }
-        val offset = if (isRightClick) -1 else 1
-
-        val newSortType = if (i == -1) {
-            sorts.first()
-        } else {
-            sorts[(i + offset) % sorts.size]
-        }
+        val newSortType = sorts.nextAfter(model.value.sortType, backwards = isRightClick)
         model.update { it.copy(sortType = newSortType) }
         sort()
     }
@@ -72,9 +66,7 @@ internal class DefaultAuctionComponent(
     private fun sort() {
         launch(mutex) {
             model.update { model ->
-                val input = SortAuctionsUseCase.Input(model.sortType, model.items)
-                val sortedItems = sortAuctionsUseCase.invoke(input)
-                model.copy(items = sortedItems.list)
+                model.copy(items = auctionsSorter.sort(model.items, model.sortType))
             }
         }
     }

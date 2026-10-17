@@ -22,7 +22,6 @@ import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
-import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.model.AuctionSlotKey
 import ru.astrainteractive.astramarket.players.component.PlayersMarketComponent
 import ru.astrainteractive.astramarket.router.api.GuiRouter
@@ -33,6 +32,7 @@ import ru.astrainteractive.astramarket.slot.playerItem
 import ru.astrainteractive.astramarket.slot.playersSort
 import ru.astrainteractive.astramarket.slot.prevPage
 import ru.astrainteractive.astramarket.slot.slotsType
+import ru.astrainteractive.astramarket.util.auctionInventoryLayout
 import ru.astrainteractive.astramarket.util.closeInventory
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -59,7 +59,7 @@ internal class PlayersGui(
         .Default(dispatchers.Main)
         .withTimings()
     private val inventoryMap by lazy {
-        DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
+        auctionInventoryLayout(config.auction.useCompactDesign)
     }
 
     override val title: Component = translation.menu.title.toComponent(inventoryOwner.locale)

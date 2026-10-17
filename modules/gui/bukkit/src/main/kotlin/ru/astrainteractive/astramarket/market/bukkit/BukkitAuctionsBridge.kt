@@ -3,9 +3,10 @@ package ru.astrainteractive.astramarket.market.bukkit
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.server.permission.asKPermissible
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.settings.model.PluginPermission
+import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.api.AuctionsBridge
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
@@ -14,7 +15,7 @@ import java.util.UUID
 
 @Suppress("TooManyFunctions")
 internal class BukkitAuctionsBridge(
-    private val itemStackEncoder: ItemStackEncoder,
+    private val objectEncoder: ObjectEncoder,
 ) : AuctionsBridge, Logger by JUtiltLogger("AstraMarket-BukkitAuctionsBridge").withoutParentHandlers() {
 
     private fun ItemStack.displayNameOrMaterialName(): String {
@@ -31,13 +32,13 @@ internal class BukkitAuctionsBridge(
     }
 
     override suspend fun addItemToInventory(marketSlot: MarketSlot, uuid: UUID) {
-        itemStackEncoder.toItemStack(marketSlot.item)
+        objectEncoder.toItemStack(marketSlot.item)
             .onFailure { error { "#addItemToInventory could not deserialize item" } }
             .onSuccess { itemStack -> Bukkit.getPlayer(uuid)?.inventory?.addItem(itemStack) }
     }
 
     override suspend fun itemDesc(marketSlot: MarketSlot): String {
-        return itemStackEncoder.toItemStack(marketSlot.item)
+        return objectEncoder.toItemStack(marketSlot.item)
             .onFailure { error { "#itemDesc could not deserialize item" } }
             .getOrNull()
             ?.displayNameOrMaterialName()
@@ -53,7 +54,7 @@ internal class BukkitAuctionsBridge(
     }
 
     override fun isItemValid(marketSlot: MarketSlot): Boolean {
-        val itemStack = itemStackEncoder.toItemStack(marketSlot.item).getOrNull()
+        val itemStack = objectEncoder.toItemStack(marketSlot.item).getOrNull()
         return itemStack != null && itemStack.type != Material.AIR
     }
 

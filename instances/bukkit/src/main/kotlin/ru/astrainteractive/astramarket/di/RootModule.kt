@@ -41,10 +41,10 @@ internal class RootModule(
         coreModule = coreModule,
         marketRepository = exposedModule.marketRepository,
         marketDataModule = BukkitMarketDataModule(
-            itemStackEncoder = coreModule.itemStackEncoder
+            objectEncoder = coreModule.objectEncoder
         ),
         platformMarketDomainModule = BukkitMarketDomainModule(
-            itemStackEncoder = coreModule.itemStackEncoder,
+            objectEncoder = coreModule.objectEncoder,
         )
     )
 

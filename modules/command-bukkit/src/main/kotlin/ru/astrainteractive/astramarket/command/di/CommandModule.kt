@@ -34,7 +34,7 @@ interface CommandModule {
                 dispatchers = coreModule.dispatchers,
                 createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
                 ioScope = coreModule.ioScope,
-                itemStackEncoder = bukkitCoreModule.itemStackEncoder,
+                objectEncoder = bukkitCoreModule.objectEncoder,
             ),
             multiplatformCommand = coreModule.multiplatformCommand,
         )

@@ -9,6 +9,7 @@ import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.players.model.PlayerSort
+import ru.astrainteractive.astramarket.players.util.toTranslation
 import ru.astrainteractive.astramarket.util.toItemStack
 
 internal fun ButtonContext.playersSort(
@@ -27,7 +28,7 @@ internal fun ButtonContext.playersSort(
             addLore {
                 val isSelected = sortType::class == entry::class
                 sortOption(
-                    label = playersSortTranslationMapping.translate(entry),
+                    label = entry.toTranslation(pluginTranslation),
                     isSelected = isSelected,
                     isAsc = sortType.isAsc
                 ).toComponent(locale)

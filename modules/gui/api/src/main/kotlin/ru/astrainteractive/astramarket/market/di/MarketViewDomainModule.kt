@@ -2,8 +2,6 @@ package ru.astrainteractive.astramarket.market.di
 
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
-import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMapping
-import ru.astrainteractive.astramarket.market.domain.mapping.AuctionSortTranslationMappingImpl
 import ru.astrainteractive.astramarket.market.usecase.BuyAuctionUseCase
 import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.market.usecase.ExpireAuctionUseCase
@@ -13,10 +11,7 @@ interface MarketViewDomainModule {
     val marketDataModule: MarketDataModule
     val platformMarketDomainModule: PlatformMarketDomainModule
 
-    // Mappers
-    val auctionSortTranslationMapping: AuctionSortTranslationMapping
 
-    // UseCases
     val buyAuctionUseCase: BuyAuctionUseCase
     val createAuctionUseCase: CreateAuctionUseCase
     val expireAuctionUseCase: ExpireAuctionUseCase
@@ -29,11 +24,6 @@ interface MarketViewDomainModule {
         override val platformMarketDomainModule: PlatformMarketDomainModule
     ) : MarketViewDomainModule {
 
-        override val auctionSortTranslationMapping: AuctionSortTranslationMapping by lazy {
-            AuctionSortTranslationMappingImpl(
-                pluginTranslationKrate = coreModule.pluginTranslationKrate
-            )
-        }
         override val buyAuctionUseCase: BuyAuctionUseCase by lazy {
             BuyAuctionUseCase(
                 pluginTranslationKrate = coreModule.pluginTranslationKrate,

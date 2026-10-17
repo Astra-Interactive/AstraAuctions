@@ -8,6 +8,7 @@ import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.context.ButtonContext
+import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.util.getTimeFormatted
 import java.util.*
@@ -22,7 +23,7 @@ internal fun ButtonContext.expiredSlot(
     hasExpirePermission: Boolean,
     hasRemovePermission: Boolean
 ): InventorySlot? {
-    val itemStack = itemStackEncoder.toItemStack(auctionItem.item)
+    val itemStack = objectEncoder.toItemStack(auctionItem.item)
         .onFailure { error { "#expiredSlot could not deserialize item" } }
         .getOrNull()
         ?: return null

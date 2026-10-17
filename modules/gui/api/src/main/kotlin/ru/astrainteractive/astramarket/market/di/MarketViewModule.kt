@@ -42,7 +42,7 @@ interface MarketViewModule {
                 isExpired = isExpired,
                 configKrate = coreModule.configKrate,
                 marketRepository = marketRepository,
-                sortAuctionsUseCase = marketViewDomainModule.platformMarketDomainModule.sortAuctionsUseCase,
+                auctionsSorter = marketViewDomainModule.platformMarketDomainModule.auctionsSorter,
                 removeAuctionUseCase = marketViewDomainModule.removeAuctionUseCase,
                 buyAuctionUseCase = marketViewDomainModule.buyAuctionUseCase,
                 expireAuctionUseCase = marketViewDomainModule.expireAuctionUseCase,

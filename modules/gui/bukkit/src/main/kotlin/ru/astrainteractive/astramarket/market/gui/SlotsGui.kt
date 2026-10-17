@@ -28,7 +28,6 @@ import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginPermission
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
-import ru.astrainteractive.astramarket.gui.layout.DefaultAuctionInventoryLayoutFactory
 import ru.astrainteractive.astramarket.market.component.AuctionComponent
 import ru.astrainteractive.astramarket.model.AuctionSlotKey
 import ru.astrainteractive.astramarket.router.api.GuiRouter
@@ -40,6 +39,7 @@ import ru.astrainteractive.astramarket.slot.filterExpired
 import ru.astrainteractive.astramarket.slot.nextPage
 import ru.astrainteractive.astramarket.slot.prevPage
 import ru.astrainteractive.astramarket.slot.slotsType
+import ru.astrainteractive.astramarket.util.auctionInventoryLayout
 import ru.astrainteractive.astramarket.util.closeInventory
 import ru.astrainteractive.astramarket.util.playSound
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -77,7 +77,7 @@ internal class SlotsGui(
     override val inventorySize: InventorySize = InventorySize.XL
 
     private val inventoryMap by lazy {
-        DefaultAuctionInventoryLayoutFactory.create(config.auction.useCompactDesign)
+        auctionInventoryLayout(config.auction.useCompactDesign)
     }
 
     private val paginator = DefaultPaginator(

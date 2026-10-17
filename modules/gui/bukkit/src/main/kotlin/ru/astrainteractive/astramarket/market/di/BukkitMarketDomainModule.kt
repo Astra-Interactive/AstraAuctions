@@ -1,13 +1,11 @@
 package ru.astrainteractive.astramarket.market.di
 
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.market.domain.usecase.BukkitSortAuctionsUseCase
-import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
+import ru.astrainteractive.astramarket.market.api.AuctionsSorter
+import ru.astrainteractive.astramarket.market.bukkit.BukkitAuctionsSorter
 
-class BukkitMarketDomainModule(itemStackEncoder: ItemStackEncoder) : PlatformMarketDomainModule {
-    override val sortAuctionsUseCase: SortAuctionsUseCase by lazy {
-        BukkitSortAuctionsUseCase(
-            itemStackEncoder = itemStackEncoder
-        )
+class BukkitMarketDomainModule(objectEncoder: ObjectEncoder) : PlatformMarketDomainModule {
+    override val auctionsSorter: AuctionsSorter by lazy {
+        BukkitAuctionsSorter(objectEncoder = objectEncoder)
     }
 }

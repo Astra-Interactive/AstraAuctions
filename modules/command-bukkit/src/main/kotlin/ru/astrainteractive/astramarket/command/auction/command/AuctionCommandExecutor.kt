@@ -3,7 +3,8 @@ package ru.astrainteractive.astramarket.command.auction.command
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
+import ru.astrainteractive.astramarket.core.util.encodeItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.router.api.GuiRouter
@@ -19,7 +20,7 @@ internal class AuctionCommandExecutor(
     private val router: GuiRouter,
     private val dispatchers: KotlinDispatchers,
     private val ioScope: CoroutineScope,
-    private val itemStackEncoder: ItemStackEncoder,
+    private val objectEncoder: ObjectEncoder,
     private val createAuctionUseCase: CreateAuctionUseCase
 ) : Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor").withoutParentHandlers() {
     private val mutex = Mutex()
@@ -50,7 +51,7 @@ internal class AuctionCommandExecutor(
                 val clonedItem = itemInstance.clone().apply {
                     amount = calculatedAmount
                 }
-                val encodedItem = itemStackEncoder.toByteArray(clonedItem)
+                val encodedItem = objectEncoder.encodeItemStack(clonedItem)
                     .onFailure { error { "#execute could not deserialize item" } }
                     .getOrNull()
                     ?: return@launch
