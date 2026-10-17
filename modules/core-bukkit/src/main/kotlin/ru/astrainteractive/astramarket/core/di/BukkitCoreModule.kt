@@ -44,9 +44,6 @@ interface BukkitCoreModule : CoreModule {
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 
-        @Suppress("MagicNumber")
-        private fun createBStats() = Metrics(lifecyclePlugin, 15771)
-
         override val yamlStringFormat: StringFormat = YamlStringFormat(
             configuration = Yaml.default.configuration.copy(
                 encodeDefaults = true,
@@ -76,10 +73,6 @@ interface BukkitCoreModule : CoreModule {
         ).asCachedKrate()
 
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
-        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
-            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
-            logger.error(throwable) { "Error happened inside global coroutine scope!" }
-        }
 
         override val ioScope = CoroutineFeature
             .Default(dispatchers.IO + SupervisorJob() + createCoroutineExceptionHandler())
@@ -114,6 +107,14 @@ interface BukkitCoreModule : CoreModule {
                     pluginTranslationKrate.getValue()
                 }
             )
+        }
+
+        @Suppress("MagicNumber")
+        private fun createBStats() = Metrics(lifecyclePlugin, 15771)
+
+        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
+            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
+            logger.error(throwable) { "Error happened inside global coroutine scope!" }
         }
     }
 }

@@ -11,7 +11,7 @@ import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.util.getTimeFormatted
-import java.util.*
+import java.util.UUID
 import kotlin.time.Clock
 
 @Suppress("LongParameterList")

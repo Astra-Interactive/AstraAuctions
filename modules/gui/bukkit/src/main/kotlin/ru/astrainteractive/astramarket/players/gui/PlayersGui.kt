@@ -170,13 +170,6 @@ internal class PlayersGui(
         e.isCancelled = true
     }
 
-    override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
-        playersMarketComponent.model
-            .onEach { model -> updatePageContext(model) }
-            .onEach { withContext(dispatchers.Main) { render() } }
-            .launchIn(menuScope)
-    }
-
     override fun render() {
         super.render()
         if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
@@ -187,4 +180,12 @@ internal class PlayersGui(
         setInventorySlot(displayTypeButton)
         setInventorySlot(slots)
     }
+
+    override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
+        playersMarketComponent.model
+            .onEach { model -> updatePageContext(model) }
+            .onEach { withContext(dispatchers.Main) { render() } }
+            .launchIn(menuScope)
+    }
+
 }

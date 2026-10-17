@@ -11,7 +11,6 @@ interface MarketViewDomainModule {
     val marketDataModule: MarketDataModule
     val platformMarketDomainModule: PlatformMarketDomainModule
 
-
     val buyAuctionUseCase: BuyAuctionUseCase
     val createAuctionUseCase: CreateAuctionUseCase
     val expireAuctionUseCase: ExpireAuctionUseCase

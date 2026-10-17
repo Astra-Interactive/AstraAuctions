@@ -47,6 +47,14 @@ internal class DefaultAuctionComponent(
         )
     )
 
+    private fun sort() {
+        launch(mutex) {
+            model.update { model ->
+                model.copy(items = auctionsSorter.sort(model.items, model.sortType))
+            }
+        }
+    }
+
     override fun onSortButtonClicked(isRightClick: Boolean) {
         val sorts = listOf(
             AuctionSort.Date(false),
@@ -63,14 +71,6 @@ internal class DefaultAuctionComponent(
         val newSortType = sorts.nextAfter(model.value.sortType, backwards = isRightClick)
         model.update { it.copy(sortType = newSortType) }
         sort()
-    }
-
-    private fun sort() {
-        launch(mutex) {
-            model.update { model ->
-                model.copy(items = auctionsSorter.sort(model.items, model.sortType))
-            }
-        }
     }
 
     private suspend fun onExpiredAuctionClicked(auction: MarketSlot): Boolean {

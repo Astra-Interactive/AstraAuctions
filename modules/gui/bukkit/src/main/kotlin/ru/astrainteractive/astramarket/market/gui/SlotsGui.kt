@@ -187,6 +187,18 @@ internal class SlotsGui(
         auctionComponent.cancel()
     }
 
+    override fun render() {
+        super.render()
+        if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
+        if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
+        setInventorySlot(filterExpiredButton)
+        setInventorySlot(displayTypeButton)
+        setInventorySlot(backButton)
+        setInventorySlot(borderButtons)
+        setInventorySlot(sortButton)
+        setInventorySlot(itemSlots)
+    }
+
     override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
         this@SlotsGui.inventoryOwner.playSound(config.sounds.open)
         auctionComponent.model
@@ -214,15 +226,4 @@ internal class SlotsGui(
         e.isCancelled = true
     }
 
-    override fun render() {
-        super.render()
-        if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
-        if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
-        setInventorySlot(filterExpiredButton)
-        setInventorySlot(displayTypeButton)
-        setInventorySlot(backButton)
-        setInventorySlot(borderButtons)
-        setInventorySlot(sortButton)
-        setInventorySlot(itemSlots)
-    }
 }
