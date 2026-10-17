@@ -4,24 +4,22 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
 import java.util.UUID
 
-internal interface AuctionCommand {
-    sealed interface Result {
-        class OpenSlots(
-            val player: OnlineKPlayer,
-            val isExpired: Boolean,
-            val targetPlayerUUID: UUID?
-        ) : Result
+internal sealed interface AuctionCommand {
+    class OpenSlots(
+        val player: OnlineKPlayer,
+        val isExpired: Boolean,
+        val targetPlayerUUID: UUID?
+    ) : AuctionCommand
 
-        class OpenPlayers(
-            val player: OnlineKPlayer,
-            val isExpired: Boolean
-        ) : Result
+    class OpenPlayers(
+        val player: OnlineKPlayer,
+        val isExpired: Boolean
+    ) : AuctionCommand
 
-        class Sell(
-            val player: OnlineKPlayer,
-            val itemInstance: ItemStack,
-            val amount: Int,
-            val price: Float
-        ) : Result
-    }
+    class Sell(
+        val player: OnlineKPlayer,
+        val itemInstance: ItemStack,
+        val amount: Int,
+        val price: Float
+    ) : AuctionCommand
 }

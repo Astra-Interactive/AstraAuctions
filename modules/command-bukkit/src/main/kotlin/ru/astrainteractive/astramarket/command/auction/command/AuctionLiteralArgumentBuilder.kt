@@ -25,7 +25,7 @@ internal class AuctionLiteralArgumentBuilder(
                                 val player = ctx.requirePlayer()
                                     .tryCast<BukkitOnlineKPlayer>()
                                     ?: error("Could not get bukkit player ")
-                                AuctionCommand.Result.Sell(
+                                AuctionCommand.Sell(
                                     player = player,
                                     itemInstance = player
                                         .instance
@@ -40,7 +40,7 @@ internal class AuctionLiteralArgumentBuilder(
                             val player = ctx.requirePlayer()
                                 .tryCast<BukkitOnlineKPlayer>()
                                 ?: error("Could not get bukkit player ")
-                            AuctionCommand.Result.Sell(
+                            AuctionCommand.Sell(
                                 player = player,
                                 itemInstance = player
                                     .instance
@@ -55,7 +55,7 @@ internal class AuctionLiteralArgumentBuilder(
                 literal("players") {
                     runs(commandExceptionHandler::handle) { ctx ->
                         val player = ctx.requirePlayer()
-                        AuctionCommand.Result.OpenPlayers(
+                        AuctionCommand.OpenPlayers(
                             player = player,
                             isExpired = false
                         ).run(executor::execute)
@@ -63,7 +63,7 @@ internal class AuctionLiteralArgumentBuilder(
                 }
                 runs(commandExceptionHandler::handle) { ctx ->
                     val player = ctx.requirePlayer()
-                    AuctionCommand.Result.OpenSlots(
+                    AuctionCommand.OpenSlots(
                         player = player,
                         isExpired = false,
                         targetPlayerUUID = null

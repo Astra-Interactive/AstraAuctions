@@ -26,9 +26,9 @@ internal class AuctionCommandExecutor(
     private val mutex = Mutex()
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
 
-    fun execute(input: AuctionCommand.Result) {
+    fun execute(input: AuctionCommand) {
         when (input) {
-            is AuctionCommand.Result.OpenSlots -> {
+            is AuctionCommand.OpenSlots -> {
                 val route = GuiRouter.Route.Slots(
                     inventoryOwner = input.player,
                     isExpired = input.isExpired,
@@ -37,7 +37,7 @@ internal class AuctionCommandExecutor(
                 router.navigate(route)
             }
 
-            is AuctionCommand.Result.OpenPlayers -> {
+            is AuctionCommand.OpenPlayers -> {
                 val route = GuiRouter.Route.Players(
                     inventoryOwner = input.player,
                     isExpired = input.isExpired
@@ -45,7 +45,7 @@ internal class AuctionCommandExecutor(
                 router.navigate(route)
             }
 
-            is AuctionCommand.Result.Sell -> ioScope.launch(mutex, limitedIoDispatcher) {
+            is AuctionCommand.Sell -> ioScope.launch(mutex, limitedIoDispatcher) {
                 val itemInstance = input.itemInstance
                 val calculatedAmount = max(min(itemInstance.amount, input.amount), 1)
                 val clonedItem = itemInstance.clone().apply {
