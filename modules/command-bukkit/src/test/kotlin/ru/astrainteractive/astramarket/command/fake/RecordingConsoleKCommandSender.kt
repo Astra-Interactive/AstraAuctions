@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.core.command
+package ru.astrainteractive.astramarket.command.fake
 
 import net.kyori.adventure.text.Component
 import ru.astrainteractive.astralibs.command.api.brigadier.sender.ConsoleKCommandSender

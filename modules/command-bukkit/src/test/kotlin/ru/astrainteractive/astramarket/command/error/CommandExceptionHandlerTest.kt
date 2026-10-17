@@ -1,6 +1,6 @@
 @file:Suppress("FunctionNaming")
 
-package ru.astrainteractive.astramarket.core.command
+package ru.astrainteractive.astramarket.command.error
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
@@ -15,6 +15,8 @@ import ru.astrainteractive.astralibs.command.api.exception.NoPlayerException
 import ru.astrainteractive.astralibs.command.api.exception.NoPotionEffectTypeException
 import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
 import ru.astrainteractive.astralibs.localization.text.LocalizedText
+import ru.astrainteractive.astramarket.command.fake.FakeMultiplatformCommands
+import ru.astrainteractive.astramarket.command.fake.RecordingConsoleKCommandSender
 import ru.astrainteractive.astramarket.core.settings.model.PluginPermission
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.asCachedMutableKrate

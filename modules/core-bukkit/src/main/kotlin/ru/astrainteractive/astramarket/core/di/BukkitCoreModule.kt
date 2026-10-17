@@ -19,7 +19,6 @@ import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
-import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
@@ -75,11 +74,6 @@ interface BukkitCoreModule : CoreModule {
                 )
             }
         ).asCachedKrate()
-
-        override val commandExceptionHandler = CommandExceptionHandler(
-            multiplatformCommand = multiplatformCommand,
-            translationKrate = pluginTranslationKrate
-        )
 
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
         private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->

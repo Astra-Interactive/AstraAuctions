@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
-import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
+import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionLiteralArgumentBuilder(

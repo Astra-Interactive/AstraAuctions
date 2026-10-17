@@ -5,6 +5,7 @@ import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.command.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.command.AuctionLiteralArgumentBuilder
+import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
 import ru.astrainteractive.astramarket.command.reload.command.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
@@ -21,14 +22,18 @@ interface CommandModule {
         marketViewModule: MarketViewModule,
         private val commandRegistrarContext: CommandRegistrarContext,
     ) : CommandModule {
+        private val commandExceptionHandler = CommandExceptionHandler(
+            multiplatformCommand = coreModule.multiplatformCommand,
+            translationKrate = coreModule.pluginTranslationKrate
+        )
         private val reloadLiteralArgumentBuilder = ReloadLiteralArgumentBuilder(
             lifecyclePlugin = coreModule.lifecyclePlugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            commandExceptionHandler = coreModule.commandExceptionHandler,
+            commandExceptionHandler = commandExceptionHandler,
             multiplatformCommand = coreModule.multiplatformCommand
         )
         private val auctionLiteralArgumentBuilder = AuctionLiteralArgumentBuilder(
-            commandExceptionHandler = coreModule.commandExceptionHandler,
+            commandExceptionHandler = commandExceptionHandler,
             executor = AuctionCommandExecutor(
                 router = bukkitRouterModule.router,
                 dispatchers = coreModule.dispatchers,

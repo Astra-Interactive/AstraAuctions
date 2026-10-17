@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.core.command
+package ru.astrainteractive.astramarket.command.fake
 
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder

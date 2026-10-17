@@ -18,4 +18,10 @@ dependencies {
     implementation(projects.modules.core)
     implementation(projects.modules.coreBukkit)
     implementation(projects.modules.gui.api)
+
+    testImplementation(libs.minecraft.brigadier)
+    testImplementation(libs.minecraft.kyori.legacy)
+    testImplementation(libs.minecraft.kyori.minimessage)
+    testImplementation(libs.minecraft.kyori.plain)
+    testImplementation(libs.tests.kotlin.test)
 }
