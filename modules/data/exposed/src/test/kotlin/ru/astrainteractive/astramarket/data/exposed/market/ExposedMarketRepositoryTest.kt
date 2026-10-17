@@ -13,6 +13,9 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
+import kotlin.time.Clock
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 
 class ExposedMarketRepositoryTest {
     private suspend fun withTestContext(block: suspend TestContext.() -> Unit) {
@@ -159,14 +162,14 @@ class ExposedMarketRepositoryTest {
     }
 
     @Test
-    fun GIVEN_old_and_new_slots_WHEN_get_slots_older_than_THEN_returns_only_old_slots() = runTest {
+    fun GIVEN_old_and_new_slots_WHEN_get_slots_created_before_THEN_returns_only_old_slots() = runTest {
         withTestContext {
-            val oneHourInMillis = 60 * 60 * 1000L
-            marketRepository.insertSlot(createMarketSlot(timeOffset = -oneHourInMillis * 2))
-            marketRepository.insertSlot(createMarketSlot(timeOffset = -oneHourInMillis * 3))
-            marketRepository.insertSlot(createMarketSlot(timeOffset = 0L))
+            val oneHour = 1.hours
+            marketRepository.insertSlot(createMarketSlot(timeOffset = -oneHour * 2))
+            marketRepository.insertSlot(createMarketSlot(timeOffset = -oneHour * 3))
+            marketRepository.insertSlot(createMarketSlot(timeOffset = Duration.ZERO))
 
-            val oldSlots = marketRepository.getSlotsOlderThan(oneHourInMillis).getOrThrow()
+            val oldSlots = marketRepository.getSlotsCreatedBefore(Clock.System.now() - oneHour).getOrThrow()
 
             assertEquals(2, oldSlots.size)
         }

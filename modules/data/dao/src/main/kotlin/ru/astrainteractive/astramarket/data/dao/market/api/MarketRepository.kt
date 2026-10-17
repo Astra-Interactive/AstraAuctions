@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.data.dao.market.api
 
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
+import kotlin.time.Instant
 
 interface MarketRepository {
     suspend fun insertSlot(marketSlot: MarketSlot): Result<Int>
@@ -11,7 +12,7 @@ interface MarketRepository {
 
     suspend fun getSlots(isExpired: Boolean): Result<List<MarketSlot>>
 
-    suspend fun getSlotsOlderThan(millis: Long): Result<List<MarketSlot>>
+    suspend fun getSlotsCreatedBefore(moment: Instant): Result<List<MarketSlot>>
 
     suspend fun getSlot(id: Int): Result<MarketSlot?>
 

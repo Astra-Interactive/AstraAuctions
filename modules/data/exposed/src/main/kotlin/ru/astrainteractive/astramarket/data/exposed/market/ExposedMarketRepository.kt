@@ -25,6 +25,7 @@ import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Instant
 
 internal class ExposedMarketRepository(
     private val databaseFlow: Flow<Database>,
@@ -54,7 +55,7 @@ internal class ExposedMarketRepository(
     private fun toMarketSlot(resultRow: ResultRow): MarketSlot {
         return MarketSlot(
             id = resultRow[AuctionTable.id].value,
-            time = resultRow[AuctionTable.time],
+            time = Instant.fromEpochMilliseconds(resultRow[AuctionTable.time]),
             minecraftUuid = resultRow[AuctionTable.minecraftUuid],
             minecraftUsername = resultRow[AuctionTable.minecraftUsername],
             item = EncodedObject.ByteArray(resultRow[AuctionTable.item]),
@@ -67,7 +68,7 @@ internal class ExposedMarketRepository(
         AuctionTable.insertAndGetId { statement ->
             statement[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
             statement[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername
-            statement[AuctionTable.time] = marketSlot.time
+            statement[AuctionTable.time] = marketSlot.time.toEpochMilliseconds()
             statement[AuctionTable.item] = marketSlot.item.value
             statement[AuctionTable.price] = marketSlot.price
             statement[AuctionTable.expired] = marketSlot.expired
@@ -102,10 +103,11 @@ internal class ExposedMarketRepository(
             .map(::toMarketSlot)
     }
 
-    override suspend fun getSlotsOlderThan(millis: Long): Result<List<MarketSlot>> = query("getSlotsOlderThan") {
-        val time = System.currentTimeMillis() - millis
+    override suspend fun getSlotsCreatedBefore(
+        moment: Instant
+    ): Result<List<MarketSlot>> = query("getSlotsCreatedBefore") {
         AuctionTable.selectAll()
-            .where { AuctionTable.time.less(time) }
+            .where { AuctionTable.time.less(moment.toEpochMilliseconds()) }
             .map(::toMarketSlot)
     }
 

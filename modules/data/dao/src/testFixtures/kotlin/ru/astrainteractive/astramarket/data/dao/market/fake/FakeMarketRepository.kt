@@ -3,6 +3,7 @@ package ru.astrainteractive.astramarket.data.dao.market.fake
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketStorageError
+import kotlin.time.Instant
 
 class FakeMarketRepository(
     slots: List<MarketSlot>
@@ -37,9 +38,8 @@ class FakeMarketRepository(
         slotsById.values.filter { slot -> slot.expired == isExpired }
     }
 
-    override suspend fun getSlotsOlderThan(millis: Long): Result<List<MarketSlot>> = respond {
-        val time = System.currentTimeMillis() - millis
-        slotsById.values.filter { slot -> slot.time < time }
+    override suspend fun getSlotsCreatedBefore(moment: Instant): Result<List<MarketSlot>> = respond {
+        slotsById.values.filter { slot -> slot.time < moment }
     }
 
     override suspend fun getSlot(id: Int): Result<MarketSlot?> = respond { slotsById[id] }

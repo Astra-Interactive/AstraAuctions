@@ -14,7 +14,7 @@ import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.getTimeFormatted
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Clock
 
 internal fun ButtonContext.playerItem(
     index: Int,
@@ -45,10 +45,8 @@ internal fun ButtonContext.playerItem(
         pluginTranslation.menu.player.lots(auctionsAmount).toComponent(locale)
     }
     .addLore {
-        val time = playerAndSlots.slots
-            .maxBy { it.time }
-            .time.milliseconds
-            .getTimeFormatted(pluginTranslation.menu.timeAgo)
+        val latestTime = playerAndSlots.slots.maxOf { slot -> slot.time }
+        val time = (Clock.System.now() - latestTime).getTimeFormatted(pluginTranslation.menu.timeAgo)
         pluginTranslation.menu.player.latestLot(time).toComponent(locale)
     }
     .setOnClickListener(click)

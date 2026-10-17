@@ -9,6 +9,8 @@ import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.exposed.table.AuctionTable
 import ru.astrainteractive.klibs.mikro.core.dispatchers.DefaultKotlinDispatchers
 import java.nio.file.Files
+import kotlin.time.Clock
+import kotlin.time.Duration
 
 internal class TestContext {
     private val tempDir = Files.createTempDirectory("astra-market-test").toFile()
@@ -36,12 +38,12 @@ internal class TestContext {
         username: String = "TestPlayer",
         price: Float = 100.0f,
         expired: Boolean = false,
-        timeOffset: Long = 0L
+        timeOffset: Duration = Duration.ZERO
     ): MarketSlot = MarketSlot(
         id = 0,
         minecraftUuid = uuid,
         minecraftUsername = username,
-        time = System.currentTimeMillis() + timeOffset,
+        time = Clock.System.now() + timeOffset,
         item = EncodedObject.ByteArray("test_item".toByteArray()),
         price = price,
         expired = expired

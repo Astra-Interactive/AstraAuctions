@@ -12,6 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlin.time.Instant
 
 class MarketRepositoryExtTest {
     private val firstPlayer = UUID.fromString("550e8400-e29b-41d4-a716-446655440001")
@@ -22,7 +23,7 @@ class MarketRepositoryExtTest {
             id = id,
             minecraftUuid = owner.toString(),
             minecraftUsername = username,
-            time = 0L,
+            time = Instant.fromEpochMilliseconds(0),
             item = EncodedObject.ByteArray(byteArrayOf()),
             price = 10f,
             expired = expired

@@ -13,6 +13,7 @@ import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.time.Clock
 
 internal class AuctionCommandExecutor(
     private val router: GuiRouter,
@@ -66,7 +67,7 @@ internal class AuctionCommandExecutor(
                 val marketSlot = MarketSlot(
                     id = -1,
                     minecraftUuid = input.player.uuid.toString(),
-                    time = System.currentTimeMillis(),
+                    time = Clock.System.now(),
                     item = encodedItem,
                     price = input.price,
                     expired = false,

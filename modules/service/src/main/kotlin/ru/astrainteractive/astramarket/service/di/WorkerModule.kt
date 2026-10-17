@@ -6,6 +6,7 @@ import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.service.ExpireServiceTask
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes
 
 interface WorkerModule {
@@ -21,7 +22,8 @@ interface WorkerModule {
             logger = JUtiltLogger("ExpireService"),
             task = ExpireServiceTask(
                 marketRepository = marketRepository,
-                configKrate = coreModule.configKrate
+                configKrate = coreModule.configKrate,
+                clock = Clock.System
             )
         )
 
