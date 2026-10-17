@@ -148,7 +148,7 @@ class ExposedMarketRepositoryTest {
     }
 
     @Test
-    fun GIVEN_active_and_expired_slots_for_player_WHEN_get_user_active_slots_THEN_returns_only_active_slots() = runTest {
+    fun GIVEN_active_and_expired_slots_WHEN_get_user_active_slots_THEN_returns_only_active_slots() = runTest {
         withTestContext {
             val uuid = "550e8400-e29b-41d4-a716-446655440001"
             marketRepository.insertSlot(createMarketSlot(uuid = uuid, expired = false))

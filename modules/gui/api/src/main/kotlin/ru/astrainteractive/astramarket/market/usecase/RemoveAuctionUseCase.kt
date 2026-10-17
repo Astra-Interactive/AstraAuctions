@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.market.domain.usecase
+package ru.astrainteractive.astramarket.market.usecase
 
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
@@ -10,55 +10,33 @@ import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 import java.util.UUID
 
-/**
- * @param _auction auction to remove
- * @param player owner of auction
- * @return boolean - true if succesfully removed
- */
-interface RemoveAuctionUseCase {
-    data class Params(
-        val auction: MarketSlot,
-        val playerUUID: UUID
-    )
-    suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean
-}
-
-internal class RemoveAuctionUseCaseImpl(
+class RemoveAuctionUseCase(
     private val auctionsBridge: AuctionsBridge,
     private val marketRepository: MarketRepository,
     private val playerInteractionBridge: PlayerInteractionBridge,
     pluginTranslationKrate: CachedKrate<PluginTranslation>,
     configKrate: CachedKrate<PluginConfig>,
-) : RemoveAuctionUseCase {
+) {
     private val translation by pluginTranslationKrate
     private val config by configKrate
 
-    override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
-        val receivedAuction = input.auction
-        val playerUUID = input.playerUUID
-        val auction = marketRepository.getSlot(receivedAuction.id).getOrNull() ?: return false
-        val ownerUUID = auction.minecraftUuid.let(UUID::fromString)
-        if (ownerUUID != playerUUID) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) {
-                translation.remove.notOwner
-            }
+    suspend operator fun invoke(auction: MarketSlot, playerUUID: UUID): Boolean {
+        val storedAuction = marketRepository.getSlot(auction.id).getOrNull() ?: return false
+        if (!storedAuction.isOwnedBy(playerUUID)) {
+            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.notOwner }
             return false
         }
-
         if (auctionsBridge.isInventoryFull(playerUUID)) {
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.inventoryFull }
             return false
         }
-
-        val result = marketRepository.deleteSlot(auction)
-        return if (result.isSuccess) {
-            playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.removed }
-            auctionsBridge.addItemToInventory(auction, playerUUID)
-            true
-        } else {
+        if (marketRepository.deleteSlot(storedAuction).isFailure) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.unexpected }
-            false
+            return false
         }
+        playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.removed }
+        auctionsBridge.addItemToInventory(storedAuction, playerUUID)
+        return true
     }
 }

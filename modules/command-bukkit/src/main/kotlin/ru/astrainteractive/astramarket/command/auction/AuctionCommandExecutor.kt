@@ -6,7 +6,7 @@ import kotlinx.coroutines.withContext
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
-import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
@@ -73,11 +73,10 @@ internal class AuctionCommandExecutor(
                     expired = false,
                     minecraftUsername = input.player.name
                 )
-                val param = CreateAuctionUseCase.Params(
+                val useCaseResult = createAuctionUseCase.invoke(
                     marketSlot = marketSlot,
-                    playerUUID = input.player.uuid,
+                    playerUUID = input.player.uuid
                 )
-                val useCaseResult = createAuctionUseCase.invoke(param)
                 withContext(dispatchers.Main) {
                     if (!useCaseResult) itemInstance.amount += calculatedAmount
                 }

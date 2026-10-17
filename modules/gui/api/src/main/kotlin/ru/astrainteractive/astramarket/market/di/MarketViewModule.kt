@@ -47,7 +47,7 @@ interface MarketViewModule {
                 marketRepository = marketRepository,
                 sortAuctionsUseCase = marketViewDomainModule.platformMarketDomainModule.sortAuctionsUseCase,
                 removeAuctionUseCase = marketViewDomainModule.removeAuctionUseCase,
-                auctionBuyUseCase = marketViewDomainModule.auctionBuyUseCase,
+                buyAuctionUseCase = marketViewDomainModule.buyAuctionUseCase,
                 expireAuctionUseCase = marketViewDomainModule.expireAuctionUseCase,
                 playerInteractionBridge = marketViewDomainModule.marketDataModule.playerInteractionBridge
             )

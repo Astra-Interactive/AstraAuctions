@@ -9,10 +9,10 @@ import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
-import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
-import ru.astrainteractive.astramarket.market.domain.usecase.ExpireAuctionUseCase
-import ru.astrainteractive.astramarket.market.domain.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.astramarket.market.domain.usecase.SortAuctionsUseCase
+import ru.astrainteractive.astramarket.market.usecase.BuyAuctionUseCase
+import ru.astrainteractive.astramarket.market.usecase.ExpireAuctionUseCase
+import ru.astrainteractive.astramarket.market.usecase.RemoveAuctionUseCase
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
@@ -28,7 +28,7 @@ internal class DefaultAuctionComponent(
     private val marketRepository: MarketRepository,
     private val sortAuctionsUseCase: SortAuctionsUseCase,
     private val removeAuctionUseCase: RemoveAuctionUseCase,
-    private val auctionBuyUseCase: AuctionBuyUseCase,
+    private val buyAuctionUseCase: BuyAuctionUseCase,
     private val expireAuctionUseCase: ExpireAuctionUseCase,
     private val playerInteractionBridge: PlayerInteractionBridge
 ) : AuctionComponent,
@@ -80,28 +80,16 @@ internal class DefaultAuctionComponent(
     }
 
     private suspend fun onExpiredAuctionClicked(auction: MarketSlot): Boolean {
-        val param = RemoveAuctionUseCase.Params(auction, playerUUID)
-        return removeAuctionUseCase.invoke(param)
+        return removeAuctionUseCase.invoke(auction, playerUUID)
     }
 
     private suspend fun onAuctionClicked(
         auction: MarketSlot,
         clickType: AuctionComponent.ClickType
     ) = when (clickType) {
-        AuctionComponent.ClickType.LEFT -> {
-            val param = AuctionBuyUseCase.Params(auction, playerUUID)
-            auctionBuyUseCase.invoke(param)
-        }
-
-        AuctionComponent.ClickType.RIGHT -> {
-            val param = RemoveAuctionUseCase.Params(auction, playerUUID)
-            removeAuctionUseCase.invoke(param)
-        }
-
-        AuctionComponent.ClickType.MIDDLE -> {
-            val param = ExpireAuctionUseCase.Params(auction, playerUUID)
-            expireAuctionUseCase.invoke(param)
-        }
+        AuctionComponent.ClickType.LEFT -> buyAuctionUseCase.invoke(auction, playerUUID)
+        AuctionComponent.ClickType.RIGHT -> removeAuctionUseCase.invoke(auction, playerUUID)
+        AuctionComponent.ClickType.MIDDLE -> expireAuctionUseCase.invoke(auction, playerUUID)
     }
 
     private fun loadItems() {

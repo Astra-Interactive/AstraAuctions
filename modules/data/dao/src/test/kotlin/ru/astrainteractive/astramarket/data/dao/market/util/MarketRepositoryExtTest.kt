@@ -63,7 +63,7 @@ class MarketRepositoryExtTest {
     @Test
     fun GIVEN_storage_failure_WHEN_players_with_slots_are_found_THEN_returns_the_failure() = runTest {
         val repository = FakeMarketRepository(slots = emptyList())
-        repository.failure = IllegalStateException("database is down")
+        repository.failingOperations += FakeMarketRepository.Operation.READ
 
         val result = repository.findPlayersWithSlots(isExpired = false)
 

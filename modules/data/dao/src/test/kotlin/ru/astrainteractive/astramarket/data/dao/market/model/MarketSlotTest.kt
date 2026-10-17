@@ -3,6 +3,7 @@
 package ru.astrainteractive.astramarket.data.dao.market.model
 
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
+import java.util.UUID
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -30,6 +31,12 @@ class MarketSlotTest {
     @Test
     fun GIVEN_slot_listed_shorter_than_lifetime_WHEN_checked_THEN_lifetime_is_not_over() {
         assertFalse(slot.isLifetimeOver(now = listedAt + 30.minutes, maxLifetime = 1.hours))
+    }
+
+    @Test
+    fun GIVEN_slot_of_player_WHEN_owner_is_checked_THEN_only_that_player_owns_it() {
+        assertTrue(slot.isOwnedBy(UUID.fromString("550e8400-e29b-41d4-a716-446655440001")))
+        assertFalse(slot.isOwnedBy(UUID.fromString("550e8400-e29b-41d4-a716-446655440002")))
     }
 
     @Test
