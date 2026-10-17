@@ -1,0 +1,3 @@
+KindShape	src/main/kotlin/ru/astrainteractive/astramarket/market/bukkit/BukkitAuctionsBridge.kt	BukkitAuctionsBridge
+KindShape	src/main/kotlin/ru/astrainteractive/astramarket/market/bukkit/BukkitAuctionsSorter.kt	BukkitAuctionsSorter
+KindShape	src/main/kotlin/ru/astrainteractive/astramarket/market/bukkit/BukkitPlayerInteractionBridge.kt	BukkitPlayerInteractionBridge
