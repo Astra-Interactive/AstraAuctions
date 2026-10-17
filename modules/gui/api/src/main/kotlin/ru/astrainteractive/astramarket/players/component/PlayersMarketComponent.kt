@@ -13,8 +13,8 @@ interface PlayersMarketComponent : CoroutineScope {
     fun onSortButtonClicked(isRightClick: Boolean)
 
     data class Model(
-        val isExpired: Boolean = false,
-        val playersAndSlots: List<PlayerAndSlots> = emptyList(),
-        val sort: PlayerSort = PlayerSort.Name(false)
+        val isExpired: Boolean,
+        val playersAndSlots: List<PlayerAndSlots>,
+        val sort: PlayerSort
     )
 }

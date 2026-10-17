@@ -40,6 +40,8 @@ internal class DefaultAuctionComponent(
 
     override val model = MutableStateFlow(
         AuctionComponent.Model(
+            items = emptyList(),
+            sortType = AuctionSort.Date(false),
             isExpired = isExpired,
             targetPlayerUUID = targetPlayerUUID
         )

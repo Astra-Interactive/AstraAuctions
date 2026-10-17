@@ -18,7 +18,13 @@ internal class DefaultPlayersMarketComponent(
     isExpired: Boolean
 ) : PlayersMarketComponent,
     CoroutineFeature by CoroutineFeature.IO.withTimings() {
-    override val model = MutableStateFlow(PlayersMarketComponent.Model(isExpired = isExpired))
+    override val model = MutableStateFlow(
+        PlayersMarketComponent.Model(
+            isExpired = isExpired,
+            playersAndSlots = emptyList(),
+            sort = PlayerSort.Name(false)
+        )
+    )
 
     private fun sortPlayersAndSlots() {
         val items = model.value.playersAndSlots

@@ -14,8 +14,8 @@ interface AuctionComponent : CoroutineScope {
     fun toggleExpired()
 
     data class Model(
-        val items: List<MarketSlot> = emptyList(),
-        val sortType: AuctionSort = AuctionSort.Date(false),
+        val items: List<MarketSlot>,
+        val sortType: AuctionSort,
         val isExpired: Boolean,
         val targetPlayerUUID: UUID?
     )
