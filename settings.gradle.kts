@@ -41,7 +41,8 @@ dependencyResolutionManagement {
 }
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 rootProject.name = "AstraMarket"
-include(":modules:api-market")
+include(":modules:data:dao")
+include(":modules:data:exposed")
 include(":modules:core")
 include(":modules:core-bukkit")
 include(":modules:gui:api")

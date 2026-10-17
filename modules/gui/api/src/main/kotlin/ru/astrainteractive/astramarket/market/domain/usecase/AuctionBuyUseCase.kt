@@ -1,10 +1,10 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astramarket.api.market.MarketApi
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -29,7 +29,7 @@ interface AuctionBuyUseCase {
 
 internal class AuctionBuyUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
-    private val marketApi: MarketApi,
+    private val marketRepository: MarketRepository,
     private val playerInteractionBridge: PlayerInteractionBridge,
     private val pluginTranslationKrate: CachedKrate<PluginTranslation>,
     private val configKrate: CachedKrate<PluginConfig>,
@@ -46,7 +46,7 @@ internal class AuctionBuyUseCaseImpl(
         val playerName = auctionsBridge.playerName(playerUUID)
         val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
         val ownerName = auctionsBridge.playerName(ownerUUID)
-        val auction = marketApi.getSlot(receivedAuction.id) ?: return false
+        val auction = marketRepository.getSlot(receivedAuction.id) ?: return false
         if (auction.minecraftUuid == playerUUID.toString()) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.buy.ownLot
@@ -78,7 +78,7 @@ internal class AuctionBuyUseCaseImpl(
             return false
         }
 
-        val result = marketApi.deleteSlot(auction)
+        val result = marketRepository.deleteSlot(auction)
         if (result != null) {
             auctionsBridge.addItemToInventory(auction, playerUUID)
             playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }

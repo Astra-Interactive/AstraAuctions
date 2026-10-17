@@ -4,9 +4,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import ru.astrainteractive.astralibs.coroutines.withTimings
-import ru.astrainteractive.astramarket.api.market.MarketApi
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 import ru.astrainteractive.astramarket.market.domain.usecase.AuctionBuyUseCase
@@ -25,7 +25,7 @@ internal class DefaultAuctionComponent(
     private val targetPlayerUUID: UUID?,
     isExpired: Boolean,
     private val configKrate: CachedKrate<PluginConfig>,
-    private val marketApi: MarketApi,
+    private val marketRepository: MarketRepository,
     private val sortAuctionsUseCase: SortAuctionsUseCase,
     private val removeAuctionUseCase: RemoveAuctionUseCase,
     private val auctionBuyUseCase: AuctionBuyUseCase,
@@ -108,13 +108,13 @@ internal class DefaultAuctionComponent(
         launch(mutex) {
             val items = when {
                 targetPlayerUUID != null -> {
-                    marketApi.getUserSlots(
+                    marketRepository.getUserSlots(
                         uuid = targetPlayerUUID.toString(),
                         isExpired = model.value.isExpired
                     )
                 }
 
-                else -> marketApi.getSlots(isExpired = model.value.isExpired)
+                else -> marketRepository.getSlots(isExpired = model.value.isExpired)
             }
             model.update { model -> model.copy(items = items.orEmpty()) }
             sort()

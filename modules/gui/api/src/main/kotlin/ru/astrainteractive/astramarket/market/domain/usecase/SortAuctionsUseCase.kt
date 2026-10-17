@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
 
 interface SortAuctionsUseCase {

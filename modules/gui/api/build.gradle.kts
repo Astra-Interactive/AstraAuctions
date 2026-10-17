@@ -11,6 +11,6 @@ dependencies {
     implementation(libs.klibs.mikro.extensions)
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.minecraft.astralibs.core)
-    implementation(projects.modules.apiMarket)
+    implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
 }

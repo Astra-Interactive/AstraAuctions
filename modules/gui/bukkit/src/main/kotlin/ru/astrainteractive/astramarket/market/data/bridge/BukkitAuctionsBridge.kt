@@ -4,9 +4,9 @@ import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.server.permission.asKPermissible
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginPermission
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import java.util.UUID

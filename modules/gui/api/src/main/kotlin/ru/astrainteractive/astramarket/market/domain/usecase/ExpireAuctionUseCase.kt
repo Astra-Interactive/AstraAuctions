@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astramarket.api.market.MarketApi
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -24,7 +24,7 @@ interface ExpireAuctionUseCase {
 
 internal class ExpireAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
-    private val marketApi: MarketApi,
+    private val marketRepository: MarketRepository,
     private val playerInteractionBridge: PlayerInteractionBridge,
     pluginTranslationKrate: CachedKrate<PluginTranslation>,
 ) : ExpireAuctionUseCase {
@@ -39,7 +39,7 @@ internal class ExpireAuctionUseCaseImpl(
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.noPermission }
             return false
         }
-        val auction = marketApi.getSlot(receivedAuction.id) ?: return false
+        val auction = marketRepository.getSlot(receivedAuction.id) ?: return false
         val itemName = auctionsBridge.itemDesc(auction)
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
             translation.expire.ownerNotice(
@@ -48,7 +48,7 @@ internal class ExpireAuctionUseCaseImpl(
             )
         }
 
-        val result = marketApi.expireSlot(auction)
+        val result = marketRepository.expireSlot(auction)
         if (result == null) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.error.unexpected

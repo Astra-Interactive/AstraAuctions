@@ -3,8 +3,8 @@ package ru.astrainteractive.astramarket.command.auction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.router.GuiRouter
 import ru.astrainteractive.astramarket.market.domain.usecase.CreateAuctionUseCase
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch

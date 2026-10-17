@@ -1,9 +1,9 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
-import ru.astrainteractive.astramarket.api.market.MarketApi
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
 import ru.astrainteractive.astramarket.core.PluginConfig
 import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
 import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -20,7 +20,7 @@ interface CreateAuctionUseCase {
 
 internal class CreateAuctionUseCaseImpl(
     private val auctionsBridge: AuctionsBridge,
-    private val marketApi: MarketApi,
+    private val marketRepository: MarketRepository,
     private val playerInteractionBridge: PlayerInteractionBridge,
     pluginTranslationKrate: CachedKrate<PluginTranslation>,
     configKrate: CachedKrate<PluginConfig>,
@@ -40,7 +40,7 @@ internal class CreateAuctionUseCaseImpl(
 
         val maxAuctionsAllowed = auctionsBridge.maxAllowedAuctionsForPlayer(playerUUID)
             ?: config.auction.maxAuctionPerPlayer
-        val auctionsAmount = marketApi.countPlayerSlots(playerUUID.toString()) ?: 0
+        val auctionsAmount = marketRepository.countPlayerSlots(playerUUID.toString()) ?: 0
         if (auctionsAmount >= maxAuctionsAllowed) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.tooManyLots }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
@@ -52,7 +52,7 @@ internal class CreateAuctionUseCaseImpl(
             return false
         }
 
-        val result = marketApi.insertSlot(auction)
+        val result = marketRepository.insertSlot(auction)
         return if (result != null) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.listed }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.success }

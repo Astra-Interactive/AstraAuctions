@@ -11,7 +11,7 @@ import ru.astrainteractive.astralibs.menu.slot.editMeta
 import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setMaterial
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
-import ru.astrainteractive.astramarket.api.market.model.PlayerAndSlots
+import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.getTimeFormatted
 import kotlin.time.Duration.Companion.milliseconds

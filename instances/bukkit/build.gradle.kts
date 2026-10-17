@@ -33,7 +33,8 @@ dependencies {
     shadow(libs.minecraft.astralibs.menu.bukkit)
     shadow(libs.minecraft.bstats)
 
-    shadow(projects.modules.apiMarket)
+    shadow(projects.modules.data.dao)
+    shadow(projects.modules.data.exposed)
     shadow(projects.modules.commandBukkit)
     shadow(projects.modules.core)
     shadow(projects.modules.coreBukkit)

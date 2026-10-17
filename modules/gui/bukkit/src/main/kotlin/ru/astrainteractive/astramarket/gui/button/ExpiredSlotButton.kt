@@ -7,7 +7,7 @@ import ru.astrainteractive.astralibs.menu.slot.addLore
 import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
-import ru.astrainteractive.astramarket.api.market.model.MarketSlot
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.gui.button.di.ButtonContext
 import ru.astrainteractive.astramarket.gui.util.getTimeFormatted
 import java.util.*

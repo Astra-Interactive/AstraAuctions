@@ -9,6 +9,6 @@ dependencies {
     implementation(libs.klibs.mikro.core)
     implementation(libs.kotlin.coroutines.core)
     implementation(libs.minecraft.astralibs.core)
-    implementation(projects.modules.apiMarket)
+    implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
 }
