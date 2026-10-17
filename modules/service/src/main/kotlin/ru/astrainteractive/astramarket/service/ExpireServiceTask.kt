@@ -21,7 +21,7 @@ internal class ExpireServiceTask(
             val maxAuctionLifeTime = config.auction.maxTimeSeconds.seconds
             val currentTime = System.currentTimeMillis().milliseconds
             marketRepository.getSlots(isExpired = false)
-                .orEmpty()
+                .getOrDefault(emptyList())
                 .filter { slot -> currentTime - slot.time.milliseconds > maxAuctionLifeTime }
                 .map { slot -> async { marketRepository.expireSlot(slot) } }
                 .awaitAll()

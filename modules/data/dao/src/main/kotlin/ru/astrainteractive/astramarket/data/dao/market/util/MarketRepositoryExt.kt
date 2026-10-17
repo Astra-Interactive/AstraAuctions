@@ -5,17 +5,16 @@ import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
 import java.util.UUID
 
-suspend fun MarketRepository.findPlayersWithSlots(isExpired: Boolean): List<PlayerAndSlots> {
-    return getSlots(isExpired)
-        .orEmpty()
-        .groupBy(MarketSlot::minecraftUuid)
-        .map { (uuid, slots) ->
-            PlayerAndSlots(
-                minecraftUUID = UUID.fromString(uuid),
-                slots = slots,
-                minecraftUsername = slots.firstOrNull()
-                    ?.minecraftUsername
-                    .orEmpty()
-            )
-        }
+suspend fun MarketRepository.findPlayersWithSlots(isExpired: Boolean): Result<List<PlayerAndSlots>> {
+    return getSlots(isExpired).map { slots ->
+        slots
+            .groupBy(MarketSlot::minecraftUuid)
+            .map { (uuid, playerSlots) ->
+                PlayerAndSlots(
+                    minecraftUUID = UUID.fromString(uuid),
+                    slots = playerSlots,
+                    minecraftUsername = playerSlots.first().minecraftUsername
+                )
+            }
+    }
 }

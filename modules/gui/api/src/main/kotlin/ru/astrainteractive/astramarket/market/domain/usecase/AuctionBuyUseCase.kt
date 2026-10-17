@@ -46,7 +46,7 @@ internal class AuctionBuyUseCaseImpl(
         val playerName = auctionsBridge.playerName(playerUUID)
         val ownerUUID = receivedAuction.minecraftUuid.let(UUID::fromString)
         val ownerName = auctionsBridge.playerName(ownerUUID)
-        val auction = marketRepository.getSlot(receivedAuction.id) ?: return false
+        val auction = marketRepository.getSlot(receivedAuction.id).getOrNull() ?: return false
         if (auction.minecraftUuid == playerUUID.toString()) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.buy.ownLot
@@ -79,7 +79,7 @@ internal class AuctionBuyUseCaseImpl(
         }
 
         val result = marketRepository.deleteSlot(auction)
-        if (result != null) {
+        if (result.isSuccess) {
             auctionsBridge.addItemToInventory(auction, playerUUID)
             playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
             val itemName = auctionsBridge.itemDesc(auction)
@@ -103,6 +103,6 @@ internal class AuctionBuyUseCaseImpl(
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.database }
         }
-        return result != null
+        return result.isSuccess
     }
 }

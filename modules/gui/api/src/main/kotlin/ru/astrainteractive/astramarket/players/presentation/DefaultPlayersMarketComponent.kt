@@ -30,6 +30,7 @@ internal class DefaultPlayersMarketComponent(
 
     private fun loadPlayersAndSlots() = launch(dispatchers.IO) {
         val slots = marketRepository.findPlayersWithSlots(isExpired = model.value.isExpired)
+            .getOrDefault(emptyList())
         model.update { it.copy(playersAndSlots = slots) }
         sortPlayersAndSlots()
     }

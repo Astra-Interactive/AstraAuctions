@@ -36,7 +36,7 @@ internal class RemoveAuctionUseCaseImpl(
     override suspend operator fun invoke(input: RemoveAuctionUseCase.Params): Boolean {
         val receivedAuction = input.auction
         val playerUUID = input.playerUUID
-        val auction = marketRepository.getSlot(receivedAuction.id) ?: return false
+        val auction = marketRepository.getSlot(receivedAuction.id).getOrNull() ?: return false
         val ownerUUID = auction.minecraftUuid.let(UUID::fromString)
         if (ownerUUID != playerUUID) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
@@ -52,7 +52,7 @@ internal class RemoveAuctionUseCaseImpl(
         }
 
         val result = marketRepository.deleteSlot(auction)
-        return if (result != null) {
+        return if (result.isSuccess) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.removed }
             auctionsBridge.addItemToInventory(auction, playerUUID)
             true

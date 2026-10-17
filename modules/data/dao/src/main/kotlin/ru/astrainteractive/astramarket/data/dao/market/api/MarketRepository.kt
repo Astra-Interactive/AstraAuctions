@@ -3,52 +3,19 @@ package ru.astrainteractive.astramarket.data.dao.market.api
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 
 interface MarketRepository {
-    /**
-     * Insert new [MarketSlot]
-     * @return id of inserted slot
-     * @throws Exception
-     */
-    suspend fun insertSlot(marketSlot: MarketSlot): Int?
+    suspend fun insertSlot(marketSlot: MarketSlot): Result<Int>
 
-    /**
-     * Changes [MarketSlot.expired] to true
-     * @throws Exception
-     */
-    suspend fun expireSlot(marketSlot: MarketSlot): Unit?
+    suspend fun expireSlot(marketSlot: MarketSlot): Result<Unit>
 
-    /**
-     * @return slots with specified [MarketSlot.minecraftUuid]
-     * @throws Exception
-     */
-    suspend fun getUserSlots(uuid: String, isExpired: Boolean): List<MarketSlot>?
+    suspend fun getUserSlots(uuid: String, isExpired: Boolean): Result<List<MarketSlot>>
 
-    /**
-     * @return list of all slots
-     * @throws Exception
-     */
-    suspend fun getSlots(isExpired: Boolean): List<MarketSlot>?
+    suspend fun getSlots(isExpired: Boolean): Result<List<MarketSlot>>
 
-    /**
-     * @return slots where [MarketSlot.time] more than [millis]
-     * @throws Exception
-     */
-    suspend fun getSlotsOlderThan(millis: Long): List<MarketSlot>?
+    suspend fun getSlotsOlderThan(millis: Long): Result<List<MarketSlot>>
 
-    /**
-     * @return slot by it's [MarketSlot.id]
-     * @throws Exception
-     */
-    suspend fun getSlot(id: Int): MarketSlot?
+    suspend fun getSlot(id: Int): Result<MarketSlot?>
 
-    /**
-     * Deletes [MarketSlot]
-     * @throws Exception
-     */
-    suspend fun deleteSlot(marketSlot: MarketSlot): Unit?
+    suspend fun deleteSlot(marketSlot: MarketSlot): Result<Unit>
 
-    /**
-     * @return amount of all player slots
-     * @throws Exception
-     */
-    suspend fun countPlayerSlots(uuid: String): Int?
+    suspend fun countPlayerSlots(uuid: String): Result<Int>
 }

@@ -116,7 +116,7 @@ internal class DefaultAuctionComponent(
 
                 else -> marketRepository.getSlots(isExpired = model.value.isExpired)
             }
-            model.update { model -> model.copy(items = items.orEmpty()) }
+            model.update { model -> model.copy(items = items.getOrDefault(emptyList())) }
             sort()
         }
     }

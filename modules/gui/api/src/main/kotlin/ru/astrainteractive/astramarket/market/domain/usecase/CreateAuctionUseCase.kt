@@ -40,7 +40,7 @@ internal class CreateAuctionUseCaseImpl(
 
         val maxAuctionsAllowed = auctionsBridge.maxAllowedAuctionsForPlayer(playerUUID)
             ?: config.auction.maxAuctionPerPlayer
-        val auctionsAmount = marketRepository.countPlayerSlots(playerUUID.toString()) ?: 0
+        val auctionsAmount = marketRepository.countPlayerSlots(playerUUID.toString()).getOrDefault(0)
         if (auctionsAmount >= maxAuctionsAllowed) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.tooManyLots }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.fail }
@@ -53,7 +53,7 @@ internal class CreateAuctionUseCaseImpl(
         }
 
         val result = marketRepository.insertSlot(auction)
-        return if (result != null) {
+        return if (result.isSuccess) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.listed }
             playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
             if (config.auction.announce) {

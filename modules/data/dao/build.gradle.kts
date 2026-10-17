@@ -8,6 +8,9 @@ plugins {
 dependencies {
     implementation(libs.minecraft.astralibs.core)
 
+    testFixturesImplementation(libs.minecraft.astralibs.core)
+
     testImplementation(libs.kotlin.coroutines.test)
+    testImplementation(libs.minecraft.astralibs.core)
     testImplementation(libs.tests.kotlin.test)
 }

@@ -39,7 +39,7 @@ internal class ExpireAuctionUseCaseImpl(
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.noPermission }
             return false
         }
-        val auction = marketRepository.getSlot(receivedAuction.id) ?: return false
+        val auction = marketRepository.getSlot(receivedAuction.id).getOrNull() ?: return false
         val itemName = auctionsBridge.itemDesc(auction)
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
             translation.expire.ownerNotice(
@@ -49,7 +49,7 @@ internal class ExpireAuctionUseCaseImpl(
         }
 
         val result = marketRepository.expireSlot(auction)
-        if (result == null) {
+        if (result.isFailure) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) {
                 translation.error.unexpected
             }
@@ -58,6 +58,6 @@ internal class ExpireAuctionUseCaseImpl(
                 translation.expire.success
             }
         }
-        return (result != null)
+        return result.isSuccess
     }
 }
