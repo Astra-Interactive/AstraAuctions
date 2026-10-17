@@ -4,7 +4,7 @@ import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.service.IntervalService
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
-import ru.astrainteractive.astramarket.service.ExpireServiceTask
+import ru.astrainteractive.astramarket.service.auction.service.ExpireServiceTask
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import kotlin.time.Clock
 import kotlin.time.Duration.Companion.minutes

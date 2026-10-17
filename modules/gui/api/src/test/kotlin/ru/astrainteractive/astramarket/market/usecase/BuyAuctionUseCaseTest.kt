@@ -3,7 +3,7 @@
 package ru.astrainteractive.astramarket.market.usecase
 
 import kotlinx.coroutines.test.runTest
-import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
 import ru.astrainteractive.astramarket.market.fake.FakeCurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.market.fake.FakeEconomyFacade

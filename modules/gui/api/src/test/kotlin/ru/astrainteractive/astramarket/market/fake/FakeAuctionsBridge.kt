@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.market.fake
 
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
+import ru.astrainteractive.astramarket.market.api.AuctionsBridge
 import java.util.UUID
 
 class FakeAuctionsBridge(

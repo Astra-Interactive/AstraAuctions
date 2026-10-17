@@ -1,6 +1,6 @@
 package ru.astrainteractive.astramarket.market.util
 
-import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 
 fun PluginConfig.Auction.isPriceAllowed(price: Float): Boolean {
     return (price <= maxPrice).and(price >= minPrice)

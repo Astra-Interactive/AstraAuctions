@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.market.domain.mapping
 
 import ru.astrainteractive.astralibs.localization.text.LocalizedText
-import ru.astrainteractive.astramarket.core.PluginTranslation
-import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
+import ru.astrainteractive.astramarket.market.model.AuctionSort
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 

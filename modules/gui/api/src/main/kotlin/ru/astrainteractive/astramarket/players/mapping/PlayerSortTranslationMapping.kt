@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.players.mapping
 
 import ru.astrainteractive.astralibs.localization.text.LocalizedText
-import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.players.model.PlayerSort
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue

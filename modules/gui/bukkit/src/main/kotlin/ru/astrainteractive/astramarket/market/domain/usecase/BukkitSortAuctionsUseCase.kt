@@ -2,7 +2,7 @@ package ru.astrainteractive.astramarket.market.domain.usecase
 
 import org.bukkit.Bukkit
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
+import ru.astrainteractive.astramarket.market.model.AuctionSort
 import ru.astrainteractive.klibs.mikro.core.util.sortedBy
 import java.util.UUID
 

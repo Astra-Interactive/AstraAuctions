@@ -1,8 +1,8 @@
 package ru.astrainteractive.astramarket.market.usecase
 
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
-import ru.astrainteractive.astramarket.core.PluginConfig
-import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.fake.FakeAuctionsBridge

@@ -1,10 +1,10 @@
 package ru.astrainteractive.astramarket.market.usecase
 
-import ru.astrainteractive.astramarket.core.PluginTranslation
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.market.data.bridge.AuctionsBridge
-import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
+import ru.astrainteractive.astramarket.market.api.AuctionsBridge
+import ru.astrainteractive.astramarket.market.api.PlayerInteractionBridge
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.getValue
 import java.util.UUID

@@ -1,0 +1,20 @@
+package ru.astrainteractive.astramarket.slot
+
+import ru.astrainteractive.astralibs.menu.clicker.Click
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.menu.slot.editMeta
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
+import ru.astrainteractive.astramarket.context.ButtonContext
+import ru.astrainteractive.astramarket.util.toItemStack
+
+internal fun ButtonContext.back(
+    index: Int,
+    click: Click
+) = InventorySlot.Builder()
+    .setIndex(index)
+    .setItemStack(config.buttons.back.toItemStack())
+    .editMeta { displayName(pluginTranslation.menu.back.toComponent(locale)) }
+    .setOnClickListener(click)
+    .build()

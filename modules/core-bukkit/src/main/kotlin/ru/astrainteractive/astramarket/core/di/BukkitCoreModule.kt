@@ -19,12 +19,13 @@ import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
-import ru.astrainteractive.astramarket.core.PluginConfig
-import ru.astrainteractive.astramarket.core.PluginTranslation
 import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
-import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderFactory
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
 import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.asCachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
@@ -105,7 +106,7 @@ interface BukkitCoreModule : CoreModule {
             .withTimings()
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
-            BukkitCurrencyEconomyProviderFactory(lifecyclePlugin)
+            VaultCurrencyEconomyProviderFactory(lifecyclePlugin)
 
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(

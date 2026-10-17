@@ -11,11 +11,11 @@ import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.data.exposed.di.ExposedModule
-import ru.astrainteractive.astramarket.gui.router.di.BukkitRouterModule
-import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
+import ru.astrainteractive.astramarket.market.di.BukkitMarketDataModule
+import ru.astrainteractive.astramarket.market.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
-import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
+import ru.astrainteractive.astramarket.router.di.BukkitRouterModule
 import ru.astrainteractive.astramarket.service.di.WorkerModule
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger

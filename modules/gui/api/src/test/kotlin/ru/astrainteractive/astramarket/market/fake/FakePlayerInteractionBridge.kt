@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.market.fake
 
 import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
-import ru.astrainteractive.astramarket.market.data.bridge.PlayerInteractionBridge
+import ru.astrainteractive.astramarket.market.api.PlayerInteractionBridge
 import java.util.UUID
 
 class FakePlayerInteractionBridge : PlayerInteractionBridge {

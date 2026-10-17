@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.market.domain.usecase
 
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.market.domain.model.AuctionSort
+import ru.astrainteractive.astramarket.market.model.AuctionSort
 
 interface SortAuctionsUseCase {
     class Input(val sortType: AuctionSort, val list: List<MarketSlot>)

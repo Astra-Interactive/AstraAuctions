@@ -2,10 +2,10 @@ package ru.astrainteractive.astramarket.players.di
 
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.players.component.DefaultPlayersMarketComponent
+import ru.astrainteractive.astramarket.players.component.PlayersMarketComponent
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMapping
 import ru.astrainteractive.astramarket.players.mapping.PlayerSortTranslationMappingImpl
-import ru.astrainteractive.astramarket.players.presentation.DefaultPlayersMarketComponent
-import ru.astrainteractive.astramarket.players.presentation.PlayersMarketComponent
 
 interface PlayersMarketViewModule {
     val playerSortTranslationMapping: PlayerSortTranslationMapping

@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.gui.layout
 
 import ru.astrainteractive.astralibs.menu.layout.slotInventoryLayout
+import ru.astrainteractive.astramarket.model.AuctionSlotKey
 
 @Suppress("MagicNumber")
 internal object DefaultAuctionInventoryLayoutFactory {

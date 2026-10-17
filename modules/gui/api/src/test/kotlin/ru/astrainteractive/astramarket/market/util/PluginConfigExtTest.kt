@@ -2,7 +2,7 @@
 
 package ru.astrainteractive.astramarket.market.util
 
-import ru.astrainteractive.astramarket.core.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
