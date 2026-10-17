@@ -29,22 +29,22 @@ internal class DefaultPlayersMarketComponent(
     private fun sortPlayersAndSlots() {
         val items = model.value.playersAndSlots
         val sortedItems = when (val sort = model.value.sort) {
-            is PlayerSort.Auctions -> items.sortedBy(sort.isAsc) { it.slots.size }
-            is PlayerSort.Name -> items.sortedBy(sort.isAsc) { it.minecraftUsername }
+            is PlayerSort.Auctions -> items.sortedBy(sort.isAsc) { playerAndSlots -> playerAndSlots.slots.size }
+            is PlayerSort.Name -> items.sortedBy(sort.isAsc) { playerAndSlots -> playerAndSlots.minecraftUsername }
         }
-        model.update { it.copy(playersAndSlots = sortedItems) }
+        model.update { state -> state.copy(playersAndSlots = sortedItems) }
     }
 
     private fun loadPlayersAndSlots() = launch(dispatchers.IO) {
         val slots = marketRepository.findPlayersWithSlots(isExpired = model.value.isExpired)
             .getOrDefault(emptyList())
-        model.update { it.copy(playersAndSlots = slots) }
+        model.update { state -> state.copy(playersAndSlots = slots) }
         sortPlayersAndSlots()
     }
 
     override fun toggleExpired() {
-        model.update {
-            it.copy(isExpired = !it.isExpired)
+        model.update { state ->
+            state.copy(isExpired = !state.isExpired)
         }
         loadPlayersAndSlots()
     }
@@ -58,8 +58,8 @@ internal class DefaultPlayersMarketComponent(
         )
         val newSortType = sorts.nextAfter(model.value.sort, backwards = isRightClick)
 
-        model.update {
-            it.copy(sort = newSortType)
+        model.update { state ->
+            state.copy(sort = newSortType)
         }
         sortPlayersAndSlots()
     }

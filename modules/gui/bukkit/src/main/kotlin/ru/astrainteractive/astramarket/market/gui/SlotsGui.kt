@@ -106,9 +106,9 @@ internal class SlotsGui(
         get() = buttonContext.auctionSort(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.SORT),
             sortType = auctionComponent.model.value.sortType,
-            click = {
+            click = { clickEvent ->
                 paginator.openPage(0)
-                onSortButtonClicked(it.isRightClick)
+                onSortButtonClicked(clickEvent.isRightClick)
             }
         )
 
@@ -157,7 +157,7 @@ internal class SlotsGui(
                 buttonContext.expiredSlot(
                     auctionItem = auctionItem,
                     index = slotIndex,
-                    click = { onAuctionItemClicked(index, it.click) },
+                    click = { clickEvent -> onAuctionItemClicked(index, clickEvent.click) },
                     isOwner = auctionItem.minecraftUuid == this@SlotsGui.inventoryOwner.uuid.toString(),
                     hasExpirePermission = permissible.hasPermission(PluginPermission.Expire),
                     hasRemovePermission = permissible.hasPermission(PluginPermission.RemoveSlot)
@@ -225,5 +225,4 @@ internal class SlotsGui(
         super.onInventoryClickEvent(e)
         e.isCancelled = true
     }
-
 }

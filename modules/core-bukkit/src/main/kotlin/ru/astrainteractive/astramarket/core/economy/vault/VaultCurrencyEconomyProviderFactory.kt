@@ -18,7 +18,7 @@ internal class VaultCurrencyEconomyProviderFactory(
         val registrations = Bukkit.getServer().servicesManager.getRegistrations(Economy::class.java)
         info { "#findEconomyProviderByCurrency registrations: ${registrations.size}" }
         val specificEconomyProvider = registrations
-            .firstOrNull { it.provider.currencyNameSingular() == currencyId }
+            .firstOrNull { registration -> registration.provider.currencyNameSingular() == currencyId }
             ?.provider
             ?.let(::VaultEconomyFacade)
         if (specificEconomyProvider == null) {

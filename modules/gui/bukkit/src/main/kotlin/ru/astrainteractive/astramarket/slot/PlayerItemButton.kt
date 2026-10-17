@@ -40,7 +40,7 @@ internal fun ButtonContext.playerItem(
     }
     .addLore {
         val auctionsAmount = playerAndSlots.slots
-            .filter { it.expired == isExpired }
+            .filter { slot -> slot.expired == isExpired }
             .size
         pluginTranslation.menu.player.lots(auctionsAmount).toComponent(locale)
     }

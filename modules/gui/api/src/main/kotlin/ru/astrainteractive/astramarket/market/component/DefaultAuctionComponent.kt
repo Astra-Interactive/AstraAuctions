@@ -69,7 +69,7 @@ internal class DefaultAuctionComponent(
             AuctionSort.Player(true),
         )
         val newSortType = sorts.nextAfter(model.value.sortType, backwards = isRightClick)
-        model.update { it.copy(sortType = newSortType) }
+        model.update { state -> state.copy(sortType = newSortType) }
         sort()
     }
 
@@ -127,7 +127,7 @@ internal class DefaultAuctionComponent(
     }
 
     override fun toggleExpired() {
-        model.update { it.copy(isExpired = !it.isExpired) }
+        model.update { state -> state.copy(isExpired = !state.isExpired) }
         loadItems()
     }
 

@@ -90,9 +90,9 @@ internal class PlayersGui(
         get() = buttonContext.playersSort(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.SORT),
             sortType = playersMarketComponent.model.value.sort,
-            click = {
+            click = { clickEvent ->
                 inventoryOwner.playSound(config.sounds.open)
-                playersMarketComponent.onSortButtonClicked(it.isRightClick)
+                playersMarketComponent.onSortButtonClicked(clickEvent.isRightClick)
             }
         )
 
@@ -137,7 +137,7 @@ internal class PlayersGui(
                 val items = playersMarketComponent.model
                     .value
                     .playersAndSlots
-                    .filter { it.slots.any { slot -> slot.expired == isExpired } }
+                    .filter { playerAndSlots -> playerAndSlots.slots.any { slot -> slot.expired == isExpired } }
                     .getOrNull(index) ?: return@mapSlotsNotNull null
                 buttonContext.playerItem(
                     playerAndSlots = items,
@@ -159,7 +159,7 @@ internal class PlayersGui(
         paginator.update { paginatorContext ->
             paginatorContext.copy(
                 maxItems = model.playersAndSlots
-                    .filter { it.slots.any { slot -> slot.expired == model.isExpired } }
+                    .filter { playerAndSlots -> playerAndSlots.slots.any { slot -> slot.expired == model.isExpired } }
                     .size
             )
         }
@@ -187,5 +187,4 @@ internal class PlayersGui(
             .onEach { withContext(dispatchers.Main) { render() } }
             .launchIn(menuScope)
     }
-
 }
