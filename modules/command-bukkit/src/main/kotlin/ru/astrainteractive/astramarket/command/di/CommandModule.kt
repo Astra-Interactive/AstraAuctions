@@ -3,13 +3,14 @@ package ru.astrainteractive.astramarket.command.di
 import ru.astrainteractive.astralibs.command.api.registrar.CommandRegistrarContext
 import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.command.auction.AuctionCommandExecutor
-import ru.astrainteractive.astramarket.command.auction.AuctionCommandFactory
-import ru.astrainteractive.astramarket.command.reload.ReloadLiteralArgumentBuilder
+import ru.astrainteractive.astramarket.command.auction.command.AuctionCommandExecutor
+import ru.astrainteractive.astramarket.command.auction.command.AuctionLiteralArgumentBuilder
+import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
+import ru.astrainteractive.astramarket.command.reload.command.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.gui.router.di.RouterModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
+import ru.astrainteractive.astramarket.router.di.RouterModule
 
 interface CommandModule {
     val lifecycle: Lifecycle
@@ -21,26 +22,30 @@ interface CommandModule {
         marketViewModule: MarketViewModule,
         private val commandRegistrarContext: CommandRegistrarContext,
     ) : CommandModule {
+        private val commandExceptionHandler = CommandExceptionHandler(
+            multiplatformCommand = coreModule.multiplatformCommand,
+            translationKrate = coreModule.pluginTranslationKrate
+        )
         private val reloadLiteralArgumentBuilder = ReloadLiteralArgumentBuilder(
             lifecyclePlugin = coreModule.lifecyclePlugin,
             translationKrate = coreModule.pluginTranslationKrate,
-            commandExceptionHandler = coreModule.commandExceptionHandler,
+            commandExceptionHandler = commandExceptionHandler,
             multiplatformCommand = coreModule.multiplatformCommand
         )
-        private val auctionCommandFactory = AuctionCommandFactory(
-            commandExceptionHandler = coreModule.commandExceptionHandler,
+        private val auctionLiteralArgumentBuilder = AuctionLiteralArgumentBuilder(
+            commandExceptionHandler = commandExceptionHandler,
             executor = AuctionCommandExecutor(
                 router = bukkitRouterModule.router,
                 dispatchers = coreModule.dispatchers,
                 createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
                 ioScope = coreModule.ioScope,
-                itemStackEncoder = bukkitCoreModule.itemStackEncoder,
+                objectEncoder = bukkitCoreModule.objectEncoder,
             ),
             multiplatformCommand = coreModule.multiplatformCommand,
         )
 
         private val nodes = buildList {
-            addAll(auctionCommandFactory.create())
+            addAll(auctionLiteralArgumentBuilder.create())
             add(reloadLiteralArgumentBuilder.create())
         }
 

@@ -1,0 +1,190 @@
+package ru.astrainteractive.astramarket.players.gui
+
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
+import net.kyori.adventure.text.Component
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
+import ru.astrainteractive.astralibs.coroutines.withTimings
+import ru.astrainteractive.astralibs.menu.core.setInventorySlot
+import ru.astrainteractive.astralibs.menu.inventory.api.InventoryMenu
+import ru.astrainteractive.astralibs.menu.inventory.model.InventorySize
+import ru.astrainteractive.astralibs.menu.paginator.api.DefaultPaginator
+import ru.astrainteractive.astralibs.menu.paginator.api.context
+import ru.astrainteractive.astralibs.menu.paginator.api.openNextPage
+import ru.astrainteractive.astralibs.menu.paginator.api.openPrevPage
+import ru.astrainteractive.astralibs.menu.paginator.model.indexOfSlot
+import ru.astrainteractive.astralibs.menu.paginator.model.isFirstPage
+import ru.astrainteractive.astralibs.menu.paginator.model.isLastPage
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.server.player.OnlineKPlayer
+import ru.astrainteractive.astramarket.context.ButtonContext
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
+import ru.astrainteractive.astramarket.model.AuctionSlotKey
+import ru.astrainteractive.astramarket.players.component.PlayersMarketComponent
+import ru.astrainteractive.astramarket.router.api.GuiRouter
+import ru.astrainteractive.astramarket.slot.back
+import ru.astrainteractive.astramarket.slot.filterExpired
+import ru.astrainteractive.astramarket.slot.nextPage
+import ru.astrainteractive.astramarket.slot.playerItem
+import ru.astrainteractive.astramarket.slot.playersSort
+import ru.astrainteractive.astramarket.slot.prevPage
+import ru.astrainteractive.astramarket.slot.slotsType
+import ru.astrainteractive.astramarket.util.auctionInventoryLayout
+import ru.astrainteractive.astramarket.util.closeInventory
+import ru.astrainteractive.astramarket.util.playSound
+import ru.astrainteractive.klibs.kstorage.api.CachedKrate
+import ru.astrainteractive.klibs.kstorage.api.getValue
+import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
+import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+
+internal class PlayersGui(
+    configKrate: CachedKrate<PluginConfig>,
+    translationKrate: CachedKrate<PluginTranslation>,
+    private val inventoryOwner: OnlineKPlayer,
+    private val buttonContext: ButtonContext,
+    private val dispatchers: KotlinDispatchers,
+    private val playersMarketComponent: PlayersMarketComponent,
+    private val router: GuiRouter,
+) : InventoryMenu() {
+    private val config by configKrate
+    private val translation by translationKrate
+
+    override val inventorySize: InventorySize = InventorySize.XL
+
+    override val childComponents = listOf(playersMarketComponent)
+    override val menuScope = CoroutineFeature
+        .Default(dispatchers.Main)
+        .withTimings()
+    private val inventoryMap by lazy {
+        auctionInventoryLayout(config.auction.useCompactDesign)
+    }
+
+    override val title: Component = translation.menu.title.toComponent(inventoryOwner.locale)
+
+    private val paginator = DefaultPaginator(
+        maxItemsPerPage = inventoryMap.count(AuctionSlotKey.AUCTION_ITEM)
+    )
+
+    private val prevPageButton: InventorySlot
+        get() = buttonContext.prevPage(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.PREV_PAGE),
+            click = {
+                inventoryOwner.playSound(config.sounds.open)
+                paginator.openPrevPage()
+            }
+        )
+
+    private val nextPageButton: InventorySlot
+        get() = buttonContext.nextPage(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.NEXT_PAGE),
+            click = {
+                inventoryOwner.playSound(config.sounds.open)
+                paginator.openNextPage()
+            }
+        )
+
+    private val sortButton: InventorySlot
+        get() = buttonContext.playersSort(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.SORT),
+            sortType = playersMarketComponent.model.value.sort,
+            click = { clickEvent ->
+                inventoryOwner.playSound(config.sounds.open)
+                playersMarketComponent.onSortButtonClicked(clickEvent.isRightClick)
+            }
+        )
+
+    private val filterExpiredButton: InventorySlot
+        get() = buttonContext.filterExpired(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.FILTER_EXPIRED),
+            isExpired = playersMarketComponent.model.value.isExpired,
+            click = {
+                inventoryOwner.playSound(config.sounds.open)
+                paginator.openPage(0)
+                playersMarketComponent.toggleExpired()
+            }
+        )
+
+    private val displayTypeButton: InventorySlot
+        get() = buttonContext.slotsType(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.DISPLAY_TYPE),
+            isGroupedByPlayers = true,
+            click = {
+                val route = GuiRouter.Route.Slots(
+                    inventoryOwner = inventoryOwner,
+                    isExpired = playersMarketComponent.model.value.isExpired,
+                    targetPlayerUUID = null
+                )
+                router.navigate(route)
+            }
+        )
+
+    private val backButton: InventorySlot
+        get() = buttonContext.back(
+            index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
+            click = { inventoryOwner.closeInventory() }
+        )
+
+    private val slots: List<InventorySlot>
+        get() {
+            var itemIndex = 0
+            val isExpired = playersMarketComponent.model.value.isExpired
+            return inventoryMap.mapSlotsNotNull(AuctionSlotKey.AUCTION_ITEM) { slotIndex ->
+                val index = paginator.context.indexOfSlot(itemIndex)
+                itemIndex++
+                val items = playersMarketComponent.model
+                    .value
+                    .playersAndSlots
+                    .filter { playerAndSlots -> playerAndSlots.slots.any { slot -> slot.expired == isExpired } }
+                    .getOrNull(index) ?: return@mapSlotsNotNull null
+                buttonContext.playerItem(
+                    playerAndSlots = items,
+                    index = slotIndex,
+                    isExpired = playersMarketComponent.model.value.isExpired,
+                    click = {
+                        val route = GuiRouter.Route.Slots(
+                            inventoryOwner = inventoryOwner,
+                            isExpired = playersMarketComponent.model.value.isExpired,
+                            targetPlayerUUID = items.minecraftUUID
+                        )
+                        router.navigate(route)
+                    },
+                )
+            }
+        }
+
+    private fun updatePageContext(model: PlayersMarketComponent.Model) {
+        paginator.update { paginatorContext ->
+            paginatorContext.copy(
+                maxItems = model.playersAndSlots
+                    .filter { playerAndSlots -> playerAndSlots.slots.any { slot -> slot.expired == model.isExpired } }
+                    .size
+            )
+        }
+    }
+
+    override fun onInventoryClickEvent(e: InventoryClickEvent) {
+        super.onInventoryClickEvent(e)
+        e.isCancelled = true
+    }
+
+    override fun render() {
+        super.render()
+        if (!paginator.context.isFirstPage) setInventorySlot(prevPageButton)
+        if (!paginator.context.isLastPage) setInventorySlot(nextPageButton)
+        setInventorySlot(sortButton)
+        setInventorySlot(filterExpiredButton)
+        setInventorySlot(backButton)
+        setInventorySlot(displayTypeButton)
+        setInventorySlot(slots)
+    }
+
+    override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
+        playersMarketComponent.model
+            .onEach { model -> updatePageContext(model) }
+            .onEach { withContext(dispatchers.Main) { render() } }
+            .launchIn(menuScope)
+    }
+}

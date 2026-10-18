@@ -1,0 +1,32 @@
+package ru.astrainteractive.astramarket.slot
+
+import ru.astrainteractive.astralibs.menu.clicker.Click
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.menu.slot.addLore
+import ru.astrainteractive.astralibs.menu.slot.setDisplayName
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setItemStack
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
+import ru.astrainteractive.astramarket.context.ButtonContext
+import ru.astrainteractive.astramarket.util.toItemStack
+
+internal fun ButtonContext.slotsType(
+    index: Int,
+    click: Click,
+    isGroupedByPlayers: Boolean
+) = InventorySlot.Builder()
+    .setIndex(index)
+    .setItemStack(config.buttons.slotsType.toItemStack())
+    .setDisplayName(pluginTranslation.menu.display.title.toComponent(locale))
+    .addLore {
+        optionColor(isSelected = isGroupedByPlayers)
+            .concat(pluginTranslation.menu.display.byPlayer)
+            .toComponent(locale)
+    }
+    .addLore {
+        optionColor(isSelected = !isGroupedByPlayers)
+            .concat(pluginTranslation.menu.display.byItem)
+            .toComponent(locale)
+    }
+    .setOnClickListener(click)
+    .build()

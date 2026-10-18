@@ -10,11 +10,12 @@ import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astramarket.command.di.CommandModule
 import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
-import ru.astrainteractive.astramarket.gui.router.di.BukkitRouterModule
-import ru.astrainteractive.astramarket.market.data.di.BukkitMarketDataModule
+import ru.astrainteractive.astramarket.data.exposed.di.ExposedModule
+import ru.astrainteractive.astramarket.market.di.BukkitMarketDataModule
+import ru.astrainteractive.astramarket.market.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
-import ru.astrainteractive.astramarket.market.domain.di.BukkitMarketDomainModule
 import ru.astrainteractive.astramarket.players.di.PlayersMarketViewModule
+import ru.astrainteractive.astramarket.router.di.BukkitRouterModule
 import ru.astrainteractive.astramarket.service.di.WorkerModule
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
@@ -28,7 +29,7 @@ internal class RootModule(
         multiplatformCommand = MultiplatformCommand(PaperMultiplatformCommands())
     )
 
-    val apiMarketModule: ApiMarketModule = ApiMarketModule.Default(
+    val exposedModule: ExposedModule = ExposedModule(
         dispatchers = coreModule.dispatchers,
         yamlStringFormat = coreModule.yamlStringFormat,
         dataFolder = coreModule.lifecyclePlugin.dataFolder,
@@ -38,18 +39,18 @@ internal class RootModule(
 
     val marketViewModule: MarketViewModule = MarketViewModule.Default(
         coreModule = coreModule,
-        apiMarketModule = apiMarketModule,
+        marketRepository = exposedModule.marketRepository,
         marketDataModule = BukkitMarketDataModule(
-            itemStackEncoder = coreModule.itemStackEncoder
+            objectEncoder = coreModule.objectEncoder
         ),
         platformMarketDomainModule = BukkitMarketDomainModule(
-            itemStackEncoder = coreModule.itemStackEncoder,
+            objectEncoder = coreModule.objectEncoder,
         )
     )
 
     val playersMarketViewModule: PlayersMarketViewModule = PlayersMarketViewModule.Default(
         coreModule = coreModule,
-        apiMarketModule = apiMarketModule
+        marketRepository = exposedModule.marketRepository
     )
 
     val bukkitRouterModule: BukkitRouterModule = BukkitRouterModule(
@@ -71,14 +72,14 @@ internal class RootModule(
     )
 
     val workerModule: WorkerModule = WorkerModule.Default(
-        apiMarketModule = apiMarketModule,
+        marketRepository = exposedModule.marketRepository,
         coreModule = coreModule
     )
 
     private val lifecycles: List<Lifecycle>
         get() = listOf(
             coreModule.lifecycle,
-            apiMarketModule.lifecycle,
+            exposedModule.lifecycle,
             commandModule.lifecycle,
             workerModule.lifecycle
         )

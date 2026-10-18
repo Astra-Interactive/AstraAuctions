@@ -19,12 +19,10 @@ import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
-import ru.astrainteractive.astramarket.core.PluginConfig
-import ru.astrainteractive.astramarket.core.PluginTranslation
-import ru.astrainteractive.astramarket.core.command.CommandExceptionHandler
-import ru.astrainteractive.astramarket.core.di.factory.CurrencyEconomyProviderFactory
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoder
-import ru.astrainteractive.astramarket.core.itemstack.ItemStackEncoderImpl
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.kstorage.api.asCachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
@@ -34,7 +32,7 @@ import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 interface BukkitCoreModule : CoreModule {
 
     override val lifecyclePlugin: LifecyclePlugin
-    val itemStackEncoder: ItemStackEncoder
+    val objectEncoder: ObjectEncoder
     val inventoryClickEventListener: EventListener
 
     class Default(
@@ -42,14 +40,9 @@ interface BukkitCoreModule : CoreModule {
         override val multiplatformCommand: MultiplatformCommand
     ) : BukkitCoreModule {
 
-        private val encoder: ObjectEncoder = BukkitObjectEncoder()
-
-        override val itemStackEncoder: ItemStackEncoder = ItemStackEncoderImpl(encoder)
+        override val objectEncoder: ObjectEncoder = BukkitObjectEncoder()
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
-
-        @Suppress("MagicNumber")
-        private fun createBStats() = Metrics(lifecyclePlugin, 15771)
 
         override val yamlStringFormat: StringFormat = YamlStringFormat(
             configuration = Yaml.default.configuration.copy(
@@ -79,16 +72,7 @@ interface BukkitCoreModule : CoreModule {
             }
         ).asCachedKrate()
 
-        override val commandExceptionHandler = CommandExceptionHandler(
-            multiplatformCommand = multiplatformCommand,
-            translationKrate = pluginTranslationKrate
-        )
-
         override val dispatchers = DefaultBukkitDispatchers(lifecyclePlugin)
-        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
-            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
-            logger.error(throwable) { "Error happened inside global coroutine scope!" }
-        }
 
         override val ioScope = CoroutineFeature
             .Default(dispatchers.IO + SupervisorJob() + createCoroutineExceptionHandler())
@@ -105,7 +89,7 @@ interface BukkitCoreModule : CoreModule {
             .withTimings()
 
         override val economyProviderFactory: CurrencyEconomyProviderFactory =
-            BukkitCurrencyEconomyProviderFactory(lifecyclePlugin)
+            VaultCurrencyEconomyProviderFactory(lifecyclePlugin)
 
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
@@ -123,6 +107,14 @@ interface BukkitCoreModule : CoreModule {
                     pluginTranslationKrate.getValue()
                 }
             )
+        }
+
+        @Suppress("MagicNumber")
+        private fun createBStats() = Metrics(lifecyclePlugin, 15771)
+
+        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
+            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
+            logger.error(throwable) { "Error happened inside global coroutine scope!" }
         }
     }
 }

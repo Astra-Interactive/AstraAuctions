@@ -6,7 +6,7 @@ import ru.astrainteractive.gradleplugin.property.util.requireProjectInfo
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
-    id("ru.astrainteractive.gradleplugin.detekt")
+    alias(libs.plugins.klibs.gradle.linter)
     id("ru.astrainteractive.gradleplugin.java.version")
     alias(libs.plugins.gradle.shadow)
     alias(libs.plugins.klibs.minecraft.resource.processor)
@@ -33,7 +33,8 @@ dependencies {
     shadow(libs.minecraft.astralibs.menu.bukkit)
     shadow(libs.minecraft.bstats)
 
-    shadow(projects.modules.apiMarket)
+    shadow(projects.modules.data.dao)
+    shadow(projects.modules.data.exposed)
     shadow(projects.modules.commandBukkit)
     shadow(projects.modules.core)
     shadow(projects.modules.coreBukkit)

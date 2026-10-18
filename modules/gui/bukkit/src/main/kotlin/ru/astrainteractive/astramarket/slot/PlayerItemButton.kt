@@ -1,0 +1,53 @@
+package ru.astrainteractive.astramarket.slot
+
+import net.kyori.adventure.text.Component
+import org.bukkit.Bukkit
+import org.bukkit.Material
+import org.bukkit.inventory.meta.SkullMeta
+import ru.astrainteractive.astralibs.menu.clicker.Click
+import ru.astrainteractive.astralibs.menu.slot.InventorySlot
+import ru.astrainteractive.astralibs.menu.slot.addLore
+import ru.astrainteractive.astralibs.menu.slot.editMeta
+import ru.astrainteractive.astralibs.menu.slot.setIndex
+import ru.astrainteractive.astralibs.menu.slot.setMaterial
+import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
+import ru.astrainteractive.astramarket.context.ButtonContext
+import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
+import ru.astrainteractive.astramarket.util.getTimeFormatted
+import kotlin.time.Clock
+
+internal fun ButtonContext.playerItem(
+    index: Int,
+    click: Click,
+    isExpired: Boolean,
+    playerAndSlots: PlayerAndSlots
+) = InventorySlot.Builder()
+    .setIndex(index)
+    .setMaterial(Material.PLAYER_HEAD)
+    .editMeta {
+        this as SkullMeta
+        val offlinePlayer = Bukkit.getOfflinePlayer(playerAndSlots.minecraftUUID)
+        if (!offlinePlayer.hasPlayedBefore()) return@editMeta
+        owningPlayer = offlinePlayer
+    }
+    .editMeta {
+        val ownerName = playerAndSlots.minecraftUsername
+            .takeIf(String::isNotEmpty)
+            ?: playerAndSlots.minecraftUUID
+                .let(Bukkit::getOfflinePlayer)
+                .name ?: "§kUNKNOWN"
+        displayName(Component.text(ownerName))
+    }
+    .addLore {
+        val auctionsAmount = playerAndSlots.slots
+            .filter { slot -> slot.expired == isExpired }
+            .size
+        pluginTranslation.menu.player.lots(auctionsAmount).toComponent(locale)
+    }
+    .addLore {
+        val latestTime = playerAndSlots.slots.maxOf { slot -> slot.time }
+        val time = (Clock.System.now() - latestTime).getTimeFormatted(pluginTranslation.menu.timeAgo)
+        pluginTranslation.menu.player.latestLot(time).toComponent(locale)
+    }
+    .setOnClickListener(click)
+    .build()
