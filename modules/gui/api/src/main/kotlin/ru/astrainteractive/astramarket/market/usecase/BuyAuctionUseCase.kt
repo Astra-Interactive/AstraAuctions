@@ -28,7 +28,6 @@ class BuyAuctionUseCase(
         playerInteractionBridge.sendTranslationMessage(playerUUID, message)
     }
 
-    @Suppress("ReturnCount")
     suspend operator fun invoke(auction: MarketSlot, playerUUID: UUID): Boolean {
         val economyProvider = economyProviderFactory.findDefault() ?: return false
         val ownerUUID = UUID.fromString(auction.minecraftUuid)
