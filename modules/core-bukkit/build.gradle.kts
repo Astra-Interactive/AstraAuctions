@@ -19,3 +19,7 @@ dependencies {
     implementation(libs.minecraft.bstats)
     implementation(projects.modules.core)
 }
+
+linter {
+    unitKind.set("technology")
+}

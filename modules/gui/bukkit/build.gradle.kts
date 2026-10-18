@@ -17,3 +17,7 @@ dependencies {
     implementation(projects.modules.coreBukkit)
     implementation(projects.modules.gui.api)
 }
+
+linter {
+    unitKind.set("technology")
+}
