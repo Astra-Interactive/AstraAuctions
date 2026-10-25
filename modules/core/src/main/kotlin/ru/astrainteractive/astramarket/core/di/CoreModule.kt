@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.serialization.StringFormat
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -21,6 +21,6 @@ interface CoreModule {
     val unconfinedScope: CoroutineScope
     val dispatchers: KotlinDispatchers
     val yamlStringFormat: StringFormat
-    val economyProviderFactory: CurrencyEconomyProviderFactory
+    val economyProviderFactory: CurrencyEconomyProviderResolver
     val multiplatformCommand: MultiplatformCommand
 }

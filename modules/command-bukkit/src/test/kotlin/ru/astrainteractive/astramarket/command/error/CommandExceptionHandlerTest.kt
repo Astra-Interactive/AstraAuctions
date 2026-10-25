@@ -1,4 +1,4 @@
-@file:Suppress("FunctionNaming")
+@file:Suppress("FunctionNaming", "TrivialLambdaReference")
 
 package ru.astrainteractive.astramarket.command.error
 
@@ -50,7 +50,7 @@ class CommandExceptionHandlerTest {
     private fun executeFailing(failure: Throwable) {
         val command = with(multiplatformCommand) {
             command("fail") {
-                runs(handler::handle) { _ -> throw failure }
+                runs(handler::onFailure) { _ -> throw failure }
             }
         }
         execute(command, "fail")
@@ -60,7 +60,7 @@ class CommandExceptionHandlerTest {
     fun GIVEN_sender_without_permission_WHEN_command_requires_it_THEN_sender_reads_no_permission() {
         val command = with(multiplatformCommand) {
             command("reload") {
-                runs(handler::handle) { ctx -> ctx.requirePermission(PluginPermission.Reload) }
+                runs(handler::onFailure) { ctx -> ctx.requirePermission(PluginPermission.Reload) }
             }
         }
 
@@ -73,7 +73,7 @@ class CommandExceptionHandlerTest {
     fun GIVEN_console_WHEN_command_requires_player_THEN_console_reads_only_player_command() {
         val command = with(multiplatformCommand) {
             command("market") {
-                runs(handler::handle) { ctx -> ctx.requirePlayer() }
+                runs(handler::onFailure) { ctx -> ctx.requirePlayer() }
             }
         }
 
@@ -94,7 +94,7 @@ class CommandExceptionHandlerTest {
         val command = with(multiplatformCommand) {
             command("sell") {
                 argument("amount", StringArgumentType.string()) { amountArg ->
-                    runs(handler::handle) { ctx -> ctx.requireArgument(amountArg, IntArgumentConverter) }
+                    runs(handler::onFailure) { ctx -> ctx.requireArgument(amountArg, IntArgumentConverter) }
                 }
             }
         }
@@ -143,7 +143,7 @@ class CommandExceptionHandlerTest {
         )
         val command = with(multiplatformCommand) {
             command("sell") {
-                runs(handler::handle) { ctx -> ctx.requireArgument(priceArg) }
+                runs(handler::onFailure) { ctx -> ctx.requireArgument(priceArg) }
             }
         }
 
@@ -173,7 +173,7 @@ class CommandExceptionHandlerTest {
         )
         val command = with(unresolvableCommand) {
             command("market") {
-                runs(unresolvableHandler::handle) { ctx -> ctx.requirePlayer() }
+                runs(unresolvableHandler::onFailure) { ctx -> ctx.requirePlayer() }
             }
         }
 

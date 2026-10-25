@@ -22,7 +22,7 @@ class ExpireAuctionUseCase(
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.error.noPermission }
             return false
         }
-        val storedAuction = marketRepository.getSlot(auction.id).getOrNull() ?: return false
+        val storedAuction = marketRepository.findSlot(auction.id).getOrNull() ?: return false
         val itemName = auctionsBridge.itemDesc(storedAuction)
         playerInteractionBridge.sendTranslationMessage(UUID.fromString(auction.minecraftUuid)) {
             translation.expire.ownerNotice(itemName = itemName, price = storedAuction.price)

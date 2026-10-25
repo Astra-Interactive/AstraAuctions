@@ -1,4 +1,4 @@
-@file:Suppress("MaxLineLength", "LongParameterList")
+@file:Suppress("MaxLineLength", "LongParameterList", "DataClassContainsFunctions")
 
 package ru.astrainteractive.astramarket.core.settings.model
 
@@ -388,10 +388,12 @@ data class PluginTranslation(
         )
     ) {
         /** Sent to the owner of the lot; the item name goes in as plain text and never becomes a click. */
-        fun ownerNotice(itemName: String, price: Number): LocalizableComponent = ownerNotice.replaceAll(
-            PlaceholderReplacement.plain("%item%", itemName),
-            PlaceholderReplacement.plain("%price%", "$price")
-        )
+        fun ownerNotice(itemName: String, price: Number): LocalizableComponent {
+            return ownerNotice.replaceAll(
+                PlaceholderReplacement.plain("%item%", itemName),
+                PlaceholderReplacement.plain("%price%", "$price")
+            )
+        }
     }
 
     @Serializable

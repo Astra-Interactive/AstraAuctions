@@ -4,11 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
-import ru.astrainteractive.astramarket.core.util.encodeItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
 import ru.astrainteractive.astramarket.router.api.GuiRouter
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch
+import ru.astrainteractive.klibs.mikro.core.coroutines.propagateCancellationException
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
@@ -51,7 +51,8 @@ internal class AuctionCommandExecutor(
                 val clonedItem = itemInstance.clone().apply {
                     amount = calculatedAmount
                 }
-                val encodedItem = objectEncoder.encodeItemStack(clonedItem)
+                val encodedItem = runCatching { objectEncoder.toByteArray(clonedItem) }
+                    .propagateCancellationException()
                     .onFailure { error { "#execute could not deserialize item" } }
                     .getOrNull()
                     ?: return@launch
@@ -79,7 +80,10 @@ internal class AuctionCommandExecutor(
                     playerUUID = input.player.uuid
                 )
                 withContext(dispatchers.Main) {
-                    if (!useCaseResult) itemInstance.amount += calculatedAmount
+                    if (useCaseResult) {
+                        return@withContext
+                    }
+                    itemInstance.amount += calculatedAmount
                 }
             }
         }

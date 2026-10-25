@@ -20,11 +20,13 @@ internal class BukkitGuiRouter(
     private val playersMarketViewModule: PlayersMarketViewModule
 ) : GuiRouter {
 
-    private fun createButtonContext(locale: Locale): ButtonContext = ButtonContext.Default(
-        coreModule = coreModule,
-        bukkitCoreModule = bukkitCoreModule,
-        locale = locale
-    )
+    private fun createButtonContext(locale: Locale): ButtonContext {
+        return ButtonContext.Default(
+            coreModule = coreModule,
+            bukkitCoreModule = bukkitCoreModule,
+            locale = locale
+        )
+    }
 
     override fun navigate(route: GuiRouter.Route) {
         coreModule.ioScope.launch(coreModule.dispatchers.Main) {

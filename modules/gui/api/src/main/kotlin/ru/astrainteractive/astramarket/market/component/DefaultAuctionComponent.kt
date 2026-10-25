@@ -80,23 +80,25 @@ internal class DefaultAuctionComponent(
     private suspend fun onAuctionClicked(
         auction: MarketSlot,
         clickType: AuctionComponent.ClickType
-    ) = when (clickType) {
-        AuctionComponent.ClickType.LEFT -> buyAuctionUseCase.invoke(auction, playerUUID)
-        AuctionComponent.ClickType.RIGHT -> removeAuctionUseCase.invoke(auction, playerUUID)
-        AuctionComponent.ClickType.MIDDLE -> expireAuctionUseCase.invoke(auction, playerUUID)
+    ): Boolean {
+        return when (clickType) {
+            AuctionComponent.ClickType.LEFT -> buyAuctionUseCase.invoke(auction, playerUUID)
+            AuctionComponent.ClickType.RIGHT -> removeAuctionUseCase.invoke(auction, playerUUID)
+            AuctionComponent.ClickType.MIDDLE -> expireAuctionUseCase.invoke(auction, playerUUID)
+        }
     }
 
     private fun loadItems() {
         launch(mutex) {
             val items = when {
                 targetPlayerUUID != null -> {
-                    marketRepository.getUserSlots(
+                    marketRepository.loadUserSlots(
                         uuid = targetPlayerUUID.toString(),
                         isExpired = model.value.isExpired
                     )
                 }
 
-                else -> marketRepository.getSlots(isExpired = model.value.isExpired)
+                else -> marketRepository.loadSlots(isExpired = model.value.isExpired)
             }
             model.update { model -> model.copy(items = items.getOrDefault(emptyList())) }
             sort()

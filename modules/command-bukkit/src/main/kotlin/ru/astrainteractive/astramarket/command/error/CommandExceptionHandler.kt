@@ -41,7 +41,7 @@ internal class CommandExceptionHandler(
         }
     }
 
-    fun handle(ctx: CommandContext<Any>, throwable: Throwable) {
+    fun onFailure(ctx: CommandContext<Any>, throwable: Throwable) {
         val commandName = ctx.input.substringBefore(' ')
         val sender = runCatching { with(multiplatformCommand) { ctx.getSender() } }
             .getOrElse { senderError ->

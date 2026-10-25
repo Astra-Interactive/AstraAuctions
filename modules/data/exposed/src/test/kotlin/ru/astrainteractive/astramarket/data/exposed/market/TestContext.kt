@@ -39,13 +39,15 @@ internal class TestContext {
         price: Float = 100.0f,
         expired: Boolean = false,
         timeOffset: Duration = Duration.ZERO
-    ): MarketSlot = MarketSlot(
-        id = 0,
-        minecraftUuid = uuid,
-        minecraftUsername = username,
-        time = Clock.System.now() + timeOffset,
-        item = EncodedObject.ByteArray("test_item".toByteArray()),
-        price = price,
-        expired = expired
-    )
+    ): MarketSlot {
+        return MarketSlot(
+            id = 0,
+            minecraftUuid = uuid,
+            minecraftUsername = username,
+            time = Clock.System.now() + timeOffset,
+            item = EncodedObject.ByteArray("test_item".toByteArray()),
+            price = price,
+            expired = expired
+        )
+    }
 }

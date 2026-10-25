@@ -5,8 +5,12 @@ package ru.astrainteractive.astramarket.util
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SortCycleExtTest {
-    private val sorts = listOf("first", "second", "third")
+class ListExtTest {
+    private val sorts = listOf(
+        "first",
+        "second",
+        "third"
+    )
 
     @Test
     fun GIVEN_current_sort_WHEN_next_is_taken_forwards_THEN_returns_the_following_sort() {

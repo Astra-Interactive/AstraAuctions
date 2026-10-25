@@ -8,13 +8,13 @@ interface MarketRepository {
 
     suspend fun expireSlot(marketSlot: MarketSlot): Result<Unit>
 
-    suspend fun getUserSlots(uuid: String, isExpired: Boolean): Result<List<MarketSlot>>
+    suspend fun loadUserSlots(uuid: String, isExpired: Boolean): Result<List<MarketSlot>>
 
-    suspend fun getSlots(isExpired: Boolean): Result<List<MarketSlot>>
+    suspend fun loadSlots(isExpired: Boolean): Result<List<MarketSlot>>
 
-    suspend fun getSlotsCreatedBefore(moment: Instant): Result<List<MarketSlot>>
+    suspend fun loadSlotsCreatedBefore(moment: Instant): Result<List<MarketSlot>>
 
-    suspend fun getSlot(id: Int): Result<MarketSlot?>
+    suspend fun findSlot(id: Int): Result<MarketSlot?>
 
     suspend fun deleteSlot(marketSlot: MarketSlot): Result<Unit>
 

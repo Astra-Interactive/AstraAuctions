@@ -13,7 +13,11 @@ import kotlin.test.assertTrue
 
 class RemoveAuctionUseCaseTest {
     private val sellerId = UUID.fromString("550e8400-e29b-41d4-a716-446655440001")
-    private val auction = MarketTestContext.slot(id = 1, owner = sellerId, price = 100f)
+    private val auction = MarketTestContext.slot(
+        id = 1,
+        owner = sellerId,
+        price = 100f
+    )
     private val context = MarketTestContext(config = PluginConfig(), slots = listOf(auction))
     private val useCase = RemoveAuctionUseCase(
         auctionsBridge = context.auctionsBridge,
@@ -24,61 +28,71 @@ class RemoveAuctionUseCaseTest {
     )
 
     @Test
-    fun GIVEN_owner_WHEN_auction_is_removed_THEN_item_returns_to_owner() = runTest {
-        val isRemoved = useCase.invoke(auction, context.seller)
+    fun GIVEN_owner_WHEN_auction_is_removed_THEN_item_returns_to_owner() {
+        runTest {
+            val isRemoved = useCase.invoke(auction, context.seller)
 
-        assertTrue(isRemoved)
-        assertTrue(context.marketRepository.slots.isEmpty())
-        assertEquals(context.seller, context.auctionsBridge.itemsGiven.single().receiver)
-        assertEquals(
-            listOf(context.translation.remove.removed),
-            context.playerInteractionBridge.messagesTo(context.seller)
-        )
+            assertTrue(isRemoved)
+            assertTrue(context.marketRepository.slots.isEmpty())
+            assertEquals(context.seller, context.auctionsBridge.itemsGiven.single().receiver)
+            assertEquals(
+                listOf(context.translation.remove.removed),
+                context.playerInteractionBridge.messagesTo(context.seller)
+            )
+        }
     }
 
     @Test
-    fun GIVEN_other_player_WHEN_auction_is_removed_THEN_player_reads_not_owner() = runTest {
-        val isRemoved = useCase.invoke(auction, context.buyer)
+    fun GIVEN_other_player_WHEN_auction_is_removed_THEN_player_reads_not_owner() {
+        runTest {
+            val isRemoved = useCase.invoke(auction, context.buyer)
 
-        assertFalse(isRemoved)
-        assertEquals(
-            listOf(context.translation.remove.notOwner),
-            context.playerInteractionBridge.messagesTo(context.buyer)
-        )
-        assertEquals(listOf(auction), context.marketRepository.slots)
+            assertFalse(isRemoved)
+            assertEquals(
+                listOf(context.translation.remove.notOwner),
+                context.playerInteractionBridge.messagesTo(context.buyer)
+            )
+            assertEquals(listOf(auction), context.marketRepository.slots)
+        }
     }
 
     @Test
-    fun GIVEN_auction_already_gone_WHEN_auction_is_removed_THEN_nothing_happens() = runTest {
-        context.marketRepository.deleteSlot(auction)
+    fun GIVEN_auction_already_gone_WHEN_auction_is_removed_THEN_nothing_happens() {
+        runTest {
+            context.marketRepository.deleteSlot(auction)
 
-        val isRemoved = useCase.invoke(auction, context.seller)
+            val isRemoved = useCase.invoke(auction, context.seller)
 
-        assertFalse(isRemoved)
-        assertTrue(context.playerInteractionBridge.messages.isEmpty())
+            assertFalse(isRemoved)
+            assertTrue(context.playerInteractionBridge.messages.isEmpty())
+        }
     }
 
     @Test
-    fun GIVEN_full_inventory_WHEN_auction_is_removed_THEN_owner_reads_inventory_full() = runTest {
-        context.auctionsBridge.isInventoryFull = true
+    fun GIVEN_full_inventory_WHEN_auction_is_removed_THEN_owner_reads_inventory_full() {
+        runTest {
+            context.auctionsBridge.isInventoryFull = true
 
-        val isRemoved = useCase.invoke(auction, context.seller)
+            val isRemoved = useCase.invoke(auction, context.seller)
 
-        assertFalse(isRemoved)
-        val messages = context.playerInteractionBridge.messagesTo(context.seller)
-        assertEquals(listOf(context.translation.error.inventoryFull), messages)
-        assertEquals(listOf(auction), context.marketRepository.slots)
+            assertFalse(isRemoved)
+            val messages = context.playerInteractionBridge.messagesTo(context.seller)
+            assertEquals(listOf(context.translation.error.inventoryFull), messages)
+            assertEquals(listOf(auction), context.marketRepository.slots)
+        }
     }
 
     @Test
-    fun GIVEN_storage_fails_WHEN_auction_is_removed_THEN_owner_reads_unexpected_error() = runTest {
-        context.marketRepository.failingOperations += FakeMarketRepository.Operation.DELETE
+    fun GIVEN_storage_fails_WHEN_auction_is_removed_THEN_owner_reads_unexpected_error() {
+        runTest {
+            context.marketRepository.failingOperations += FakeMarketRepository.Operation.DELETE
 
-        val isRemoved = useCase.invoke(auction, context.seller)
+            val isRemoved = useCase.invoke(auction, context.seller)
 
-        assertFalse(isRemoved)
-        val messages = context.playerInteractionBridge.messagesTo(context.seller)
-        assertEquals(listOf(context.translation.error.unexpected), messages)
-        assertTrue(context.auctionsBridge.itemsGiven.isEmpty())
+            assertFalse(isRemoved)
+            val messages = context.playerInteractionBridge.messagesTo(context.seller)
+            assertEquals(listOf(context.translation.error.unexpected), messages)
+            assertTrue(context.auctionsBridge.itemsGiven.isEmpty())
+        }
     }
 }

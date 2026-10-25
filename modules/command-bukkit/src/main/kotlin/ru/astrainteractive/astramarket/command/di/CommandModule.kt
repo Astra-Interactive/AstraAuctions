@@ -2,12 +2,12 @@ package ru.astrainteractive.astramarket.command.di
 
 import ru.astrainteractive.astralibs.command.api.registrar.CommandRegistrarContext
 import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
 import ru.astrainteractive.astramarket.command.auction.command.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.command.AuctionLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
 import ru.astrainteractive.astramarket.command.reload.command.ReloadLiteralArgumentBuilder
-import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.market.di.MarketViewModule
 import ru.astrainteractive.astramarket.router.di.RouterModule
@@ -17,7 +17,7 @@ interface CommandModule {
 
     class Default(
         private val coreModule: CoreModule,
-        bukkitCoreModule: BukkitCoreModule,
+        objectEncoder: ObjectEncoder,
         bukkitRouterModule: RouterModule,
         marketViewModule: MarketViewModule,
         private val commandRegistrarContext: CommandRegistrarContext,
@@ -39,7 +39,7 @@ interface CommandModule {
                 dispatchers = coreModule.dispatchers,
                 createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
                 ioScope = coreModule.ioScope,
-                objectEncoder = bukkitCoreModule.objectEncoder,
+                objectEncoder = objectEncoder,
             ),
             multiplatformCommand = coreModule.multiplatformCommand,
         )

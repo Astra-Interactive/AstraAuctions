@@ -19,8 +19,8 @@ import ru.astrainteractive.astralibs.lifecycle.LifecyclePlugin
 import ru.astrainteractive.astralibs.menu.event.DefaultInventoryClickEvent
 import ru.astrainteractive.astralibs.util.YamlStringFormat
 import ru.astrainteractive.astralibs.util.parseOrWriteIntoDefault
-import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
-import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
+import ru.astrainteractive.astramarket.core.economy.vault.VaultCurrencyEconomyProviderResolver
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
@@ -88,8 +88,8 @@ interface BukkitCoreModule : CoreModule {
             .Default(dispatchers.Unconfined + SupervisorJob() + createCoroutineExceptionHandler())
             .withTimings()
 
-        override val economyProviderFactory: CurrencyEconomyProviderFactory =
-            VaultCurrencyEconomyProviderFactory(lifecyclePlugin)
+        override val economyProviderFactory: CurrencyEconomyProviderResolver =
+            VaultCurrencyEconomyProviderResolver(lifecyclePlugin)
 
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
@@ -112,9 +112,11 @@ interface BukkitCoreModule : CoreModule {
         @Suppress("MagicNumber")
         private fun createBStats() = Metrics(lifecyclePlugin, 15771)
 
-        private fun createCoroutineExceptionHandler() = CoroutineExceptionHandler { _, throwable ->
-            val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
-            logger.error(throwable) { "Error happened inside global coroutine scope!" }
+        private fun createCoroutineExceptionHandler(): CoroutineExceptionHandler {
+            return CoroutineExceptionHandler { _, throwable ->
+                val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt")
+                logger.error(throwable) { "Error happened inside global coroutine scope!" }
+            }
         }
     }
 }

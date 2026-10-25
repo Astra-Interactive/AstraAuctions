@@ -8,7 +8,11 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class PluginConfigExtTest {
-    private val auction = PluginConfig.Auction(minPrice = 10, maxPrice = 100, maxAuctionPerPlayer = 2)
+    private val auction = PluginConfig.Auction(
+        minPrice = 10,
+        maxPrice = 100,
+        maxAuctionPerPlayer = 2
+    )
 
     @Test
     fun GIVEN_price_on_the_bounds_WHEN_checked_THEN_price_is_allowed() {

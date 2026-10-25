@@ -21,7 +21,7 @@ internal class ExpireServiceTask(
         coroutineScope {
             val maxAuctionLifeTime = config.auction.maxTimeSeconds.seconds
             val now = clock.now()
-            marketRepository.getSlots(isExpired = false)
+            marketRepository.loadSlots(isExpired = false)
                 .getOrDefault(emptyList())
                 .filter { slot -> slot.isLifetimeOver(now, maxAuctionLifeTime) }
                 .map { slot -> async { marketRepository.expireSlot(slot) } }

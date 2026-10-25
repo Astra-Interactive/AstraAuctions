@@ -20,7 +20,7 @@ internal class ReloadLiteralArgumentBuilder(
     fun create(): LiteralArgumentBuilder<Any> {
         return with(multiplatformCommand) {
             command("amarketreload") {
-                runs(commandExceptionHandler::handle) { ctx ->
+                runs(commandExceptionHandler::onFailure) { ctx ->
                     ctx.requirePermission(PluginPermission.Reload)
                     ctx.getSender().sendMessage(translation.reload.started)
                     lifecyclePlugin.onReload()

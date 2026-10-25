@@ -62,7 +62,7 @@ internal class RootModule(
 
     val commandModule: CommandModule = CommandModule.Default(
         coreModule = coreModule,
-        bukkitCoreModule = coreModule,
+        objectEncoder = coreModule.objectEncoder,
         bukkitRouterModule = bukkitRouterModule,
         marketViewModule = marketViewModule,
         commandRegistrarContext = PaperCommandRegistrarContext(

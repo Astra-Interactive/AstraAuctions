@@ -21,7 +21,7 @@ class RemoveAuctionUseCase(
     private val config by configKrate
 
     suspend operator fun invoke(auction: MarketSlot, playerUUID: UUID): Boolean {
-        val storedAuction = marketRepository.getSlot(auction.id).getOrNull() ?: return false
+        val storedAuction = marketRepository.findSlot(auction.id).getOrNull() ?: return false
         if (!storedAuction.isOwnedBy(playerUUID)) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.remove.notOwner }
             return false

@@ -6,14 +6,14 @@ import org.bukkit.plugin.java.JavaPlugin
 import ru.astrainteractive.astralibs.economy.EconomyFacade
 import ru.astrainteractive.astralibs.economy.EssentialsEconomyFacade
 import ru.astrainteractive.astralibs.economy.VaultEconomyFacade
-import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 
-internal class VaultCurrencyEconomyProviderFactory(
+internal class VaultCurrencyEconomyProviderResolver(
     private val plugin: JavaPlugin,
-) : CurrencyEconomyProviderFactory,
-    Logger by JUtiltLogger("AstraMarket-CurrencyEconomyProviderFactory").withoutParentHandlers() {
+) : CurrencyEconomyProviderResolver,
+    Logger by JUtiltLogger("AstraMarket-CurrencyEconomyProviderResolver").withoutParentHandlers() {
     override fun findByCurrencyId(currencyId: String): EconomyFacade? {
         val registrations = Bukkit.getServer().servicesManager.getRegistrations(Economy::class.java)
         info { "#findEconomyProviderByCurrency registrations: ${registrations.size}" }
