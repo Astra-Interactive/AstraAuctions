@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ClassSignature:WorkerModule.kt:WorkerModule$Default : WorkerModule</ID>
+    <ID>TrailingCommaOnCallSite:WorkerModule.kt:WorkerModule.Default$( interval = EXPIRE_CHECK_INTERVAL, scope = coreModule.ioScope, logger = JUtiltLogger("ExpireService"), task = ExpireServiceTask( marketRepository = marketRepository, configKrate = coreModule.configKrate, clock = Clock.System ) )</ID>
+    <ID>TrailingCommaOnCallSite:WorkerModule.kt:WorkerModule.Default$( marketRepository = marketRepository, configKrate = coreModule.configKrate, clock = Clock.System )</ID>
+    <ID>TrailingCommaOnCallSite:WorkerModule.kt:WorkerModule.Default$( onEnable = { expireService.onEnable() }, onDisable = { expireService.onDisable() } )</ID>
+    <ID>TrailingCommaOnDeclarationSite:ExpireServiceTask.kt:ExpireServiceTask$( private val marketRepository: MarketRepository, private val configKrate: CachedKrate&lt;PluginConfig>, private val clock: Clock )</ID>
+    <ID>TrailingCommaOnDeclarationSite:WorkerModule.kt:WorkerModule.Default$( marketRepository: MarketRepository, coreModule: CoreModule )</ID>
+  </CurrentIssues>
+</SmellBaseline>

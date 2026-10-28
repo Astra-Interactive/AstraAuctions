@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>BlankLineBetweenWhenConditions:ObjectEncoderExt.kt:when (encodedObject) { is EncodedObject.Base64 -> fromBase64(encodedObject) is EncodedObject.ByteArray -> runCatching { ItemStack.deserializeBytes(encodedObject.value) } .getOrNull() ?: fromByteArray(encodedObject) }</ID>
+    <ID>ClassSignature:VaultCurrencyEconomyProviderResolver.kt:VaultCurrencyEconomyProviderResolver : CurrencyEconomyProviderResolverLogger</ID>
+    <ID>FunctionExpressionBody:BukkitCoreModule.kt:BukkitCoreModule.Default${ return CoroutineExceptionHandler { _, throwable -> val logger = JUtiltLogger("CoroutineExceptionHandler-AspeKt") logger.error(throwable) { "Error happened inside global coroutine scope!" } } }</ID>
+    <ID>FunctionExpressionBody:ObjectEncoderExt.kt:{ return runCatching { toByteArray(itemStack) } }</ID>
+    <ID>FunctionExpressionBody:ObjectEncoderExt.kt:{ return runCatching { when (encodedObject) { is EncodedObject.Base64 -> fromBase64(encodedObject) is EncodedObject.ByteArray -> runCatching { ItemStack.deserializeBytes(encodedObject.value) } .getOrNull() ?: fromByteArray(encodedObject) } } }</ID>
+    <ID>FunctionExpressionBody:VaultCurrencyEconomyProviderResolver.kt:VaultCurrencyEconomyProviderResolver${ return kotlin.runCatching { VaultEconomyFacade(plugin) }.getOrNull() ?: kotlin.runCatching { if (!Bukkit.getServer().pluginManager.isPluginEnabled("Essentials")) { error("Essentials not enabled") } else { EssentialsEconomyFacade } }.getOrNull() }</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( encodeDefaults = true, strictMode = false, polymorphismStyle = PolymorphismStyle.Property )</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( factory = ::PluginConfig, loader = { yamlStringFormat.parseOrWriteIntoDefault( file = lifecyclePlugin.dataFolder.resolve("config.yml"), default = ::PluginConfig ) } )</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( factory = ::PluginTranslation, loader = { yamlStringFormat.parseOrWriteIntoDefault( file = lifecyclePlugin.dataFolder.resolve("translations.yml"), default = ::PluginTranslation ) } )</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( file = lifecyclePlugin.dataFolder.resolve("config.yml"), default = ::PluginConfig )</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( file = lifecyclePlugin.dataFolder.resolve("translations.yml"), default = ::PluginTranslation )</ID>
+    <ID>TrailingCommaOnCallSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( onEnable = { createBStats() inventoryClickEventListener.onEnable(lifecyclePlugin) }, onDisable = { inventoryClickEventListener.onDisable() unconfinedScope.cancel() ioScope.cancel() }, onReload = { configKrate.getValue() pluginTranslationKrate.getValue() } )</ID>
+    <ID>TrailingCommaOnDeclarationSite:BukkitCoreModule.kt:BukkitCoreModule.Default$( override val lifecyclePlugin: LifecyclePlugin, override val multiplatformCommand: MultiplatformCommand )</ID>
+  </CurrentIssues>
+</SmellBaseline>

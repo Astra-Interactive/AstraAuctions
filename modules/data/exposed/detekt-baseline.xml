@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ClassSignature:DatabaseConfig.kt:DatabaseConfig</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return MarketSlot( id = resultRow[AuctionTable.id].value, time = Instant.fromEpochMilliseconds(resultRow[AuctionTable.time]), minecraftUuid = resultRow[AuctionTable.minecraftUuid], minecraftUsername = resultRow[AuctionTable.minecraftUsername], item = EncodedObject.ByteArray(resultRow[AuctionTable.item]), price = resultRow[AuctionTable.price], expired = resultRow[AuctionTable.expired] ) }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("countPlayerSlots") { AuctionTable.selectAll() .where { AuctionTable.minecraftUuid.eq(uuid) } .count() .toInt() } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("deleteSlot") { AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) } Unit } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("expireSlot") { AuctionTable.update( where = { AuctionTable.id.eq(marketSlot.id) }, body = { statement -> statement[AuctionTable.expired] = true } ) Unit } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("findSlot") { AuctionTable.selectAll() .where { AuctionTable.id.eq(id) } .map(::toMarketSlot) .firstOrNull() } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("insertSlot") { AuctionTable.insertAndGetId { statement -> statement[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid statement[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername statement[AuctionTable.time] = marketSlot.time.toEpochMilliseconds() statement[AuctionTable.item] = marketSlot.item.value statement[AuctionTable.price] = marketSlot.price statement[AuctionTable.expired] = marketSlot.expired }.value } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("loadSlots") { AuctionTable.selectAll() .where { AuctionTable.expired.eq(isExpired) } .map(::toMarketSlot) } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("loadSlotsCreatedBefore") { AuctionTable.selectAll() .where { AuctionTable.time.less(moment.toEpochMilliseconds()) } .map(::toMarketSlot) } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return query("loadUserSlots") { AuctionTable .selectAll() .where { AuctionTable.minecraftUuid .eq(uuid) .and(AuctionTable.expired.eq(isExpired)) } .map(::toMarketSlot) } }</ID>
+    <ID>FunctionExpressionBody:ExposedMarketRepository.kt:ExposedMarketRepository${ return runCatching { mutex.withLock { withContext(dispatchers.IO) { transaction(databaseFlow.first()) { statement.invoke(this) } } } } .propagateCancellationException() .fold( onSuccess = { value -> Result.success(value) }, onFailure = { throwable -> error(throwable) { "$tag: Error during execution" } Result.failure(MarketStorageError.QueryFailed(throwable)) } ) }</ID>
+    <ID>FunctionExpressionBody:ExposedModule.kt:ExposedModule${ return config.configuration }</ID>
+    <ID>FunctionExpressionBody:ExposedModule.kt:ExposedModule${ return configuration.connectAsFlow() }</ID>
+    <ID>FunctionExpressionBody:TestContext.kt:TestContext${ return MarketSlot( id = 0, minecraftUuid = uuid, minecraftUsername = username, time = Clock.System.now() + timeOffset, item = EncodedObject.ByteArray("test_item".toByteArray()), price = price, expired = expired ) }</ID>
+    <ID>FunctionSignature:ExposedMarketRepository.kt:ExposedMarketRepository$override suspend fun loadSlotsCreatedBefore: Result&lt;List&lt;MarketSlot>></ID>
+    <ID>FunctionSignature:ExposedMarketRepository.kt:ExposedMarketRepository$override suspend fun loadUserSlots: Result&lt;List&lt;MarketSlot>></ID>
+    <ID>TrailingCommaOnCallSite:ExposedMarketRepository.kt:ExposedMarketRepository$( id = resultRow[AuctionTable.id].value, time = Instant.fromEpochMilliseconds(resultRow[AuctionTable.time]), minecraftUuid = resultRow[AuctionTable.minecraftUuid], minecraftUsername = resultRow[AuctionTable.minecraftUsername], item = EncodedObject.ByteArray(resultRow[AuctionTable.item]), price = resultRow[AuctionTable.price], expired = resultRow[AuctionTable.expired] )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedMarketRepository.kt:ExposedMarketRepository$( onSuccess = { value -> Result.success(value) }, onFailure = { throwable -> error(throwable) { "$tag: Error during execution" } Result.failure(MarketStorageError.QueryFailed(throwable)) } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedMarketRepository.kt:ExposedMarketRepository$( where = { AuctionTable.id.eq(marketSlot.id) }, body = { statement -> statement[AuctionTable.expired] = true } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedMarketRepositoryTest.kt:ExposedMarketRepositoryTest$( databaseFlow = flow&lt;Database> { error("database is down") }, dispatchers = DefaultKotlinDispatchers )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedMarketRepositoryTest.kt:ExposedMarketRepositoryTest$( marketRepository.loadSlots(isExpired = false) .getOrThrow() .none { slot -> slot.id == insertedId } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedModule.kt:ExposedModule$( databaseFlow = databaseFlow, dispatchers = dispatchers )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedModule.kt:ExposedModule$( factory = { DatabaseConfig(default.invoke()) }, loader = { yamlStringFormat.parseOrWriteIntoDefault( file = dataFolder.resolve("database.yaml"), default = { DatabaseConfig(default.invoke()) } ) } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedModule.kt:ExposedModule$( file = dataFolder.resolve("database.yaml"), default = { DatabaseConfig(default.invoke()) } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedModule.kt:ExposedModule$( onReload = { dbConfig.getValue() } )</ID>
+    <ID>TrailingCommaOnCallSite:ExposedModule.kt:ExposedModule$( scope = ioScope, started = SharingStarted.Eagerly, replay = 1 )</ID>
+    <ID>TrailingCommaOnCallSite:TestContext.kt:TestContext$( databaseFlow = flowOf(database), dispatchers = DefaultKotlinDispatchers )</ID>
+    <ID>TrailingCommaOnCallSite:TestContext.kt:TestContext$( id = 0, minecraftUuid = uuid, minecraftUsername = username, time = Clock.System.now() + timeOffset, item = EncodedObject.ByteArray("test_item".toByteArray()), price = price, expired = expired )</ID>
+    <ID>TrailingCommaOnCallSite:TestContext.kt:TestContext$( url = "jdbc:h2:${tempDir.absolutePath}/test", driver = "org.h2.Driver" )</ID>
+    <ID>TrailingCommaOnDeclarationSite:DatabaseConfig.kt:DatabaseConfig$( val configuration: DatabaseConfiguration )</ID>
+    <ID>TrailingCommaOnDeclarationSite:ExposedMarketRepository.kt:ExposedMarketRepository$( moment: Instant )</ID>
+    <ID>TrailingCommaOnDeclarationSite:ExposedMarketRepository.kt:ExposedMarketRepository$( private val databaseFlow: Flow&lt;Database>, private val dispatchers: KotlinDispatchers )</ID>
+    <ID>TrailingCommaOnDeclarationSite:ExposedMarketRepository.kt:ExposedMarketRepository$( uuid: String, isExpired: Boolean )</ID>
+    <ID>TrailingCommaOnDeclarationSite:TestContext.kt:TestContext$( uuid: String = "550e8400-e29b-41d4-a716-446655440000", username: String = "TestPlayer", price: Float = 100.0f, expired: Boolean = false, timeOffset: Duration = Duration.ZERO )</ID>
+  </CurrentIssues>
+</SmellBaseline>
