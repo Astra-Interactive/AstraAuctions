@@ -58,7 +58,7 @@ internal class RootModule(
     val bukkitRouterModule: BukkitRouterModule = BukkitRouterModule(
         coreModule = coreModule,
         marketViewModule = marketViewModule,
-        bukkitCoreModule = coreModule,
+        objectEncoder = coreModule.objectEncoder,
         playersMarketViewModule = playersMarketViewModule
     )
 

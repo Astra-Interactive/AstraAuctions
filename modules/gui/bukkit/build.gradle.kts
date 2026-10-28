@@ -15,7 +15,6 @@ dependencies {
     implementation(libs.minecraft.astralibs.menu.bukkit)
     implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
-    implementation(projects.modules.coreBukkit)
     implementation(projects.modules.gui.api)
 }
 

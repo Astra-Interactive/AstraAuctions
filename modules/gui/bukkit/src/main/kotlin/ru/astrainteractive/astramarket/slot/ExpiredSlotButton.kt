@@ -8,9 +8,9 @@ import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.context.ButtonContext
-import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.util.formatTime
+import ru.astrainteractive.astramarket.util.toItemStack
 import java.util.UUID
 import kotlin.time.Clock
 
