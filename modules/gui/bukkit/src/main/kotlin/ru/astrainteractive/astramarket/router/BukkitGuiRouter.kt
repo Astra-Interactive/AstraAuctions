@@ -1,3 +1,5 @@
+@file:Suppress("FieldDependencyConstruction")
+
 package ru.astrainteractive.astramarket.router
 
 import kotlinx.coroutines.launch

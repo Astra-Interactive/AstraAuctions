@@ -1,3 +1,5 @@
+@file:Suppress("RootModuleConstruction")
+
 package ru.astrainteractive.astramarket.di
 
 import org.bukkit.Bukkit
