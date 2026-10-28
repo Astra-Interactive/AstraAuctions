@@ -5,14 +5,7 @@ plugins {
     `java-test-fixtures`
 }
 
-configurations.api {
-    dependencies.removeIf { dependency ->
-        dependency.group == "org.jetbrains.kotlin" && dependency.name == "kotlin-stdlib"
-    }
-}
-
 dependencies {
-    implementation(kotlin("stdlib"))
     implementation(libs.minecraft.astralibs.core)
 
     testFixturesImplementation(libs.minecraft.astralibs.core)
