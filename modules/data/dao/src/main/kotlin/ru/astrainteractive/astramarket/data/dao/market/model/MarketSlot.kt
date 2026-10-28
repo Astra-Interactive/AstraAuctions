@@ -1,3 +1,5 @@
+@file:Suppress("BareIdentifier", "DataClassContainsFunctions")
+
 package ru.astrainteractive.astramarket.data.dao.market.model
 
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject

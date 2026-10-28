@@ -16,27 +16,29 @@ internal fun ButtonContext.auctionSort(
     index: Int,
     sortType: AuctionSort,
     click: Click
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(config.buttons.sort.toItemStack())
-    .setDisplayName(pluginTranslation.menu.sort.title.toComponent(locale))
-    .apply {
-        listOf(
-            AuctionSort.Date(false),
-            AuctionSort.Material(false),
-            AuctionSort.Name(false),
-            AuctionSort.Price(false),
-            AuctionSort.Player(false),
-        ).forEach { entry ->
-            addLore {
-                val isSelected = sortType::class == entry::class
-                sortOption(
-                    label = entry.toTranslation(pluginTranslation),
-                    isSelected = isSelected,
-                    isAsc = sortType.isAsc
-                ).toComponent(locale)
+): InventorySlot {
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(config.buttons.sort.toItemStack())
+        .setDisplayName(pluginTranslation.menu.sort.title.toComponent(locale))
+        .apply {
+            listOf(
+                AuctionSort.Date(false),
+                AuctionSort.Material(false),
+                AuctionSort.Name(false),
+                AuctionSort.Price(false),
+                AuctionSort.Player(false),
+            ).forEach { entry ->
+                addLore {
+                    val isSelected = sortType::class == entry::class
+                    sortOption(
+                        label = entry.toTranslation(pluginTranslation),
+                        isSelected = isSelected,
+                        isAsc = sortType.isAsc
+                    ).toComponent(locale)
+                }
             }
         }
-    }
-    .setOnClickListener(click)
-    .build()
+        .setOnClickListener(click)
+        .build()
+}

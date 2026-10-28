@@ -21,7 +21,7 @@ internal class AuctionLiteralArgumentBuilder(
                 literal("sell") {
                     argument("price", FloatArgumentType.floatArg(0f, Float.MAX_VALUE)) { priceArg ->
                         argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) { amountArg ->
-                            runs(commandExceptionHandler::handle) { ctx ->
+                            runs(commandExceptionHandler::onFailure) { ctx ->
                                 val player = ctx.requirePlayer()
                                     .tryCast<BukkitOnlineKPlayer>()
                                     ?: error("Could not get bukkit player ")
@@ -36,7 +36,7 @@ internal class AuctionLiteralArgumentBuilder(
                                 ).run(executor::execute)
                             }
                         }
-                        runs(commandExceptionHandler::handle) { ctx ->
+                        runs(commandExceptionHandler::onFailure) { ctx ->
                             val player = ctx.requirePlayer()
                                 .tryCast<BukkitOnlineKPlayer>()
                                 ?: error("Could not get bukkit player ")
@@ -53,7 +53,7 @@ internal class AuctionLiteralArgumentBuilder(
                     }
                 }
                 literal("players") {
-                    runs(commandExceptionHandler::handle) { ctx ->
+                    runs(commandExceptionHandler::onFailure) { ctx ->
                         val player = ctx.requirePlayer()
                         AuctionCommand.OpenPlayers(
                             player = player,
@@ -61,7 +61,7 @@ internal class AuctionLiteralArgumentBuilder(
                         ).run(executor::execute)
                     }
                 }
-                runs(commandExceptionHandler::handle) { ctx ->
+                runs(commandExceptionHandler::onFailure) { ctx ->
                     val player = ctx.requirePlayer()
                     AuctionCommand.OpenSlots(
                         player = player,
@@ -74,7 +74,13 @@ internal class AuctionLiteralArgumentBuilder(
     }
 
     fun create(): List<LiteralArgumentBuilder<*>> {
-        return listOf("market", "ah", "auctionhouse", "aauc", "amarket")
+        return listOf(
+            "market",
+            "ah",
+            "auctionhouse",
+            "aauc",
+            "amarket"
+        )
             .map(::create)
     }
 }

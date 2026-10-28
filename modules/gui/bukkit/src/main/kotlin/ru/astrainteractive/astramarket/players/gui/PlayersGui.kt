@@ -121,6 +121,7 @@ internal class PlayersGui(
             }
         )
 
+    @Suppress("TrivialLambdaReference")
     private val backButton: InventorySlot
         get() = buttonContext.back(
             index = inventoryMap.firstIndexOf(AuctionSlotKey.BACK),
@@ -183,7 +184,7 @@ internal class PlayersGui(
 
     override fun onInventoryOpenEvent(e: InventoryOpenEvent) {
         playersMarketComponent.model
-            .onEach { model -> updatePageContext(model) }
+            .onEach(::updatePageContext)
             .onEach { withContext(dispatchers.Main) { render() } }
             .launchIn(menuScope)
     }

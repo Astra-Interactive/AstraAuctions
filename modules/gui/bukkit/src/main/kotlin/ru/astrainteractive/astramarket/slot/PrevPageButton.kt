@@ -12,9 +12,11 @@ import ru.astrainteractive.astramarket.util.toItemStack
 internal fun ButtonContext.prevPage(
     index: Int,
     click: Click
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(config.buttons.previous.toItemStack())
-    .editMeta { displayName(pluginTranslation.menu.previousPage.toComponent(locale)) }
-    .setOnClickListener(click)
-    .build()
+): InventorySlot {
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(config.buttons.previous.toItemStack())
+        .editMeta { displayName(pluginTranslation.menu.previousPage.toComponent(locale)) }
+        .setOnClickListener(click)
+        .build()
+}

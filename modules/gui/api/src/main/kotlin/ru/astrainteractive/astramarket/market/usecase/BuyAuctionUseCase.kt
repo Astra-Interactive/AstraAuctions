@@ -1,7 +1,7 @@
 package ru.astrainteractive.astramarket.market.usecase
 
 import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
-import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
@@ -18,7 +18,7 @@ class BuyAuctionUseCase(
     private val playerInteractionBridge: PlayerInteractionBridge,
     pluginTranslationKrate: CachedKrate<PluginTranslation>,
     configKrate: CachedKrate<PluginConfig>,
-    private val economyProviderFactory: CurrencyEconomyProviderFactory,
+    private val economyProviderFactory: CurrencyEconomyProviderResolver,
 ) {
     private val config by configKrate
     private val translation by pluginTranslationKrate
@@ -33,7 +33,7 @@ class BuyAuctionUseCase(
         val ownerUUID = UUID.fromString(auction.minecraftUuid)
         val playerName = auctionsBridge.playerName(playerUUID)
         val ownerName = auctionsBridge.playerName(ownerUUID)
-        val storedAuction = marketRepository.getSlot(auction.id).getOrNull() ?: return false
+        val storedAuction = marketRepository.findSlot(auction.id).getOrNull() ?: return false
         if (storedAuction.isOwnedBy(playerUUID)) {
             playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.buy.ownLot }
             return false
@@ -62,10 +62,18 @@ class BuyAuctionUseCase(
         playerInteractionBridge.playSound(playerUUID) { config.sounds.sold }
         val itemName = auctionsBridge.itemDesc(storedAuction)
         playerInteractionBridge.sendTranslationMessage(playerUUID) {
-            translation.buy.bought(sellerName = ownerName ?: "-", itemName = itemName, price = storedAuction.price)
+            translation.buy.bought(
+                sellerName = ownerName ?: "-",
+                itemName = itemName,
+                price = storedAuction.price
+            )
         }
         playerInteractionBridge.sendTranslationMessage(ownerUUID) {
-            translation.buy.sold(buyerName = playerName ?: "-", itemName = itemName, price = storedAuction.price)
+            translation.buy.sold(
+                buyerName = playerName ?: "-",
+                itemName = itemName,
+                price = storedAuction.price
+            )
         }
         return true
     }

@@ -21,10 +21,10 @@ import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketStorageError
 import ru.astrainteractive.astramarket.data.exposed.table.AuctionTable
+import ru.astrainteractive.klibs.mikro.core.coroutines.propagateCancellationException
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Instant
 
 internal class ExposedMarketRepository(
@@ -38,11 +38,11 @@ internal class ExposedMarketRepository(
         return runCatching {
             mutex.withLock {
                 withContext(dispatchers.IO) {
-                    transaction(databaseFlow.first()) { statement() }
+                    transaction(databaseFlow.first()) { statement.invoke(this) }
                 }
             }
         }
-            .onFailure { throwable -> if (throwable is CancellationException) throw throwable }
+            .propagateCancellationException()
             .fold(
                 onSuccess = { value -> Result.success(value) },
                 onFailure = { throwable ->
@@ -64,69 +64,85 @@ internal class ExposedMarketRepository(
         )
     }
 
-    override suspend fun insertSlot(marketSlot: MarketSlot): Result<Int> = query("insertSlot") {
-        AuctionTable.insertAndGetId { statement ->
-            statement[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
-            statement[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername
-            statement[AuctionTable.time] = marketSlot.time.toEpochMilliseconds()
-            statement[AuctionTable.item] = marketSlot.item.value
-            statement[AuctionTable.price] = marketSlot.price
-            statement[AuctionTable.expired] = marketSlot.expired
-        }.value
+    override suspend fun insertSlot(marketSlot: MarketSlot): Result<Int> {
+        return query("insertSlot") {
+            AuctionTable.insertAndGetId { statement ->
+                statement[AuctionTable.minecraftUuid] = marketSlot.minecraftUuid
+                statement[AuctionTable.minecraftUsername] = marketSlot.minecraftUsername
+                statement[AuctionTable.time] = marketSlot.time.toEpochMilliseconds()
+                statement[AuctionTable.item] = marketSlot.item.value
+                statement[AuctionTable.price] = marketSlot.price
+                statement[AuctionTable.expired] = marketSlot.expired
+            }.value
+        }
     }
 
-    override suspend fun expireSlot(marketSlot: MarketSlot): Result<Unit> = query("expireSlot") {
-        AuctionTable.update(
-            where = { AuctionTable.id.eq(marketSlot.id) },
-            body = { statement -> statement[AuctionTable.expired] = true }
-        )
-        Unit
+    override suspend fun expireSlot(marketSlot: MarketSlot): Result<Unit> {
+        return query("expireSlot") {
+            AuctionTable.update(
+                where = { AuctionTable.id.eq(marketSlot.id) },
+                body = { statement -> statement[AuctionTable.expired] = true }
+            )
+            Unit
+        }
     }
 
-    override suspend fun getUserSlots(
+    override suspend fun loadUserSlots(
         uuid: String,
         isExpired: Boolean
-    ): Result<List<MarketSlot>> = query("getUserSlots") {
-        AuctionTable
-            .selectAll()
-            .where {
-                AuctionTable.minecraftUuid
-                    .eq(uuid)
-                    .and(AuctionTable.expired.eq(isExpired))
-            }
-            .map(::toMarketSlot)
+    ): Result<List<MarketSlot>> {
+        return query("loadUserSlots") {
+            AuctionTable
+                .selectAll()
+                .where {
+                    AuctionTable.minecraftUuid
+                        .eq(uuid)
+                        .and(AuctionTable.expired.eq(isExpired))
+                }
+                .map(::toMarketSlot)
+        }
     }
 
-    override suspend fun getSlots(isExpired: Boolean): Result<List<MarketSlot>> = query("getSlots") {
-        AuctionTable.selectAll()
-            .where { AuctionTable.expired.eq(isExpired) }
-            .map(::toMarketSlot)
+    override suspend fun loadSlots(isExpired: Boolean): Result<List<MarketSlot>> {
+        return query("loadSlots") {
+            AuctionTable.selectAll()
+                .where { AuctionTable.expired.eq(isExpired) }
+                .map(::toMarketSlot)
+        }
     }
 
-    override suspend fun getSlotsCreatedBefore(
+    override suspend fun loadSlotsCreatedBefore(
         moment: Instant
-    ): Result<List<MarketSlot>> = query("getSlotsCreatedBefore") {
-        AuctionTable.selectAll()
-            .where { AuctionTable.time.less(moment.toEpochMilliseconds()) }
-            .map(::toMarketSlot)
+    ): Result<List<MarketSlot>> {
+        return query("loadSlotsCreatedBefore") {
+            AuctionTable.selectAll()
+                .where { AuctionTable.time.less(moment.toEpochMilliseconds()) }
+                .map(::toMarketSlot)
+        }
     }
 
-    override suspend fun getSlot(id: Int): Result<MarketSlot?> = query("getSlot") {
-        AuctionTable.selectAll()
-            .where { AuctionTable.id.eq(id) }
-            .map(::toMarketSlot)
-            .firstOrNull()
+    override suspend fun findSlot(id: Int): Result<MarketSlot?> {
+        return query("findSlot") {
+            AuctionTable.selectAll()
+                .where { AuctionTable.id.eq(id) }
+                .map(::toMarketSlot)
+                .firstOrNull()
+        }
     }
 
-    override suspend fun deleteSlot(marketSlot: MarketSlot): Result<Unit> = query("deleteSlot") {
-        AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) }
-        Unit
+    override suspend fun deleteSlot(marketSlot: MarketSlot): Result<Unit> {
+        return query("deleteSlot") {
+            AuctionTable.deleteWhere { AuctionTable.id.eq(marketSlot.id) }
+            Unit
+        }
     }
 
-    override suspend fun countPlayerSlots(uuid: String): Result<Int> = query("countPlayerSlots") {
-        AuctionTable.selectAll()
-            .where { AuctionTable.minecraftUuid.eq(uuid) }
-            .count()
-            .toInt()
+    override suspend fun countPlayerSlots(uuid: String): Result<Int> {
+        return query("countPlayerSlots") {
+            AuctionTable.selectAll()
+                .where { AuctionTable.minecraftUuid.eq(uuid) }
+                .count()
+                .toInt()
+        }
     }
 }

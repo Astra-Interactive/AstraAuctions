@@ -7,7 +7,7 @@ import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import kotlin.time.Duration
 
 @Suppress("MagicNumber")
-fun Duration.getTimeFormatted(format: PluginTranslation.Menu.TimeAgo): LocalizableComponent {
+fun Duration.formatTime(format: PluginTranslation.Menu.TimeAgo): LocalizableComponent {
     val days = inWholeDays
     val hours = inWholeHours - days * 24
     val minutes = inWholeMinutes - inWholeHours * 60

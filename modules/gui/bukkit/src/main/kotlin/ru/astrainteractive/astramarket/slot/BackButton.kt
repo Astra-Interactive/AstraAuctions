@@ -12,9 +12,11 @@ import ru.astrainteractive.astramarket.util.toItemStack
 internal fun ButtonContext.back(
     index: Int,
     click: Click
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(config.buttons.back.toItemStack())
-    .editMeta { displayName(pluginTranslation.menu.back.toComponent(locale)) }
-    .setOnClickListener(click)
-    .build()
+): InventorySlot {
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(config.buttons.back.toItemStack())
+        .editMeta { displayName(pluginTranslation.menu.back.toComponent(locale)) }
+        .setOnClickListener(click)
+        .build()
+}

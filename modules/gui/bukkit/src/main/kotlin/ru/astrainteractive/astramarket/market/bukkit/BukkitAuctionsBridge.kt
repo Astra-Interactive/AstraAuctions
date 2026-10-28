@@ -1,3 +1,5 @@
+@file:Suppress("KindImportDirection")
+
 package ru.astrainteractive.astramarket.market.bukkit
 
 import org.bukkit.Bukkit
@@ -6,9 +8,9 @@ import org.bukkit.inventory.ItemStack
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.server.permission.asKPermissible
 import ru.astrainteractive.astramarket.core.settings.model.PluginPermission
-import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.market.api.AuctionsBridge
+import ru.astrainteractive.astramarket.util.toItemStack
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import java.util.UUID

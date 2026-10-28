@@ -8,9 +8,9 @@ import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.context.ButtonContext
-import ru.astrainteractive.astramarket.core.util.toItemStack
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.util.getTimeFormatted
+import ru.astrainteractive.astramarket.util.formatTime
+import ru.astrainteractive.astramarket.util.toItemStack
 import java.util.UUID
 import kotlin.time.Clock
 
@@ -49,7 +49,7 @@ internal fun ButtonContext.expiredSlot(
             pluginTranslation.menu.lot.seller(ownerName).toComponent(locale)
         }
         .addLore {
-            val time = (Clock.System.now() - auctionItem.time).getTimeFormatted(pluginTranslation.menu.timeAgo)
+            val time = Clock.System.now().minus(auctionItem.time).formatTime(pluginTranslation.menu.timeAgo)
             pluginTranslation.menu.lot.listed(time).toComponent(locale)
         }
         .addLore {

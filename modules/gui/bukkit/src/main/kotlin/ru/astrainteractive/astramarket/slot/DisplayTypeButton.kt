@@ -14,19 +14,21 @@ internal fun ButtonContext.slotsType(
     index: Int,
     click: Click,
     isGroupedByPlayers: Boolean
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(config.buttons.slotsType.toItemStack())
-    .setDisplayName(pluginTranslation.menu.display.title.toComponent(locale))
-    .addLore {
-        optionColor(isSelected = isGroupedByPlayers)
-            .concat(pluginTranslation.menu.display.byPlayer)
-            .toComponent(locale)
-    }
-    .addLore {
-        optionColor(isSelected = !isGroupedByPlayers)
-            .concat(pluginTranslation.menu.display.byItem)
-            .toComponent(locale)
-    }
-    .setOnClickListener(click)
-    .build()
+): InventorySlot {
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(config.buttons.slotsType.toItemStack())
+        .setDisplayName(pluginTranslation.menu.display.title.toComponent(locale))
+        .addLore {
+            optionColor(isSelected = isGroupedByPlayers)
+                .concat(pluginTranslation.menu.display.byPlayer)
+                .toComponent(locale)
+        }
+        .addLore {
+            optionColor(isSelected = !isGroupedByPlayers)
+                .concat(pluginTranslation.menu.display.byItem)
+                .toComponent(locale)
+        }
+        .setOnClickListener(click)
+        .build()
+}

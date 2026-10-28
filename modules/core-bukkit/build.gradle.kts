@@ -1,11 +1,12 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
-    alias(libs.plugins.klibs.gradle.linter)
+    alias(libs.plugins.klibs.rules.gradle.linter)
     id("ru.astrainteractive.gradleplugin.java.version")
 }
 
 dependencies {
+    implementation(libs.klibs.kstorage)
     compileOnly(libs.minecraft.paper.api)
     compileOnly(libs.minecraft.vaultapi)
     implementation(libs.klibs.mikro.core)

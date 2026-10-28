@@ -1,11 +1,12 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.plugin.serialization")
-    alias(libs.plugins.klibs.gradle.linter)
+    alias(libs.plugins.klibs.rules.gradle.linter)
     id("ru.astrainteractive.gradleplugin.java.version")
 }
 
 dependencies {
+    implementation(libs.klibs.kstorage)
     compileOnly(libs.minecraft.brigadier)
     compileOnly(libs.minecraft.kyori.api)
     compileOnly(libs.minecraft.paper.api)
@@ -16,7 +17,6 @@ dependencies {
     implementation(libs.minecraft.astralibs.core.bukkit)
     implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
-    implementation(projects.modules.coreBukkit)
     implementation(projects.modules.gui.api)
 
     testImplementation(libs.minecraft.brigadier)

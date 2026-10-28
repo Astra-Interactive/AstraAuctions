@@ -1,11 +1,11 @@
 package ru.astrainteractive.astramarket.market.fake
 
 import ru.astrainteractive.astralibs.economy.EconomyFacade
-import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderFactory
+import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
 
-class FakeCurrencyEconomyProviderFactory(
+class FakeCurrencyEconomyProviderResolver(
     private val defaultEconomy: EconomyFacade?
-) : CurrencyEconomyProviderFactory {
+) : CurrencyEconomyProviderResolver {
     override fun findByCurrencyId(currencyId: String): EconomyFacade? = defaultEconomy
 
     override fun findDefault(): EconomyFacade? = defaultEconomy

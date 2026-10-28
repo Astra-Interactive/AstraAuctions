@@ -1,4 +1,4 @@
-@file:Suppress("Filename")
+@file:Suppress("Filename", "UtilFileName")
 
 package ru.astrainteractive.astramarket.util
 

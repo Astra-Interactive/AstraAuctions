@@ -1,3 +1,5 @@
+@file:Suppress("RootModuleConstruction")
+
 package ru.astrainteractive.astramarket.di
 
 import org.bukkit.Bukkit
@@ -56,13 +58,13 @@ internal class RootModule(
     val bukkitRouterModule: BukkitRouterModule = BukkitRouterModule(
         coreModule = coreModule,
         marketViewModule = marketViewModule,
-        bukkitCoreModule = coreModule,
+        objectEncoder = coreModule.objectEncoder,
         playersMarketViewModule = playersMarketViewModule
     )
 
     val commandModule: CommandModule = CommandModule.Default(
         coreModule = coreModule,
-        bukkitCoreModule = coreModule,
+        objectEncoder = coreModule.objectEncoder,
         bukkitRouterModule = bukkitRouterModule,
         marketViewModule = marketViewModule,
         commandRegistrarContext = PaperCommandRegistrarContext(

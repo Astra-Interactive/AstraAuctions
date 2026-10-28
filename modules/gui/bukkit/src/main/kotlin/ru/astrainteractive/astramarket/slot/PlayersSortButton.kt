@@ -16,24 +16,26 @@ internal fun ButtonContext.playersSort(
     index: Int,
     sortType: PlayerSort,
     click: Click
-) = InventorySlot.Builder()
-    .setIndex(index)
-    .setItemStack(config.buttons.sort.toItemStack())
-    .setDisplayName(pluginTranslation.menu.sort.title.toComponent(locale))
-    .apply {
-        listOf(
-            PlayerSort.Name(false),
-            PlayerSort.Auctions(false),
-        ).forEach { entry ->
-            addLore {
-                val isSelected = sortType::class == entry::class
-                sortOption(
-                    label = entry.toTranslation(pluginTranslation),
-                    isSelected = isSelected,
-                    isAsc = sortType.isAsc
-                ).toComponent(locale)
+): InventorySlot {
+    return InventorySlot.Builder()
+        .setIndex(index)
+        .setItemStack(config.buttons.sort.toItemStack())
+        .setDisplayName(pluginTranslation.menu.sort.title.toComponent(locale))
+        .apply {
+            listOf(
+                PlayerSort.Name(false),
+                PlayerSort.Auctions(false),
+            ).forEach { entry ->
+                addLore {
+                    val isSelected = sortType::class == entry::class
+                    sortOption(
+                        label = entry.toTranslation(pluginTranslation),
+                        isSelected = isSelected,
+                        isAsc = sortType.isAsc
+                    ).toComponent(locale)
+                }
             }
         }
-    }
-    .setOnClickListener(click)
-    .build()
+        .setOnClickListener(click)
+        .build()
+}

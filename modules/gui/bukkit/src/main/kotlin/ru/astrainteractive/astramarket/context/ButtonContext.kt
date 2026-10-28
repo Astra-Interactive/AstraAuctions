@@ -1,7 +1,6 @@
 package ru.astrainteractive.astramarket.context
 
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
-import ru.astrainteractive.astramarket.core.di.BukkitCoreModule
 import ru.astrainteractive.astramarket.core.di.CoreModule
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
@@ -19,12 +18,11 @@ internal interface ButtonContext : Logger {
 
     class Default(
         coreModule: CoreModule,
-        bukkitCoreModule: BukkitCoreModule,
+        override val objectEncoder: ObjectEncoder,
         override val locale: Locale
     ) : ButtonContext,
         Logger by JUtiltLogger("AstraMarket-ButtonContext").withoutParentHandlers() {
         override val config: PluginConfig by coreModule.configKrate
         override val pluginTranslation: PluginTranslation by coreModule.pluginTranslationKrate
-        override val objectEncoder = bukkitCoreModule.objectEncoder
     }
 }

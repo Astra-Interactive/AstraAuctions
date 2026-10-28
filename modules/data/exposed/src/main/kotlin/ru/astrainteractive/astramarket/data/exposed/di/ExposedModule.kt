@@ -45,27 +45,38 @@ class ExposedModule(
     ).asStateFlowMutableKrate()
 
     private val databaseFlow: Flow<Database> = dbConfig.cachedStateFlow
-        .map { databaseConfig -> databaseConfig.configuration }
+        .map(::databaseConfiguration)
         .distinctUntilChanged()
-        .flatMapLatest { configuration -> configuration.connectAsFlow() }
+        .flatMapLatest(::connectDatabase)
         .onEach { database ->
             TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
             transaction(database) {
                 SchemaUtils.create(AuctionTable)
             }
         }
-        .shareIn(ioScope, SharingStarted.Eagerly, 1)
+        .shareIn(
+            scope = ioScope,
+            started = SharingStarted.Eagerly,
+            replay = 1
+        )
 
     val marketRepository: MarketRepository = ExposedMarketRepository(
         databaseFlow = databaseFlow,
         dispatchers = dispatchers
     )
 
+    @Suppress("TrivialLambdaReference")
     val lifecycle: Lifecycle by lazy {
         Lifecycle.Lambda(
-            onReload = {
-                dbConfig.getValue()
-            }
+            onReload = { dbConfig.getValue() }
         )
+    }
+
+    private fun databaseConfiguration(config: DatabaseConfig): DatabaseConfiguration {
+        return config.configuration
+    }
+
+    private fun connectDatabase(configuration: DatabaseConfiguration): Flow<Database> {
+        return configuration.connectAsFlow()
     }
 }

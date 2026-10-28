@@ -1,6 +1,7 @@
 package ru.astrainteractive.astramarket.market.bukkit
 
 import org.bukkit.Bukkit
+import org.bukkit.entity.Player
 import ru.astrainteractive.astralibs.localization.component.LocalizableComponent
 import ru.astrainteractive.astralibs.server.sendMessage
 import ru.astrainteractive.astralibs.server.util.asKAudience
@@ -13,14 +14,19 @@ internal class BukkitPlayerInteractionBridge : PlayerInteractionBridge {
     }
 
     override fun broadcast(message: LocalizableComponent) {
-        val players = Bukkit.getOnlinePlayers().map { player -> player.asKAudience() }
+        val players = Bukkit.getOnlinePlayers().map(Player::asKAudience)
         val console = Bukkit.getConsoleSender().asKAudience()
-        (players + console).sendMessage(message)
+        players.plus(console).sendMessage(message)
     }
 
     override fun playSound(uuid: UUID, sound: () -> String) {
         Bukkit.getPlayer(uuid)?.let { player ->
-            player.playSound(player.location, sound.invoke(), 1f, 1f)
+            player.playSound(
+                player.location,
+                sound.invoke(),
+                1f,
+                1f
+            )
         }
     }
 }

@@ -27,13 +27,10 @@ interface WorkerModule {
             )
         )
 
+        @Suppress("TrivialLambdaReference")
         override val lifecycle: Lifecycle = Lifecycle.Lambda(
-            onEnable = {
-                expireService.onEnable()
-            },
-            onDisable = {
-                expireService.onDisable()
-            }
+            onEnable = { expireService.onEnable() },
+            onDisable = { expireService.onDisable() }
         )
 
         companion object {
