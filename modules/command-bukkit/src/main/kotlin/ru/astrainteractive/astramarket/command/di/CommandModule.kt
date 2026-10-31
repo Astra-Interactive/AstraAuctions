@@ -4,13 +4,13 @@ import ru.astrainteractive.astralibs.command.api.registrar.CommandRegistrarConte
 import ru.astrainteractive.astralibs.command.api.registrar.registerWhenReady
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
+import ru.astrainteractive.astramarket.command.api.CommandExceptionHandler
 import ru.astrainteractive.astramarket.command.auction.command.AuctionCommandExecutor
 import ru.astrainteractive.astramarket.command.auction.command.AuctionLiteralArgumentBuilder
-import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
 import ru.astrainteractive.astramarket.command.reload.command.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.market.di.MarketViewModule
-import ru.astrainteractive.astramarket.router.di.RouterModule
+import ru.astrainteractive.astramarket.gui.api.market.di.MarketViewModule
+import ru.astrainteractive.astramarket.gui.api.router.di.RouterModule
 
 interface CommandModule {
     val lifecycle: Lifecycle
@@ -40,6 +40,7 @@ interface CommandModule {
                 createAuctionUseCase = marketViewModule.marketViewDomainModule.createAuctionUseCase,
                 ioScope = coreModule.ioScope,
                 objectEncoder = objectEncoder,
+                clock = coreModule.clock
             ),
             multiplatformCommand = coreModule.multiplatformCommand,
         )

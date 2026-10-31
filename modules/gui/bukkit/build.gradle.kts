@@ -20,4 +20,5 @@ dependencies {
 
 linter {
     unitKind.set("technology")
+    extensionKinds.add("slot")
 }
