@@ -7,11 +7,6 @@ interface GuiRouter {
     sealed interface Route {
         val inventoryOwner: OnlineKPlayer
 
-        /**
-         * @param inventoryOwner player who opened route
-         * @param isExpired expired auctions
-         * @param targetPlayerUUID only this player auctions will be shown
-         */
         class Slots(
             override val inventoryOwner: OnlineKPlayer,
             val isExpired: Boolean,

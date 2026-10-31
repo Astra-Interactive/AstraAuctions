@@ -9,7 +9,6 @@ import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
 import java.util.Locale
 
-/** What the buttons of one menu need, including the language of the player who opened the menu. */
 internal interface ButtonContext : Logger {
     val config: PluginConfig
     val pluginTranslation: PluginTranslation

@@ -11,10 +11,6 @@ import ru.astrainteractive.astralibs.localization.component.replaceAll
 import ru.astrainteractive.astralibs.localization.locale.MinecraftLocales
 import ru.astrainteractive.astralibs.localization.text.LocalizedText
 
-/**
- * Texts of the plugin, grouped by the feature that sends them. Every text has a default, so the plugin works
- * without `translations.yml` and a missing key keeps its default.
- */
 @Serializable
 data class PluginTranslation(
     @SerialName("menu")
@@ -54,10 +50,8 @@ data class PluginTranslation(
             translation(MinecraftLocales.EN_US, "&6Back")
             translation(MinecraftLocales.RU_RU, "&6Назад")
         },
-        /** Joined in front of the option a button currently shows. */
         @SerialName("selected_color")
         val selectedColor: LocalizedText = LocalizedText.shared("&6"),
-        /** Joined in front of the options a button does not show. */
         @SerialName("unselected_color")
         val unselectedColor: LocalizedText = LocalizedText.shared("&f"),
         @SerialName("filter")
@@ -73,7 +67,6 @@ data class PluginTranslation(
         @SerialName("time_ago")
         val timeAgo: TimeAgo = TimeAgo()
     ) {
-        /** The button that switches between expired and active lots. */
         @Serializable
         data class Filter(
             @SerialName("title")
@@ -93,7 +86,6 @@ data class PluginTranslation(
             }
         )
 
-        /** The button that switches between lots and the players who sell them. */
         @Serializable
         data class Display(
             @SerialName("title")
@@ -156,7 +148,6 @@ data class PluginTranslation(
             }
         )
 
-        /** Lore of a lot in the menu. */
         @Serializable
         data class Lot(
             @SerialName("buy_hint")
@@ -197,7 +188,6 @@ data class PluginTranslation(
             fun price(price: Number): LocalizableComponent = this.price.replace("%price%", "$price")
         }
 
-        /** Lore of a player's head in the menu of players who sell. */
         @Serializable
         data class Player(
             @SerialName("lots")
@@ -216,7 +206,6 @@ data class PluginTranslation(
             fun latestLot(timeAgo: LocalizableComponent): LocalizableComponent = latestLot.replace("%time%", timeAgo)
         }
 
-        /** How long ago a lot was listed; the largest unit that is not zero picks the format. */
         @Serializable
         data class TimeAgo(
             @SerialName("days_hours_minutes")
@@ -281,7 +270,6 @@ data class PluginTranslation(
         fun announcement(playerName: String): LocalizableComponent = announcement.replace("%player%", playerName)
     }
 
-    /** Item names are set by players on an anvil, so they go into these texts as plain text and never become a click. */
     @Serializable
     data class Buy(
         @SerialName("own_lot")
@@ -332,7 +320,6 @@ data class PluginTranslation(
             }
         )
     ) {
-        /** Sent to the buyer. */
         fun bought(sellerName: String, itemName: String, price: Number): LocalizableComponent {
             return bought.replaceAll(
                 PlaceholderReplacement.plain("%item%", itemName),
@@ -341,7 +328,6 @@ data class PluginTranslation(
             )
         }
 
-        /** Sent to the seller. */
         fun sold(buyerName: String, itemName: String, price: Number): LocalizableComponent {
             return sold.replaceAll(
                 PlaceholderReplacement.plain("%player%", buyerName),
@@ -371,7 +357,6 @@ data class PluginTranslation(
 
     @Serializable
     data class Expire(
-        /** Sent to the moderator who expired the lot. */
         @SerialName("success")
         val success: LocalizedText = PREFIX.concat(
             LocalizedText.build {
@@ -387,7 +372,6 @@ data class PluginTranslation(
             }
         )
     ) {
-        /** Sent to the owner of the lot; the item name goes in as plain text and never becomes a click. */
         fun ownerNotice(itemName: String, price: Number): LocalizableComponent {
             return ownerNotice.replaceAll(
                 PlaceholderReplacement.plain("%item%", itemName),
@@ -414,7 +398,6 @@ data class PluginTranslation(
         )
     )
 
-    /** Failures that several operations report. */
     @Serializable
     data class Error(
         @SerialName("no_permission")
