@@ -1,4 +1,4 @@
-package ru.astrainteractive.astramarket.market.fake
+package ru.astrainteractive.astramarket.core.economy.fake
 
 import ru.astrainteractive.astralibs.economy.EconomyFacade
 import ru.astrainteractive.astramarket.core.economy.api.CurrencyEconomyProviderResolver
