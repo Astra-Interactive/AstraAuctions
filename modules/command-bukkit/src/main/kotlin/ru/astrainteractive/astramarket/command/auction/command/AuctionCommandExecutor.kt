@@ -5,8 +5,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
-import ru.astrainteractive.astramarket.router.api.GuiRouter
+import ru.astrainteractive.astramarket.gui.api.market.usecase.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.gui.api.router.api.GuiRouter
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import ru.astrainteractive.klibs.mikro.core.coroutines.propagateCancellationException
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers

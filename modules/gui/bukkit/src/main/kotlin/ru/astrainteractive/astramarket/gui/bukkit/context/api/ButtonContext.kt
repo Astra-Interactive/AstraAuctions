@@ -1,0 +1,30 @@
+package ru.astrainteractive.astramarket.gui.bukkit.context.api
+
+import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
+import ru.astrainteractive.astramarket.core.di.CoreModule
+import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
+import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
+import ru.astrainteractive.klibs.kstorage.api.getValue
+import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import ru.astrainteractive.klibs.mikro.core.logging.Logger
+import java.util.Locale
+import kotlin.time.Clock
+
+internal interface ButtonContext : Logger {
+    val config: PluginConfig
+    val pluginTranslation: PluginTranslation
+    val objectEncoder: ObjectEncoder
+    val locale: Locale
+    val clock: Clock
+
+    class Default(
+        coreModule: CoreModule,
+        override val objectEncoder: ObjectEncoder,
+        override val locale: Locale
+    ) : ButtonContext,
+        Logger by JUtiltLogger("AstraMarket-ButtonContext").withoutParentHandlers() {
+        override val config: PluginConfig by coreModule.configKrate
+        override val pluginTranslation: PluginTranslation by coreModule.pluginTranslationKrate
+        override val clock: Clock = coreModule.clock
+    }
+}

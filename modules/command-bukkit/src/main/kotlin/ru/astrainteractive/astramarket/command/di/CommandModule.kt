@@ -9,8 +9,8 @@ import ru.astrainteractive.astramarket.command.auction.command.AuctionCommandExe
 import ru.astrainteractive.astramarket.command.auction.command.AuctionLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.command.reload.command.ReloadLiteralArgumentBuilder
 import ru.astrainteractive.astramarket.core.di.CoreModule
-import ru.astrainteractive.astramarket.market.di.MarketViewModule
-import ru.astrainteractive.astramarket.router.di.RouterModule
+import ru.astrainteractive.astramarket.gui.api.market.di.MarketViewModule
+import ru.astrainteractive.astramarket.gui.api.router.di.RouterModule
 
 interface CommandModule {
     val lifecycle: Lifecycle
