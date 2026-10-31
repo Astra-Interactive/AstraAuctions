@@ -2,6 +2,7 @@
 
 package ru.astrainteractive.astramarket.market.usecase
 
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
@@ -29,8 +30,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_valid_lot_WHEN_auction_is_created_THEN_it_is_listed_and_announced() {
-        runTest {
+    fun GIVEN_valid_lot_WHEN_auction_is_created_THEN_it_is_listed_and_announced(): TestResult {
+        return runTest {
             val context = contextWith()
             val lot = MarketTestContext.slot(
                 id = 0,
@@ -51,8 +52,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_announcements_off_WHEN_auction_is_created_THEN_nothing_is_broadcast() {
-        runTest {
+    fun GIVEN_announcements_off_WHEN_auction_is_created_THEN_nothing_is_broadcast(): TestResult {
+        return runTest {
             val context = contextWith(PluginConfig(auction = PluginConfig.Auction(announce = false)))
             val lot = MarketTestContext.slot(
                 id = 0,
@@ -68,8 +69,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_invalid_item_WHEN_auction_is_created_THEN_player_reads_wrong_item() {
-        runTest {
+    fun GIVEN_invalid_item_WHEN_auction_is_created_THEN_player_reads_wrong_item(): TestResult {
+        return runTest {
             val context = contextWith()
             context.auctionsBridge.isItemValid = false
             val lot = MarketTestContext.slot(
@@ -88,8 +89,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_player_at_permission_limit_WHEN_auction_is_created_THEN_player_reads_too_many_lots() {
-        runTest {
+    fun GIVEN_player_at_permission_limit_WHEN_auction_is_created_THEN_player_reads_too_many_lots(): TestResult {
+        return runTest {
             val context = contextWith()
             context.auctionsBridge.permissionLimit = 1
             val lot = MarketTestContext.slot(
@@ -109,8 +110,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_price_out_of_range_WHEN_auction_is_created_THEN_player_reads_wrong_price() {
-        runTest {
+    fun GIVEN_price_out_of_range_WHEN_auction_is_created_THEN_player_reads_wrong_price(): TestResult {
+        return runTest {
             val context = contextWith()
             val lot = MarketTestContext.slot(
                 id = 0,
@@ -127,8 +128,8 @@ class CreateAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_storage_fails_WHEN_auction_is_created_THEN_player_reads_database_error() {
-        runTest {
+    fun GIVEN_storage_fails_WHEN_auction_is_created_THEN_player_reads_database_error(): TestResult {
+        return runTest {
             val context = contextWith()
             context.marketRepository.failingOperations += FakeMarketRepository.Operation.INSERT
             val lot = MarketTestContext.slot(

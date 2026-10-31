@@ -2,6 +2,7 @@
 
 package ru.astrainteractive.astramarket.market.usecase
 
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
@@ -35,8 +36,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_buyer_with_enough_money_WHEN_auction_is_bought_THEN_money_moves_and_item_is_given() {
-        runTest {
+    fun GIVEN_buyer_with_enough_money_WHEN_auction_is_bought_THEN_money_moves_and_item_is_given(): TestResult {
+        return runTest {
             val isBought = useCase().invoke(auction, context.buyer)
 
             assertTrue(isBought)
@@ -50,8 +51,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_no_economy_WHEN_auction_is_bought_THEN_nothing_happens() {
-        runTest {
+    fun GIVEN_no_economy_WHEN_auction_is_bought_THEN_nothing_happens(): TestResult {
+        return runTest {
             val isBought = useCase(economyFacade = null).invoke(auction, context.buyer)
 
             assertFalse(isBought)
@@ -61,8 +62,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_auction_already_gone_WHEN_auction_is_bought_THEN_nothing_happens() {
-        runTest {
+    fun GIVEN_auction_already_gone_WHEN_auction_is_bought_THEN_nothing_happens(): TestResult {
+        return runTest {
             context.marketRepository.deleteSlot(auction)
 
             val isBought = useCase().invoke(auction, context.buyer)
@@ -73,8 +74,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_own_auction_WHEN_auction_is_bought_THEN_player_reads_own_lot() {
-        runTest {
+    fun GIVEN_own_auction_WHEN_auction_is_bought_THEN_player_reads_own_lot(): TestResult {
+        return runTest {
             val isBought = useCase().invoke(auction, context.seller)
 
             assertFalse(isBought)
@@ -86,8 +87,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_full_inventory_WHEN_auction_is_bought_THEN_player_reads_inventory_full() {
-        runTest {
+    fun GIVEN_full_inventory_WHEN_auction_is_bought_THEN_player_reads_inventory_full(): TestResult {
+        return runTest {
             context.auctionsBridge.isInventoryFull = true
 
             val isBought = useCase().invoke(auction, context.buyer)
@@ -100,8 +101,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_buyer_without_money_WHEN_auction_is_bought_THEN_player_reads_not_enough_money() {
-        runTest {
+    fun GIVEN_buyer_without_money_WHEN_auction_is_bought_THEN_player_reads_not_enough_money(): TestResult {
+        return runTest {
             val poorEconomy = FakeEconomyFacade(balances = mapOf(context.buyer to 10.0))
 
             val isBought = useCase(poorEconomy).invoke(auction, context.buyer)
@@ -114,8 +115,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_payment_to_seller_fails_WHEN_auction_is_bought_THEN_buyer_gets_money_back() {
-        runTest {
+    fun GIVEN_payment_to_seller_fails_WHEN_auction_is_bought_THEN_buyer_gets_money_back(): TestResult {
+        return runTest {
             economy.failingDeposits += context.seller
 
             val isBought = useCase().invoke(auction, context.buyer)
@@ -129,8 +130,8 @@ class BuyAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_storage_fails_on_delete_WHEN_auction_is_bought_THEN_money_is_returned() {
-        runTest {
+    fun GIVEN_storage_fails_on_delete_WHEN_auction_is_bought_THEN_money_is_returned(): TestResult {
+        return runTest {
             context.marketRepository.failingOperations += FakeMarketRepository.Operation.DELETE
 
             val isBought = useCase().invoke(auction, context.buyer)

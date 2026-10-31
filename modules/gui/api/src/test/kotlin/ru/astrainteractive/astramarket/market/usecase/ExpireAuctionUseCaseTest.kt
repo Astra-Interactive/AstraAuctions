@@ -2,6 +2,7 @@
 
 package ru.astrainteractive.astramarket.market.usecase
 
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
@@ -28,8 +29,8 @@ class ExpireAuctionUseCaseTest {
     )
 
     @Test
-    fun GIVEN_moderator_WHEN_auction_is_expired_THEN_it_expires_and_owner_is_noticed() {
-        runTest {
+    fun GIVEN_moderator_WHEN_auction_is_expired_THEN_it_expires_and_owner_is_noticed(): TestResult {
+        return runTest {
             context.auctionsBridge.hasExpirePermission = true
 
             val isExpired = useCase.invoke(auction, moderator)
@@ -45,8 +46,8 @@ class ExpireAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_player_without_permission_WHEN_auction_is_expired_THEN_player_reads_no_permission() {
-        runTest {
+    fun GIVEN_player_without_permission_WHEN_auction_is_expired_THEN_player_reads_no_permission(): TestResult {
+        return runTest {
             val isExpired = useCase.invoke(auction, moderator)
 
             assertFalse(isExpired)
@@ -57,8 +58,8 @@ class ExpireAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_auction_already_gone_WHEN_auction_is_expired_THEN_nothing_happens() {
-        runTest {
+    fun GIVEN_auction_already_gone_WHEN_auction_is_expired_THEN_nothing_happens(): TestResult {
+        return runTest {
             context.auctionsBridge.hasExpirePermission = true
             context.marketRepository.deleteSlot(auction)
 
@@ -70,8 +71,8 @@ class ExpireAuctionUseCaseTest {
     }
 
     @Test
-    fun GIVEN_storage_fails_WHEN_auction_is_expired_THEN_moderator_reads_unexpected_error() {
-        runTest {
+    fun GIVEN_storage_fails_WHEN_auction_is_expired_THEN_moderator_reads_unexpected_error(): TestResult {
+        return runTest {
             context.auctionsBridge.hasExpirePermission = true
             context.marketRepository.failingOperations += FakeMarketRepository.Operation.EXPIRE
 
