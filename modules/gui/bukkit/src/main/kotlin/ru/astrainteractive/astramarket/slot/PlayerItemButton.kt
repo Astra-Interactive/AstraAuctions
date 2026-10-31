@@ -15,7 +15,6 @@ import ru.astrainteractive.astramarket.context.ButtonContext
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
 import ru.astrainteractive.astramarket.util.formatTime
-import kotlin.time.Clock
 
 internal fun ButtonContext.playerItem(
     index: Int,
@@ -41,14 +40,12 @@ internal fun ButtonContext.playerItem(
             displayName(Component.text(ownerName))
         }
         .addLore {
-            val auctionsAmount = playerAndSlots.slots
-                .filter { slot -> slot.expired == isExpired }
-                .size
+            val auctionsAmount = playerAndSlots.slots.count { slot -> slot.expired == isExpired }
             pluginTranslation.menu.player.lots(auctionsAmount).toComponent(locale)
         }
         .addLore {
             val latestTime = playerAndSlots.slots.maxOf(MarketSlot::time)
-            val time = Clock.System.now().minus(latestTime).formatTime(pluginTranslation.menu.timeAgo)
+            val time = clock.now().minus(latestTime).formatTime(pluginTranslation.menu.timeAgo)
             pluginTranslation.menu.player.latestLot(time).toComponent(locale)
         }
         .setOnClickListener(click)

@@ -9,6 +9,7 @@ import ru.astrainteractive.astramarket.core.settings.model.PluginConfig
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
+import kotlin.time.Clock
 
 interface CoreModule {
     val lifecycle: Lifecycle
@@ -23,4 +24,5 @@ interface CoreModule {
     val yamlStringFormat: StringFormat
     val economyProviderFactory: CurrencyEconomyProviderResolver
     val multiplatformCommand: MultiplatformCommand
+    val clock: Clock
 }

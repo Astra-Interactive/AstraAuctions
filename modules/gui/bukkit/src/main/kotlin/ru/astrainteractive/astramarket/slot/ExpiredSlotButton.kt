@@ -12,7 +12,6 @@ import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.util.formatTime
 import ru.astrainteractive.astramarket.util.toItemStack
 import java.util.UUID
-import kotlin.time.Clock
 
 @Suppress("LongParameterList")
 internal fun ButtonContext.expiredSlot(
@@ -49,7 +48,7 @@ internal fun ButtonContext.expiredSlot(
             pluginTranslation.menu.lot.seller(ownerName).toComponent(locale)
         }
         .addLore {
-            val time = Clock.System.now().minus(auctionItem.time).formatTime(pluginTranslation.menu.timeAgo)
+            val time = clock.now().minus(auctionItem.time).formatTime(pluginTranslation.menu.timeAgo)
             pluginTranslation.menu.lot.listed(time).toComponent(locale)
         }
         .addLore {
