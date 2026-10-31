@@ -22,9 +22,7 @@ internal class BukkitAuctionsBridge(
 
     private fun ItemStack.displayNameOrMaterialName(): String {
         val name = itemMeta?.displayName
-        if (name.isNullOrEmpty()) {
-            return type.name
-        }
+        if (name.isNullOrEmpty()) return type.name
         return name
     }
 

@@ -30,20 +30,14 @@ class CreateAuctionUseCase(
     }
 
     suspend operator fun invoke(marketSlot: MarketSlot, playerUUID: UUID): Boolean {
-        if (!auctionsBridge.isItemValid(marketSlot)) {
-            return fail(playerUUID) { translation.sell.wrongItem }
-        }
+        if (!auctionsBridge.isItemValid(marketSlot)) return fail(playerUUID) { translation.sell.wrongItem }
         val listedAmount = marketRepository.countPlayerSlots(playerUUID.toString()).getOrDefault(0)
         val permissionLimit = auctionsBridge.maxAllowedAuctionsForPlayer(playerUUID)
         if (!config.auction.canListMore(listedAmount, permissionLimit)) {
             return fail(playerUUID) { translation.sell.tooManyLots }
         }
-        if (!config.auction.isPriceAllowed(marketSlot.price)) {
-            return fail(playerUUID) { translation.sell.wrongPrice }
-        }
-        if (marketRepository.insertSlot(marketSlot).isFailure) {
-            return fail(playerUUID) { translation.error.database }
-        }
+        if (!config.auction.isPriceAllowed(marketSlot.price)) return fail(playerUUID) { translation.sell.wrongPrice }
+        if (marketRepository.insertSlot(marketSlot).isFailure) return fail(playerUUID) { translation.error.database }
         playerInteractionBridge.sendTranslationMessage(playerUUID) { translation.sell.listed }
         playerInteractionBridge.playSound(playerUUID) { config.sounds.success }
         if (config.auction.announce) {

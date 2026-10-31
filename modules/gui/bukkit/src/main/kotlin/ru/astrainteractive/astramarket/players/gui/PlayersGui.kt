@@ -159,9 +159,9 @@ internal class PlayersGui(
     private fun updatePageContext(model: PlayersMarketComponent.Model) {
         paginator.update { paginatorContext ->
             paginatorContext.copy(
-                maxItems = model.playersAndSlots
-                    .filter { playerAndSlots -> playerAndSlots.slots.any { slot -> slot.expired == model.isExpired } }
-                    .size
+                maxItems = model.playersAndSlots.count { playerAndSlots ->
+                    playerAndSlots.slots.any { slot -> slot.expired == model.isExpired }
+                }
             )
         }
     }
