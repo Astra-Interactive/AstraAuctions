@@ -3,7 +3,7 @@ package ru.astrainteractive.astramarket.command.reload.command
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.lifecycle.Lifecycle
-import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
+import ru.astrainteractive.astramarket.command.api.CommandExceptionHandler
 import ru.astrainteractive.astramarket.core.settings.model.PluginPermission
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.klibs.kstorage.api.CachedKrate

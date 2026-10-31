@@ -1,6 +1,6 @@
 @file:Suppress("FunctionNaming", "TrivialLambdaReference")
 
-package ru.astrainteractive.astramarket.command.error
+package ru.astrainteractive.astramarket.command.api
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher
@@ -93,7 +93,10 @@ class CommandExceptionHandlerTest {
     fun GIVEN_amount_that_is_not_a_number_WHEN_command_converts_it_THEN_sender_reads_invalid_argument() {
         val command = with(multiplatformCommand) {
             command("sell") {
-                argument("amount", StringArgumentType.string()) { amountArg ->
+                argument(
+                    "amount",
+                    StringArgumentType.string()
+                ) { amountArg ->
                     runs(handler::onFailure) { ctx -> ctx.requireArgument(amountArg, IntArgumentConverter) }
                 }
             }
