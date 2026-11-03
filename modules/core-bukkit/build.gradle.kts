@@ -22,5 +22,5 @@ dependencies {
 }
 
 linter {
-    unitKind.set("technology")
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.CorePlatform())
 }
