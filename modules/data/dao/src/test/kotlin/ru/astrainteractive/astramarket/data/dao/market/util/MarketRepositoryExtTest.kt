@@ -2,6 +2,7 @@
 
 package ru.astrainteractive.astramarket.data.dao.market.util
 
+import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.runTest
 import ru.astrainteractive.astralibs.encoding.model.EncodedObject
 import ru.astrainteractive.astramarket.data.dao.market.fake.FakeMarketRepository
@@ -32,8 +33,8 @@ class MarketRepositoryExtTest {
     }
 
     @Test
-    fun GIVEN_slots_of_two_players_WHEN_players_with_slots_are_found_THEN_slots_are_grouped_by_owner() {
-        runTest {
+    fun GIVEN_slots_of_two_players_WHEN_players_with_slots_are_found_THEN_slots_are_grouped_by_owner(): TestResult {
+        return runTest {
             val repository = FakeMarketRepository(
                 slots = listOf(
                     slot(
@@ -68,8 +69,8 @@ class MarketRepositoryExtTest {
     }
 
     @Test
-    fun GIVEN_only_expired_slots_WHEN_active_players_are_found_THEN_returns_no_players() {
-        runTest {
+    fun GIVEN_only_expired_slots_WHEN_active_players_are_found_THEN_returns_no_players(): TestResult {
+        return runTest {
             val repository = FakeMarketRepository(
                 slots = listOf(
                     slot(
@@ -88,8 +89,8 @@ class MarketRepositoryExtTest {
     }
 
     @Test
-    fun GIVEN_storage_failure_WHEN_players_with_slots_are_found_THEN_returns_the_failure() {
-        runTest {
+    fun GIVEN_storage_failure_WHEN_players_with_slots_are_found_THEN_returns_the_failure(): TestResult {
+        return runTest {
             val repository = FakeMarketRepository(slots = emptyList())
             repository.failingOperations += FakeMarketRepository.Operation.READ
 

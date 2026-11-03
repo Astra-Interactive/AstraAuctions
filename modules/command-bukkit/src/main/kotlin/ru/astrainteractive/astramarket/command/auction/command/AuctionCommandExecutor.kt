@@ -5,8 +5,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withContext
 import ru.astrainteractive.astralibs.encoding.encoder.ObjectEncoder
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
-import ru.astrainteractive.astramarket.market.usecase.CreateAuctionUseCase
-import ru.astrainteractive.astramarket.router.api.GuiRouter
+import ru.astrainteractive.astramarket.gui.api.market.usecase.CreateAuctionUseCase
+import ru.astrainteractive.astramarket.gui.api.router.api.GuiRouter
 import ru.astrainteractive.klibs.mikro.core.coroutines.launch
 import ru.astrainteractive.klibs.mikro.core.coroutines.propagateCancellationException
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
@@ -21,7 +21,8 @@ internal class AuctionCommandExecutor(
     private val dispatchers: KotlinDispatchers,
     private val ioScope: CoroutineScope,
     private val objectEncoder: ObjectEncoder,
-    private val createAuctionUseCase: CreateAuctionUseCase
+    private val createAuctionUseCase: CreateAuctionUseCase,
+    private val clock: Clock
 ) : Logger by JUtiltLogger("AstraMarket-AuctionCommandExecutor").withoutParentHandlers() {
     private val mutex = Mutex()
     private val limitedIoDispatcher = dispatchers.IO.limitedParallelism(1)
@@ -45,7 +46,10 @@ internal class AuctionCommandExecutor(
                 router.navigate(route)
             }
 
-            is AuctionCommand.Sell -> ioScope.launch(mutex, limitedIoDispatcher) {
+            is AuctionCommand.Sell -> ioScope.launch(
+                mutex,
+                limitedIoDispatcher
+            ) {
                 val itemInstance = input.itemInstance
                 val calculatedAmount = max(min(itemInstance.amount, input.amount), 1)
                 val clonedItem = itemInstance.clone().apply {
@@ -69,7 +73,7 @@ internal class AuctionCommandExecutor(
                 val marketSlot = MarketSlot(
                     id = -1,
                     minecraftUuid = input.player.uuid.toString(),
-                    time = Clock.System.now(),
+                    time = clock.now(),
                     item = encodedItem,
                     price = input.price,
                     expired = false,
@@ -80,9 +84,7 @@ internal class AuctionCommandExecutor(
                     playerUUID = input.player.uuid
                 )
                 withContext(dispatchers.Main) {
-                    if (useCaseResult) {
-                        return@withContext
-                    }
+                    if (useCaseResult) return@withContext
                     itemInstance.amount += calculatedAmount
                 }
             }

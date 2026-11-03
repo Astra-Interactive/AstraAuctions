@@ -28,6 +28,7 @@ import ru.astrainteractive.klibs.kstorage.api.asCachedKrate
 import ru.astrainteractive.klibs.kstorage.api.impl.DefaultMutableKrate
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
+import kotlin.time.Clock
 
 interface BukkitCoreModule : CoreModule {
 
@@ -41,6 +42,8 @@ interface BukkitCoreModule : CoreModule {
     ) : BukkitCoreModule {
 
         override val objectEncoder: ObjectEncoder = BukkitObjectEncoder()
+
+        override val clock: Clock = Clock.System
 
         override val inventoryClickEventListener = DefaultInventoryClickEvent()
 

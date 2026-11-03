@@ -1,5 +1,6 @@
 package ru.astrainteractive.astramarket.data.exposed.market
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
@@ -21,7 +22,6 @@ import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.MarketStorageError
 import ru.astrainteractive.astramarket.data.exposed.table.AuctionTable
-import ru.astrainteractive.klibs.mikro.core.coroutines.propagateCancellationException
 import ru.astrainteractive.klibs.mikro.core.dispatchers.KotlinDispatchers
 import ru.astrainteractive.klibs.mikro.core.logging.JUtiltLogger
 import ru.astrainteractive.klibs.mikro.core.logging.Logger
@@ -35,21 +35,19 @@ internal class ExposedMarketRepository(
     private val mutex = Mutex()
 
     private suspend fun <T> query(tag: String, statement: JdbcTransaction.() -> T): Result<T> {
-        return runCatching {
-            mutex.withLock {
+        return try {
+            val value = mutex.withLock {
                 withContext(dispatchers.IO) {
                     transaction(databaseFlow.first()) { statement.invoke(this) }
                 }
             }
+            Result.success(value)
+        } catch (cancellation: CancellationException) {
+            throw cancellation
+        } catch (throwable: Throwable) {
+            error(throwable) { "$tag: Error during execution" }
+            Result.failure(MarketStorageError.QueryFailed(throwable))
         }
-            .propagateCancellationException()
-            .fold(
-                onSuccess = { value -> Result.success(value) },
-                onFailure = { throwable ->
-                    error(throwable) { "$tag: Error during execution" }
-                    Result.failure(MarketStorageError.QueryFailed(throwable))
-                }
-            )
     }
 
     private fun toMarketSlot(resultRow: ResultRow): MarketSlot {

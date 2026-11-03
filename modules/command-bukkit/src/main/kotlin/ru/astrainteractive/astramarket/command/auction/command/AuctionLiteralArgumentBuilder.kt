@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import ru.astrainteractive.astralibs.command.api.brigadier.command.MultiplatformCommand
 import ru.astrainteractive.astralibs.server.player.BukkitOnlineKPlayer
-import ru.astrainteractive.astramarket.command.error.CommandExceptionHandler
+import ru.astrainteractive.astramarket.command.api.CommandExceptionHandler
 import ru.astrainteractive.klibs.mikro.core.util.tryCast
 
 internal class AuctionLiteralArgumentBuilder(
@@ -19,8 +19,14 @@ internal class AuctionLiteralArgumentBuilder(
         return with(multiplatformCommand) {
             command(alias) {
                 literal("sell") {
-                    argument("price", FloatArgumentType.floatArg(0f, Float.MAX_VALUE)) { priceArg ->
-                        argument("amount", IntegerArgumentType.integer(0, Int.MAX_VALUE)) { amountArg ->
+                    argument(
+                        "price",
+                        FloatArgumentType.floatArg(0f, Float.MAX_VALUE)
+                    ) { priceArg ->
+                        argument(
+                            "amount",
+                            IntegerArgumentType.integer(0, Int.MAX_VALUE)
+                        ) { amountArg ->
                             runs(commandExceptionHandler::onFailure) { ctx ->
                                 val player = ctx.requirePlayer()
                                     .tryCast<BukkitOnlineKPlayer>()
