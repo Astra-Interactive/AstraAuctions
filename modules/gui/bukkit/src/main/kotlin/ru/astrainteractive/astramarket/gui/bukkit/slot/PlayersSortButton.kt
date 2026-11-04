@@ -8,8 +8,8 @@ import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.gui.api.player.model.PlayerSort
-import ru.astrainteractive.astramarket.gui.api.player.util.toTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.context.api.ButtonContext
+import ru.astrainteractive.astramarket.gui.bukkit.player.util.toTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.util.toItemStack
 
 internal fun ButtonContext.playersSort(

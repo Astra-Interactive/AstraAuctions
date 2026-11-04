@@ -8,8 +8,8 @@ import ru.astrainteractive.astralibs.menu.slot.setIndex
 import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.gui.api.market.model.AuctionSort
-import ru.astrainteractive.astramarket.gui.api.market.util.toTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.context.api.ButtonContext
+import ru.astrainteractive.astramarket.gui.bukkit.market.util.toTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.util.toItemStack
 
 internal fun ButtonContext.auctionSort(

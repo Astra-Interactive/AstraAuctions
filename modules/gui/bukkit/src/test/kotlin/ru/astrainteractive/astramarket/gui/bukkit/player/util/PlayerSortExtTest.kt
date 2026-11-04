@@ -1,6 +1,6 @@
 @file:Suppress("FunctionNaming")
 
-package ru.astrainteractive.astramarket.gui.api.player.util
+package ru.astrainteractive.astramarket.gui.bukkit.player.util
 
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.gui.api.player.model.PlayerSort

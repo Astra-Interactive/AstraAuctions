@@ -16,6 +16,9 @@ dependencies {
     implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
     implementation(projects.modules.gui.api)
+
+    testImplementation(libs.minecraft.kyori.api)
+    testImplementation(libs.tests.kotlin.test)
 }
 
 linter {
