@@ -230,3 +230,8 @@ val shadowJar by tasks.getting(ShadowJar::class) {
         add("tomp2p.opuswrapper")
     }.forEach { pattern -> relocate(pattern, "${requireProjectInfo.group}.shade.$pattern") }
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.EntryPoint())
+    rootPackage.set("ru.astrainteractive.astramarket")
+}
