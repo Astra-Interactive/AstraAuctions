@@ -14,3 +14,8 @@ dependencies {
     testImplementation(libs.minecraft.astralibs.core)
     testImplementation(libs.tests.kotlin.test)
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.StorageContract())
+    rootPackage.set("ru.astrainteractive.astramarket.data.dao")
+}

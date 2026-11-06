@@ -13,3 +13,8 @@ dependencies {
     implementation(projects.modules.data.dao)
     implementation(projects.modules.core)
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.Context())
+    rootPackage.set("ru.astrainteractive.astramarket.service")
+}

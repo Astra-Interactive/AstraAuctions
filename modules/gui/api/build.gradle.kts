@@ -21,3 +21,8 @@ dependencies {
     testImplementation(testFixtures(projects.modules.core))
     testImplementation(testFixtures(projects.modules.data.dao))
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.Api())
+    rootPackage.set("ru.astrainteractive.astramarket.gui.api")
+}

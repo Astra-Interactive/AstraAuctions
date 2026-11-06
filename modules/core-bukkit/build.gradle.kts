@@ -23,4 +23,5 @@ dependencies {
 
 linter {
     unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.CorePlatform())
+    rootPackage.set("ru.astrainteractive.astramarket.core")
 }

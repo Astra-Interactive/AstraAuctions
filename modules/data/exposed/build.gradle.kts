@@ -20,3 +20,8 @@ dependencies {
     testImplementation(libs.kotlin.coroutines.test)
     testImplementation(libs.tests.kotlin.test)
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.Technology())
+    rootPackage.set("ru.astrainteractive.astramarket.data.exposed")
+}

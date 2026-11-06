@@ -23,5 +23,6 @@ dependencies {
 
 linter {
     unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.Platform())
+    rootPackage.set("ru.astrainteractive.astramarket.gui.bukkit")
     extensionKinds.add("slot")
 }

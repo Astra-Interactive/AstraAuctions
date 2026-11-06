@@ -25,3 +25,8 @@ dependencies {
     testImplementation(libs.minecraft.kyori.plain)
     testImplementation(libs.tests.kotlin.test)
 }
+
+linter {
+    unit(ru.astrainteractive.klibs.rules.core.unit.model.UnitRole.Context())
+    rootPackage.set("ru.astrainteractive.astramarket.command")
+}
