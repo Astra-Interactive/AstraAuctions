@@ -91,8 +91,9 @@ interface BukkitCoreModule : CoreModule {
             .Default(dispatchers.Unconfined + SupervisorJob() + createCoroutineExceptionHandler())
             .withTimings()
 
-        override val economyProviderFactory: CurrencyEconomyProviderResolver =
-            VaultCurrencyEconomyProviderResolver(lifecyclePlugin)
+        override val economyProviderFactory: CurrencyEconomyProviderResolver = VaultCurrencyEconomyProviderResolver(
+            lifecyclePlugin
+        )
 
         override val lifecycle: Lifecycle by lazy {
             Lifecycle.Lambda(
