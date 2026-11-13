@@ -4,8 +4,8 @@ import ru.astrainteractive.astralibs.localization.text.LocalizedText
 import ru.astrainteractive.astramarket.core.settings.model.PluginTranslation
 import ru.astrainteractive.astramarket.gui.api.market.model.AuctionSort
 
-internal fun AuctionSort.toTranslation(translation: PluginTranslation): LocalizedText {
-    return when (this) {
+internal fun selectAuctionSortTranslation(sort: AuctionSort, translation: PluginTranslation): LocalizedText {
+    return when (sort) {
         is AuctionSort.Material -> translation.menu.sort.byMaterial
         is AuctionSort.Date -> translation.menu.sort.byDate
         is AuctionSort.Name -> translation.menu.sort.byName
