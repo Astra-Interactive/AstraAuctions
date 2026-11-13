@@ -9,7 +9,7 @@ import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.gui.api.market.model.AuctionSort
 import ru.astrainteractive.astramarket.gui.bukkit.context.api.ButtonContext
-import ru.astrainteractive.astramarket.gui.bukkit.market.util.toTranslation
+import ru.astrainteractive.astramarket.gui.bukkit.market.util.selectAuctionSortTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.util.toItemStack
 
 internal fun ButtonContext.auctionSort(
@@ -32,7 +32,7 @@ internal fun ButtonContext.auctionSort(
                 addLore {
                     val isSelected = sortType::class == entry::class
                     sortOption(
-                        label = entry.toTranslation(pluginTranslation),
+                        label = selectAuctionSortTranslation(entry, pluginTranslation),
                         isSelected = isSelected,
                         isAsc = sortType.isAsc
                     ).toComponent(locale)

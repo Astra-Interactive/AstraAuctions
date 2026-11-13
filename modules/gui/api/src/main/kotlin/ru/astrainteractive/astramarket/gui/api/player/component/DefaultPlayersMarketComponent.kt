@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.astrainteractive.astralibs.coroutines.withTimings
 import ru.astrainteractive.astramarket.data.dao.market.api.MarketRepository
+import ru.astrainteractive.astramarket.data.dao.market.model.MarketSlot
 import ru.astrainteractive.astramarket.data.dao.market.model.PlayerAndSlots
-import ru.astrainteractive.astramarket.data.dao.market.util.findPlayersWithSlots
+import ru.astrainteractive.astramarket.data.dao.market.util.toPlayersAndSlots
 import ru.astrainteractive.astramarket.gui.api.player.model.PlayerSort
 import ru.astrainteractive.astramarket.gui.api.util.nextAfter
 import ru.astrainteractive.klibs.mikro.core.coroutines.CoroutineFeature
@@ -38,9 +39,10 @@ internal class DefaultPlayersMarketComponent(
 
     private fun loadPlayersAndSlots() {
         launch(dispatchers.IO) {
-            val slots = marketRepository.findPlayersWithSlots(isExpired = model.value.isExpired)
+            val playersAndSlots = marketRepository.loadSlots(isExpired = model.value.isExpired)
+                .map(List<MarketSlot>::toPlayersAndSlots)
                 .getOrDefault(emptyList())
-            model.update { state -> state.copy(playersAndSlots = slots) }
+            model.update { state -> state.copy(playersAndSlots = playersAndSlots) }
             sortPlayersAndSlots()
         }
     }

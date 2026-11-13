@@ -9,7 +9,7 @@ import ru.astrainteractive.astralibs.menu.slot.setItemStack
 import ru.astrainteractive.astralibs.menu.slot.setOnClickListener
 import ru.astrainteractive.astramarket.gui.api.player.model.PlayerSort
 import ru.astrainteractive.astramarket.gui.bukkit.context.api.ButtonContext
-import ru.astrainteractive.astramarket.gui.bukkit.player.util.toTranslation
+import ru.astrainteractive.astramarket.gui.bukkit.player.util.selectPlayerSortTranslation
 import ru.astrainteractive.astramarket.gui.bukkit.util.toItemStack
 
 internal fun ButtonContext.playersSort(
@@ -29,7 +29,7 @@ internal fun ButtonContext.playersSort(
                 addLore {
                     val isSelected = sortType::class == entry::class
                     sortOption(
-                        label = entry.toTranslation(pluginTranslation),
+                        label = selectPlayerSortTranslation(entry, pluginTranslation),
                         isSelected = isSelected,
                         isAsc = sortType.isAsc
                     ).toComponent(locale)
